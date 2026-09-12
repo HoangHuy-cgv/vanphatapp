@@ -2,22 +2,18 @@
 <html lang="vi">
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="color-scheme" content="dark">
 	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 	<meta http-equiv="Pragma" content="no-cache">
 	<meta http-equiv="Expires" content="0">
-	<title>Đăng nhập — Vạn Phát</title>
+	<title>Đăng nhập — Bao Bì Vạn Phát</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 	<style>
 		:root {
-			--canvas: #12151a;
-			--outline: #3a424e;
-			--outline-focus: #4ea1e0;
-			--ink: #eef1f6;
-			--ink-secondary: #9da7b5;
-			--primary: #4ea1e0;
-			--primary-press: #3b8ac4;
-			--blocked: #f97066;
-			--font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+			color-scheme: dark;
 		}
 
 		*, *::before, *::after {
@@ -27,240 +23,491 @@
 		}
 
 		html, body {
-			height: 100%;
-			font-family: var(--font-sans);
-			background-color: var(--canvas);
-			color: var(--ink);
+			min-height: 100vh;
+			width: 100%;
+			font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+			font-size: 16px;
+			line-height: 1.5;
 			-webkit-font-smoothing: antialiased;
 			-moz-osx-font-smoothing: grayscale;
 			-webkit-text-size-adjust: 100%;
+			text-size-adjust: 100%;
+			background-color: #0b0f17;
+			color: #f3f4f6;
 		}
 
-		.login-screen {
+		.page-wrapper {
 			display: flex;
-			flex-direction: column;
+			min-height: 100vh;
+			width: 100%;
 			align-items: center;
 			justify-content: center;
-			min-height: 100vh;
 			padding: 24px 16px;
-			background-color: var(--canvas);
+			background-color: #0b0f17;
 			background-image:
-				linear-gradient(
-					180deg,
-					rgba(13, 17, 23, 0.84) 0%,
-					rgba(18, 24, 34, 0.88) 50%,
-					rgba(13, 17, 23, 0.93) 100%
-				),
+				linear-gradient(180deg, rgba(11, 15, 23, 0.82) 0%, rgba(15, 23, 42, 0.88) 50%, rgba(11, 15, 23, 0.94) 100%),
 				url('/assets/vanphat_portal/images/bg-factory.webp');
 			background-position: center center;
 			background-size: cover;
 			background-repeat: no-repeat;
 		}
 
-		.login-container {
+		/* Khung đăng nhập tối giản: Căn thẳng hàng hoàn hảo với chữ BAO BÌ VẠN PHÁT */
+		.auth-card {
 			display: flex;
 			flex-direction: column;
 			align-items: center;
-			width: 100%;
-			max-width: 300px;
+			width: fit-content;
+			max-width: 90vw;
+			margin: 0 auto;
+			background: transparent;
+			border: none;
+			box-shadow: none;
+			padding: 0;
 		}
 
-		.login-hero {
+		.auth-header {
 			display: flex;
 			flex-direction: column;
 			align-items: center;
 			text-align: center;
-			margin-bottom: 22px;
+			margin-bottom: 24px;
 			width: 100%;
 		}
 
-		.hero-logo {
-			width: 135px;
+		.auth-logo {
+			width: 110px;
 			height: auto;
+			max-height: 55px;
 			object-fit: contain;
 			margin-bottom: 12px;
-			filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.6));
+			filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.6));
 		}
 
-		.hero-brand {
-			font-size: 20px;
+		.auth-title {
+			font-size: 22px;
 			font-weight: 800;
-			letter-spacing: 0.05em;
-			color: #ffffff;
+			letter-spacing: 0.04em;
 			text-transform: uppercase;
-			white-space: nowrap;
-			text-align: center;
-			width: 100%;
+			color: #ffffff;
 			text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+			white-space: nowrap;
+			display: inline-block;
+			text-align: center;
 		}
 
-		.login-card {
+		.auth-form {
 			width: 100%;
-			background: rgba(22, 27, 34, 0.82);
-			border: 1px solid rgba(255, 255, 255, 0.12);
-			border-radius: 12px;
-			padding: 24px 20px;
-			box-shadow:
-				0 20px 40px -10px rgba(0, 0, 0, 0.7),
-				0 0 0 1px rgba(255, 255, 255, 0.05);
-		}
-
-		.login-form {
 			display: flex;
 			flex-direction: column;
-			align-items: stretch;
-			gap: 14px;
+			gap: 12px;
+		}
+
+		.input-wrapper {
+			position: relative;
+			display: flex;
+			align-items: center;
 			width: 100%;
 		}
 
-		/* Lock input font-size to exactly 18px in all states */
-		.form-input,
-		.form-input:hover,
-		.form-input:focus,
-		.form-input:active {
+		/* Khung viền tinh tế, tập trung thị giác vào ô nhập liệu */
+		.form-input {
 			width: 100%;
 			min-width: 0;
-			height: 50px;
+			height: 46px;
 			padding: 0 14px;
-			background: rgba(18, 21, 26, 0.92);
-			border: 1px solid var(--outline);
-			border-radius: 8px;
-			font-family: var(--font-sans) !important;
-			font-size: 18px !important;
-			font-weight: 500 !important;
-			color: #ffffff !important;
-			line-height: normal !important;
+			font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+			font-size: 16px !important;
+			font-weight: 500;
+			line-height: normal;
+			color: #ffffff;
+			color-scheme: dark;
+			background: rgba(15, 23, 42, 0.85);
+			backdrop-filter: blur(8px);
+			-webkit-backdrop-filter: blur(8px);
+			border: 1px solid rgba(255, 255, 255, 0.22);
+			border-radius: 10px;
 			outline: none;
-			touch-action: manipulation;
+			box-sizing: border-box;
+			transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+		}
+
+		/* Đồng bộ phông chữ hệ thống cho ô password để dấu chấm bullet luôn đồng đều */
+		.form-input[type="password"] {
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+			font-size: 16px !important;
+			letter-spacing: 0.05em;
+		}
+
+		.input-wrapper.has-toggle .form-input {
+			padding-right: 42px;
 		}
 
 		.form-input::placeholder {
-			font-family: var(--font-sans) !important;
-			font-size: 18px !important;
-			font-weight: 400 !important;
-			color: var(--ink-secondary) !important;
-			opacity: 0.85 !important;
+			font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+			font-size: 14px;
+			font-weight: 400;
+			color: #9ca3af;
+			opacity: 1;
+		}
+
+		.form-input:hover {
+			border-color: rgba(255, 255, 255, 0.38);
+			background: rgba(15, 23, 42, 0.92);
 		}
 
 		.form-input:focus {
-			border-color: var(--outline-focus) !important;
-			box-shadow: 0 0 0 3px rgba(78, 161, 224, 0.25) !important;
+			border-color: #3b82f6;
+			box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.28);
+			background: rgba(15, 23, 42, 0.98);
 		}
 
-		/* Autofill styling override for WebKit/Chrome/Safari */
+		/* Animation hack để ép trình duyệt giữ đúng font style khi Autofill kích hoạt */
+		@keyframes autofill-lock {
+			0%, 100% {
+				font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+				font-size: 16px;
+				font-weight: 500;
+				color: #ffffff;
+				-webkit-text-fill-color: #ffffff;
+			}
+		}
+
+		/* Khóa giao diện nền và màu chữ cho Autofill */
 		.form-input:-webkit-autofill,
 		.form-input:-webkit-autofill:hover,
 		.form-input:-webkit-autofill:focus,
 		.form-input:-webkit-autofill:active {
-			font-family: var(--font-sans) !important;
-			font-size: 18px !important;
+			font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+			font-size: 16px !important;
 			font-weight: 500 !important;
-			line-height: normal !important;
 			-webkit-text-fill-color: #ffffff !important;
-			-webkit-box-shadow: 0 0 0 50px rgba(18, 21, 26, 0.95) inset !important;
+			-webkit-box-shadow: 0 0 0 50px #0f172a inset !important;
+			box-shadow: 0 0 0 50px #0f172a inset !important;
 			caret-color: #ffffff !important;
+			animation: autofill-lock 0.001s forwards;
+			-webkit-animation: autofill-lock 0.001s forwards;
 			transition: background-color 5000s ease-in-out 0s;
 		}
 
-		.form-input:-webkit-autofill::first-line {
-			font-family: var(--font-sans) !important;
-			font-size: 18px !important;
+		/* GIẢI PHÁP CHỦ CHỐT CHO WEBKIT / CHROMIUM:
+		   Chromium cho phép override font-size và typography của Autofill thông qua pseudo ::first-line */
+		.form-input:-webkit-autofill::first-line,
+		.form-input:-webkit-autofill:hover::first-line,
+		.form-input:-webkit-autofill:focus::first-line,
+		.form-input:-webkit-autofill:active::first-line {
+			font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+			font-size: 16px !important;
+			font-weight: 500 !important;
+			line-height: normal !important;
+			color: #ffffff !important;
+			-webkit-text-fill-color: #ffffff !important;
+		}
+
+		.form-input[type="password"]:-webkit-autofill::first-line {
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+			font-size: 16px !important;
+			letter-spacing: 0.05em !important;
+		}
+
+		/* Chuẩn CSS tiêu chuẩn hiện đại cho browser mới */
+		.form-input:autofill,
+		.form-input:autofill:hover,
+		.form-input:autofill:focus,
+		.form-input:autofill:active {
+			font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+			font-size: 16px !important;
+			font-weight: 500 !important;
+			-webkit-text-fill-color: #ffffff !important;
+			box-shadow: 0 0 0 50px #0f172a inset !important;
+			caret-color: #ffffff !important;
+		}
+
+		.form-input:autofill::first-line {
+			font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+			font-size: 16px !important;
 			font-weight: 500 !important;
 			color: #ffffff !important;
 			-webkit-text-fill-color: #ffffff !important;
 		}
 
-		.btn {
+		.toggle-pwd {
+			position: absolute;
+			right: 4px;
+			top: 50%;
+			transform: translateY(-50%);
+			width: 34px;
+			height: 34px;
 			display: flex;
 			align-items: center;
 			justify-content: center;
+			background: transparent;
+			border: none;
+			color: #9ca3af;
+			cursor: pointer;
+			border-radius: 6px;
+			transition: color 0.15s ease;
+		}
+
+		.toggle-pwd:hover {
+			color: #ffffff;
+		}
+
+		.toggle-pwd svg {
+			width: 18px;
+			height: 18px;
+		}
+
+		.alert-box {
+			display: none;
+			padding: 10px 12px;
+			border-radius: 8px;
+			background: rgba(239, 68, 68, 0.14);
+			border: 1px solid rgba(239, 68, 68, 0.35);
+			color: #fca5a5;
+			font-size: 13px;
+			font-weight: 500;
+			line-height: 1.35;
+			text-align: center;
+		}
+
+		.alert-box.show {
+			display: block;
+		}
+
+		/* Khung viền và khối nút Đăng nhập nổi bật, thẳng hàng */
+		.submit-btn {
 			width: 100%;
 			height: 46px;
-			font-family: var(--font-sans) !important;
-			font-size: 18px !important;
-			font-weight: 700 !important;
+			margin-top: 2px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+			font-family: inherit;
+			font-size: 15px;
+			font-weight: 700;
 			letter-spacing: 0.02em;
 			color: #ffffff;
-			background: var(--primary);
-			border: 0;
-			border-radius: 8px;
+			background: #2563eb;
+			border: 1px solid #3b82f6;
+			border-radius: 10px;
 			cursor: pointer;
-			user-select: none;
-			touch-action: manipulation;
-			transition: background-color 0.2s ease, transform 0.1s ease;
+			box-shadow: 0 4px 16px rgba(37, 99, 235, 0.35);
+			box-sizing: border-box;
+			transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
 		}
 
-		.btn:hover {
-			background: var(--primary-press);
+		.submit-btn:hover {
+			background: #1d4ed8;
+			border-color: #2563eb;
+			box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
 		}
 
-		.btn:active {
+		.submit-btn:active {
 			transform: scale(0.98);
 		}
 
-		.btn:disabled {
-			opacity: 0.6;
+		.submit-btn:disabled {
+			opacity: 0.65;
 			cursor: not-allowed;
+			transform: none;
 		}
 
-		.login-error {
-			color: var(--blocked);
-			font-size: 14px;
-			font-weight: 500;
-			line-height: 1.4;
-			text-align: center;
+		.spinner {
+			display: none;
+			width: 16px;
+			height: 16px;
+			border: 2px solid rgba(255, 255, 255, 0.3);
+			border-top-color: #ffffff;
+			border-radius: 50%;
+			animation: spin 0.8s linear infinite;
+		}
+
+		.submit-btn.loading .spinner {
+			display: inline-block;
+		}
+
+		.submit-btn.loading .btn-text {
+			opacity: 0.85;
+		}
+
+		@keyframes spin {
+			to { transform: rotate(360deg); }
+		}
+
+		@media (max-width: 480px) {
+			.auth-title {
+				font-size: 20px;
+			}
 		}
 	</style>
 </head>
 <body>
-	<div class="login-screen">
-		<div class="login-container">
-			<div class="login-hero">
-				<img src="/assets/vanphat_portal/images/logo-vanphat.png" alt="Bao Bì Vạn Phát" class="hero-logo" />
-				<h1 class="hero-brand">BAO BÌ VẠN PHÁT</h1>
-			</div>
-			<form class="login-card" id="login-form" novalidate>
-				<div class="login-form">
-					<input name="usr" class="form-input" autocomplete="username" placeholder="Tên đăng nhập hoặc Email" required />
-					<input name="pwd" class="form-input" type="password" autocomplete="current-password" placeholder="Mật khẩu" required />
-					<p class="login-error" id="login-error" hidden></p>
-					<button class="btn" type="submit" id="btn-submit">Đăng nhập</button>
+	<main class="page-wrapper">
+		<div class="auth-card">
+			<header class="auth-header">
+				<img src="/assets/vanphat_portal/images/logo-vanphat.png" alt="Bao Bì Vạn Phát" class="auth-logo" />
+				<h1 class="auth-title">Bao Bì Vạn Phát</h1>
+			</header>
+
+			<form class="auth-form" id="login-form" novalidate>
+				<div class="input-wrapper">
+					<input
+						type="text"
+						id="usr"
+						name="usr"
+						class="form-input"
+						placeholder="Nhập số điện thoại"
+						autocomplete="username"
+						required
+						spellcheck="false"
+					/>
 				</div>
+
+				<div class="input-wrapper has-toggle">
+					<input
+						type="password"
+						id="pwd"
+						name="pwd"
+						class="form-input"
+						placeholder="Nhập mật khẩu"
+						autocomplete="current-password"
+						required
+					/>
+					<button type="button" class="toggle-pwd" id="toggle-pwd" title="Ẩn/Hiện mật khẩu" aria-label="Ẩn/Hiện mật khẩu">
+						<svg id="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+							<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+							<circle cx="12" cy="12" r="3"></circle>
+						</svg>
+					</button>
+				</div>
+
+				<div class="alert-box" id="error-alert" role="alert"></div>
+
+				<button type="submit" class="submit-btn" id="submit-btn">
+					<span class="spinner" aria-hidden="true"></span>
+					<span class="btn-text">Đăng nhập</span>
+				</button>
 			</form>
 		</div>
-	</div>
+	</main>
+
 	<script>
 		(function () {
 			var form = document.getElementById("login-form");
-			var errEl = document.getElementById("login-error");
-			var btn = document.getElementById("btn-submit");
+			var usrInput = document.getElementById("usr");
+			var pwdInput = document.getElementById("pwd");
+			var toggleBtn = document.getElementById("toggle-pwd");
+			var alertBox = document.getElementById("error-alert");
+			var submitBtn = document.getElementById("submit-btn");
 
-			function fail(msg) {
-				errEl.textContent = msg;
-				errEl.hidden = false;
-				btn.disabled = false;
+			// Căn chỉnh chiều ngang khung form thẳng hàng chính xác với chữ "Bao Bì Vạn Phát"
+			function alignWithTitle() {
+				var title = document.querySelector(".auth-title");
+				if (title && form && title.offsetWidth > 0) {
+					form.style.width = title.offsetWidth + "px";
+				}
+			}
+
+			if (document.fonts && document.fonts.ready) {
+				document.fonts.ready.then(alignWithTitle);
+			}
+			window.addEventListener("load", alignWithTitle);
+			window.addEventListener("resize", alignWithTitle);
+			alignWithTitle();
+			setTimeout(alignWithTitle, 50);
+			setTimeout(alignWithTitle, 200);
+
+			// Đồng bộ và khóa chặt font-size 16px mọi trạng thái (kể cả khi Autofill kích hoạt ngầm)
+			function enforceConsistentFont(input) {
+				if (!input) return;
+				input.style.fontSize = "16px";
+			}
+
+			[usrInput, pwdInput].forEach(function (input) {
+				if (!input) return;
+				input.addEventListener("animationstart", function (e) {
+					if (e.animationName === "autofill-lock") {
+						enforceConsistentFont(input);
+					}
+				});
+				input.addEventListener("change", function () { enforceConsistentFont(input); });
+				input.addEventListener("input", function () { enforceConsistentFont(input); });
+				enforceConsistentFont(input);
+			});
+
+			setTimeout(function () {
+				enforceConsistentFont(usrInput);
+				enforceConsistentFont(pwdInput);
+			}, 50);
+			setTimeout(function () {
+				enforceConsistentFont(usrInput);
+				enforceConsistentFont(pwdInput);
+			}, 300);
+
+			toggleBtn.addEventListener("click", function () {
+				var isPassword = pwdInput.type === "password";
+				pwdInput.type = isPassword ? "text" : "password";
+				toggleBtn.innerHTML = isPassword
+					? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>'
+					: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+			});
+
+			function showError(msg) {
+				alertBox.textContent = msg;
+				alertBox.classList.add("show");
+				submitBtn.disabled = false;
+				submitBtn.classList.remove("loading");
+			}
+
+			function clearError() {
+				alertBox.textContent = "";
+				alertBox.classList.remove("show");
 			}
 
 			form.addEventListener("submit", async function (e) {
 				e.preventDefault();
-				errEl.hidden = true;
-				errEl.textContent = "";
-				btn.disabled = true;
+				clearError();
+
+				var usr = (usrInput.value || "").trim();
+				var pwd = pwdInput.value || "";
+
+				if (!usr || !pwd) {
+					showError("Vui lòng nhập số điện thoại và mật khẩu.");
+					return;
+				}
+
+				submitBtn.disabled = true;
+				submitBtn.classList.add("loading");
+
 				try {
 					var res = await fetch("/api/method/login", {
 						method: "POST",
 						headers: { "Content-Type": "application/x-www-form-urlencoded" },
-						body: new URLSearchParams(new FormData(form)),
+						body: new URLSearchParams({ usr: usr, pwd: pwd }),
 					});
+
 					var data = await res.json();
 					if (res.ok && data.message === "Logged In") {
-						var redirectTo = new URLSearchParams(window.location.search).get("redirect-to") || "/portal";
-						window.location.href = redirectTo;
+						var params = new URLSearchParams(window.location.search);
+						var redirect = params.get("redirect-to") || "/app";
+						window.location.href = redirect;
 					} else {
-						fail("Tài khoản hoặc mật khẩu không chính xác.");
+						var errMsg = "Số điện thoại hoặc mật khẩu không chính xác.";
+						if (data && data._server_messages) {
+							try {
+								var msgs = JSON.parse(data._server_messages);
+								if (msgs.length > 0) {
+									var parsed = JSON.parse(msgs[0]);
+									if (parsed.message) errMsg = parsed.message;
+								}
+							} catch (_) {}
+						}
+						showError(errMsg);
 					}
 				} catch (err) {
-					fail("Không thể kết nối đến máy chủ. Vui lòng thử lại.");
+					showError("Không thể kết nối tới máy chủ. Vui lòng kiểm tra lại mạng.");
 				}
 			});
 		}());

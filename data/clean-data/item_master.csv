@@ -1,0 +1,276 @@
+﻿item_code,item_name,item_group,stock_uom,disabled,is_stock_item,is_sales_item,is_purchase_item,customer,customer_ref_code,description
+NGCS-00001,NGCS Nhỏ Đỏ - Đam Mê,Túi Nước Giặt Có Sẵn (NGCS),Túi,0,1,1,0,,,"Phôi túi nước giặt đáy đứng size nhỏ (1.8L - 2.4L), 4 lớp PET/MPET/PA/PE sữa dày 220mic, gắn vòi 16mm, in sẵn màu Đỏ (Hương Đam Mê). In lụa lần 2 brandname của khách khi có đơn hàng."
+NGCS-00002,NGCS Nhỏ Xanh - Hoa Hồng,Túi Nước Giặt Có Sẵn (NGCS),Túi,0,1,1,0,,,"Phôi túi nước giặt đáy đứng size nhỏ (1.8L - 2.4L), 4 lớp PET/MPET/PA/PE sữa dày 220mic, gắn vòi 16mm, in sẵn màu Xanh (Hương Hoa Hồng). In lụa lần 2 brandname của khách khi có đơn hàng."
+NGCS-00003,NGCS Nhỏ Tím - Nước Hoa,Túi Nước Giặt Có Sẵn (NGCS),Túi,0,1,1,0,,,"Phôi túi nước giặt đáy đứng size nhỏ (1.8L - 2.4L), 4 lớp PET/MPET/PA/PE sữa dày 220mic, gắn vòi 16mm, in sẵn màu Tím (Hương Nước Hoa). In lụa lần 2 brandname của khách khi có đơn hàng."
+NGCS-00004,NGCS Nhỏ Hồng - Cá Tính,Túi Nước Giặt Có Sẵn (NGCS),Túi,0,1,1,0,,,"Phôi túi nước giặt đáy đứng size nhỏ (1.8L - 2.4L), 4 lớp PET/MPET/PA/PE sữa dày 220mic, gắn vòi 16mm, in sẵn màu Hồng (Hương Cá Tính). In lụa lần 2 brandname của khách khi có đơn hàng."
+NGCS-00005,NGCS Nhỏ Vàng - Ban Mai,Túi Nước Giặt Có Sẵn (NGCS),Túi,0,1,1,0,,,"Phôi túi nước giặt đáy đứng size nhỏ (1.8L - 2.4L), 4 lớp PET/MPET/PA/PE sữa dày 220mic, gắn vòi 16mm, in sẵn màu Vàng (Hương Nắng Ban Mai). In lụa lần 2 brandname của khách khi có đơn hàng."
+NGCS-00006,NGCS Trung Đỏ - Đam Mê,Túi Nước Giặt Có Sẵn (NGCS),Túi,0,1,1,0,,,"Phôi túi nước giặt đáy đứng size trung (3 - 3.6Kg), 3 lớp PET//PA/PE sữa dày 230mic, KT 280x340mm, gắn vòi 16mm, in sẵn màu Đỏ (Hương Đam Mê). In lụa lần 2 brandname của khách khi có đơn hàng."
+NGCS-00007,NGCS Trung Xanh - Hoa Hồng,Túi Nước Giặt Có Sẵn (NGCS),Túi,0,1,1,0,,,"Phôi túi nước giặt đáy đứng size trung (3 - 3.6Kg), 3 lớp PET//PA/PE sữa dày 230mic, KT 280x340mm, gắn vòi 16mm, in sẵn màu Xanh (Hương Hoa Hồng). In lụa lần 2 brandname của khách khi có đơn hàng."
+NGCS-00008,NGCS Trung Tím - Nước Hoa,Túi Nước Giặt Có Sẵn (NGCS),Túi,0,1,1,0,,,"Phôi túi nước giặt đáy đứng size trung (3 - 3.6Kg), 3 lớp PET//PA/PE sữa dày 230mic, KT 280x340mm, gắn vòi 16mm, in sẵn màu Tím (Hương Nước Hoa). In lụa lần 2 brandname của khách khi có đơn hàng."
+NGCS-00009,NGCS Trung Hồng - Cá Tính,Túi Nước Giặt Có Sẵn (NGCS),Túi,0,1,1,0,,,"Phôi túi nước giặt đáy đứng size trung (3 - 3.6Kg), 3 lớp PET//PA/PE sữa dày 230mic, KT 280x340mm, gắn vòi 16mm, in sẵn màu Hồng (Hương Cá Tính). In lụa lần 2 brandname của khách khi có đơn hàng."
+NGCS-00010,NGCS Trung Vàng - Ban Mai,Túi Nước Giặt Có Sẵn (NGCS),Túi,0,1,1,0,,,"Phôi túi nước giặt đáy đứng size trung (3 - 3.6Kg), 3 lớp PET//PA/PE sữa dày 230mic, KT 280x340mm, gắn vòi 16mm, in sẵn màu Vàng (Hương Nắng Ban Mai). In lụa lần 2 brandname của khách khi có đơn hàng."
+NGCS-00011,NGCS Lớn Đỏ - Đam Mê,Túi Nước Giặt Có Sẵn (NGCS),Túi,0,1,1,0,,,"Phôi túi nước giặt đáy đứng size lớn (3.5L - 5Lit), 4 lớp PET/MPET/PA/PE sữa dày 250mic, gắn vòi 16mm, in sẵn màu Đỏ (Hương Đam Mê). In lụa lần 2 brandname của khách khi có đơn hàng."
+NGCS-00012,NGCS Lớn Xanh - Hoa Hồng,Túi Nước Giặt Có Sẵn (NGCS),Túi,0,1,1,0,,,"Phôi túi nước giặt đáy đứng size lớn (3.5L - 5Lit), 4 lớp PET/MPET/PA/PE sữa dày 250mic, gắn vòi 16mm, in sẵn màu Xanh (Hương Hoa Hồng). In lụa lần 2 brandname của khách khi có đơn hàng."
+NGCS-00013,NGCS Lớn Tím - Nước Hoa,Túi Nước Giặt Có Sẵn (NGCS),Túi,0,1,1,0,,,"Phôi túi nước giặt đáy đứng size lớn (3.5L - 5Lit), 4 lớp PET/MPET/PA/PE sữa dày 250mic, gắn vòi 16mm, in sẵn màu Tím (Hương Nước Hoa). In lụa lần 2 brandname của khách khi có đơn hàng."
+NGCS-00014,NGCS Lớn Hồng - Cá Tính,Túi Nước Giặt Có Sẵn (NGCS),Túi,0,1,1,0,,,"Phôi túi nước giặt đáy đứng size lớn (3.5L - 5Lit), 4 lớp PET/MPET/PA/PE sữa dày 250mic, gắn vòi 16mm, in sẵn màu Hồng (Hương Cá Tính). In lụa lần 2 brandname của khách khi có đơn hàng."
+NGCS-00015,NGCS Lớn Vàng - Ban Mai,Túi Nước Giặt Có Sẵn (NGCS),Túi,0,1,1,0,,,"Phôi túi nước giặt đáy đứng size lớn (3.5L - 5Lit), 4 lớp PET/MPET/PA/PE sữa dày 250mic, gắn vòi 16mm, in sẵn màu Vàng (Hương Nắng Ban Mai). In lụa lần 2 brandname của khách khi có đơn hàng."
+TMD-00001,HD quai thỏ 17x25,Túi Màng Đơn,Kg,0,1,1,0,,,Túi HD trắng sữa quai thỏ 17x25cm dày 4-5zem (Mẫu in ví dụ: BV Vạn An)
+TMD-00002,HD quai thỏ 26x40,Túi Màng Đơn,Kg,0,1,1,0,,,Túi HD trắng sữa quai thỏ 26x40cm dày 4-5zem (Mẫu in ví dụ: BV Vạn An)
+TMD-00003,HD quai thỏ 30x50,Túi Màng Đơn,Kg,0,1,1,0,,,Túi HD trắng sữa quai thỏ 30x50cm xếp hông (Mẫu in ví dụ: Hải sản Ốc Kiều)
+TMD-00004,HD quai thỏ 26x43,Túi Màng Đơn,Kg,0,1,1,0,,,Túi HD trắng sữa quai thỏ 26x43cm đựng 3kg (Mẫu in ví dụ: Ms. Barun)
+TMD-00005,HD quai thỏ 30x60,Túi Màng Đơn,Kg,0,1,1,0,,,Túi HD trắng sữa quai thỏ 30x60cm đựng 5kg (Mẫu in ví dụ: Ms. Barun)
+TMD-00006,HD quai thỏ 30x20x30,Túi Màng Đơn,Kg,0,1,1,0,,,Túi HD trắng sữa xếp hông đáy vuông 30x20x30cm mẫu mới (Mẫu in ví dụ: BV Vạn An)
+TMD-00007,PE hột xoài 20x30,Túi Màng Đơn,Kg,0,1,1,0,,,"Túi PE hột xoài trắng sữa 20x30cm (Mẫu in ví dụ: MTBC An Hữu, MTBC Bình Phước, MTBC Vĩnh Long)"
+TMD-00008,PE hột xoài 17x22,Túi Màng Đơn,Kg,0,1,1,0,,,Túi PE hột xoài trắng sữa 17x22cm (Mẫu in ví dụ: PK Huỳnh Minh Thư)
+TMD-00009,PE hột xoài 30x42,Túi Màng Đơn,Kg,0,1,1,0,,,Túi PE hột xoài trắng sữa 30x42cm (Mẫu in ví dụ: Nhựa Hà Linh)
+TMD-00010,PP 32x45,Túi Màng Đơn,Kg,0,1,1,0,,,Túi PP trong suốt 32x45cm dày 7zem (Mẫu in ví dụ: LOTUS - Đặng Diều Tâm)
+TMD-00011,PE 50x100,Túi Màng Đơn,Kg,0,1,1,0,,,Túi PE trơn khổ lớn 50x100cm dùng bọc nệm (Ví dụ: Nệm Phong Nguyên)
+TMD-00012,PE Cây Đàn,Túi Màng Đơn,Kg,0,1,1,0,,,Túi phôi màng đơn Cây Đàn (Mẫu in ví dụ: JNS Việt Nam)
+TP-00001,888 3.2Kg Hồng,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,CÔNG TY CỔ PHẦN DS COSMETIC,888-3.2KG-HONG,"Túi màng ghép 3.2Kg đặt riêng cho CÔNG TY CỔ PHẦN DS COSMETIC, cấu trúc PET//PA/PE sữa dày 230mic, KT 280x340mm. Mẫu in: Hồng (Phấn Thơm)."
+TP-00002,888 3.2Kg Tím,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,CÔNG TY CỔ PHẦN DS COSMETIC,888-3.2KG-TIM,"Túi màng ghép 3.2Kg đặt riêng cho CÔNG TY CỔ PHẦN DS COSMETIC, cấu trúc PET//PA/PE sữa dày 230mic, KT 280x340mm. Mẫu in: Tím (Huyền Bí)."
+TP-00003,888 3.2Kg Đỏ,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,CÔNG TY CỔ PHẦN DS COSMETIC,888-3.2KG-DO,"Túi màng ghép 3.2Kg đặt riêng cho CÔNG TY CỔ PHẦN DS COSMETIC, cấu trúc PET//PA/PE sữa dày 230mic, KT 280x340mm. Mẫu in: Đỏ (Đam Mê)."
+TP-00004,888 2Kg Hồng,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,CÔNG TY CỔ PHẦN DS COSMETIC,888-2KG-HONG,"Túi màng ghép 2Kg đặt riêng cho CÔNG TY CỔ PHẦN DS COSMETIC, cấu trúc PET//PA/PE sữa dày 210mic, KT 240x300mm. Mẫu in: Hồng."
+TP-00005,888 2Kg Tím,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,CÔNG TY CỔ PHẦN DS COSMETIC,888-2KG-TIM,"Túi màng ghép 2Kg đặt riêng cho CÔNG TY CỔ PHẦN DS COSMETIC, cấu trúc PET//PA/PE sữa dày 210mic, KT 240x300mm. Mẫu in: Tím."
+TP-00006,888 2Kg Đỏ,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,CÔNG TY CỔ PHẦN DS COSMETIC,888-2KG-DO,"Túi màng ghép 2Kg đặt riêng cho CÔNG TY CỔ PHẦN DS COSMETIC, cấu trúc PET//PA/PE sữa dày 210mic, KT 240x300mm. Mẫu in: Đỏ."
+TP-00007,888 0.6Kg Hồng,Túi Màng Ghép Đặt Riêng,Túi,1,1,0,0,CÔNG TY CỔ PHẦN DS COSMETIC,888-0.6KG-HONG,"[NGỪNG BÁN THƯƠNG MẠI] Túi màng ghép 0.6Kg đặt riêng cho CÔNG TY CỔ PHẦN DS COSMETIC, cấu trúc PET//PA/PE dày 180mic, KT 180x240mm. Mẫu in: Hồng."
+TP-00008,888 0.6Kg Tím,Túi Màng Ghép Đặt Riêng,Túi,1,1,0,0,CÔNG TY CỔ PHẦN DS COSMETIC,888-0.6KG-TIM,"[NGỪNG BÁN THƯƠNG MẠI] Túi màng ghép 0.6Kg đặt riêng cho CÔNG TY CỔ PHẦN DS COSMETIC, cấu trúc PET//PA/PE dày 180mic, KT 180x240mm. Mẫu in: Tím."
+TP-00009,888 0.6Kg Đỏ,Túi Màng Ghép Đặt Riêng,Túi,1,1,0,0,CÔNG TY CỔ PHẦN DS COSMETIC,888-0.6KG-DO,"[NGỪNG BÁN THƯƠNG MẠI] Túi màng ghép 0.6Kg đặt riêng cho CÔNG TY CỔ PHẦN DS COSMETIC, cấu trúc PET//PA/PE dày 180mic, KT 180x240mm. Mẫu in: Đỏ."
+TP-00010,NLS 888 0.6Kg,Túi Màng Ghép Đặt Riêng,Túi,1,1,0,0,CÔNG TY CỔ PHẦN DS COSMETIC,888-NLS-0.6KG,"[NGỪNG BÁN THƯƠNG MẠI] Túi màng ghép 0.6Kg đặt riêng cho CÔNG TY CỔ PHẦN DS COSMETIC, cấu trúc PET//PE dày 180mic, KT 180x240mm. Mẫu in: Nước Lau Sàn."
+TP-00011,NRC 888 0.6Kg,Túi Màng Ghép Đặt Riêng,Túi,1,1,0,0,CÔNG TY CỔ PHẦN DS COSMETIC,888-NRC-0.6KG,"[NGỪNG BÁN THƯƠNG MẠI] Túi màng ghép 0.6Kg đặt riêng cho CÔNG TY CỔ PHẦN DS COSMETIC, cấu trúc PET//PE dày 180mic, KT 180x240mm. Mẫu in: Nước Rửa Chén."
+TP-00012,Minh Râu 3.2Kg Tím,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,CÔNG TY CỔ PHẦN DS COSMETIC,MINHRAU-3.2KG-TIM,"Túi màng ghép 3.2Kg đặt riêng cho CÔNG TY CỔ PHẦN DS COSMETIC, cấu trúc PET//PA/PE sữa dày 230mic, KT 280x340mm. Mẫu in: Tím."
+TP-00013,Minh Râu 3.2Kg Hồng,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,CÔNG TY CỔ PHẦN DS COSMETIC,MINHRAU-3.2KG-HONG,"Túi màng ghép 3.2Kg đặt riêng cho CÔNG TY CỔ PHẦN DS COSMETIC, cấu trúc PET//PA/PE sữa dày 230mic, KT 280x340mm. Mẫu in: Hồng."
+TP-00014,Lamy 2Kg Vàng,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,CÔNG TY CỔ PHẦN ECO WIPES VIỆT NAM,LAMY-2KG-VANG,"Túi màng ghép 2Kg đặt riêng cho CÔNG TY CỔ PHẦN ECO WIPES VIỆT NAM, cấu trúc PET//PA/PE sữa dày 210mic, KT 240x300mm. Mẫu in: Vàng."
+TP-00015,Lamy 2Kg Xanh,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,CÔNG TY CỔ PHẦN ECO WIPES VIỆT NAM,LAMY-2KG-XANH,"Túi màng ghép 2Kg đặt riêng cho CÔNG TY CỔ PHẦN ECO WIPES VIỆT NAM, cấu trúc PET//PA/PE sữa dày 210mic, KT 240x300mm. Mẫu in: Xanh."
+TP-00016,BABA 3.6Kg,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,CÔNG TY TNHH MTV SX TM XNK ANH PHÁT,BABA-3.6KG,"Túi màng ghép 3.6Kg đặt riêng cho CÔNG TY TNHH MTV SX TM XNK ANH PHÁT, cấu trúc PET/PA/PE sữa dày 230mic, KT 280x350mm. Mẫu in: BABA."
+TP-00017,Vietcoat 5L,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,CÔNG TY TNHH CÔNG NGHỆ VẬT LIỆU TIÊN PHONG VIETCOAT,VIETCOAT-5L,"Túi màng ghép 5L đặt riêng cho CÔNG TY TNHH CÔNG NGHỆ VẬT LIỆU TIÊN PHONG VIETCOAT, cấu trúc PET/PA/PE dày 250mic, KT 300x380mm. Mẫu in: Keo Dán Gạch."
+TP-00018,Pho Mai KOVAA 200g,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,CÔNG TY TNHH SX THƯƠNG MẠI BAO BÌ KOVAA,KOVAA-200G,"Túi màng ghép 200g đặt riêng cho CÔNG TY TNHH SX THƯƠNG MẠI BAO BÌ KOVAA, cấu trúc PET/AL/PE dày 120mic, KT 120x180mm. Mẫu in: Xốt Pho Mai."
+TP-00019,TopGia MBTP,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,CÔNG TY TNHH PHONG TÍN,TOPGIA-MBTP,"Túi màng ghép Tiêu chuẩn đặt riêng cho CÔNG TY TNHH PHONG TÍN, cấu trúc PET/PE dày 80mic, KT 200x300mm. Mẫu in: Màng Bọc Thực Phẩm."
+TP-00020,TopGia 1L Hoa Nắng,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,CÔNG TY TNHH PHONG TÍN,TOPGIA-1L-HN,"Túi màng ghép 1L đặt riêng cho CÔNG TY TNHH PHONG TÍN, cấu trúc PET/PA/PE dày 190mic, KT 180x250mm. Mẫu in: Hoa Nắng."
+TP-00021,TopGia 1L Đắm Say,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,CÔNG TY TNHH PHONG TÍN,TOPGIA-1L-DS,"Túi màng ghép 1L đặt riêng cho CÔNG TY TNHH PHONG TÍN, cấu trúc PET/PA/PE dày 190mic, KT 180x250mm. Mẫu in: Đắm Say."
+TP-00022,Softy 3L Tím,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,CTY TNHH SX - XNK AMYCO,SOFTY-3L-TIM,"Túi màng ghép 3L đặt riêng cho CTY TNHH SX - XNK AMYCO, cấu trúc PET/PA/PE sữa dày 230mic, KT 280x340mm. Mẫu in: Nền Tím."
+TP-00023,Sachpoong 3.2Kg,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,Khách hàng Sachpoong,SACHPOONG-3.2KG,"Túi màng ghép 3.2Kg đặt riêng cho Khách hàng Sachpoong, cấu trúc PET//PA/PE sữa dày 230mic, KT 280x340mm. Mẫu in: Sachpoong 3.2Kg."
+TP-00024,Sachpoong 0.6Kg,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,Khách hàng Sachpoong,SACHPOONG-0.6KG,"Túi màng ghép 0.6Kg đặt riêng cho Khách hàng Sachpoong, cấu trúc PET//PA/PE dày 180mic, KT 180x240mm. Mẫu in: Sachpoong 0.6Kg."
+TP-00025,Raptor Clean 0.6Kg,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,Khách hàng Raptor Clean,RAPTOR-0.6KG,"Túi màng ghép 0.6Kg đặt riêng cho Khách hàng Raptor Clean, cấu trúc PET//PA/PE dày 180mic, KT 180x240mm. Mẫu in: Raptor Clean 0.6Kg."
+TP-00026,Trần Quân 2Kg,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,Khách hàng Trần Quân,TRANQUAN-2KG,"Túi màng ghép 2Kg đặt riêng cho Khách hàng Trần Quân, cấu trúc PET//PA/PE sữa dày 210mic, KT 240x300mm. Mẫu in: Trần Quân 2Kg."
+TP-00027,DPClean 0.6Kg,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,Khách hàng DPClean,DPCLEAN-0.6KG,"Túi màng ghép 0.6Kg đặt riêng cho Khách hàng DPClean, cấu trúc PET//PA/PE dày 180mic, KT 180x240mm. Mẫu in: DPClean 0.6Kg."
+TP-00028,Bluum 3Kg Đen,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,Khách hàng Bluum,BLUUM-3KG-DEN,"Túi màng ghép 3Kg đặt riêng cho Khách hàng Bluum, cấu trúc PET//PA/PE sữa dày 230mic, KT 280x340mm. Mẫu in: Đen."
+TP-00029,Bluum 3Kg Xanh,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,Khách hàng Bluum,BLUUM-3KG-XANH,"Túi màng ghép 3Kg đặt riêng cho Khách hàng Bluum, cấu trúc PET//PA/PE sữa dày 230mic, KT 280x340mm. Mẫu in: Xanh."
+TP-00030,Premium 3.2Kg Tím,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,Khách hàng Premium,PREMIUM-3.2KG-TIM,"Túi màng ghép 3.2Kg đặt riêng cho Khách hàng Premium, cấu trúc PET//PA/PE sữa dày 230mic, KT 280x340mm. Mẫu in: Tím."
+TP-00031,Premium 3.2Kg Đỏ,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,Khách hàng Premium,PREMIUM-3.2KG-DO,"Túi màng ghép 3.2Kg đặt riêng cho Khách hàng Premium, cấu trúc PET//PA/PE sữa dày 230mic, KT 280x340mm. Mẫu in: Đỏ."
+TP-00032,Yumi Care 3.6L,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,Khách hàng Yumi Care,YUMICARE-3.6L,"Túi màng ghép 3.6L đặt riêng cho Khách hàng Yumi Care, cấu trúc PET//PA/PE sữa dày 230mic, KT 280x350mm. Mẫu in: Yumi Care 3.6L."
+TP-00033,Sofia 3Kg Xanh,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,Khách hàng Sofia,SOFIA-3KG-XANH,"Túi màng ghép 3Kg đặt riêng cho Khách hàng Sofia, cấu trúc PET//PA/PE sữa dày 230mic, KT 280x340mm. Mẫu in: Xanh (Hương LyLy)."
+TP-00034,Clean 3.6L,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,Khách hàng Clean,CLEAN-3.6L,"Túi màng ghép 3.6L đặt riêng cho Khách hàng Clean, cấu trúc PET//PA/PE sữa dày 230mic, KT 280x350mm. Mẫu in: Clean 3.6L."
+TP-00035,Clean 2L,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,Khách hàng Clean,CLEAN-2L,"Túi màng ghép 2L đặt riêng cho Khách hàng Clean, cấu trúc PET//PA/PE sữa dày 210mic, KT 240x300mm. Mẫu in: Clean 2L."
+TP-00036,Futa True 3Kg,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,Khách hàng Futa True,FUTA-3KG,"Túi màng ghép 3Kg đặt riêng cho Khách hàng Futa True, cấu trúc PET//PA/PE sữa dày 230mic, KT 280x340mm. Mẫu in: Futa True 3Kg."
+TP-00037,Chakari Louis 3.2Kg,Túi Màng Ghép Đặt Riêng,Túi,0,1,1,0,Khách hàng Chakari,CHAKARI-3.2KG,"Túi màng ghép 3.2Kg đặt riêng cho Khách hàng Chakari, cấu trúc PET//PA/PE sữa dày 230mic, KT 280x340mm. Mẫu in: Chakari Louis 3.2Kg."
+TRUC-G4010806,Trục Sachpoong 3.2Kg (G4010806),Trục In Ống Đồng,Cây,0,1,1,1,,G4010806,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT SACHPOONG 3.2KG. Mã trục: G4010806, Kho: VẠN PHÁT, SL: 5.0 cây. "
+TRUC-G4010805,Trục Sachpoong 0.6Kg (G4010805),Trục In Ống Đồng,Cây,0,1,1,1,,G4010805,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT SACHPOONG 0.6KG. Mã trục: G4010805, Kho: VẠN PHÁT, SL: 5.0 cây. "
+TRUC-G4010947,Trục Raptor Clean 0.6Kg (G4010947),Trục In Ống Đồng,Cây,0,1,1,1,,G4010947,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT RAPTOR CLEAN 0.6KG. Mã trục: G4010947, Kho: VẠN PHÁT, SL: 7.0 cây. "
+TRUC-G4011425,Trục Topgia Hoa Nắng (G4011425),Trục In Ống Đồng,Cây,0,1,1,1,,G4011425,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT TOPGIA HOA NẮNG 1L. Mã trục: G4011425, Kho: KIẾN TÂM, SL: 6.0 cây. "
+TRUC-G4011427,Trục Topgia Đắm Say (G4011427),Trục In Ống Đồng,Cây,0,1,1,1,,G4011427,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT TOPGIA ĐẮM SAY 1L. Mã trục: G4011427, Kho: KIẾN TÂM, SL: 6.0 cây. "
+TRUC-G4011409,Trục Trần Quân 2Kg (G4011409),Trục In Ống Đồng,Cây,0,1,1,1,,G4011409,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT TRẦN QUÂN 2KG. Mã trục: G4011409, Kho: VẠN PHÁT, SL: 4.0 cây. "
+TRUC-G4011542,Trục Dpclean 0.6Kg (G4011542),Trục In Ống Đồng,Cây,0,1,1,1,,G4011542,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT DPCLEAN 0.6KG. Mã trục: G4011542, Kho: VẠN PHÁT, SL: 5.0 cây. "
+TRUC-G4006940,Trục 888 3.2Kg Hương (G4006940),Trục In Ống Đồng,Cây,0,1,1,1,,G4006940,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT 888 3.2KG HƯƠNG PHẤN THƠM - HỒNG. Mã trục: G4006940, Kho: KIẾN TÂM, SL: 5.0 cây. "
+TRUC-G4006961,Trục 888 3.2Kg Hương (G4006961),Trục In Ống Đồng,Cây,0,1,1,1,,G4006961,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT 888 3.2KG HƯƠNG HUYỀN BÍ - TÍM. Mã trục: G4006961, Kho: KIẾN TÂM, SL: 5.0 cây. "
+TRUC-G4006960,Trục 888 3.2Kg Hương (G4006960),Trục In Ống Đồng,Cây,0,1,1,1,,G4006960,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT 888 3.2KG HƯƠNG ĐAM MÊ - ĐỎ. Mã trục: G4006960, Kho: VẠN PHÁT, SL: 5.0 cây. "
+TRUC-G4012179,Trục Bluum 3Kg Đen (G4012179),Trục In Ống Đồng,Cây,0,1,1,1,,G4012179,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT BLUUM 3KG ĐEN. Mã trục: G4012179, Kho: VẠN PHÁT, SL: 5.0 cây. "
+TRUC-G4012417,Trục 888 0.6Kg (G4012417),Trục In Ống Đồng,Cây,0,1,1,1,,G4012417,"Bộ trục in ống đồng: TÚI NƯỚC LAU SÀN 888 0.6KG. Mã trục: G4012417, Kho: VẠN PHÁT, SL: 6.0 cây. "
+TRUC-G4012418,Trục 888 0.6Kg (G4012418),Trục In Ống Đồng,Cây,0,1,1,1,,G4012418,"Bộ trục in ống đồng: TÚI NƯỚC RỬA CHÉN 888 0.6KG. Mã trục: G4012418, Kho: VẠN PHÁT, SL: 5.0 cây. "
+TRUC-G4012676,Trục Không Tên (G4012676),Trục In Ống Đồng,Cây,0,1,1,1,,G4012676,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT KHÔNG TÊN (NỀN HỒNG + NỀN TÍM). Mã trục: G4012676, Kho: TUỆ NHI, SL: 5.0 cây. "
+TRUC-G4005887,Trục Minh Râu 3.2Kg (G4005887),Trục In Ống Đồng,Cây,0,1,1,1,,G4005887,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT MINH RÂU 3.2KG TÍM. Mã trục: G4005887, Kho: KIẾN TÂM, SL: 6.0 cây. "
+TRUC-G4005883,Trục Minh Râu 3.2Kg (G4005883),Trục In Ống Đồng,Cây,0,1,1,1,,G4005883,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT MINH RÂU 3.2KG HỒNG. Mã trục: G4005883, Kho: KIẾN TÂM, SL: 6.0 cây. "
+TRUC-G4012178,Trục Bluum 3Kg Xanh (G4012178),Trục In Ống Đồng,Cây,0,1,1,1,,G4012178,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT BLUUM 3KG XANH. Mã trục: G4012178, Kho: VẠN PHÁT, SL: 6.0 cây. "
+TRUC-Z437761,Trục Yaourt Hoa Hồng (Z437761),Trục In Ống Đồng,Cây,0,1,1,1,,Z437761,"Bộ trục in ống đồng: TÚI YAOURT HOA HỒNG. Mã trục: Z437761, Kho: VẠN PHÁT, SL: 2.0 cây. "
+TRUC-G4005877,Trục 888 0.6Kg - (G4005877),Trục In Ống Đồng,Cây,0,1,1,1,,G4005877,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT 888 0.6KG - ĐỎ. Mã trục: G4005877, Kho: VẠN PHÁT, SL: 6.0 cây. "
+TRUC-G4006655,Trục 888 0.6Kg - (G4006655),Trục In Ống Đồng,Cây,0,1,1,1,,G4006655,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT 888 0.6KG - TÍM. Mã trục: G4006655, Kho: VẠN PHÁT, SL: 5.0 cây. "
+TRUC-G4006660,Trục 888 0.6Kg - (G4006660),Trục In Ống Đồng,Cây,0,1,1,1,,G4006660,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT 888 0.6KG - HỒNG. Mã trục: G4006660, Kho: VẠN PHÁT, SL: 5.0 cây. "
+TRUC-G4005897,Trục 888 2Kg - (G4005897),Trục In Ống Đồng,Cây,0,1,1,1,,G4005897,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT 888 2KG - ĐỎ. Mã trục: G4005897, Kho: VẠN PHÁT, SL: 5.0 cây. "
+TRUC-G4005893,Trục 888 2Kg - (G4005893),Trục In Ống Đồng,Cây,0,1,1,1,,G4005893,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT 888 2KG - TÍM. Mã trục: G4005893, Kho: VẠN PHÁT, SL: 5.0 cây. "
+TRUC-G4006677,Trục 888 2Kg - (G4006677),Trục In Ống Đồng,Cây,0,1,1,1,,G4006677,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT 888 2KG - HỒNG. Mã trục: G4006677, Kho: VẠN PHÁT, SL: 5.0 cây. "
+TRUC-G4006905,Trục Premium 3.2Kg Tím (G4006905),Trục In Ống Đồng,Cây,0,1,1,1,,G4006905,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT PREMIUM 3.2KG TÍM. Mã trục: G4006905, Kho: KIẾN TÂM, SL: 5.0 cây. "
+TRUC-G4006924,Trục Premium 3.2Kg Đỏ (G4006924),Trục In Ống Đồng,Cây,0,1,1,1,,G4006924,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT PREMIUM 3.2KG ĐỎ. Mã trục: G4006924, Kho: VẠN PHÁT, SL: 5.0 cây. "
+TRUC-Z417582,Trục Masa (Z417582),Trục In Ống Đồng,Cây,0,1,1,1,,Z417582,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT MASA. Mã trục: Z417582, Kho: VẠN PHÁT, SL: 5.0 cây. "
+TRUC-G631383,Trục Yumi Care 3.6L (G631383),Trục In Ống Đồng,Cây,0,1,1,1,,G631383,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT YUMI CARE 3.6L. Mã trục: G631383, Kho: VẠN PHÁT, SL: 5.0 cây. "
+TRUC-G4002697,Trục Sofia 3Kg Xanh (G4002697),Trục In Ống Đồng,Cây,0,1,1,1,,G4002697,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT SOFIA 3KG XANH (HƯƠNG LYLY). Mã trục: G4002697, Kho: VẠN PHÁT, SL: 5.0 cây. "
+TRUC-Z418556,Trục Clean (Cleanz) 3.6L (Z418556),Trục In Ống Đồng,Cây,0,1,1,1,,Z418556,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT CLEAN (CLEANZ) 3.6L. Mã trục: Z418556, Kho: VẠN PHÁT, SL: 8.0 cây. "
+TRUC-G630657,Trục Clean (Cleanz) 2L (G630657),Trục In Ống Đồng,Cây,0,1,1,1,,G630657,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT CLEAN (CLEANZ) 2L. Mã trục: G630657, Kho: VẠN PHÁT, SL: 8.0 cây. "
+TRUC-G628929,Trục Mè Vỏ Minh (G628929),Trục In Ống Đồng,Cây,0,1,1,1,,G628929,"Bộ trục in ống đồng: TÚI MÈ VỎ MINH CHÂU 1KG. Mã trục: G628929, Kho: VẠN PHÁT, SL: 5.0 cây. "
+TRUC-G631044,Trục Cà Phê Bảo (G631044),Trục In Ống Đồng,Cây,0,1,1,1,,G631044,"Bộ trục in ống đồng: TÚI CÀ PHÊ BẢO TRÂN THƯỢNG HẠNG 500G. Mã trục: G631044, Kho: VẠN PHÁT, SL: 4.0 cây. "
+TRUC-G630788,Trục Cà Phê Việt (G630788),Trục In Ống Đồng,Cây,0,1,1,1,,G630788,"Bộ trục in ống đồng: CUỘN MÀNG CÀ PHÊ VIỆT FARM 16G. Mã trục: G630788, Kho: VẠN PHÁT, SL: 7.0 cây. "
+TRUC-G628231,Trục Thức Ăn Cho (G628231),Trục In Ống Đồng,Cây,0,1,1,1,,G628231,"Bộ trục in ống đồng: TÚI THỨC ĂN CHO CHIM 500G. Mã trục: G628231, Kho: VẠN PHÁT, SL: 5.0 cây. "
+TRUC-G628230,Trục Thức Ăn Cho (G628230),Trục In Ống Đồng,Cây,0,1,1,1,,G628230,"Bộ trục in ống đồng: TÚI THỨC ĂN CHO CHIM 200G. Mã trục: G628230, Kho: VẠN PHÁT, SL: 8.0 cây. "
+TRUC-G627954,Trục Muối Tôm Muối (G627954),Trục In Ống Đồng,Cây,0,1,1,1,,G627954,"Bộ trục in ống đồng: TÚI MUỐI TÔM MUỐI ỚT. Mã trục: G627954, Kho: VẠN PHÁT, SL: 5.0 cây. "
+TRUC-G630103,Trục Hạt Hướng Dương (G630103),Trục In Ống Đồng,Cây,0,1,1,1,,G630103,"Bộ trục in ống đồng: TÚI HẠT HƯỚNG DƯƠNG SẠCH RANG CỦI LOẠI ĐẶC BIỆT 500G. Mã trục: G630103, Kho: VẠN PHÁT, SL: 1.0 cây. "
+TRUC-G630102,Trục Hạt Hướng Dương (G630102),Trục In Ống Đồng,Cây,0,1,1,1,,G630102,"Bộ trục in ống đồng: TÚI HẠT HƯỚNG DƯƠNG SẠCH RANG CỦI LOẠI 500G. Mã trục: G630102, Kho: VẠN PHÁT, SL: 6.0 cây. "
+TRUC-G628207,Trục Đựng Tiêu 50G (G628207),Trục In Ống Đồng,Cây,0,1,1,1,,G628207,"Bộ trục in ống đồng: CUỘN MÀNG ĐỰNG TIÊU 50G. Mã trục: G628207, Kho: VẠN PHÁT, SL: 5.0 cây. "
+TRUC-Z417825,Trục Sữa Nutri (Z417825),Trục In Ống Đồng,Cây,0,1,1,1,,Z417825,"Bộ trục in ống đồng: CUỘN MÀNG SỮA NUTRI. Mã trục: Z417825, Kho: VẠN PHÁT, SL: 9.0 cây. "
+TRUC-G630368,Trục Bột Lá Tía (G630368),Trục In Ống Đồng,Cây,0,1,1,1,,G630368,"Bộ trục in ống đồng: CUỘN MÀNG BỘT LÁ TÍA TÔ, BỘT CẦN TÂY 5G. Mã trục: G630368, Kho: VẠN PHÁT, SL: 6.0 cây. "
+TRUC-G628866,Trục Cơm Cháy Tường (G628866),Trục In Ống Đồng,Cây,0,1,1,1,,G628866,"Bộ trục in ống đồng: TÚI ĐỰNG CƠM CHÁY TƯỜNG DƯƠNG. Mã trục: G628866, Kho: VẠN PHÁT, SL: 3.0 cây. "
+TRUC-G630100,Trục Hạt Dưa Sạch (G630100),Trục In Ống Đồng,Cây,0,1,1,1,,G630100,"Bộ trục in ống đồng: TÚI HẠT DƯA SẠCH RANG CỦI 500G. Mã trục: G630100, Kho: VẠN PHÁT, SL: 6.0 cây. "
+TRUC-G630101,Trục Hạt Dưa Sạch (G630101),Trục In Ống Đồng,Cây,0,1,1,1,,G630101,"Bộ trục in ống đồng: TÚI HẠT DƯA SẠCH RANG CỦI LOẠI ĐẶC BIỆT 500G. Mã trục: G630101, Kho: VẠN PHÁT, SL: 1.0 cây. "
+TRUC-G630755,Trục Hạt Dưa Sạch (G630755),Trục In Ống Đồng,Cây,0,1,1,1,,G630755,"Bộ trục in ống đồng: TÚI HẠT DƯA SẠCH RANG CỦI 500G. Mã trục: G630755, Kho: VẠN PHÁT, SL: 6.0 cây. "
+TRUC-G630756,Trục Hạt Dưa Sạch (G630756),Trục In Ống Đồng,Cây,0,1,1,1,,G630756,"Bộ trục in ống đồng: TÚI HẠT DƯA SẠCH RANG CỦI LOẠI ĐẶC BIỆT 500G. Mã trục: G630756, Kho: VẠN PHÁT, SL: 1.0 cây. "
+TRUC-G630758,Trục Hướng Dương Sạch (G630758),Trục In Ống Đồng,Cây,0,1,1,1,,G630758,"Bộ trục in ống đồng: TÚI HƯỚNG DƯƠNG SẠCH RANG CỦI LOẠI ĐẶC BIỆT 500G. Mã trục: G630758, Kho: VẠN PHÁT, SL: 1.0 cây. "
+TRUC-G630757,Trục Hướng Dương Sạch (G630757),Trục In Ống Đồng,Cây,0,1,1,1,,G630757,"Bộ trục in ống đồng: TÚI HƯỚNG DƯƠNG SẠCH RANG CỦI LOẠI 500G. Mã trục: G630757, Kho: VẠN PHÁT, SL: 6.0 cây. "
+TRUC-G629977,Trục Cơm Cháy Chà (G629977),Trục In Ống Đồng,Cây,0,1,1,1,,G629977,"Bộ trục in ống đồng: TÚI CƠM CHÁY CHÀ BÔNG TÀI PHƯƠNG. Mã trục: G629977, Kho: VẠN PHÁT, SL: 3.0 cây. "
+TRUC-G631221,Trục Bánh Wawel (G631221),Trục In Ống Đồng,Cây,0,1,1,1,,G631221,"Bộ trục in ống đồng: TÚI BÁNH WAWEL. Mã trục: G631221, Kho: VẠN PHÁT, SL: 1.0 cây. "
+TRUC-G630072,Trục Bột Minh Châu (G630072),Trục In Ống Đồng,Cây,0,1,1,1,,G630072,"Bộ trục in ống đồng: CUỘN MÀNG BỘT MINH CHÂU. Mã trục: G630072, Kho: VẠN PHÁT, SL: 2.0 cây. "
+TRUC-G631016,Trục Bánh Solidarnosc (G631016),Trục In Ống Đồng,Cây,0,1,1,1,,G631016,"Bộ trục in ống đồng: TÚI BÁNH SOLIDARNOSC. Mã trục: G631016, Kho: VẠN PHÁT, SL: 1.0 cây. "
+TRUC-G627906,Trục Sữa Đậu Nành (G627906),Trục In Ống Đồng,Cây,0,1,1,1,,G627906,"Bộ trục in ống đồng: TÚI SỮA ĐẬU NÀNH. Mã trục: G627906, Kho: VẠN PHÁT, SL: 3.0 cây. "
+TRUC-G631015,Trục Bánh Feodora (G631015),Trục In Ống Đồng,Cây,0,1,1,1,,G631015,"Bộ trục in ống đồng: TÚI BÁNH FEODORA. Mã trục: G631015, Kho: VẠN PHÁT, SL: 1.0 cây. "
+TRUC-Z416438,Trục Ốc Cooked Whole (Z416438),Trục In Ống Đồng,Cây,0,1,1,1,,Z416438,"Bộ trục in ống đồng: TÚI ỐC COOKED WHOLE WHELK 1KG ( ZIPPER - KT 23.5*28). Mã trục: Z416438, Kho: VẠN PHÁT, SL: 7.0 cây. "
+TRUC-Z416476,Trục Sốt Gia Vị (Z416476),Trục In Ống Đồng,Cây,0,1,1,1,,Z416476,"Bộ trục in ống đồng: TÚI SỐT GIA VỊ IN 8 MÀU ( 2 MẪU/ TRỤC - PHỞ GÀ - NƯỚC CỐT HEO). Mã trục: Z416476, Kho: VẠN PHÁT, SL: 9.0 cây. "
+TRUC-Z433654,Trục Da Cá Sấy (Z433654),Trục In Ống Đồng,Cây,0,1,1,1,,Z433654,"Bộ trục in ống đồng: TÚI ĐỰNG DA CÁ SẤY KHÔ 100G ( ZIPPER ĐÁY ĐỨNG - IN PHỦ MỜ - KT : 18*26CM). Mã trục: Z433654, Kho: VẠN PHÁT, SL: 6.0 cây. "
+TRUC-Z416475,Trục Sốt Gia Vị (Z416475),Trục In Ống Đồng,Cây,0,1,1,1,,Z416475,"Bộ trục in ống đồng: TÚI SỐT GIA VỊ IN 7 MÀU (2 MẪU/TRỤC - PHỞ BÒ - BÚN BÒ HUẾ) TRỤC CŨ. Mã trục: Z416475, Kho: VẠN PHÁT, SL: 7.0 cây. "
+TRUC-Z434004,"Trục Màng "" Nước (Z434004)",Trục In Ống Đồng,Cây,0,1,1,1,,Z434004,"Bộ trục in ống đồng: MÀNG "" NƯỚC CỐT HEO "" IN 8 MÀU 138G (KT 24CM). Mã trục: Z434004, Kho: VẠN PHÁT, SL: 8.0 cây. "
+TRUC-Z434003,"Trục Màng "" Nước (Z434003)",Trục In Ống Đồng,Cây,0,1,1,1,,Z434003,"Bộ trục in ống đồng: MÀNG "" NƯỚC CỐT PHỞ GÀ "" IN 7 MÀU 138G (KT 24CM). Mã trục: Z434003, Kho: VẠN PHÁT, SL: 7.0 cây. "
+TRUC-Z416685,"Trục Sò Điệp ""Whole (Z416685)",Trục In Ống Đồng,Cây,0,1,1,1,,Z416685,"Bộ trục in ống đồng: TÚI ĐỰNG SÒ ĐIỆP ""WHOLE SHELL SCALLOPS"" 1KG IN 7 MÀU (ZIPPER - KT 27*33CM). Mã trục: Z416685, Kho: VẠN PHÁT, SL: 7.0 cây. "
+TRUC-Z435796,Trục Chả Cá Chiên (Z435796),Trục In Ống Đồng,Cây,0,1,1,1,,Z435796,"Bộ trục in ống đồng: TÚI ĐỰNG CHẢ CÁ CHIÊN NGỌC LIÊN 450G - IN 8 MÀU (NỀN CAM - KT 21*31CM). Mã trục: Z435796, Kho: VẠN PHÁT, SL: 8.0 cây. "
+TRUC-Z416686,"Trục Ốc "" Bulot (Z416686)",Trục In Ống Đồng,Cây,0,1,1,1,,Z416686,"Bộ trục in ống đồng: TÚI ĐỰNG ỐC "" BULOT WHELK - IRELAND"" 1KG IN 8 MÀU (ZIPPER - KT 24*33CM). Mã trục: Z416686, Kho: VẠN PHÁT, SL: 8.0 cây. "
+TRUC-Z436110,Trục Bột Phô Mai (Z436110),Trục In Ống Đồng,Cây,0,1,1,1,,Z436110,"Bộ trục in ống đồng: TÚI ĐỰNG BỘT PHÔ MAI HOA MỸ KÝ - IN 6 MÀU (KT 14*31CM). Mã trục: Z436110, Kho: VẠN PHÁT, SL: 6.0 cây. "
+TRUC-Z434196,Trục Kem Hoa Vàng (Z434196),Trục In Ống Đồng,Cây,0,1,1,1,,Z434196,"Bộ trục in ống đồng: CUỘN MÀNG KEM HOA VÀNG - SOCOLA ( IN 5 MÀU KHỔ 17CM). Mã trục: Z434196, Kho: VẠN PHÁT, SL: 5.0 cây. "
+TRUC-Z435698,Trục Kem Hoa Vàng (Z435698),Trục In Ống Đồng,Cây,0,1,1,1,,Z435698,"Bộ trục in ống đồng: CUỘN MÀNG KEM HOA VÀNG - SẦU RIÊNG ( IN 5 MÀU KHỔ 17CM). Mã trục: Z435698, Kho: TRANG TÍN, SL: 5.0 cây. "
+TRUC-Z439843,Trục Kem Hoa Vàng (Z439843),Trục In Ống Đồng,Cây,0,1,1,1,,Z439843,"Bộ trục in ống đồng: CUỘN MÀNG KEM HOA VÀNG - TRÁI CÂY TƯƠI ( IN 5 MÀU KHỔ 17CM). Mã trục: Z439843, Kho: VẠN PHÁT, SL: 5.0 cây. "
+TRUC-Z437016,Trục Hạt Sáp Wax (Z437016),Trục In Ống Đồng,Cây,0,1,1,1,,Z437016,"Bộ trục in ống đồng: TÚI ĐỰNG HẠT SÁP WAX LÔNG-NWAXING 100G ( IN PHỦ MỜ - ZIPPER - KT 12*19CM). Mã trục: Z437016, Kho: VẠN PHÁT, SL: 4.0 cây. "
+TRUC-WAX500G,Trục Hạt Sáp Wax,Trục In Ống Đồng,Cây,0,1,1,1,,,"Bộ trục in ống đồng: TÚI ĐỰNG HẠT SÁP WAX LÔNG-NWAXING 500G ( IN PHỦ MỜ - ZIPPER - KT 18*26CM). Mã trục: , Kho: VẠN PHÁT, SL: 4.0 cây. "
+TRUC-G614772,Trục Nem Hoàng Tú (G614772),Trục In Ống Đồng,Cây,0,1,1,1,,G614772,"Bộ trục in ống đồng: TÚI NEM HOÀNG TÚ - IN 5 MÀU (MÀU ĐỎ - KT 12 x 28.5CM). Mã trục: G614772, Kho: VẠN PHÁT, SL: 5.0 cây. "
+TRUC-G612128,Trục Chả Lụa Hoàng (G612128),Trục In Ống Đồng,Cây,0,1,1,1,,G612128,"Bộ trục in ống đồng: TÚI CHẢ LỤA HOÀNG TÚ - IN 6 MÀU (KT 16.5 x 26CM - NỀN ĐỎ). Mã trục: G612128, Kho: VẠN PHÁT, SL: 6.0 cây. "
+TRUC-Z433493,Trục Chả Lụa Hoàng (Z433493),Trục In Ống Đồng,Cây,0,1,1,1,,Z433493,"Bộ trục in ống đồng: TÚI CHẢ LỤA HOÀNG TÚ IN 6 MÀU 500G (NỀN ĐỎ). Mã trục: Z433493, Kho: VẠN PHÁT, SL: 6.0 cây. "
+TRUC-Z416845,Trục Hạt Điều Cashew (Z416845),Trục In Ống Đồng,Cây,0,1,1,1,,Z416845,"Bộ trục in ống đồng: TÚI HẠT ĐIỀU CASHEW NUTS - NỀN XANH LÁ ( ĐÁY ĐỨNG - ZIPPER - IN PHỦ MỜ - KT 22*28CM). Mã trục: Z416845, Kho: VẠN PHÁT, SL: 7.0 cây. "
+TRUC-G125806G2,Trục Phân Bón Guller (G125806G2),Trục In Ống Đồng,Cây,0,1,1,1,,G125806G2,"Bộ trục in ống đồng: TÚI PHÂN BÓN GULLER ORCHIDS IN 8  MÀU ( ZIPPER - ĐÁY ĐỨNG - KT 14*19CM). Mã trục: G125806G2, Kho: VẠN PHÁT, SL: 6.0 cây. "
+TRUC-G612508,Trục Nem Hoàng Tú (G612508),Trục In Ống Đồng,Cây,0,1,1,1,,G612508,"Bộ trục in ống đồng: TÚI NEM HOÀNG TÚ - IN 5 MÀU (MÀU XANH - KT 12 * 28.5CM). Mã trục: G612508, Kho: VẠN PHÁT, SL: 5.0 cây. "
+TRUC-Z417577,Trục Mồi Câu T5-Mồi (Z417577),Trục In Ống Đồng,Cây,0,1,1,1,,Z417577,"Bộ trục in ống đồng: TÚI MỒI CÂU T5-MỒI RÔ PHI SIÊU CẤP (KT 16*22CM). Mã trục: Z417577, Kho: VẠN PHÁT, SL: 7.0 cây. "
+TRUC-Z418260,Trục Dinh Dưỡng Ăn (Z418260),Trục In Ống Đồng,Cây,0,1,1,1,,Z418260,"Bộ trục in ống đồng: TÚI DINH DƯỠNG ĂN KÈM NỀN VÀNG - TIỆT TRÙNG - KT 8.5*10.5CM). Mã trục: Z418260, Kho: VẠN PHÁT, SL: 2.0 cây. "
+TRUC-Z418425,Trục Kem Hương Vị (Z418425),Trục In Ống Đồng,Cây,0,1,1,1,,Z418425,"Bộ trục in ống đồng: CUỘN MÀNG KEM HƯƠNG VỊ KÝ ỨC HƯƠNG XƯA (4 MẪU/TRỤC - KT 13CM). Mã trục: Z418425, Kho: VẠN PHÁT, SL: 9.0 cây. "
+TRUC-Z435082,Trục Kem Hoa Vàng (Z435082),Trục In Ống Đồng,Cây,0,1,1,1,,Z435082,"Bộ trục in ống đồng: CUỘN MÀNG KEM HOA VÀNG - SOCOLA NHÚNG HẠT KHÔ (IN 5 MÀU - KHỔ 17CM). Mã trục: Z435082, Kho: VẠN PHÁT, SL: 5.0 cây. "
+TRUC-G652829,Trục Hạt Đậu Dinh (G652829),Trục In Ống Đồng,Cây,0,1,1,1,,G652829,"Bộ trục in ống đồng: TÚI ĐỰNG HẠT ĐẬU DINH DƯỠNG ( TÚI ĐÁY ĐỨNG - ZIPPER - KT 16*23.5CM). Mã trục: G652829, Kho: VẠN PHÁT, SL: 4.0 cây. "
+TRUC-G493102,Trục Bột Ớt 500G (G493102),Trục In Ống Đồng,Cây,0,1,1,1,,G493102,"Bộ trục in ống đồng: TÚI ĐỰNG BỘT ỚT 500G - SEOUL FOOD ( NỀN ĐỎ - 3 BIÊN - ZIPPER - KT 19*30CM). Mã trục: G493102, Kho: VẠN PHÁT, SL: 6.0 cây. "
+TRUC-Z437240,Trục Cà Phê Nấm (Z437240),Trục In Ống Đồng,Cây,0,1,1,1,,Z437240,"Bộ trục in ống đồng: TÚI CÀ PHÊ NẤM MEN 10G- NA COFFE (IN PHỦ MỜ -KT: 7.5*9CM). Mã trục: Z437240, Kho: VẠN PHÁT, SL: 7.0 cây. "
+TRUC-Z433450,Trục Màng Bột Ngọt (Z433450),Trục In Ống Đồng,Cây,0,1,1,1,,Z433450,"Bộ trục in ống đồng: MÀNG BỘT NGỌT OSAKA HÀ GIANG FOOD 350G. Mã trục: Z433450, Kho: VẠN PHÁT, SL: 6.0 cây. "
+TRUC-Z433451,Trục Màng Bột Ngọt (Z433451),Trục In Ống Đồng,Cây,0,1,1,1,,Z433451,"Bộ trục in ống đồng: MÀNG BỘT NGỌT OSAKA HÀ GIANG FOOD 100G. Mã trục: Z433451, Kho: VẠN PHÁT, SL: 6.0 cây. "
+TRUC-Z433306,Trục Thiết Bị Nhựa (Z433306),Trục In Ống Đồng,Cây,0,1,1,1,,Z433306,"Bộ trục in ống đồng: TÚI ĐỰNG THIẾT BỊ NHỰA KURU KURU HOOK 5KG. Mã trục: Z433306, Kho: VẠN PHÁT, SL: 5.0 cây. "
+TRUC-Z433449,Trục Màng Bột Ngọt (Z433449),Trục In Ống Đồng,Cây,0,1,1,1,,Z433449,"Bộ trục in ống đồng: MÀNG BỘT NGỌT OSAKA HÀ GIANG FOOD 1KG. Mã trục: Z433449, Kho: VẠN PHÁT, SL: 6.0 cây. "
+TRUC-Z416639,Trục Bánh Mì Sanwich (Z416639),Trục In Ống Đồng,Cây,0,1,1,1,,Z416639,"Bộ trục in ống đồng: TÚI BÁNH MÌ SANWICH TONY THẾ HIỂN 420G. Mã trục: Z416639, Kho: VẠN PHÁT, SL: 7.0 cây. "
+TRUC-G4006649,Trục Passion 3.2Kg Hương (G4006649),Trục In Ống Đồng,Cây,0,1,1,1,,G4006649,"Bộ trục in ống đồng: TÚI PASSION 3.2KG HƯƠNG NƯỚC HOA CAO CẤP- HỒNG. Mã trục: G4006649, Kho: KIẾN TÂM, SL: 6.0 cây. "
+TRUC-G4006653,Trục Passion 3.2Kg Hương (G4006653),Trục In Ống Đồng,Cây,0,1,1,1,,G4006653,"Bộ trục in ống đồng: TÚI PASSION 3.2KG HƯƠNG NƯỚC HOA ĐAM MÊ - VÀNG. Mã trục: G4006653, Kho: KIẾN TÂM, SL: 6.0 cây. "
+TRUC-G4012674,Trục Bọc Thực Phẩm (G4012674),Trục In Ống Đồng,Cây,0,1,1,1,,G4012674,"Bộ trục in ống đồng: TÚI MÀNG BỌC THỰC PHẨM 300 PCS - TOP GIA ( NỀN XANH LÁ ). Mã trục: G4012674, Kho: KIẾN TÂM, SL: 6.0 cây. "
+TRUC-S515739,Trục Xốt Phô Mai (S515739),Trục In Ống Đồng,Cây,0,1,1,1,,S515739,"Bộ trục in ống đồng: TÚI XỐT PHÔ MAI 500G - TANZY. Mã trục: S515739, Kho: KIẾN TÂM, SL: 9.0 cây. "
+TRUC-G4014162,Trục Nui Thiên Long (G4014162),Trục In Ống Đồng,Cây,0,1,1,1,,G4014162,"Bộ trục in ống đồng: TÚI NUI THIÊN LONG 200G. Mã trục: G4014162, Kho: TRANG TÍN, SL: 5.0 cây. "
+TRUC-G630618,Trục Cồi Sò Điệp (G630618),Trục In Ống Đồng,Cây,0,1,1,1,,G630618,"Bộ trục in ống đồng: TÚI CỒI SÒ ĐIỆP 1KG - JAPANESE FAVOURITE ( NỀN HỒNG). Mã trục: G630618, Kho: TRANG TÍN, SL: 6.0 cây. "
+TRUC-KEM-DUANON,Trục MàNg Kem Hoa,Trục In Ống Đồng,Cây,0,1,1,1,,,"Bộ trục in ống đồng: MÀNG KEM HOA VÀNG - DỪA NON ( IN 5 MÀU - KHỔ 17CM ). Mã trục: , Kho: TRANG TÍN, SL: 5.0 cây. "
+TRUC-G4014589,Trục Hồng Loan 2.5L (G4014589),Trục In Ống Đồng,Cây,0,1,1,1,,G4014589,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT HỒNG LOAN 2.5L. Mã trục: G4014589, Kho: VẠN PHÁT, SL: 4.0 cây. "
+TRUC-G4015277,Trục Topgia Huyền Diệu (G4015277),Trục In Ống Đồng,Cây,0,1,1,1,,G4015277,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT TOPGIA HUYỀN DIỆU 2L. Mã trục: G4015277, Kho: VẠN PHÁT, SL: 8.0 cây. "
+TRUC-G4015340,Trục Topgia Đắm Say (G4015340),Trục In Ống Đồng,Cây,0,1,1,1,,G4015340,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT TOPGIA ĐẮM SAY 1L - NEW. Mã trục: G4015340, Kho: KIẾN TÂM, SL: 6.0 cây. "
+TRUC-G4016016,Trục The Good Wife (G4016016),Trục In Ống Đồng,Cây,0,1,1,1,,G4016016,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT THE GOOD WIFE 3.2L. Mã trục: G4016016, Kho: KIẾN TÂM, SL: 6.0 cây. "
+TRUC-G4016051,Trục Cô Út 3.2Kg (G4016051),Trục In Ống Đồng,Cây,0,1,1,1,,G4016051,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT XẢ CÔ ÚT 3.2KG. Mã trục: G4016051, Kho: KIẾN TÂM, SL: 6.0 cây. "
+TRUC-G4007070,Trục Premium Gold 3L (G4007070),Trục In Ống Đồng,Cây,0,1,1,1,,G4007070,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT PREMIUM GOLD 3L. Mã trục: G4007070, Kho: TRANG TÍN, SL:  cây. "
+TRUC-G4016395,Trục Mẹ Chọn 3.2Kg (G4016395),Trục In Ống Đồng,Cây,0,1,1,1,,G4016395,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT XẢ MẸ CHỌN 3.2KG NỀN ĐEN. Mã trục: G4016395, Kho: KIẾN TÂM, SL: 3.0 cây. "
+TRUC-G4016394,Trục Mẹ Chọn 3.2Kg (G4016394),Trục In Ống Đồng,Cây,0,1,1,1,,G4016394,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT XẢ MẸ CHỌN 3.2KG NỀN XANH - TÍM. Mã trục: G4016394, Kho: KIẾN TÂM, SL: 5.0 cây. "
+TRUC-G4016428,Trục Hồ Tiêu Nhật (G4016428),Trục In Ống Đồng,Cây,0,1,1,1,,G4016428,"Bộ trục in ống đồng: TÚI HỒ TIÊU NHẬT QUẢNG TRỊ 500G. Mã trục: G4016428, Kho: KIẾN TÂM, SL: 7.0 cây. "
+TRUC-G4006662,Trục Mimo 1L - (G4006662),Trục In Ống Đồng,Cây,0,1,1,1,,G4006662,"Bộ trục in ống đồng: TÚI NƯỚC RỬA CHÉN MIMO 1L - XANH. Mã trục: G4006662, Kho: VẠN PHÁT, SL: 7.0 cây. "
+TRUC-G4010678,Trục Good Care 3.2Kg (G4010678),Trục In Ống Đồng,Cây,0,1,1,1,,G4010678,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT GOOD CARE 3.2KG. Mã trục: G4010678, Kho: VẠN PHÁT, SL: 5.0 cây. "
+TRUC-G4044368,Trục Aha 3Kg - (G4044368),Trục In Ống Đồng,Cây,0,1,1,1,,G4044368,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT AHA 3KG - NỀN TÍM. Mã trục: G4044368, Kho: TRANG TÍN, SL: 5.0 cây. "
+TRUC-G4005957,Trục Xốt Ướp Nướng (G4005957),Trục In Ống Đồng,Cây,0,1,1,1,,G4005957,"Bộ trục in ống đồng: TÚI XỐT ƯỚP NƯỚNG MẬT ONG 80G. Mã trục: G4005957, Kho: VẠN PHÁT, SL: 6.0 cây. "
+TRUC-G4005954,Trục Xốt Ướp Nướng (G4005954),Trục In Ống Đồng,Cây,0,1,1,1,,G4005954,"Bộ trục in ống đồng: TÚI XỐT ƯỚP NƯỚNG BBQ 80G. Mã trục: G4005954, Kho: TRANG TÍN, SL: 6.0 cây. "
+TRUC-G4005956,Trục Xốt Ướp Nướng (G4005956),Trục In Ống Đồng,Cây,0,1,1,1,,G4005956,"Bộ trục in ống đồng: TÚI XỐT ƯỚP NƯỚNG NGŨ VỊ 80G. Mã trục: G4005956, Kho: VẠN PHÁT, SL: 6.0 cây. "
+TRUC-G4005955,Trục Xốt Kho Thịt (G4005955),Trục In Ống Đồng,Cây,0,1,1,1,,G4005955,"Bộ trục in ống đồng: TÚI XỐT KHO THỊT 80G. Mã trục: G4005955, Kho: TRANG TÍN, SL: 6.0 cây. "
+TRUC-G4005953,Trục Xốt Kho Cá (G4005953),Trục In Ống Đồng,Cây,0,1,1,1,,G4005953,"Bộ trục in ống đồng: TÚI XỐT KHO CÁ 80G. Mã trục: G4005953, Kho: TRANG TÍN, SL: 8.0 cây. "
+TRUC-G4005948,Trục Gia Vị Phở (G4005948),Trục In Ống Đồng,Cây,0,1,1,1,,G4005948,"Bộ trục in ống đồng: TÚI GIA VỊ PHỞ BÒ 110G. Mã trục: G4005948, Kho: VẠN PHÁT, SL: 8.0 cây. "
+TRUC-G4005949,Trục Gia Vị Bò (G4005949),Trục In Ống Đồng,Cây,0,1,1,1,,G4005949,"Bộ trục in ống đồng: TÚI GIA VỊ BÒ KHO 110G. Mã trục: G4005949, Kho: VẠN PHÁT, SL: 7.0 cây. "
+TRUC-G4005950,Trục Gia Vị Bún (G4005950),Trục In Ống Đồng,Cây,0,1,1,1,,G4005950,"Bộ trục in ống đồng: TÚI GIA VỊ BÚN BÒ HUẾ 110G. Mã trục: G4005950, Kho: VẠN PHÁT, SL: 6.0 cây. "
+TRUC-G4005960,Trục Gia Vị Lẩu (G4005960),Trục In Ống Đồng,Cây,0,1,1,1,,G4005960,"Bộ trục in ống đồng: TÚI GIA VỊ LẨU THÁI 180G. Mã trục: G4005960, Kho: TRANG TÍN, SL: 6.0 cây. "
+TRUC-G4005959,Trục Gia Vị Lẩu (G4005959),Trục In Ống Đồng,Cây,0,1,1,1,,G4005959,"Bộ trục in ống đồng: TÚI GIA VỊ LẨU HẢI SẢN 180G. Mã trục: G4005959, Kho: VẠN PHÁT, SL: 6.0 cây. "
+TRUC-G4005958,Trục Gia Vị Lẩu (G4005958),Trục In Ống Đồng,Cây,0,1,1,1,,G4005958,"Bộ trục in ống đồng: TÚI GIA VỊ LẨU CHUA CAY 180G. Mã trục: G4005958, Kho: VẠN PHÁT, SL: 8.0 cây. "
+TRUC-G4012180,Trục Hạt Nêm Nền (G4012180),Trục In Ống Đồng,Cây,0,1,1,1,,G4012180,"Bộ trục in ống đồng: TÚI HẠT NÊM NỀN XANH + NỀN CAM. Mã trục: G4012180, Kho: TRANG TÍN, SL: 8.0 cây. "
+TRUC-G4010974,Trục Bánh Hạt Điều (G4010974),Trục In Ống Đồng,Cây,0,1,1,1,,G4010974,"Bộ trục in ống đồng: TÚI BÁNH HẠT ĐIỀU 200G (HÔNG). Mã trục: G4010974, Kho: TRANG TÍN, SL: 7.0 cây. "
+TRUC-G4010966,Trục Bánh Hạt Điều (G4010966),Trục In Ống Đồng,Cây,0,1,1,1,,G4010966,"Bộ trục in ống đồng: TÚI BÁNH HẠT ĐIỀU VINAHE 200G ( THÂN). Mã trục: G4010966, Kho: TRANG TÍN, SL: 7.0 cây. "
+TRUC-G4010871,Trục Cuộn Bánh Hạt (G4010871),Trục In Ống Đồng,Cây,0,1,1,1,,G4010871,"Bộ trục in ống đồng: CUỘN BÁNH HẠT ĐIỀU VINAHE 11G. Mã trục: G4010871, Kho: TRANG TÍN, SL: 7.0 cây. "
+TRUC-G4010794,Trục Cuộn Kem Hương (G4010794),Trục In Ống Đồng,Cây,0,1,1,1,,G4010794,"Bộ trục in ống đồng: CUỘN KEM HƯƠNG XƯA. Mã trục: G4010794, Kho: TRANG TÍN, SL: 9.0 cây. "
+TRUC-Z418225,Trục Ngx Ko Tên (Z418225),Trục In Ống Đồng,Cây,0,1,1,1,,Z418225,"Bộ trục in ống đồng: TÚI NGX KO TÊN TÍM+ ĐỎ LỚN. Mã trục: Z418225, Kho: TUỆ NHI, SL: 8.0 cây. "
+TRUC-Z418262,Trục Ngx Ko Tên (Z418262),Trục In Ống Đồng,Cây,0,1,1,1,,Z418262,"Bộ trục in ống đồng: TÚI NGX KO TÊN XANH DƯƠNG + HỒNG LỚN. Mã trục: Z418262, Kho: TUỆ NHI, SL: 1.0 cây. "
+TRUC-Z418086,Trục Chả Ram Tôm (Z418086),Trục In Ống Đồng,Cây,0,1,1,1,,Z418086,"Bộ trục in ống đồng: TÚI CHẢ RAM TÔM NGỌC LIÊN 420G (KT 14*29). Mã trục: Z418086, Kho: VẠN PHÁT, SL: 7.0 cây. "
+TRUC-G629036,Trục Cà Phê Lâm (G629036),Trục In Ống Đồng,Cây,0,1,1,1,,G629036,"Bộ trục in ống đồng: TÚI CÀ PHÊ LÂM NGAO 500G. Mã trục: G629036, Kho: VẠN PHÁT, SL: 6.0 cây. "
+TRUC-G631656,Trục Viên Súp Hải (G631656),Trục In Ống Đồng,Cây,0,1,1,1,,G631656,"Bộ trục in ống đồng: TÚI VIÊN SÚP HẢI SẢN , BÀO NGƯ, HẢI SÂM. Mã trục: G631656, Kho: VẠN PHÁT, SL: 7.0 cây. "
+TRUC-G631662,Trục Viên Súp Hải (G631662),Trục In Ống Đồng,Cây,0,1,1,1,,G631662,"Bộ trục in ống đồng: TÚI VIÊN SÚP HẢI SẢN , BÀO NGƯ, HẢI SÂM. Mã trục: G631662, Kho: VẠN PHÁT, SL: 1.0 cây. "
+TRUC-G4005609,Trục Paris 1Kg (G4005609),Trục In Ống Đồng,Cây,0,1,1,1,,G4005609,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT XẢ PARIS 1KG. Mã trục: G4005609, Kho: VẠN PHÁT, SL: 7.0 cây. "
+TRUC-SB02240264,Trục Chuối (SB02240264),Trục In Ống Đồng,Cây,0,1,1,1,,SB02240264,"Bộ trục in ống đồng: TÚI CHUỐI. Mã trục: SB02240264, Kho: VẠN PHÁT, SL: 5.0 cây. "
+TRUC-G626324,Trục Cuộn Cà Phê (G626324),Trục In Ống Đồng,Cây,0,1,1,1,,G626324,"Bộ trục in ống đồng: CUỘN CÀ PHÊ MUỐI LONG ONE. Mã trục: G626324, Kho: VẠN PHÁT, SL: 6.0 cây. "
+TRUC-G629613,Trục Cơm Chiên (G629613),Trục In Ống Đồng,Cây,0,1,1,1,,G629613,"Bộ trục in ống đồng: TÚI ĐỰNG CƠM CHIÊN. Mã trục: G629613, Kho: VẠN PHÁT, SL: 6.0 cây. "
+TRUC-Z416612,Trục Nước Cốt Hủ (Z416612),Trục In Ống Đồng,Cây,0,1,1,1,,Z416612,"Bộ trục in ống đồng: TÚI NƯỚC CỐT HỦ TIẾU + NƯỚC CỐT BÚN MẮM (2 MẪU / 1 BỘ) TRỤC CŨ. Mã trục: Z416612, Kho: VẠN PHÁT, SL: 10.0 cây. "
+TRUC-Z418465,Trục Aha 3Kg - (Z418465),Trục In Ống Đồng,Cây,0,1,1,1,,Z418465,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT AHA 3KG - 2 MẪU /1 BỘ. Mã trục: Z418465, Kho: VẠN PHÁT, SL: 7.0 cây. "
+TRUC-Z433912,Trục Mì Quảng Khô (Z433912),Trục In Ống Đồng,Cây,0,1,1,1,,Z433912,"Bộ trục in ống đồng: TÚI MÌ QUẢNG KHÔ HAPPINUT 480G. Mã trục: Z433912, Kho: VẠN PHÁT, SL: 9.0 cây. "
+TRUC-G625648,Trục Cà Phê Muối (G625648),Trục In Ống Đồng,Cây,0,1,1,1,,G625648,"Bộ trục in ống đồng: TÚI CÀ PHÊ MUỐI. Mã trục: G625648, Kho: VẠN PHÁT, SL: 3.0 cây. "
+TRUC-G631570,Trục Mồi Câu T5-Cá (G631570),Trục In Ống Đồng,Cây,0,1,1,1,,G631570,"Bộ trục in ống đồng: TÚI MỒI CÂU T5-CÁ RÔ PHI BỂ. Mã trục: G631570, Kho: VẠN PHÁT, SL: 2.0 cây. "
+TRUC-Z433914,Trục Bánh Tráng Cuốn (Z433914),Trục In Ống Đồng,Cây,0,1,1,1,,Z433914,"Bộ trục in ống đồng: TÚI BÁNH TRÁNG CUỐN ĐẠI LỘC HAPPINUT 500G. Mã trục: Z433914, Kho: VẠN PHÁT, SL: 7.0 cây. "
+TRUC-Z418580,Trục Hpro (Z418580),Trục In Ống Đồng,Cây,0,1,1,1,,Z418580,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT HPRO. Mã trục: Z418580, Kho: VẠN PHÁT, SL: 5.0 cây. "
+TRUC-P96149,Trục Kem Apilo ( (P96149),Trục In Ống Đồng,Cây,0,1,1,1,,P96149,"Bộ trục in ống đồng: TÚI ĐỰNG KEM APILO ( DỪA, DƯA GANG, ĐẬU XANH) - 3 MẪU /1 BỘ. Mã trục: P96149, Kho: VẠN PHÁT, SL: 7.0 cây. "
+TRUC-Z416634,Trục Nước Cốt Bò (Z416634),Trục In Ống Đồng,Cây,0,1,1,1,,Z416634,"Bộ trục in ống đồng: TÚI NƯỚC CỐT BÒ KHO + NƯỚC CỐT BÚN RIÊU ( 2 MẪU/1 BỘ). Mã trục: Z416634, Kho: VẠN PHÁT, SL: 8.0 cây. "
+TRUC-G628405,Trục Lyla Eats (G628405),Trục In Ống Đồng,Cây,0,1,1,1,,G628405,"Bộ trục in ống đồng: TÚI LYLA EATS. Mã trục: G628405, Kho: VẠN PHÁT, SL: 8.0 cây. "
+TRUC-G628206,Trục Màng Tiêu Đại (G628206),Trục In Ống Đồng,Cây,0,1,1,1,,G628206,"Bộ trục in ống đồng: MÀNG TIÊU ĐẠI PHÁT 15G. Mã trục: G628206, Kho: VẠN PHÁT, SL: 5.0 cây. "
+TRUC-G4004063,Trục Không Tên 2L (G4004063),Trục In Ống Đồng,Cây,0,1,1,1,,G4004063,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT XẢ KHÔNG TÊN 2L ( NỀN ĐEN - CÔ GÁI + NỀN XANH DƯƠNG ĐẬM - HOA HỒNG - 2 MẪU/TRỤC - KT 24*30CM) 4 LỚP. Mã trục: G4004063, Kho: VẠN PHÁT, SL: 8.0 cây. "
+TRUC-G4004064,Trục Không Tên 2L (G4004064),Trục In Ống Đồng,Cây,0,1,1,1,,G4004064,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT XẢ KHÔNG TÊN 2L ( NỀN VÀNG - CÔ GÁI + NỀN TRẮNG - HOA HỒNG - 2 MẪU/TRỤC - KT 24*30CM) 4 LỚP. Mã trục: G4004064, Kho: VẠN PHÁT, SL: 1.0 cây. "
+TRUC-G4013050,Trục Nước Giặt Futa (G4013050),Trục In Ống Đồng,Cây,0,1,1,1,,G4013050,"Bộ trục in ống đồng: NƯỚC GIẶT FUTA TRUE 3KG. Mã trục: G4013050, Kho: TRANG TÍN, SL: 6.0 cây. "
+TRUC-G1005432,Trục Kem Hoa Vàng (G1005432),Trục In Ống Đồng,Cây,0,1,1,1,,G1005432,"Bộ trục in ống đồng: TÚI KEM HOA VÀNG VỊ SOCOLA 62G. Mã trục: G1005432, Kho: TRANG TÍN, SL: 5.0 cây. "
+TRUC-G4014585,Trục Chakari - Louis (G4014585),Trục In Ống Đồng,Cây,0,1,1,1,,G4014585,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT XẢ CHAKARI - LOUIS - 12H PREMIUM 3.2KG. Mã trục: G4014585, Kho: TRANG TÍN, SL: 7.0 cây. "
+TRUC-G628218,Trục Hạt Chia (G628218),Trục In Ống Đồng,Cây,0,1,1,1,,G628218,"Bộ trục in ống đồng: TÚI MÀNG HẠT CHIA. Mã trục: G628218, Kho: TRANG TÍN, SL: 5.0 cây. "
+TRUC-LUCKYSTAR,Trục Lucky Star,Trục In Ống Đồng,Cây,0,1,1,1,,,"Bộ trục in ống đồng: TÚI NƯỚC GIẶT LUCKY STAR. Mã trục: , Kho: VẠN PHÁT, SL: 8.0 cây. "
+TRUC-G3000042,Trục Thức Ăn Chó (G3000042),Trục In Ống Đồng,Cây,0,1,1,1,,G3000042,"Bộ trục in ống đồng: TÚI THỨC ĂN CHÓ MÈO 60G ALPHA. Mã trục: G3000042, Kho: VẠN PHÁT, SL: 9.0 cây. "
+TRUC-E180920,Trục Thức Ăn Chó (E180920),Trục In Ống Đồng,Cây,0,1,1,1,,E180920,"Bộ trục in ống đồng: TÚI THỨC ĂN CHÓ MÈO 60G ALPHA. Mã trục: E180920, Kho: TRANG TÍN, SL: 6.0 cây. "
+TRUC-G496512G8,Trục Cây Đàn (G496512G8),Trục In Ống Đồng,Cây,0,1,1,1,,G496512G8,"Bộ trục in ống đồng: TÚI CÂY ĐÀN. Mã trục: G496512G8, Kho: TUỆ NHI, SL: 1.0 cây. "
+NVL-00001,PE sữa K700 160mic,Màng Thô NVL,Kg,0,1,0,1,,,Nguyên vật liệu cuộn màng thô: PE sữa K700 160mic.
+NVL-00002,PE sữa K700 190mic,Màng Thô NVL,Kg,0,1,0,1,,,Nguyên vật liệu cuộn màng thô: PE sữa K700 190mic.
+NVL-00003,PE sữa K740 190mic,Màng Thô NVL,Kg,0,1,0,1,,,Nguyên vật liệu cuộn màng thô: PE sữa K740 190mic.
+NVL-00004,PE sữa K750 190mic,Màng Thô NVL,Kg,0,1,0,1,,,Nguyên vật liệu cuộn màng thô: PE sữa K750 190mic.
+NVL-00005,PE sữa K740 50mic,Màng Thô NVL,Kg,0,1,0,1,,,Nguyên vật liệu cuộn màng thô: PE sữa K740 50mic.
+NVL-00006,PA K700 15mic,Màng Thô NVL,Kg,0,1,0,1,,,Nguyên vật liệu cuộn màng thô: PA K700 15mic.
+NVL-00007,PA K740 15mic,Màng Thô NVL,Kg,0,1,0,1,,,Nguyên vật liệu cuộn màng thô: PA K740 15mic.
+NVL-00008,PA K760 15mic,Màng Thô NVL,Kg,0,1,0,1,,,Nguyên vật liệu cuộn màng thô: PA K760 15mic.
+NVL-00009,PA K800 15mic,Màng Thô NVL,Kg,0,1,0,1,,,Nguyên vật liệu cuộn màng thô: PA K800 15mic.
+NVL-00010,PA K380 15mic,Màng Thô NVL,Kg,0,1,0,1,,,Nguyên vật liệu cuộn màng thô: PA K380 15mic.
+NVL-00011,PET K560 12mic,Màng Thô NVL,Kg,0,1,0,1,,,Nguyên vật liệu cuộn màng thô: PET K560 12mic.
+NVL-00012,PET K610 12mic,Màng Thô NVL,Kg,0,1,0,1,,,Nguyên vật liệu cuộn màng thô: PET K610 12mic.
+NVL-00013,PET K700 12mic,Màng Thô NVL,Kg,0,1,0,1,,,Nguyên vật liệu cuộn màng thô: PET K700 12mic.
+NVL-00014,PET K740 12mic,Màng Thô NVL,Kg,0,1,0,1,,,Nguyên vật liệu cuộn màng thô: PET K740 12mic.
+NVL-00015,PET K800 12mic,Màng Thô NVL,Kg,0,1,0,1,,,Nguyên vật liệu cuộn màng thô: PET K800 12mic.
+NVL-00016,PET K790 190mic,Màng Thô NVL,Kg,0,1,0,1,,,Nguyên vật liệu cuộn màng thô: PET K790 190mic.
+NVL-00017,MPET K540 12mic,Màng Thô NVL,Kg,0,1,0,1,,,Nguyên vật liệu cuộn màng thô: MPET K540 12mic.
+NVL-00018,MPET K800 12mic,Màng Thô NVL,Kg,0,1,0,1,,,Nguyên vật liệu cuộn màng thô: MPET K800 12mic.
+NVL-00019,AL K560 6mic,Màng Thô NVL,Kg,0,1,0,1,,,Nguyên vật liệu cuộn màng thô: AL K560 6mic.
+NVL-00020,PE trong K720 70mic,Màng Thô NVL,Kg,0,1,0,1,,,Nguyên vật liệu cuộn màng thô: PE trong K720 70mic.
+NVL-00021,PE trong K660 75mic,Màng Thô NVL,Kg,0,1,0,1,,,Nguyên vật liệu cuộn màng thô: PE trong K660 75mic.
+NVL-00022,PE trong K700 150mic,Màng Thô NVL,Kg,0,1,0,1,,,Nguyên vật liệu cuộn màng thô: PE trong K700 150mic.
+NVL-00023,OPP K375 30mic,Màng Thô NVL,Kg,0,1,0,1,,,Nguyên vật liệu cuộn màng thô: OPP K375 30mic.
+NVL-00024,Màng Ngọc K800 40mic,Màng Thô NVL,Kg,0,1,0,1,,,Nguyên vật liệu cuộn màng thô: Màng Ngọc K800 40mic.
+NVL-00025,Keo D-9700,Hóa Chất & Keo Ghép,Kg,0,1,0,1,,,Hóa chất / Keo ghép màng: Keo D-9700.
+NVL-00026,Chất Đóng Rắn CL-3192K,Hóa Chất & Keo Ghép,Kg,0,1,0,1,,,Hóa chất / Keo ghép màng: Chất Đóng Rắn CL-3192K.
+NVL-00027,Dung Môi Ethyl Acetate,Hóa Chất & Keo Ghép,Kg,0,1,0,1,,,Hóa chất / Keo ghép màng: Dung Môi Ethyl Acetate.
+NVL-00028,PET in 888 - Phấn Thơm,Màng In Ống Đồng,m,0,1,0,1,,,Màng PET đã in ống đồng mẫu 888 - Phấn Thơm (Khổ 800mm)
+NVL-00029,PET in 888 - Huyền Bí,Màng In Ống Đồng,m,0,1,0,1,,,Màng PET đã in ống đồng mẫu 888 - Huyền Bí Xanh (Khổ 800mm)
+NVL-00030,PET in 888 - Đam Mê,Màng In Ống Đồng,m,0,1,0,1,,,Màng PET đã in ống đồng mẫu 888 - Đam Mê Đỏ (Khổ 800mm)
+NVL-00031,PET in NGCS Đỏ - Tím,Màng In Ống Đồng,m,0,1,0,1,,,Màng PET in mẫu NGCS Đỏ - Tím (2 mẫu/trục)
+NVL-00032,PET in NGCS Hồng - Xanh,Màng In Ống Đồng,m,0,1,0,1,,,Màng PET in mẫu NGCS Hồng - Xanh Dương (2 mẫu/trục)
+NVL-00033,PET in Minh Râu Tím,Màng In Ống Đồng,m,0,1,0,1,,,Màng PET in mẫu Minh Râu Tím (Khổ 780mm)
+NVL-00034,PET in TopGia 2L,Màng In Ống Đồng,m,0,1,0,1,,,Màng PET in mẫu TopGia 2L (Khổ 750mm)
+NVL-00035,PET in Softy 3L,Màng In Ống Đồng,m,0,1,0,1,,,Màng PET in mẫu Softy 3L Nền Tím (Khổ 800mm)
+NVL-00036,PET in FUTA Xanh MT,Màng In Ống Đồng,m,0,1,0,1,,,Màng PET in FUTA Xanh mặt trước (Khổ 900mm)
+NVL-00037,PET in FUTA Xanh MS,Màng In Ống Đồng,m,0,1,0,1,,,Màng PET in FUTA Xanh mặt sau (Khổ 900mm)
+NVL-00038,PET in FUTA Tím MT,Màng In Ống Đồng,m,0,1,0,1,,,Màng PET in FUTA Tím mặt trước (Khổ 900mm)
+NVL-00039,PET in FUTA Tím MS,Màng In Ống Đồng,m,0,1,0,1,,,Màng PET in FUTA Tím mặt sau (Khổ 900mm)
+BTP-00001,Cuộn 888 - Phấn Thơm,Cuộn Màng Ghép BTP,m,0,1,1,0,,,Cuộn màng ghép hoàn thiện 3 lớp mẫu 888 Phấn Thơm (Input máy cắt túi hoặc bán cuộn)
+BTP-00002,Cuộn 888 - Huyền Bí,Cuộn Màng Ghép BTP,m,0,1,1,0,,,Cuộn màng ghép hoàn thiện 3 lớp mẫu 888 Huyền Bí Xanh
+BTP-00003,Cuộn 888 - Đam Mê,Cuộn Màng Ghép BTP,m,0,1,1,0,,,Cuộn màng ghép hoàn thiện 3 lớp mẫu 888 Đam Mê Đỏ
+BTP-00004,Cuộn NGCS Đỏ - Tím,Cuộn Màng Ghép BTP,m,0,1,1,0,,,Cuộn màng ghép hoàn thiện NGCS Đỏ - Tím
+BTP-00005,Cuộn NGCS Hồng - Xanh,Cuộn Màng Ghép BTP,m,0,1,1,0,,,Cuộn màng ghép hoàn thiện NGCS Hồng - Xanh
+BTP-00006,Cuộn Minh Râu Tím,Cuộn Màng Ghép BTP,m,0,1,1,0,,,Cuộn màng ghép hoàn thiện Minh Râu Tím
+BTP-00007,Cuộn TopGia 2L,Cuộn Màng Ghép BTP,m,0,1,1,0,,,Cuộn màng ghép hoàn thiện TopGia 2L
+BTP-00008,Cuộn Softy 3L,Cuộn Màng Ghép BTP,m,0,1,1,0,,,Cuộn màng ghép hoàn thiện Softy 3L
+BTP-00009,Cuộn FUTA Xanh MT,Cuộn Màng Ghép BTP,m,0,1,1,0,,,Cuộn màng ghép FUTA Xanh mặt trước
+BTP-00010,Cuộn FUTA Xanh MS,Cuộn Màng Ghép BTP,m,0,1,1,0,,,Cuộn màng ghép FUTA Xanh mặt sau
+BTP-00011,Cuộn FUTA Tím MT,Cuộn Màng Ghép BTP,m,0,1,1,0,,,Cuộn màng ghép FUTA Tím mặt trước
+BTP-00012,Cuộn FUTA Tím MS,Cuộn Màng Ghép BTP,m,0,1,1,0,,,Cuộn màng ghép FUTA Tím mặt sau
+BTP-00013,Cuộn màng đáy 3.2Kg,Cuộn Màng Ghép BTP,m,0,1,1,0,,,Cuộn màng ghép chuyên dụng cắt đáy đứng túi 3.2Kg
+NVL-00040,Vòi 16mm,Phụ Kiện Bao Bì,Cái,0,1,0,1,,,Vòi nhựa phi 16mm kèm nắp niêm phong chống tràn cho túi nước giặt (dùng cho cả đặt thẳng hoặc đặt xéo góc).
+NVL-00041,Vòi 10mm,Phụ Kiện Bao Bì,Cái,0,1,0,1,,,Vòi nhựa phi 10mm kèm nắp cho túi thể tích nhỏ / dung dịch mỹ phẩm.
+NVL-00042,Vòi 22mm,Phụ Kiện Bao Bì,Cái,0,1,0,1,,,Vòi nhựa phi 22mm kèm nắp cho túi dung tích lớn 5L / hóa chất.
+NVL-00043,Dây Zipper,Phụ Kiện Bao Bì,m,0,1,0,1,,,Cuộn dây khóa zipper dán nhiệt cho túi 3 biên / túi đáy đứng zipper.
+NVL-00044,Thùng carton đựng túi,Phụ Kiện Bao Bì,Cái,0,1,0,1,,,Thùng carton 3 lớp / 5 lớp đóng gói giao hàng túi nước giặt.

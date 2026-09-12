@@ -391,7 +391,7 @@ function onContinue() {
 }
 
 .modal-title {
-	font-size: 16px;
+	font-size: 18px;
 	font-weight: 800;
 	color: #eef1f6;
 	letter-spacing: -0.01em;
@@ -434,7 +434,7 @@ function onContinue() {
 .switch-btn {
 	height: 54px;
 	font-family: inherit;
-	font-size: 14px;
+	font-size: 14.5px;
 	font-weight: 600;
 	color: #9da7b5;
 	background: #1a1f27;
@@ -510,7 +510,7 @@ function onContinue() {
 	border: 1px solid #3a424e;
 	border-radius: 10px;
 	font-family: inherit;
-	font-size: 13.5px;
+	font-size: 14.5px;
 	font-weight: 500;
 	color: #eef1f6;
 	outline: none;
@@ -525,7 +525,7 @@ function onContinue() {
 
 .form-input::placeholder {
 	color: #64748b;
-	font-size: 13px;
+	font-size: 13.5px;
 }
 
 .cust-input {
@@ -589,7 +589,7 @@ function onContinue() {
 	align-items: center;
 	justify-content: center;
 	font-family: inherit;
-	font-size: 14.5px;
+	font-size: 15.5px;
 	font-weight: 700;
 	border-radius: 10px;
 	cursor: pointer;

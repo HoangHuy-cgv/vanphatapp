@@ -9,3 +9,19 @@ required_apps = ["frappe"]
 website_route_rules = [
 	{"from_route": "/login", "to_route": "login"},
 ]
+
+# Fixtures for Packaging Master Data (DocType Item Customization)
+fixtures = [
+	{
+		"dt": "Custom Field",
+		"filters": [
+			["dt", "in", ["Item", "Sales Order Item"]]
+		]
+	},
+	{
+		"dt": "Property Setter",
+		"filters": [
+			["doc_type", "=", "Item"]
+		]
+	}
+]

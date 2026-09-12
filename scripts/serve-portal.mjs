@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 
 const PORT = 8080;
-const ROOT_DIR = '/var/home/huy/workspace';
+const ROOT_DIR = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const FRONTEND_DIR = path.join(ROOT_DIR, 'apps/vanphat_portal/vanphat_portal/public/frontend');
 const PUBLIC_DIR = path.join(ROOT_DIR, 'apps/vanphat_portal/vanphat_portal/public');
 const LOGIN_HTML = path.join(ROOT_DIR, 'apps/vanphat_portal/vanphat_portal/www/login.html');
@@ -55,6 +55,10 @@ const server = http.createServer((req, res) => {
 				res.end(JSON.stringify({ message: 'Logged In' }));
 				return;
 			}
+			if (pathname === '/api/method/logout') {
+				res.end(JSON.stringify({ message: 'Logged Out' }));
+				return;
+			}
 			if (pathname === '/api/method/vanphat_portal.api.bao_gia.list_quotations') {
 				res.end(JSON.stringify({ message: MOCK_QUOTATIONS }));
 				return;
@@ -73,6 +77,98 @@ const server = http.createServer((req, res) => {
 				};
 				MOCK_QUOTATIONS.unshift(newDoc);
 				res.end(JSON.stringify({ message: newDoc }));
+				return;
+			}
+			if (pathname === '/api/method/vanphat_portal.api.bao_gia.get_boot') {
+				res.end(JSON.stringify({
+					message: {
+						user: 'Administrator',
+						csrf_token: 'mock_csrf_token',
+						company: 'Công ty TNHH Bao Bì Vạn Phát'
+					}
+				}));
+				return;
+			}
+			if (pathname === '/api/method/vanphat_portal.api.bao_gia.search_customers') {
+				res.end(JSON.stringify({
+					message: [
+						{ name: 'CUST-0001', customer_name: 'Công ty TNHH Mỹ Phẩm DS Cosmetic' },
+						{ name: 'CUST-0002', customer_name: 'Công ty CP Khăn Ướt Eco Wipes' }
+					]
+				}));
+				return;
+			}
+			if (pathname === '/api/method/vanphat_portal.api.bao_gia.calculate_packaging_quotation') {
+				let p = {};
+				try { p = JSON.parse(body); } catch (e) { void e; }
+				const desired_qty = Number(p.desired_qty) || 5000;
+				const width = Number(p.width_mm) || 280;
+				const length = Number(p.length_mm) || 340;
+				const lanes = width <= 360 ? 2 : 1;
+				const bags_per_roll = Math.floor((1500.0 * lanes * 0.92) / (length / 1000.0));
+				const num_rolls = Math.max(1, Math.ceil(desired_qty / (bags_per_roll || 8000)));
+				const q_opt = num_rolls * bags_per_roll;
+				const q_surp = Math.max(0, q_opt - desired_qty);
+				const cyl_qty = Number(p.cylinder_qty) || 0;
+				const opt_rate = 4965;
+				const req_rate = desired_qty >= q_opt ? 4965 : 5258;
+				res.end(JSON.stringify({
+					message: {
+						lanes,
+						bags_per_roll,
+						scenarios: {
+							optimal_whole_roll: {
+								rolls: num_rolls,
+								qty: q_opt,
+								rate: opt_rate,
+								total: opt_rate * q_opt,
+								label: `Tròn ${num_rolls} cuộn (${q_opt.toLocaleString()} túi) — ĐƠN GIÁ TỐT NHẤT`
+							},
+							requested_qty: {
+								rolls_required: num_rolls,
+								qty: desired_qty,
+								surplus_bags_warehouse: q_surp,
+								rate: req_rate,
+								total: req_rate * desired_qty,
+								label: `Đúng số lượng yêu cầu (${desired_qty.toLocaleString()} túi) — ĐƠN GIÁ CAO HƠN`
+							}
+						},
+						cylinder_quote: {
+							qty: cyl_qty,
+							unit_price: 3500000,
+							total: cyl_qty * 3500000
+						},
+						upsell_recommendation: {
+							extra_cost_to_get_full_batch: Math.max(0, opt_rate * q_opt - req_rate * desired_qty),
+							extra_bags_received: q_surp,
+							unit_price_savings: Math.max(0, req_rate - opt_rate),
+							pitch: `Khách chỉ cần thêm ${(Math.max(0, opt_rate * q_opt - req_rate * desired_qty)).toLocaleString()} đ là nhận thêm trọn vẹn ${q_surp.toLocaleString()} túi với đơn giá rẻ hơn ${Math.max(0, req_rate - opt_rate).toLocaleString()} đ/túi!`
+						}
+					}
+				}));
+				return;
+			}
+			if (pathname === '/api/method/vanphat_portal.api.bao_gia.get_price_preview') {
+				let p = {};
+				try { p = JSON.parse(body); } catch (e) { void e; }
+				const rows = p.lines || [];
+				let total_qty = 0;
+				let subtotal = 0;
+				for (const r of rows) {
+					const q = Number(r.qty) || 0;
+					const rt = Number(r.rate) || 0;
+					total_qty += q;
+					subtotal += q * rt;
+				}
+				res.end(JSON.stringify({
+					message: {
+						total_qty,
+						subtotal,
+						cylinder_total: 0,
+						tax_amount: Math.round(subtotal * 0.08),
+						grand_total: Math.round(subtotal * 1.08)
+					}
+				}));
 				return;
 			}
 			res.statusCode = 404;

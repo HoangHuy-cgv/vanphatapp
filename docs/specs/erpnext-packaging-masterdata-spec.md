@@ -30,53 +30,101 @@
 
 ---
 
-## PHẦN 2: THIẾT KẾ MASTER DATA CHUẨN ERPNEXT NATIVE
+## PHẦN 2: THIẾT KẾ CÂY NHÓM HÀNG & PHÂN LOẠI SẢN PHẨM (SẾP CHỐT)
 
-### 1. Cây Nhóm Hàng (Sếp chốt 2026-09-11 theo 09-san-pham-chinh + NH-0001..0019)
+### 1. Cấu Trúc Cây Nhóm Hàng Chuẩn (2 Nhóm Lớn: Túi & Màng)
 ```text
 All Item Groups
-├── Màng nguyên vật liệu (NVL: Màng PE / PA / PET / Màng khác + Hạt nhựa + Hóa chất + Vật tư + Trục in)
-└── Thành phẩm túi — 4 nhánh:
-    ├── Nhánh 1. Túi màng ghép (có vòi: 888, Lamy, Xốt, BABA, Topgia… / không vòi)
-    ├── Nhánh 2. Túi màng đơn (túi 1 lớp bán Kg: cây đàn, Phong Nguyên, LOTUS…)
-    ├── Nhánh 3. Cuộn màng ghép (BTP: input cắt túi hoặc bán nguyên cuộn)
-    └── Nhánh 4. Túi NGCS (in sẵn OEM: TP-0001..0013, 3 lớp tự SX / 4 lớp mua Trang Tín)
+├── 1. MÀNG (Film)
+│   ├── 1.1. Màng đơn nguyên vật liệu (NVL: PET, PA, PE, MPET, CPP, AL, Hạt nhựa, Hóa chất keo/dung môi)
+│   └── 1.2. Cuộn màng ghép (BTP / Thành phẩm: Input máy cắt túi hoặc bán cho máy đóng gói tự động — In trục/Offset, thiết kế riêng từng khách)
+├── 2. TÚI (Pouch)
+│   ├── 2.1. Túi màng đơn (Bán đại trà cho mọi khách — In lụa)
+│   └── 2.2. Túi màng ghép
+│       ├── Túi nước giặt có sẵn (NGCS: Mẫu in sẵn của Vạn Phát thiết kế, bán đại trà, in lụa lần 2 brandname của khách)
+│       └── Túi màng ghép đặt riêng (In trục/offset theo thiết kế của khách, bán độc quyền 1 khách)
+│           ├── Túi đáy đứng (Doypack: Nước giặt, xốt, chất lỏng — có vòi / không vòi)
+│           ├── Túi 3 biên (Flat / Three-side seal)
+│           ├── Túi xếp hông (Side Gusset)
+│           ├── Túi lưng giữa (Center Seal)
+│           └── Túi 8 cạnh (Flat Bottom / Box Pouch)
+├── 3. PHỤ KIỆN TÚI (Accessories)
+│   ├── Vòi (Spouts: Phi 8.6, 10, 15, 16, 22, 28, 33...)
+│   ├── Zipper (Dây kéo)
+│   └── Hàn kín (Chỉ dán nhiệt, không gắn phụ kiện)
+└── 4. TRỤC IN (Cylinders)
+    └── Trục in ống đồng theo mẫu riêng của từng khách
 ```
-(Mã: TP- túi hoàn chỉnh, NVL- màng/keo, BTP- cuộn ghép, TRUC- trục. Chi tiết NH: `01-master-data.md` §1.3.)
 
 ---
 
-### 2. Quy Chuẩn Đặt Mã Hàng (`Item Code`) Bằng Naming Series
-Hệ thống tự động nhảy số, loại bỏ hoàn toàn việc con người tự viết tắt gây trùng lặp:
-
-* **`TP-.#####`** *(Túi hoàn chỉnh)*: `TP-00001`, `TP-00002`...
-* **`NVL-.#####`** *(NVL màng đơn + keo/dung môi)*: `NVL-00001`, `NVL-00002`...
-* **`BTP-.#####`** *(Cuộn ghép + túi chưa vòi)*: `BTP-00001`, `BTP-00002`...
-* **`TRUC-.#####`** *(Trục in ống đồng)*: `TRUC-00001`, `TRUC-00002`...
-(Sếp duyệt 2026-09-11: bỏ MD/CM/TNG, chỉ giữ NVL/BTP/TP/TRUC.)
-
----
-
-### 3. Quy Chuẩn Tên Hiển Thị (UI) & Tên In PDF (Print Format)
-
-* **Trên màn hình giao diện (`Item Name`):** Siêu ngắn gọn theo công thức:  
-  **`[Brand / Loại] + [Dung tích] + [Đặc trưng cốt lõi]`**
-  * Ví dụ: `TopGia 2L - Đắm say` *(20 ký tự, không bao giờ vỡ giao diện grid)*.
-* **Trên phiếu in PDF gửi khách (`Print Format / Jinja2`):**  
-  Mẫu in sẽ tự động ghép các trường kỹ thuật thành một dòng hoàn chỉnh:
-  ```jinja2
-  {{ doc.item_name }} (Cấu trúc: {{ doc.item_group }} | Đáy: {{ doc.bottom_type }} | Vòi: {{ doc.spout_type }})
-  ```
-  * Kết quả hiển thị trên PDF:  
-    *TopGia 2L - Đắm say (Cấu trúc: Túi đáy đứng màng ghép phức hợp | Đáy: Ghép rời | Vòi: Phi 22 kèm quai xách oval)*
+### 2. Ma Trận Công Nghệ In & Phụ Kiện Túi
+* **Công nghệ in:**
+  * **In trục (Ống đồng) & In offset:** Dành riêng cho Túi màng ghép đặt riêng và Cuộn màng ghép.
+  * **In lụa:** Dành cho Túi màng đơn và in lụa lần 2 (in Brandname/Logo của khách) lên Túi NGCS in sẵn.
+* **Phụ kiện miệng túi:**
+  * **Đóng vòi (Spout):** Chủ lực cho túi nước giặt đáy đứng.
+  * **Zipper (Khóa kéo):** Túi thực phẩm, nông sản, bột.
+  * **Hàn kín (Heat seal):** Hàn nhiệt phẳng miệng túi.
 
 ---
 
-## PHẦN 3: CÁC KỊCH BẢN VẬN HÀNH THỰC TẾ (USE CASES)
+### 3. Quy Chuẩn Đơn Vị Tính (UOM) Chuẩn Hóa Toàn Hệ Thống (Sếp duyệt)
+Hệ thống sử dụng đúng 5 đơn vị tính chuẩn mực, không dùng từ ngữ thừa:
+1. **`Túi`**: Áp dụng cho toàn bộ thành phẩm túi (Túi NGCS và Túi màng ghép đặt riêng).
+2. **`Kg`**: Áp dụng cho Túi màng đơn bán theo cân, Màng thô NVL (PET, PA, PE sữa, MPET, AL), Hóa chất ghép màng (Keo, Curing agent, EA).
+3. **`m`**: Chuẩn duy nhất đo chiều dài cuộn (thay thế hoàn toàn 'Mét Dài'). Áp dụng cho Màng in NVL (PET in), Cuộn màng ghép BTP và Dây Zipper.
+4. **`Cây`**: Áp dụng cho Trục in ống đồng.
+5. **`Cái`**: Áp dụng cho Phụ kiện vòi, nắp và thùng carton đóng gói.
 
-### Kịch bản 1: Túi in sẵn bán đại trà (MTS) — UNKNOWN (Sếp 2026-09-11)
-* Danh sách mã in sẵn thực tế chưa xác minh (file in-lụa có 40+ mẫu, không khớp bộ 13 mã cũ). Chờ Sếp cung cấp danh sách mới dựng Template/biến thể.
-* Vận hành (khi có danh sách): tồn min-max, thiếu hàng chạy Work Order bù kho.
+---
+
+### 4. Quy Tắc Đặt Tên `item_name` Tối Giản & Tách Bạch Dữ Liệu UI/UX
+Tuân thủ nguyên tắc ERPNext Native: `item_name` dài không quá 25 ký tự, không gộp thông số kỹ thuật (độ dày, cấu trúc màng, kích thước WxL), mọi thông số kỹ thuật chi tiết đưa vào `description` và 25 Custom Fields kỹ thuật:
+
+1. **Nhóm Túi Nước Giặt Có Sẵn (NGCS):**
+   * Công thức: **`NGCS {Size} {Màu} - {Mẫu in}`**
+   * Ví dụ: `NGCS Nhỏ Đỏ - Đam Mê`, `NGCS Trung Tím - Nước Hoa`, `NGCS Lớn Vàng - Ban Mai` (18 - 23 ký tự).
+   * Vận hành: Bán đại trà, nhân viên chọn thương hiệu in lụa lần 2 qua dropdown `custom_screen_print_brand` trên Sales Order.
+2. **Nhóm Túi Màng Đơn Dùng Chung (TMD):**
+   * Công thức: **`{Chất liệu} {Kiểu quai} {WxL}`** (Bỏ hẳn chữ "Túi")
+   * Ví dụ: `HD quai thỏ 17x25`, `PE hột xoài 20x30`, `PP 32x45`, `HD quai thỏ 30x20x30` (8 - 18 ký tự).
+3. **Nhóm Túi Màng Ghép Đặt Riêng (TP):**
+   * Công thức: **`{Brand} {Dung tích} {Biến thể/Màu}`** (Bỏ hẳn chữ "Túi" và dấu gạch nối thừa)
+   * Ví dụ: `888 3.2Kg Hồng`, `888 2Kg Tím`, `Minh Râu 3.2Kg Tím`, `TopGia MBTP`, `Lamy 2Kg Vàng` (10 - 18 ký tự).
+4. **Nhóm Trục In Ống Đồng (TRUC):**
+   * `item_code`: `TRUC-{Mã trục NCC}` (Ví dụ `TRUC-G4006940`). Khớp 100% mã khắc laser vật lý.
+   * `item_name`: `Trục {Tên ngắn} ({Mã trục})` (Ví dụ: `Trục Sachpoong (G4010806)`, `Trục Sandokkaebi (G4006940)`).
+5. **Nhóm Màng NVL & BTP:**
+   * Màng đơn NVL: `{Vật liệu} K{Khổ} {Độ dày}mic` (Ví dụ `PA K700 15mic`, `PE sữa K700 190mic`).
+   * Màng In NVL: `PET in {Brand} - {Mẫu in}`, ĐVT: **`m`** (Ví dụ `PET in 888 - Phấn Thơm`).
+   * Cuộn Màng Ghép BTP: `Cuộn {Brand} - {Mẫu in}`, ĐVT: **`m`** (Ví dụ `Cuộn 888 - Phấn Thơm`).
+   * Phụ kiện vòi: `Vòi 16mm`, `Vòi 10mm`, `Vòi 22mm` (ĐVT: Cái, không phân biệt thẳng/xéo).
+   * Phụ kiện zipper: `Dây Zipper`, ĐVT: **`m`**.
+
+---
+
+### Kịch bản 1: Túi in sẵn bán đại trà (MTS) — BẢNG GIÁ NỘI BỘ CHÍNH THỨC 27/05/2026 (GIÁM ĐỐC DUYỆT)
+Túi nước giặt có sẵn (NGCS) được chuẩn hóa theo 3 size quy chuẩn:
+1. **Size Nhỏ (`1.8L – 2.4L`)**:
+   - Tên kỹ thuật: `TÚI ĐỰNG NƯỚC GIẶT CÓ VÒI (Size Nhỏ)`
+   - Cấu trúc màng: **4 Lớp PET/MPET/PA/PE**, Độ dày: **220 Mic**, Vòi: **16mm**.
+   - Báo giá nội bộ: Giá HĐ 4.000 đ + Giá in lụa 2.500 đ $\rightarrow$ Đơn giá chưa VAT: **6.500 đ** (gồm VAT 8%: 6.820 đ).
+   - Quy cách in lụa lần 2: Đã bao gồm in thương hiệu cho 2 mặt (tổng 2 màu) theo từng mã màu.
+2. **Size Trung (`3 – 3.6Kg`)**:
+   - Tên kỹ thuật: `TÚI ĐỰNG NƯỚC GIẶT KHÔNG TÊN 3 LỚP (Size Trung)`
+   - Cấu trúc màng: **3 Lớp PET//PA/PES**, Kích thước: **28x34 cm**, Độ dày: **230 Mic**, Vòi: **16mm**.
+   - Báo giá bậc thang theo số lượng (Chưa VAT):
+     - 500 – 1.000 túi: **7.368 đ** (gồm VAT: 7.680 đ)
+     - 1.100 – 2.000 túi: **7.208 đ** (gồm VAT: 7.520 đ)
+     - 2.100 – 4.000 túi: **7.068 đ** (gồm VAT: 7.380 đ)
+     - Trên 4.100 túi: **6.768 đ** (gồm VAT: 7.080 đ)
+3. **Size Lớn (`3.5L – 5L`)**:
+   - Tên kỹ thuật: `TÚI ĐỰNG NƯỚC GIẶT CÓ VÒI (Size Lớn)`
+   - Cấu trúc màng: **4 Lớp PET/MPET/PA/PE**, Độ dày: **250 Mic**, Vòi: **16mm**.
+   - Báo giá nội bộ:
+     - 500 – 1.000 túi: Giá HĐ 6.400 đ + In lụa 3.000 đ $\rightarrow$ Chưa VAT: **9.400 đ** (gồm VAT: 9.912 đ).
+     - Trên 2.000 túi: Giá HĐ 6.400 đ + In lụa 2.700 đ $\rightarrow$ Chưa VAT: **9.100 đ** (gồm VAT: 9.612 đ).
 
 ### Kịch bản 2: Quản lý Hàng in riêng độc quyền (TopGia, Tanzy, Minh Râu...)
 * **Loại nghiệp vụ:** Make to Order (MTO - Sản xuất theo đơn đặt hàng).
@@ -97,6 +145,14 @@ Hệ thống tự động nhảy số, loại bỏ hoàn toàn việc con ngư�
 * **Thực tế:** Brand `Topgia` thuộc 2 chủ (Fani đã bỏ): **KOVAA** — túi nước giặt; **Phong Tín** — túi đựng màng bọc thực phẩm. Khác item → 2 mã TP riêng cùng `brand` = Topgia.
 * Cùng 1 item nhiều khách (VD 888/Minh Râu của DS COSMETIC): 1 mã TP + bảng `customer_items` + `Item Price` riêng từng khách.
 * **Giá:** giá bán lấy từ file Đơn cọc (`TỔNG HỢP ĐƠN HÀNG ĐÃ CỌC CHƯA GIAO.xlsx`); giá nhập màng/keo từ `MÀNG.xlsx`. Cấm dùng giá chào Google Sheet khi đã có đơn cọc. (Số 2.400/2.550 cũ là ví dụ bịa — bỏ.)
+
+### Kịch bản 5: Quản lý vòng đời sản phẩm & Hàng ngừng bán thương mại (Disabled Items)
+* **Thực tế:** Các mã sản phẩm đã ngừng bán thương phẩm trên thị trường (ví dụ: dòng túi `888 0.6Kg` Hồng, Tím, Đỏ, NLS, NRC của DS COSMETIC).
+* **Thiết lập trên ERPNext:**
+  * Gán cờ `disabled = 1` và `is_sales_item = 0`.
+  * Prefix mô tả: `[NGỪNG BÁN THƯƠNG MẠI]`.
+  * Vẫn giữ nguyên định danh kỹ thuật trong `item_spec.csv` và mã trục in vật lý (`G4006660`, `G4006655`, `G4005877`, `G4012417`, `G4012418`) đang lưu trữ tại Kho Vạn Phát.
+* **Hiệu quả vận hành:** ERPNext tự động lọc bỏ khỏi danh sách tìm kiếm khi tạo Đơn đặt hàng (Sales Order) mới, bảo đảm an toàn cho kinh doanh nhưng bảo toàn toàn vẹn lịch sử kỹ thuật và quản lý tài sản trục in.
 
 ---
 

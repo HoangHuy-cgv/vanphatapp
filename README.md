@@ -5,10 +5,10 @@
 ---
 
 ## 1. Giới thiệu & Kiến trúc
-- **Backend**: Frappe v16 + ERPNext v16 (Custom app: `vanphat_portal`).
-- **Frontend**: Vue 3 + Vite (Single Page Application mount tại route `/portal`).
-- **Database**: MariaDB 10.6.
-- **Hạ tầng**: Docker Compose stack, Cloudflare Zero Trust tunnel, Rclone sao lưu R2.
+Đặc tả kiến trúc hệ thống, tech stack và quy tắc phát triển được định nghĩa duy nhất tại [AGENTS.md](AGENTS.md).
+- **Core Stack**: Frappe v16 + ERPNext v16 + Vue 3 + Frappe UI + Tailwind CSS.
+- **Runtime**: Zero-Node Runtime (Vite build tĩnh, Nginx serve tại `/portal`).
+- **Database & Infra**: MariaDB 10.6+, Docker Compose, Cloudflare Tunnel, Rclone R2.
 
 ---
 

@@ -22,6 +22,8 @@ node_modules/
 
 # Data / outputs (regenerable, often large)
 raw-data/
+data/raw-data/
+**/raw-data/
 *_mapped.csv
 _build_report.json
 _meta.json

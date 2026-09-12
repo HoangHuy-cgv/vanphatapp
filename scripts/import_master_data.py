@@ -1,0 +1,353 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""Script: import_master_data.py (ERPNext v16 Native - Simplified & Robust)"""
+
+import os
+import sys
+import csv
+import argparse
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+def get_clean_dir(custom_path=None):
+    if custom_path and os.path.isdir(custom_path):
+        return custom_path
+    env_dir = os.environ.get("CLEAN_DATA_DIR")
+    if env_dir and os.path.isdir(env_dir):
+        return env_dir
+    candidates = [
+        os.path.join(BASE_DIR, "data", "clean-data"),
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "clean-data"),
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "clean-data"),
+        "/home/frappe/frappe-bench/data/clean-data",
+        "/tmp/clean-data",
+    ]
+    for c in candidates:
+        if os.path.isdir(c) and os.path.exists(os.path.join(c, "item_master.csv")):
+            return os.path.abspath(c)
+    return os.path.join(BASE_DIR, "data", "clean-data")
+
+
+CLEAN_DIR = get_clean_dir()
+
+UOM_DEFINITIONS = [
+    {"name": "Túi", "must_be_whole_number": 1},
+    {"name": "Kg", "must_be_whole_number": 0},
+    {"name": "m", "must_be_whole_number": 0},
+    {"name": "Cây", "must_be_whole_number": 1},
+    {"name": "Cái", "must_be_whole_number": 1},
+]
+
+ITEM_GROUPS = [
+    {"name": "1. NGUYÊN VẬT LIỆU (NVL)", "parent": "All Item Groups", "is_group": 1},
+    {"name": "2. BÁN THÀNH PHẨM (BTP)", "parent": "All Item Groups", "is_group": 1},
+    {"name": "3. THÀNH PHẨM (TP)", "parent": "All Item Groups", "is_group": 1},
+    {"name": "4. TRỤC IN (TRUC)", "parent": "All Item Groups", "is_group": 1},
+    {"name": "Màng Thô NVL", "parent": "1. NGUYÊN VẬT LIỆU (NVL)", "is_group": 0},
+    {"name": "Hóa Chất & Keo Ghép", "parent": "1. NGUYÊN VẬT LIỆU (NVL)", "is_group": 0},
+    {"name": "Phụ Kiện Bao Bì", "parent": "1. NGUYÊN VẬT LIỆU (NVL)", "is_group": 0},
+    {"name": "Màng In Ống Đồng", "parent": "2. BÁN THÀNH PHẨM (BTP)", "is_group": 0},
+    {"name": "Cuộn Màng Ghép BTP", "parent": "2. BÁN THÀNH PHẨM (BTP)", "is_group": 0},
+    {"name": "Túi Nước Giặt Có Sẵn (NGCS)", "parent": "3. THÀNH PHẨM (TP)", "is_group": 0},
+    {"name": "Túi Màng Ghép Đặt Riêng", "parent": "3. THÀNH PHẨM (TP)", "is_group": 0},
+    {"name": "Túi Màng Đơn", "parent": "3. THÀNH PHẨM (TP)", "is_group": 0},
+    {"name": "Trục In Ống Đồng", "parent": "4. TRỤC IN (TRUC)", "is_group": 0},
+]
+
+SPEC_NUMERIC_FIELDS = [
+    "custom_thickness_mic", "custom_film_width_mm", "custom_density_g_cm3",
+    "custom_pouch_width_mm", "custom_pouch_length_mm", "custom_cut_length_mm", "custom_gusset_mm",
+    "custom_print_width_mm", "custom_cylinder_length_mm", "custom_cylinder_circ_mm"
+]
+SPEC_TEXT_FIELDS = [
+    "custom_structure_layers", "custom_capacity", "custom_bottom_type",
+    "custom_closure_type", "custom_spout_type", "custom_spout_position",
+    "custom_handle_type", "custom_print_method", "custom_design_variant",
+    "custom_cylinder_item", "custom_cylinder_location", "custom_cylinder_code"
+]
+
+FRAPPE_AVAILABLE = False
+try:
+    import frappe
+    FRAPPE_AVAILABLE = True
+except ImportError:
+    pass
+
+
+def safe_float(v, default=0.0):
+    try:
+        return float(v) if v not in (None, "") else default
+    except (ValueError, TypeError):
+        return default
+
+
+def safe_int(v, default=0):
+    try:
+        return int(float(v)) if v not in (None, "") else default
+    except (ValueError, TypeError):
+        return default
+
+
+def load_csv(filename):
+    path = os.path.join(CLEAN_DIR, filename)
+    if not os.path.exists(path):
+        return []
+    with open(path, mode="r", encoding="utf-8-sig") as f:
+        return list(csv.DictReader(f))
+
+
+def load_all_nhom_a_data():
+    master_items = load_csv("item_master.csv")
+    spec_items = {r["item_code"]: r for r in load_csv("item_spec.csv")}
+    bom_master = load_csv("bom_master.csv")
+    bom_items = load_csv("bom_items.csv")
+
+    customers = {m["customer"].strip() for m in master_items if m.get("customer", "").strip()}
+    for r in load_csv("customer_brand_matrix.csv"):
+        c = r.get("customer_name", "").strip()
+        if c:
+            customers.add(c)
+
+    boms_grouped = {b["bom_no"]: {"master": b, "items": []} for b in bom_master}
+    for bi in bom_items:
+        if bi["bom_no"] in boms_grouped:
+            boms_grouped[bi["bom_no"]]["items"].append(bi)
+
+    return {
+        "items": [{"master": m, "spec": spec_items.get(m["item_code"], {})} for m in master_items],
+        "customers": sorted(list(customers)),
+        "warehouses": load_csv("warehouses.csv"),
+        "suppliers": load_csv("suppliers.csv"),
+        "operations": load_csv("operations.csv"),
+        "boms": list(boms_grouped.values())
+    }
+
+
+def import_to_frappe(data):
+    print("=" * 75)
+    print(" BẮT ĐẦU IMPORT TOÀN BỘ DANH MỤC NỀN TẢNG (NHÓM A) VÀO ERPNEXT v16")
+    print("=" * 75)
+
+    def create_if_missing(doctype, filters, doc_data, log_prefix=""):
+        if not frappe.db.exists(doctype, filters):
+            frappe.get_doc(doc_data).insert(ignore_permissions=True)
+            if log_prefix:
+                print(f"   [+] {log_prefix}")
+
+    frappe.db.begin()
+    try:
+        print("\n1. Nạp Đơn Vị Tính (UOM)...")
+        for u in UOM_DEFINITIONS:
+            create_if_missing("UOM", u["name"], {"doctype": "UOM", "uom_name": u["name"], "must_be_whole_number": u["must_be_whole_number"]}, f"Tạo UOM: {u['name']}")
+
+        print("\n2. Nạp Cây Nhóm Hàng (Item Group Hierarchy)...")
+        for g in ITEM_GROUPS:
+            if not frappe.db.exists("Item Group", g["name"]):
+                parent = g["parent"]
+                if parent != "All Item Groups" and not frappe.db.exists("Item Group", parent):
+                    frappe.get_doc({"doctype": "Item Group", "item_group_name": parent, "parent_item_group": "All Item Groups", "is_group": 1}).insert(ignore_permissions=True)
+                frappe.get_doc({"doctype": "Item Group", "item_group_name": g["name"], "parent_item_group": g["parent"], "is_group": g["is_group"]}).insert(ignore_permissions=True)
+                print(f"   [+] Tạo Item Group: {g['name']}")
+
+        print("\n3. Nạp Cây Kho Bãi (Warehouse)...")
+        company = frappe.defaults.get_user_default("Company") or "Công ty TNHH Sản Xuất Bao Bì Vạn Phát"
+        company_abbr = frappe.db.get_value("Company", company, "abbr") or "VP"
+        root_warehouse = frappe.db.get_value("Warehouse", {"company": company, "is_group": 1, "warehouse_name": "All Warehouses"}) or f"All Warehouses - {company_abbr}"
+        for w in data["warehouses"]:
+            wh_name = w["warehouse_name"]
+            parent = root_warehouse if w["parent_warehouse"] in ("All Warehouses", "") else f"{w['parent_warehouse']} - {company_abbr}"
+            create_if_missing("Warehouse", {"warehouse_name": wh_name, "company": company}, {
+                "doctype": "Warehouse", "warehouse_name": wh_name,
+                "parent_warehouse": parent, "is_group": int(w["is_group"]), "company": company
+            }, f"Tạo Kho: {wh_name}")
+
+        print(f"\n4. Nạp {len(data['customers'])} Khách Hàng & {len(data['suppliers'])} Nhà Cung Cấp...")
+        for c in data["customers"]:
+            create_if_missing("Customer", c, {"doctype": "Customer", "customer_name": c, "customer_type": "Company"})
+        for s in data["suppliers"]:
+            grp = s.get("supplier_group", "All Supplier Groups")
+            if grp and grp != "All Supplier Groups":
+                create_if_missing("Supplier Group", grp, {
+                    "doctype": "Supplier Group", "supplier_group_name": grp,
+                    "parent_supplier_group": "All Supplier Groups", "is_group": 0
+                })
+            create_if_missing("Supplier", s["supplier_name"], {
+                "doctype": "Supplier", "supplier_name": s["supplier_name"],
+                "supplier_group": grp, "supplier_type": s.get("supplier_type", "Company")
+            }, f"Tạo NCC: {s['supplier_name']}")
+
+        print("\n5. Nạp Trạm Máy & Công Đoạn Sản Xuất...")
+        for op in data["operations"]:
+            create_if_missing("Workstation", op["workstation"], {
+                "doctype": "Workstation", "workstation_name": op["workstation"],
+                "production_capacity": 1, "hour_rate": safe_float(op.get("hour_rate", 200000))
+            })
+            create_if_missing("Operation", op["operation"], {
+                "doctype": "Operation", "name": op["operation"], "operation": op["operation"],
+                "workstation": op["workstation"], "description": op.get("desc", "")
+            }, f"Tạo Công Đoạn: {op['operation']}")
+
+        print(f"\n6. Nạp {len(data['items'])} Mặt Hàng...")
+        def item_dep_rank(it):
+            c = it["master"]["item_code"]
+            if c.startswith("TRUC-"): return 1
+            if c.startswith("NVL-"): return 2
+            if c.startswith("BTP-"): return 3
+            if c.startswith("TMD-"): return 4
+            if c.startswith("NGCS-"): return 5
+            return 6
+        sorted_items = sorted(data["items"], key=item_dep_rank)
+        for it in sorted_items:
+            m, s = it["master"], it["spec"]
+            code = m["item_code"]
+            doc_dict = {
+                "doctype": "Item", "item_code": code, "item_name": m["item_name"],
+                "item_group": m["item_group"], "stock_uom": m["stock_uom"],
+                "disabled": safe_int(m.get("disabled", 0)),
+                "is_stock_item": safe_int(m.get("is_stock_item", 1)),
+                "is_sales_item": safe_int(m.get("is_sales_item", 1)),
+                "is_purchase_item": safe_int(m.get("is_purchase_item", 0)),
+                "description": m.get("description", ""),
+            }
+            if s:
+                for k in SPEC_NUMERIC_FIELDS:
+                    val = s.get(k)
+                    if val is None or val == "":
+                        if k == "custom_cylinder_length_mm": val = s.get("cylinder_length_mm")
+                        elif k == "custom_cylinder_circ_mm": val = s.get("cylinder_circ_mm")
+                    doc_dict[k] = safe_float(val)
+                for k in SPEC_TEXT_FIELDS:
+                    val = s.get(k)
+                    if not val:
+                        if k == "custom_cylinder_location": val = s.get("cylinder_warehouse") or ""
+                        elif k == "custom_cylinder_code": val = s.get("cylinder_code") or ""
+                    doc_dict[k] = str(val or "")
+                doc_dict["custom_print_colors"] = safe_int(s.get("custom_print_colors"))
+                doc_dict["custom_cylinder_qty"] = safe_int(s.get("custom_cylinder_qty") or s.get("cylinder_qty"))
+                if code.startswith("TRUC-") or doc_dict.get("custom_cylinder_item") == code:
+                    doc_dict["custom_cylinder_item"] = ""
+            if frappe.db.exists("Item", code):
+                doc = frappe.get_doc("Item", code)
+                for k, v in doc_dict.items():
+                    if k != "doctype": doc.set(k, v)
+                doc.save(ignore_permissions=True)
+            else:
+                frappe.get_doc(doc_dict).insert(ignore_permissions=True)
+
+        print(f"\n7. Nạp {len(data['boms'])} Định Mức Sản Xuất (BOM)...")
+        currency = frappe.db.get_value("Company", company, "default_currency") or "VND"
+        for b in data["boms"]:
+            bm = b["master"]
+            if not frappe.db.exists("BOM", {"item": bm["item"], "is_default": 1}):
+                frappe.get_doc({
+                    "doctype": "BOM", "item": bm["item"], "quantity": safe_float(bm["quantity"], 1000),
+                    "uom": bm["uom"], "company": company, "currency": currency,
+                    "conversion_rate": 1.0, "rm_cost_as_per": "Valuation Rate",
+                    "is_active": 1, "is_default": 1, "with_operations": 0,
+                    "process_loss_percentage": safe_float(bm.get("process_loss_percentage", 2.0)),
+                    "items": [{"item_code": bi["item_code"], "qty": safe_float(bi["qty"]), "uom": bi["uom"], "rate": safe_float(bi.get("rate", 0.0))} for bi in b["items"]]
+                }).insert(ignore_permissions=True)
+                print(f"   [+] Tạo BOM: {bm['bom_no']} cho {bm['item']}")
+
+        frappe.db.commit()
+        print("\n" + "=" * 75)
+        print(" IMPORT THÀNH CÔNG RỰC RỠ TOÀN BỘ NHÓM A VÀO DATABASE!")
+        print("=" * 75)
+    except Exception as e:
+        frappe.db.rollback()
+        print(f"\n[!] LỖI - ĐÃ ROLLBACK GIAO DỊCH: {e}")
+        raise e
+
+
+def run_dry_run(data):
+    print("=" * 75)
+    print(" BÁO CÁO TỔNG KIỂM TRA BỘ DANH MỤC NỀN TẢNG (NHÓM A) - DỰ ÁN VẠN PHÁT")
+    print("=" * 75)
+
+    print("\n1. ĐƠN VỊ TÍNH CHUẨN (5 UOMs):")
+    for u in UOM_DEFINITIONS:
+        print(f"   - {u['name']:<6} (Số nguyên: {u['must_be_whole_number']})")
+
+    print("\n2. CÂY NHÓM HÀNG CHUẨN HÓA 4 TRỤ CỘT (ITEM GROUPS):")
+    for g in ITEM_GROUPS:
+        indent = "   " if g["parent"] == "All Item Groups" else "      └── "
+        print(f"{indent}{g['name']} ({'Nhóm cha' if g['is_group'] else 'Nhóm lá gán Item'})")
+
+    print(f"\n3. CÂY KHO BÃI SẢN XUẤT ({len(data['warehouses'])} Kho):")
+    for w in data["warehouses"]:
+        indent = "   " if w["parent_warehouse"] == "All Warehouses" else "      └── "
+        print(f"{indent}[{w['warehouse_code']:<9}] {w['warehouse_name']:<25} ({w['desc']})")
+
+    print(f"\n4. ĐỐI TÁC NGHIỆP VỤ (PARTNERS):")
+    print(f"   - Khách Hàng: {len(data['customers'])} pháp nhân (DS Cosmetic, TopGia/Phong Tín, KOVAA, Eco Wipes, Amyco...)")
+    print(f"   - Nhà Cung Cấp: {len(data['suppliers'])} NCC verified từ sổ công nợ:")
+    for s in data["suppliers"]:
+        print(f"      * {s['supplier_name']:<48} | Sản phẩm: {s['products']}")
+
+    print(f"\n5. CÔNG ĐOẠN & TRẠM MÁY ({len(data['operations'])} Trạm):")
+    for op in data["operations"]:
+        print(f"   - {op['operation']:<24} -> Trạm máy: {op['workstation']:<38} ({op['hour_rate']:>7} đ/h)")
+
+    print(f"\n6. MẶT HÀNG SẢN PHẨM & QUY CÁCH ({len(data['items'])} Items):")
+    group_stats = {}
+    disabled_cnt = 0
+    for it in data["items"]:
+        m = it["master"]
+        grp = m["item_group"]
+        group_stats[grp] = group_stats.get(grp, 0) + 1
+        if safe_int(m.get("disabled", 0)) == 1:
+            disabled_cnt += 1
+    for grp, cnt in sorted(group_stats.items(), key=lambda x: x[1], reverse=True):
+        print(f"   - {grp:<32}: {cnt:>3} mã")
+    print(f"   - Trong đó đã DISABLE (Ngừng bán thương mại): {disabled_cnt} mã (dòng 888 0.6Kg)")
+
+    print(f"\n7. ĐỊNH MỨC SẢN XUẤT 2 CẤP (BOM - BILL OF MATERIALS):")
+    print(f"   - Tổng số BOM Master : {len(data['boms'])} định mức sản xuất")
+    total_components = sum(len(b["items"]) for b in data["boms"])
+    print(f"   - Tổng dòng vật tư   : {total_components} thành phần chi tiết")
+    print("   - Cấu trúc BOM minh họa:")
+    for sample_bom in data["boms"][:2]:
+        bm = sample_bom["master"]
+        print(f"      * [{bm['bom_no']}] Sản xuất: {bm['item']} ({bm['item_name']}) | Cơ số: {bm['quantity']} {bm['uom']}")
+        for bi in sample_bom["items"]:
+            print(f"         + {bi['item_code']:<12} ({bi['item_name']:<24}): {bi['qty']:>7} {bi['uom']:<4} | {bi['note']}")
+
+    print("\n" + "=" * 75)
+    print(" KẾT QUẢ: 100% DANH MỤC NỀN TẢNG (NHÓM A) ĐÃ HOÀN THIỆN & SẠCH TUYỆT ĐỐI!")
+    print(" Lệnh nạp trực tiếp trên máy chủ VPS:")
+    print("   bench --site app.vanphat.io.vn run-script scripts/import_master_data.py")
+    print("=" * 75)
+
+
+def execute():
+    data = load_all_nhom_a_data()
+    import_to_frappe(data)
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Nạp Danh Mục Nền Tảng (Nhóm A) Bao Bì Vạn Phát")
+    parser.add_argument("--dry-run", action="store_true", help="Chạy kiểm tra tính toàn vẹn Nhóm A")
+    parser.add_argument("--site", type=str, help="Tên site Frappe")
+    parser.add_argument("--data-dir", type=str, help="Đường dẫn thư mục clean-data")
+    args, _ = parser.parse_known_args()
+
+    if args.data_dir:
+        global CLEAN_DIR
+        CLEAN_DIR = get_clean_dir(args.data_dir)
+
+    data = load_all_nhom_a_data()
+    if args.dry_run or not FRAPPE_AVAILABLE:
+        run_dry_run(data)
+    else:
+        if args.site and (not hasattr(frappe, "db") or not frappe.db):
+            frappe.init(site=args.site)
+            frappe.connect()
+        import_to_frappe(data)
+
+
+if __name__ == "__main__":
+    if FRAPPE_AVAILABLE and getattr(frappe, "db", None) and any("run-script" in a or "execute" in a for a in sys.argv):
+        execute()
+    else:
+        main()

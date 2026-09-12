@@ -4,17 +4,34 @@
 	<aside class="sidebar">
 		<div class="brand-block">
 			<img :src="logoUrl" alt="Bao Bì Vạn Phát" class="brand-logo" />
-			<div class="brand-title">VẠN PHÁT</div>
+			<div class="brand-title">BAO BÌ VẠN PHÁT</div>
 		</div>
+
 		<nav class="nav-menu">
-			<button type="button" class="nav-btn">Tổng quan</button>
+			<button type="button" class="nav-btn">
+				<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<rect x="3" y="3" width="7" height="7"></rect>
+					<rect x="14" y="3" width="7" height="7"></rect>
+					<rect x="14" y="14" width="7" height="7"></rect>
+					<rect x="3" y="14" width="7" height="7"></rect>
+				</svg>
+				<span class="nav-text">Tổng quan</span>
+			</button>
 			<button
 				type="button"
 				class="nav-btn"
 				:class="{ active: view === 'quotes' }"
 				@click="view = 'quotes'; loadQuotations()"
 			>
-				Báo giá
+				<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+					<polyline points="14 2 14 8 20 8"></polyline>
+					<line x1="16" y1="13" x2="8" y2="13"></line>
+					<line x1="16" y1="17" x2="8" y2="17"></line>
+					<polyline points="10 9 9 9 8 9"></polyline>
+				</svg>
+				<span class="nav-text">Báo giá</span>
+				<span v-if="quotations.length" class="nav-badge">{{ quotations.length }}</span>
 			</button>
 			<button
 				type="button"
@@ -22,10 +39,49 @@
 				:class="{ active: view === 'orders' }"
 				@click="view = 'orders'; loadOrders()"
 			>
-				Đơn hàng
+				<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<line x1="16.5" y1="9.4" x2="7.5" y2="4.21"></line>
+					<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+					<polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+					<line x1="12" y1="22.08" x2="12" y2="12"></line>
+				</svg>
+				<span class="nav-text">Đơn hàng</span>
+				<span v-if="orders.length" class="nav-badge">{{ orders.length }}</span>
 			</button>
-			<button type="button" class="nav-btn">Sản xuất</button>
+			<button type="button" class="nav-btn">
+				<svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+					<polyline points="2 17 12 22 22 17"></polyline>
+					<polyline points="2 12 12 17 22 12"></polyline>
+				</svg>
+				<span class="nav-text">Sản xuất</span>
+			</button>
 		</nav>
+
+		<!-- Bottom User & Logout -->
+		<div class="sidebar-footer">
+			<div class="user-block" :title="currentUser">
+				<div class="user-avatar">
+					<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+						<circle cx="12" cy="7" r="4"></circle>
+					</svg>
+				</div>
+				<span class="user-id">{{ currentUser }}</span>
+			</div>
+			<button
+				type="button"
+				class="btn-logout"
+				title="Đăng xuất"
+				@click="handleLogout"
+			>
+				<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+					<polyline points="16 17 21 12 16 7"></polyline>
+					<line x1="21" y1="12" x2="9" y2="12"></line>
+				</svg>
+			</button>
+		</div>
 	</aside>
 
 		<!-- Main Content Area -->
@@ -150,16 +206,16 @@
 		/>
 
 		<!-- Step 2: Director Drawer -->
-	<DrawerStep2Director
-		v-if="showStep2"
-		:form-data="step1Data"
-		:preview-figures="figures"
-		:saved-data="step2Data"
-		@close="showStep2 = false"
-		@back="onStep2Back"
-		@items-changed="onItemsChanged"
-		@submit="onQuotationSubmit"
-	/>
+		<DrawerStep2Director
+			v-if="showStep2"
+			:form-data="step1Data"
+			:preview-figures="figures"
+			:saved-data="step2Data"
+			@close="showStep2 = false"
+			@back="onStep2Back"
+			@items-changed="onItemsChanged"
+			@submit="onQuotationSubmit"
+		/>
 	</div>
 </template>
 
@@ -194,7 +250,7 @@ const step1Data = ref({
 });
 const step2Data = ref({
 	lines: [{ item_name: '', qty: '', rate: '' }],
-	materials: ['OPP', 'PE'],
+	materials: ['OPP', 'PE sữa'],
 	cylinder_qty: 1,
 	artwork_url: '',
 });
@@ -206,6 +262,11 @@ const figures = ref({
 	tax_amount: '0 đ',
 	grand_total: '0 đ',
 });
+
+const calcResult = ref(null);
+const selectedScenario = ref('optimal_whole_roll');
+
+const currentUser = ref('giamdoc@vanphat.com');
 
 // API Caller wrapper
 function csrfToken() {
@@ -233,12 +294,31 @@ async function boot() {
 	try {
 		const res = await fetch('/api/method/vanphat_portal.api.bao_gia.get_boot');
 		const json = await res.json();
-		if (json && json.message && json.message.csrf_token) {
-			window.vp_csrf_token = json.message.csrf_token;
+		if (json && json.message) {
+			if (json.message.csrf_token) {
+				window.vp_csrf_token = json.message.csrf_token;
+			}
+			if (json.message.user && json.message.user !== 'Guest') {
+				currentUser.value = json.message.user;
+			}
 		}
 	} catch (err) {
 		// keep going with whatever token the host page provides
 	}
+}
+
+async function handleLogout() {
+	try {
+		await fetch('/api/method/logout', {
+			method: 'POST',
+			headers: {
+				'X-Frappe-CSRF-Token': csrfToken(),
+			},
+		});
+	} catch (err) {
+		// ignore
+	}
+	window.location.href = '/login';
 }
 
 async function loadQuotations() {
@@ -254,11 +334,47 @@ function openStep1Modal() {
 	showStep1.value = true;
 }
 
-function onStep1Complete(payload) {
+async function calculatePackaging() {
+	const totalDesiredQty =
+		step2Data.value.lines.reduce((s, r) => s + (Number(r.qty) || 0), 0) || 5000;
+	const isPrintCylinder =
+		step1Data.value.print_type === 'In trục' &&
+		step1Data.value.cylinder_status === 'Chưa có trục';
+	const cylQty = isPrintCylinder ? Number(step2Data.value.cylinder_qty) || 1 : 0;
+
+	const res = await api('calculate_packaging_quotation', {
+		pouch_type: step1Data.value.product_type,
+		width_mm: step1Data.value.width,
+		length_mm: step1Data.value.length,
+		gusset_mm: step1Data.value.bottom,
+		layers: step2Data.value.materials,
+		spout_type: step1Data.value.accessory === 'Có vòi' ? '16mm' : '',
+		desired_qty: totalDesiredQty,
+		cylinder_qty: cylQty,
+		target_margin: 0.30,
+	});
+
+	if (res) {
+		calcResult.value = res;
+		return res;
+	}
+	return null;
+}
+
+async function onStep1Complete(payload) {
 	step1Data.value = payload;
 	showStep1.value = false;
 	showStep2.value = true;
-	fetchPricePreview();
+	if (!step2Data.value.lines || !step2Data.value.lines.length || !step2Data.value.lines[0].item_name) {
+		step2Data.value.lines = [
+			{
+				item_name: step1Data.value.description || 'Mẫu in chính',
+				qty: 5000,
+				rate: '',
+			},
+		];
+	}
+	await fetchPricePreview();
 }
 
 function onStep2Back() {
@@ -268,13 +384,23 @@ function onStep2Back() {
 
 async function fetchPricePreview() {
 	const res = await api('get_price_preview', { quotation: '', lines: step2Data.value.lines });
+	const isPrintCylinder =
+		step1Data.value.print_type === 'In trục' &&
+		step1Data.value.cylinder_status === 'Chưa có trục';
+	const cylTotal = isPrintCylinder
+		? (calcResult.value?.cylinder_quote?.total ?? (Number(step2Data.value.cylinder_qty) || 1) * 3500000)
+		: 0;
+
 	if (res) {
+		const sub = Number(res.subtotal) || 0;
+		const tax = Math.round(sub * 0.08);
+		const grand = sub + cylTotal + tax;
 		figures.value = {
 			total_qty: String(res.total_qty ?? '0'),
-			subtotal: formatCurrency(res.subtotal),
-			cylinder_total: formatCurrency(res.cylinder_total),
-			tax_amount: formatCurrency(res.tax_amount),
-			grand_total: formatCurrency(res.grand_total),
+			subtotal: formatCurrency(sub),
+			cylinder_total: formatCurrency(cylTotal),
+			tax_amount: formatCurrency(tax),
+			grand_total: formatCurrency(grand),
 		};
 	}
 }
@@ -306,14 +432,15 @@ async function onMarkLost(q) {
 	if (res) await loadQuotations();
 }
 
-function onItemsChanged(payload = {}) {
+async function onItemsChanged(payload = {}) {
 	step2Data.value = {
 		lines: (payload.lines && payload.lines.length ? payload.lines : step2Data.value.lines).map((r) => ({ ...r })),
 		materials: [...(payload.materials || step2Data.value.materials)],
 		cylinder_qty: payload.cylinder_qty ?? step2Data.value.cylinder_qty,
 		artwork_url: payload.artwork_url ?? step2Data.value.artwork_url,
 	};
-	fetchPricePreview();
+	await calculatePackaging();
+	await fetchPricePreview();
 }
 
 async function onQuotationSubmit(payload) {
@@ -393,40 +520,57 @@ html, body {
 }
 
 .sidebar {
-	width: 200px;
+	width: 216px;
+	height: 100vh;
+	position: sticky;
+	top: 0;
 	flex-shrink: 0;
 	background: #161b22;
-	border-right: 1px solid #3a424e;
-	padding: 18px 12px;
+	border-right: 1px solid #2d333b;
+	padding: 14px 10px;
 	display: flex;
 	flex-direction: column;
 	gap: 6px;
+	z-index: 10;
 }
+
 .brand-block {
 	display: flex;
 	align-items: center;
-	gap: 10px;
-	padding: 4px 10px 14px;
+	gap: 9px;
+	padding: 4px 6px 12px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+	margin-bottom: 6px;
 }
 
 .brand-logo {
-	width: 36px;
-	height: 36px;
+	height: 24px;
+	width: auto;
+	max-width: 36px;
 	object-fit: contain;
-	border-radius: 8px;
-	background: #ffffff;
-	padding: 3px;
+	background: transparent;
+	filter: drop-shadow(0 2px 6px rgba(237, 28, 36, 0.35));
 }
 
 .brand-title {
 	font-weight: 800;
-	letter-spacing: 0.04em;
-	color: #eef1f6;
-	font-size: 16px;
+	letter-spacing: 0.03em;
+	color: #ffffff;
+	font-size: 14px;
+	white-space: nowrap;
+}
+
+.nav-menu {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	flex: 1;
 }
 
 .nav-btn {
-	display: block;
+	display: flex;
+	align-items: center;
+	gap: 10px;
 	width: 100%;
 	text-align: left;
 	background: transparent;
@@ -437,7 +581,7 @@ html, body {
 	font-weight: 600;
 	padding: 9px 12px;
 	cursor: pointer;
-	transition: all 0.15s;
+	transition: all 0.15s ease;
 }
 
 .nav-btn:hover {
@@ -451,23 +595,116 @@ html, body {
 	font-weight: 700;
 }
 
+.nav-icon {
+	width: 18px;
+	height: 18px;
+	flex-shrink: 0;
+	opacity: 0.85;
+}
+
+.nav-btn.active .nav-icon {
+	opacity: 1;
+	stroke: #4ea1e0;
+}
+
+.nav-text {
+	flex: 1;
+}
+
+.nav-badge {
+	font-size: 11.5px;
+	font-weight: 700;
+	padding: 1px 7px;
+	border-radius: 10px;
+	background: rgba(255, 255, 255, 0.08);
+	color: #9da7b5;
+}
+
+.nav-btn.active .nav-badge {
+	background: rgba(78, 161, 224, 0.25);
+	color: #4ea1e0;
+}
+
+.sidebar-footer {
+	margin-top: auto;
+	padding-top: 12px;
+	border-top: 1px solid rgba(255, 255, 255, 0.07);
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 6px;
+	padding-left: 4px;
+	padding-right: 2px;
+}
+
+.user-block {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	min-width: 0;
+	flex: 1;
+}
+
+.user-avatar {
+	width: 28px;
+	height: 28px;
+	border-radius: 50%;
+	background: #1f2937;
+	border: 1px solid #374151;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: #9ca3af;
+	flex-shrink: 0;
+}
+
+.user-id {
+	font-size: 13px;
+	font-weight: 600;
+	color: #cbd5e1;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.btn-logout {
+	width: 30px;
+	height: 30px;
+	border-radius: 6px;
+	border: none;
+	background: transparent;
+	color: #94a3b8;
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.15s ease;
+	flex-shrink: 0;
+}
+
+.btn-logout:hover {
+	color: #f87171;
+	background: rgba(239, 68, 68, 0.12);
+}
+
 .main-content {
 	flex: 1;
 	min-width: 0;
-	padding: 24px 32px;
+	padding: 26px 36px;
 }
 
 .page-head {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	margin-bottom: 20px;
+	margin-bottom: 22px;
 }
 
 .page-title {
-	font-size: 20px;
+	font-size: 22px;
 	font-weight: 800;
 	color: #eef1f6;
+	letter-spacing: -0.01em;
 }
 
 .btn-new-quote {
@@ -481,7 +718,7 @@ html, body {
 	background: #4ea1e0;
 	border: 0;
 	border-radius: 8px;
-	padding: 10px 20px;
+	padding: 11px 22px;
 	cursor: pointer;
 	transition: background 0.15s;
 }
@@ -500,23 +737,23 @@ html, body {
 .data-table {
 	width: 100%;
 	border-collapse: collapse;
-	font-size: 14.5px;
+	font-size: 15px;
 }
 
 .data-table th {
 	text-align: left;
-	font-size: 12.5px;
+	font-size: 13.5px;
 	font-weight: 700;
 	text-transform: uppercase;
 	letter-spacing: 0.04em;
 	color: #9da7b5;
-	padding: 12px 16px;
+	padding: 14px 18px;
 	border-bottom: 1px solid #3a424e;
 	background: #1a1f27;
 }
 
 .data-table td {
-	padding: 12px 16px;
+	padding: 14px 18px;
 	border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 	color: #eef1f6;
 }
@@ -551,9 +788,9 @@ html, body {
 
 .status-badge {
 	display: inline-block;
-	font-size: 12.5px;
+	font-size: 13px;
 	font-weight: 700;
-	padding: 3px 8px;
+	padding: 4px 10px;
 	border-radius: 6px;
 }
 
@@ -589,15 +826,16 @@ html, body {
 .row-btn {
 	display: inline-block;
 	font-family: inherit;
-	font-size: 12px;
+	font-size: 13px;
 	font-weight: 700;
 	color: #4ea1e0;
 	background: rgba(78, 161, 224, 0.12);
 	border: 1px solid rgba(78, 161, 224, 0.4);
 	border-radius: 6px;
-	padding: 4px 10px;
+	padding: 5px 12px;
 	margin: 0 2px;
 	cursor: pointer;
+	transition: all 0.15s;
 }
 
 .row-btn-danger {

@@ -117,10 +117,18 @@
 							<button
 								type="button"
 								class="mat-chip chip-emerald"
-								:class="{ on: isMaterialSelected('PE') }"
-								@click="toggleMaterial('PE')"
+								:class="{ on: isMaterialSelected('PE sữa') }"
+								@click="toggleMaterial('PE sữa')"
 							>
-								PE
+								PE sữa
+							</button>
+							<button
+								type="button"
+								class="mat-chip chip-emerald"
+								:class="{ on: isMaterialSelected('PE trong') }"
+								@click="toggleMaterial('PE trong')"
+							>
+								PE trong
 							</button>
 							<button
 								type="button"
@@ -273,7 +281,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import ArtworkBox from './ArtworkBox.vue';
 
 const props = defineProps({
@@ -295,18 +303,38 @@ const props = defineProps({
 		type: Object,
 		default: () => ({}),
 	},
+	calculationResult: {
+		type: Object,
+		default: null,
+	},
 });
 
 const emit = defineEmits(['close', 'back', 'submit', 'itemsChanged']);
+
+function formatCurrency(val) {
+	if (val == null || val === '') return '0 đ';
+	if (typeof val === 'string' && isNaN(Number(val))) return val;
+	return Number(val).toLocaleString('vi-VN') + ' đ';
+}
+
+function formatNumber(val) {
+	if (val == null || val === '') return '0';
+	return Number(val).toLocaleString('vi-VN');
+}
 
 const isRoll = computed(() => props.formData.product_type === 'Cuộn màng ghép');
 const needCylinder = computed(() => props.formData.print_type === 'In trục' && props.formData.cylinder_status === 'Chưa có trục');
 
 // M2 state — restored from App-held savedData so Quay lại không mất dữ liệu
-const selectedMaterials = ref([...(props.savedData.materials || ['OPP', 'PE'])]);
+const selectedMaterials = ref([...(props.savedData.materials || ['OPP', 'PE sữa'])]);
 const artworkUrl = ref(props.savedData.artwork_url || '');
 const cylinderQty = ref(props.savedData.cylinder_qty ?? 1);
-const cylinderRateDisplay = ref('Chờ báo giá');
+const cylinderRateDisplay = computed(() => {
+	if (props.calculationResult?.cylinder_quote?.unit_price) {
+		return formatCurrency(props.calculationResult.cylinder_quote.unit_price) + '/cây';
+	}
+	return '3.500.000 đ/cây';
+});
 
 // Print item rows
 const itemRows = ref(
@@ -314,6 +342,20 @@ const itemRows = ref(
 		? props.savedData.lines
 		: [{ item_name: '', qty: '', rate: '' }]
 	).map((r) => ({ item_name: r.item_name || '', qty: r.qty ?? '', rate: r.rate ?? '' })),
+);
+
+watch(
+	() => props.savedData.lines,
+	(newLines) => {
+		if (newLines && newLines.length) {
+			itemRows.value = newLines.map((r) => ({
+				item_name: r.item_name || '',
+				qty: r.qty ?? '',
+				rate: r.rate ?? '',
+			}));
+		}
+	},
+	{ deep: true },
 );
 
 function isMaterialSelected(code) {
@@ -327,6 +369,7 @@ function toggleMaterial(code) {
 	} else {
 		selectedMaterials.value.push(code);
 	}
+	onItemChange();
 }
 
 // Line 4 compiled dimensions with explicit units mm and mic
@@ -394,7 +437,7 @@ function onSubmit() {
 }
 
 .drawer-panel {
-	width: 560px;
+	width: 580px;
 	max-width: 94vw;
 	height: 100vh;
 	background: #161b22;
@@ -409,12 +452,12 @@ function onSubmit() {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 14px 20px;
+	padding: 16px 22px;
 	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .drawer-title {
-	font-size: 16px;
+	font-size: 18px;
 	font-weight: 800;
 	color: #eef1f6;
 	margin: 0;
@@ -430,6 +473,7 @@ function onSubmit() {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	transition: color 0.15s;
 }
 
 .btn-icon:hover {
@@ -437,7 +481,7 @@ function onSubmit() {
 }
 
 .drawer-top-summary {
-	padding: 16px 20px 10px;
+	padding: 16px 22px 12px;
 	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 	display: flex;
 	flex-direction: column;
@@ -451,8 +495,8 @@ function onSubmit() {
 	margin-bottom: 12px;
 	background: #1a1f27;
 	border-radius: 10px;
-	padding: 9px 14px;
-	min-height: 40px;
+	padding: 10px 14px;
+	min-height: 42px;
 	box-sizing: border-box;
 }
 
@@ -465,13 +509,13 @@ function onSubmit() {
 }
 
 .icon-building {
-	font-size: 14px;
+	font-size: 15px;
 	flex-shrink: 0;
 }
 
 .cust-name {
-	font-size: 15px;
-	font-weight: 800;
+	font-size: 14px;
+	font-weight: 700;
 	color: #eef1f6;
 	white-space: nowrap;
 	overflow: hidden;
@@ -479,11 +523,11 @@ function onSubmit() {
 }
 
 .brand-tag {
-	font-size: 12.5px;
+	font-size: 14px;
 	font-weight: 700;
 	color: #0284c7;
-	background: rgba(2, 132, 199, 0.12);
-	border: 1px solid rgba(2, 132, 199, 0.25);
+	background: rgba(2, 132, 199, 0.14);
+	border: 1px solid rgba(2, 132, 199, 0.3);
 	padding: 3px 10px;
 	border-radius: 6px;
 	white-space: nowrap;
@@ -494,13 +538,13 @@ function onSubmit() {
 	display: flex;
 	gap: 8px;
 	flex-wrap: wrap;
-	margin-bottom: 14px;
+	margin-bottom: 12px;
 }
 
 .axis-badge {
-	font-size: 12px;
+	font-size: 14px;
 	font-weight: 700;
-	padding: 4px 10px;
+	padding: 4px 11px;
 	border-radius: 6px;
 }
 
@@ -529,33 +573,27 @@ function onSubmit() {
 }
 
 .spec-box {
-	background: #1a1f27;
-	border-radius: 12px;
-	padding: 12px 14px;
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	gap: 6px;
+	margin-top: 2px;
 }
 
 .spec-line {
 	display: flex;
 	align-items: center;
-	gap: 10px;
-	background: #161b22;
-	border: 1px solid rgba(255, 255, 255, 0.08);
-	border-radius: 8px;
-	padding: 8px 12px;
-	min-height: 38px;
+	gap: 8px;
+	padding: 2px 0;
 	box-sizing: border-box;
 }
 
 .spec-icon {
-	font-size: 14px;
+	font-size: 15px;
 	flex-shrink: 0;
 }
 
 .spec-desc-text {
-	font-size: 13px;
+	font-size: 14px;
 	font-weight: 700;
 	color: #eef1f6;
 	overflow: hidden;
@@ -564,7 +602,7 @@ function onSubmit() {
 }
 
 .spec-dim-text {
-	font-size: 13px;
+	font-size: 14px;
 	font-weight: 700;
 	color: #eef1f6;
 	letter-spacing: 0.01em;
@@ -573,63 +611,71 @@ function onSubmit() {
 
 .mat-chips-wrap {
 	display: flex;
-	gap: 6px;
+	gap: 3px;
 	align-items: center;
 	width: 100%;
 	box-sizing: border-box;
+	flex-wrap: nowrap;
+	overflow-x: auto;
+	padding: 4px 0 2px;
 }
 
 .mat-group {
 	display: flex;
-	gap: 4px;
+	gap: 3px;
+	align-items: center;
 }
 
 .mat-divider {
 	width: 1px;
-	height: 20px;
+	height: 16px;
 	background: rgba(255, 255, 255, 0.15);
-	margin: 0 2px;
+	margin: 0 3px;
+	flex-shrink: 0;
 }
 
 .mat-chip {
 	font-family: inherit;
-	font-size: 12px;
+	font-size: 12.5px;
 	font-weight: 700;
 	padding: 5px 8px;
 	border-radius: 6px;
-	background: #161b22;
-	border: 1px solid rgba(255, 255, 255, 0.08);
+	background: #1c222b;
+	border: none;
 	color: #9da7b5;
 	cursor: pointer;
 	transition: all 0.15s;
+	white-space: nowrap;
+	flex-shrink: 0;
+}
+
+.mat-chip:hover {
+	color: #eef1f6;
+	background: #252d38;
 }
 
 .mat-chip.chip-blue.on {
-	background: rgba(56, 189, 248, 0.18);
-	border-color: #38bdf8;
+	background: rgba(56, 189, 248, 0.22);
 	color: #38bdf8;
 }
 
 .mat-chip.chip-amber.on {
-	background: rgba(245, 158, 11, 0.18);
-	border-color: #f59e0b;
+	background: rgba(245, 158, 11, 0.22);
 	color: #f59e0b;
 }
 
 .mat-chip.chip-purple.on {
-	background: rgba(192, 132, 252, 0.18);
-	border-color: #c084fc;
+	background: rgba(192, 132, 252, 0.22);
 	color: #c084fc;
 }
 
 .mat-chip.chip-emerald.on {
-	background: rgba(52, 211, 153, 0.18);
-	border-color: #34d399;
+	background: rgba(52, 211, 153, 0.22);
 	color: #34d399;
 }
 
 .drawer-body {
-	padding: 14px 20px;
+	padding: 16px 22px;
 	overflow-y: auto;
 	flex: 1;
 }
@@ -638,14 +684,14 @@ function onSubmit() {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	margin-bottom: 8px;
+	margin-bottom: 10px;
 }
 
 .section-label {
-	font-size: 12px;
+	font-size: 13px;
 	font-weight: 800;
 	text-transform: uppercase;
-	letter-spacing: 0.04em;
+	letter-spacing: 0.05em;
 	color: #9da7b5;
 }
 
@@ -653,18 +699,24 @@ function onSubmit() {
 	background: #1a1f27;
 	border: 1px solid #3a424e;
 	border-radius: 6px;
-	font-size: 12px;
+	font-size: 13px;
 	font-weight: 600;
 	color: #eef1f6;
-	padding: 4px 10px;
+	padding: 5px 12px;
 	cursor: pointer;
+	transition: all 0.15s;
+}
+
+.btn-sm-ghost:hover {
+	background: rgba(255, 255, 255, 0.06);
+	border-color: rgba(255, 255, 255, 0.2);
 }
 
 .items-container {
 	display: flex;
 	flex-direction: column;
 	gap: 8px;
-	margin-bottom: 12px;
+	margin-bottom: 14px;
 }
 
 .item-row {
@@ -674,17 +726,19 @@ function onSubmit() {
 }
 
 .form-input {
-	height: 36px;
-	padding: 0 10px;
+	height: 40px;
+	padding: 0 12px;
 	background: #1a1f27;
 	border: 1px solid #3a424e;
 	border-radius: 8px;
 	color: #eef1f6;
-	font-size: 13px;
+	font-size: 14px;
+	font-weight: 500;
 	font-family: inherit;
 	box-sizing: border-box;
 	outline: none;
 	flex: 1;
+	transition: border-color 0.15s;
 }
 
 .form-input:focus {
@@ -693,17 +747,17 @@ function onSubmit() {
 
 .form-input::placeholder {
 	color: #64748b;
-	font-size: 12.5px;
+	font-size: 13.5px;
 }
 
 .w-110 {
-	flex: 0 0 110px;
-	width: 110px;
+	flex: 0 0 120px;
+	width: 120px;
 }
 
 .w-120 {
-	flex: 0 0 120px;
-	width: 120px;
+	flex: 0 0 140px;
+	width: 140px;
 }
 
 .text-center {
@@ -722,25 +776,31 @@ function onSubmit() {
 	border: none;
 	color: #f97066;
 	cursor: pointer;
-	font-size: 13px;
-	padding: 4px 6px;
+	font-size: 15px;
+	padding: 6px 8px;
+	border-radius: 6px;
+	transition: background 0.15s;
+}
+
+.btn-icon-del:hover {
+	background: rgba(249, 112, 102, 0.12);
 }
 
 .cylinder-row {
 	display: flex;
 	align-items: center;
 	gap: 8px;
-	padding: 8px 0;
+	padding: 10px 0;
 	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-	margin-bottom: 12px;
+	margin-bottom: 14px;
 }
 
 .cyl-label-wrap {
 	flex: 1;
 	display: flex;
 	align-items: center;
-	height: 36px;
-	padding: 0 10px;
+	height: 40px;
+	padding: 0 12px;
 	background: rgba(245, 158, 11, 0.08);
 	border: 1px solid rgba(245, 158, 11, 0.25);
 	border-radius: 8px;
@@ -748,16 +808,16 @@ function onSubmit() {
 }
 
 .badge-cyl-tag {
-	font-size: 10px;
+	font-size: 11px;
 	font-weight: 800;
 	color: #f59e0b;
 	background: rgba(245, 158, 11, 0.15);
-	padding: 2px 6px;
+	padding: 3px 8px;
 	border-radius: 4px;
 }
 
 .cyl-title {
-	font-size: 12px;
+	font-size: 13.5px;
 	font-weight: 700;
 	color: #eef1f6;
 }
@@ -774,7 +834,7 @@ function onSubmit() {
 	flex: 1;
 	display: flex;
 	flex-direction: column;
-	gap: 8px;
+	gap: 9px;
 }
 
 .fin-row {
@@ -784,14 +844,16 @@ function onSubmit() {
 }
 
 .fin-label {
-	font-size: 13px;
+	font-size: 14px;
 	color: #9da7b5;
+	font-weight: 500;
 }
 
 .fin-val {
-	font-size: 13.5px;
+	font-size: 15px;
 	color: #eef1f6;
 	font-variant-numeric: tabular-nums;
+	font-weight: 700;
 }
 
 .font-bold {
@@ -805,14 +867,15 @@ function onSubmit() {
 }
 
 .fin-label-total {
-	font-size: 13.5px;
+	font-size: 15px;
 	font-weight: 800;
 	color: #eef1f6;
 	text-transform: uppercase;
+	letter-spacing: 0.02em;
 }
 
 .fin-val-total {
-	font-size: 18px;
+	font-size: 22px;
 	font-weight: 900;
 	color: #4ea1e0;
 	font-variant-numeric: tabular-nums;
@@ -820,17 +883,17 @@ function onSubmit() {
 }
 
 .drawer-footer {
-	padding: 14px 20px;
+	padding: 16px 22px;
 	border-top: 1px solid rgba(255, 255, 255, 0.08);
 	display: flex;
 	gap: 12px;
 }
 
 .act-btn {
-	height: 40px;
-	padding: 0 18px;
+	height: 44px;
+	padding: 0 20px;
 	font-family: inherit;
-	font-size: 14px;
+	font-size: 15px;
 	font-weight: 700;
 	border-radius: 8px;
 	cursor: pointer;
