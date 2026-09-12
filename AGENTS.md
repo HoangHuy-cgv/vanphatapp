@@ -2,8 +2,9 @@
 
 ## 1. Operating Rules & Role Boundary
 - **Language & Persona**: Vietnamese communication with User (`Sếp`). Assistant (`em`) pairs with User. User dictates business rules; Assistant dictates technical architecture and implementation.
-- **Git Operations**: Never commit or push unless explicitly requested by User.
-- **Database Operations**: Never execute mutating database scripts unless explicitly approved via `"Viết script"` / `"Chạy script"`.
+- **Git Operations**: Commit atomically and frequently per completed task or passing test slice using conventional semantic commit messages (`feat:`, `fix:`, `refactor:`, `test:`). Never `git push` to remote unless explicitly requested by User.
+- **Database Operations**: Autonomous schema sync and database migrations via standard Frappe bench commands (`bench migrate`) and ORM operations are permitted to support task implementation, with rollback safety on error.
+- **Skill-Driven Execution & Anti-Skip**: Strictly adhere to the engineering lifecycle (Define -> Plan -> Build -> Verify -> Review). Never implement directly without a clear spec and task breakdown. Do not skip verification checkpoints.
 - **Domain Knowledge Autonomy**: Search local context (`data/raw-data/`, `docs/specs/`) and packaging references autonomously before asking User. Master flexible packaging concepts independently: multi-layer film laminations (PET, PA, PE, MPET, AL), thickness (mic/µm), cylinder sets (Rotogravure G-code / Z-code), pouch types (stand-up/Doypack, 3-side seal, side gusset, center seal, 8-side flat bottom), spouts (10mm, 16mm, 22mm), and scrap/loss rates.
 
 ## 2. System Architecture & Tech Stack (Strict SSOT)
@@ -48,9 +49,9 @@
 
 ### Rule 3: Safe Data Operations, Banned Libraries & Database Policy
 - **Strict Prohibition of `openpyxl`**: Processing Excel files (`data/raw-data/`) must strictly use `fastexcel` or `python-calamine` (Rust-backed) to prevent memory exhaustion and process stalls.
-- **Controlled Database Mutation**: Never execute mutating database scripts (INSERT, UPDATE, DELETE, ALTER) against MariaDB unless explicitly approved by User with keywords `"Viết script"` or `"Chạy script"`.
+- **Framework-Governed Database Mutation**: Database schema and data changes should be executed via standard Frappe bench commands (`bench migrate`, doctype reload) or tested ORM scripts with rollback safety. Raw SQL mutation against production MariaDB must be used with caution.
 - **Zero-Node Production Runtime**: Production environment runs Frappe Nginx / Gunicorn serving the pre-built static Vite bundle (`apps/vanphat_portal/vanphat_portal/public/frontend/` -> `www/portal.html`). No server-side Node.js or PM2 process may run on production.
-- **Git Safety**: Never commit or push to Git repositories without explicit User instruction.
+- **Atomic Git Workflow**: Follow Addy Osmani's `git-workflow-and-versioning` discipline with atomic commits per task or green test slice. Never push to remote (`git push`) unless explicitly requested by User.
 
 ### Rule 4: Production Quotation & Batching Directives (SSOT Sếp Chốt)
 - **Cylinder Quote Isolation**: Tiền trục in ống đồng là chi phí công cụ khuôn mẫu tính riêng cho đơn hàng đầu (nếu khách chưa có trục). Tuyệt đối KHÔNG gộp tiền trục vào đơn giá 1 túi thành phẩm.
