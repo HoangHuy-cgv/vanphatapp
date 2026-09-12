@@ -87,7 +87,7 @@
 		<!-- Main Content Area -->
 		<main class="main-content">
 			<header class="page-head">
-				<h2 class="page-title">{{ view === 'orders' ? 'Danh sách Đơn hàng' : 'Danh sách Báo giá' }}</h2>
+				<h2 class="page-title">{{ view === 'orders' ? 'Danh sách Đơn hàng & Tiền cọc' : 'Danh sách Báo giá' }}</h2>
 				<button
 					v-if="view === 'quotes'"
 					type="button"
@@ -95,6 +95,14 @@
 					@click="openStep1Modal"
 				>
 					+ Báo giá
+				</button>
+				<button
+					v-else-if="view === 'orders'"
+					type="button"
+					class="btn-new-quote"
+					@click="openStep1Modal"
+				>
+					+ Báo giá SP Mới
 				</button>
 			</header>
 
@@ -161,34 +169,46 @@
 				</table>
 			</div>
 
-			<!-- Sales Order Table -->
+			<!-- Sales Order Table with Real Data Columns & Click Row -->
 			<div v-else class="table-container">
 				<table class="data-table">
 					<thead>
 						<tr>
-							<th style="width: 14%;">Ngày</th>
-							<th style="width: 18%;">Mã đơn</th>
-							<th style="width: 32%;">Khách hàng</th>
-							<th style="width: 18%; text-align: right;">Tổng tiền</th>
-							<th style="width: 18%; text-align: center;">Trạng thái</th>
+							<th style="width: 10%;">Ngày đặt</th>
+							<th style="width: 14%;">Mã đơn</th>
+							<th style="width: 18%;">Khách hàng</th>
+							<th style="width: 20%;">Mặt hàng</th>
+							<th style="width: 8%; text-align: right;">SL</th>
+							<th style="width: 13%; text-align: right;">Tổng tiền</th>
+							<th style="width: 15%; text-align: right;">Đã cọc</th>
+							<th style="width: 12%; text-align: center;">Trạng thái</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr
 							v-for="o in orders"
 							:key="o.name"
-							class="table-row"
+							class="table-row cursor-pointer"
+							@click="openOrderDetail(o)"
 						>
-							<td class="text-secondary">{{ o.transaction_date || '—' }}</td>
-							<td class="font-bold text-primary">{{ o.name }}</td>
-							<td class="font-bold">{{ o.customer || '—' }}</td>
+							<td class="text-secondary font-mono">{{ o.transaction_date || '—' }}</td>
+							<td class="font-bold text-primary font-mono">{{ o.name }}</td>
+							<td class="font-bold">{{ o.customer_name || o.customer || '—' }}</td>
+							<td class="truncate" :title="o.item_name">{{ o.item_name || '—' }}</td>
+							<td class="text-right text-num">{{ formatNumber(o.qty) }}</td>
 							<td class="text-right font-bold text-num">{{ formatCurrency(o.grand_total) }}</td>
+							<td class="text-right text-num font-bold" :class="o.deposit_pct >= 30 ? 'text-emerald' : 'text-amber'">
+								{{ formatCurrency(o.advance_paid) }}
+								<span v-if="o.deposit_pct" class="text-xs font-normal" style="opacity: 0.85;">({{ o.deposit_pct }}%)</span>
+							</td>
 							<td class="text-center">
-								<span class="status-badge" :class="statusClass(o.status)">{{ o.status || 'Draft' }}</span>
+								<span class="status-badge" :class="orderStatusClass(o)">
+									{{ orderStatusText(o) }}
+								</span>
 							</td>
 						</tr>
 						<tr v-if="orders.length === 0">
-							<td colspan="5" class="empty-cell">
+							<td colspan="8" class="empty-cell">
 								{{ loadingOrders ? 'Đang tải dữ liệu...' : 'Chưa có đơn hàng nào trong hệ thống.' }}
 							</td>
 						</tr>
@@ -216,6 +236,14 @@
 			@items-changed="onItemsChanged"
 			@submit="onQuotationSubmit"
 		/>
+
+		<!-- Order Detail Drawer (Click Row to Open) -->
+		<DrawerOrderDetail
+			:order-id="selectedOrderId"
+			:is-open="showOrderDetail"
+			@close="showOrderDetail = false"
+			@order-updated="loadOrders"
+		/>
 	</div>
 </template>
 
@@ -223,13 +251,18 @@
 import { ref, onMounted } from 'vue';
 import ModalStep1Sale from './components/ModalStep1Sale.vue';
 import DrawerStep2Director from './components/DrawerStep2Director.vue';
+import DrawerOrderDetail from './components/DrawerOrderDetail.vue';
 import logoUrl from './assets/logo-vanphat.png';
+import { INITIAL_ORDERS, INITIAL_QUOTATIONS } from './data/mockData';
 
-const view = ref('quotes');
+const view = ref('orders');
 const quotations = ref([]);
 const loading = ref(false);
 const orders = ref([]);
 const loadingOrders = ref(false);
+
+const selectedOrderId = ref('');
+const showOrderDetail = ref(false);
 
 const showStep1 = ref(false);
 const showStep2 = ref(false);
@@ -322,8 +355,10 @@ async function handleLogout() {
 async function loadQuotations() {
 	loading.value = true;
 	const data = await api('list_quotations');
-	if (Array.isArray(data)) {
+	if (Array.isArray(data) && data.length > 0) {
 		quotations.value = data;
+	} else if (quotations.value.length === 0) {
+		quotations.value = [...INITIAL_QUOTATIONS];
 	}
 	loading.value = false;
 }
@@ -450,10 +485,36 @@ async function onQuotationSubmit(payload) {
 async function loadOrders() {
 	loadingOrders.value = true;
 	const data = await api('list_orders');
-	if (Array.isArray(data)) {
+	if (Array.isArray(data) && data.length > 0) {
 		orders.value = data;
+	} else {
+		orders.value = [...INITIAL_ORDERS];
 	}
 	loadingOrders.value = false;
+}
+
+function openOrderDetail(o) {
+	selectedOrderId.value = o.name;
+	showOrderDetail.value = true;
+}
+
+function orderStatusText(o) {
+	if (o.docstatus === 1) return 'Chính thức';
+	if (o.deposit_pct >= 30) return 'Đã cọc 30%+';
+	if (o.advance_paid > 0) return 'Cọc 1 phần';
+	return 'Chờ cọc';
+}
+
+function orderStatusClass(o) {
+	if (o.docstatus === 1) return 'status-ordered';
+	if (o.deposit_pct >= 30) return 'status-ordered';
+	if (o.advance_paid > 0) return 'status-open';
+	return 'status-draft';
+}
+
+function formatNumber(val) {
+	if (val == null || val === '') return '0';
+	return Number(val).toLocaleString('vi-VN');
 }
 
 async function onMakeOrder(q) {
@@ -472,7 +533,7 @@ function formatCurrency(val) {
 
 onMounted(async () => {
 	await boot();
-	loadQuotations();
+	await Promise.all([loadOrders(), loadQuotations()]);
 });
 </script>
 
@@ -844,5 +905,32 @@ html, body {
 	color: #ffffff;
 	background: #4ea1e0;
 	border-color: #4ea1e0;
+}
+
+.cursor-pointer {
+	cursor: pointer;
+}
+
+.table-row.cursor-pointer:hover {
+	background: rgba(78, 161, 224, 0.08) !important;
+}
+
+.text-emerald {
+	color: #34d399;
+}
+
+.text-amber {
+	color: #f59e0b;
+}
+
+.font-mono {
+	font-family: 'JetBrains Mono', monospace;
+}
+
+.truncate {
+	max-width: 220px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 </style>

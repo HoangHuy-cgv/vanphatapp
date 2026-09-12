@@ -1,26 +1,22 @@
-# Todo List - Code Simplification & Cleanup
+# Todo List: Trang 1 — Đơn Hàng & Tiền Cọc
 
-- [x] Task 1: Refactor and simplify `apps/vanphat_portal/vanphat_portal/www/login.html`
-  - Acceptance: Clean, readable HTML/CSS/JS without brittle `setTimeout` layout hacks; exact visual styling and Frappe login submission preserved.
-  - Verify: Check file diff, ensure no JS errors on load.
-  - Files: `apps/vanphat_portal/vanphat_portal/www/login.html`
+- [x] Task 1: Nâng cấp Backend APIs Quản Lý Đơn Hàng & Tiền Cọc (`bao_gia.py`)
+  - Nâng cấp `list_orders` (advance_paid, outstanding_amount, item_name, total_qty).
+  - Viết `get_order_details(name)`, `record_order_deposit(name, amount, is_vip_guarantee, note)` và `submit_sales_order(name)`.
+  - Files: `apps/vanphat_portal/vanphat_portal/api/bao_gia.py`
 
-- [x] Task 2: Refactor and simplify `apps/vanphat_portal/frontend/src/App.vue`
-  - Acceptance: Zero client-side arithmetic math (tax, cylinder total); streamline state management and scoped CSS.
-  - Verify: `cd apps/vanphat_portal/frontend && yarn build`
+- [x] Task 2: Xây dựng Component Drawer Chi Tiết Đơn Hàng (`DrawerOrderDetail.vue`)
+  - Giao diện slideover từ phải sang, theme Industrial Dark.
+  - Hiển thị mặt hàng, tổng tiền, số tiền đã cọc, còn nợ, % cọc.
+  - Hộp xác nhận cọc & nút Submit đơn hàng.
+  - Files: `apps/vanphat_portal/frontend/src/components/DrawerOrderDetail.vue`
+
+- [x] Task 3: Tích hợp Bảng Đơn Hàng Mới vào `App.vue`
+  - Cập nhật bảng `orders` (bổ sung cột Đã cọc, Còn nợ, Mặt hàng).
+  - Thêm sự kiện `@click="openOrderDetail"` mở Drawer.
+  - Giữ nguyên 100% `quotes`, `ModalStep1Sale.vue`, `DrawerStep2Director.vue`.
   - Files: `apps/vanphat_portal/frontend/src/App.vue`
 
-- [x] Task 3: Refactor and simplify `apps/vanphat_portal/frontend/src/components/ModalStep1Sale.vue`
-  - Acceptance: Streamlined customer search timer, consolidated button styles, clean props/event emitting.
-  - Verify: `cd apps/vanphat_portal/frontend && yarn build`
-  - Files: `apps/vanphat_portal/frontend/src/components/ModalStep1Sale.vue`
-
-- [x] Task 4: Refactor and simplify `apps/vanphat_portal/frontend/src/components/DrawerStep2Director.vue`
-  - Acceptance: Concise CSS, clean material chip toggles, proper formatting, no dead code.
-  - Verify: `cd apps/vanphat_portal/frontend && yarn build`
-  - Files: `apps/vanphat_portal/frontend/src/components/DrawerStep2Director.vue`
-
-- [x] Task 5: End-to-End Build & Visual Verification
-  - Acceptance: Vite production build succeeds with 0 errors; static assets generated in `vanphat_portal/public/frontend/`.
-  - Verify: `cd apps/vanphat_portal/frontend && yarn build`
-  - Files: `apps/vanphat_portal/vanphat_portal/public/frontend/*`
+- [x] Task 4: Kiểm Thử & Biên Dịch Vite
+  - Build frontend: `yarn build` thành công 100% không lỗi.
+  - Output đồng bộ vào `vanphat_portal/public/frontend/` và `vanphat_portal/www/portal.html`.

@@ -394,12 +394,133 @@ def mark_quotation_lost(name, reason=""):
 
 @frappe.whitelist()
 def list_orders():
-	return frappe.get_list(
+	orders = frappe.get_list(
 		"Sales Order",
-		fields=["name", "transaction_date", "customer", "grand_total", "status"],
+		fields=[
+			"name",
+			"transaction_date",
+			"customer",
+			"customer_name",
+			"grand_total",
+			"advance_paid",
+			"status",
+			"docstatus",
+		],
 		order_by="creation desc",
 		limit=50,
 	)
+	for o in orders:
+		gt = frappe.utils.flt(o.grand_total)
+		adv = frappe.utils.flt(o.advance_paid)
+		o["advance_paid"] = adv
+		o["outstanding_amount"] = max(0.0, gt - adv)
+		o["deposit_pct"] = round((adv / gt * 100), 1) if gt > 0 else 0
+		# Lấy tóm tắt mặt hàng đầu tiên & tổng số lượng
+		items = frappe.get_all(
+			"Sales Order Item",
+			filters={"parent": o.name},
+			fields=["item_name", "qty", "uom"],
+			order_by="idx asc",
+			limit=1,
+		)
+		if items:
+			o["item_name"] = items[0].item_name
+			o["qty"] = items[0].qty
+			o["uom"] = items[0].uom
+		else:
+			o["item_name"] = "—"
+			o["qty"] = 0
+			o["uom"] = "Túi"
+	return orders
+
+
+@frappe.whitelist()
+def get_order_details(name):
+	if not frappe.db.exists("Sales Order", name):
+		frappe.throw("Không tìm thấy đơn hàng " + str(name))
+	doc = frappe.get_doc("Sales Order", name)
+	credit_limit = frappe.db.get_value("Customer", doc.customer, "credit_limit") or 0
+	advance_paid = frappe.utils.flt(doc.advance_paid)
+	grand_total = frappe.utils.flt(doc.grand_total)
+	outstanding_amount = max(0.0, grand_total - advance_paid)
+	deposit_pct = round((advance_paid / grand_total * 100), 1) if grand_total > 0 else 0
+	can_submit = (doc.docstatus == 0) and (deposit_pct >= 30.0 or credit_limit > 0)
+
+	items = []
+	for it in doc.items:
+		items.append({
+			"item_name": it.item_name,
+			"qty": it.qty,
+			"rate": it.rate,
+			"amount": it.amount,
+			"uom": it.uom,
+		})
+
+	return {
+		"name": doc.name,
+		"transaction_date": str(doc.transaction_date),
+		"customer": doc.customer,
+		"customer_name": doc.customer_name,
+		"grand_total": grand_total,
+		"advance_paid": advance_paid,
+		"outstanding_amount": outstanding_amount,
+		"deposit_pct": deposit_pct,
+		"status": doc.status,
+		"docstatus": doc.docstatus,
+		"credit_limit": credit_limit,
+		"can_submit": can_submit,
+		"items": items,
+	}
+
+
+@frappe.whitelist()
+def record_order_deposit(name, amount=0, is_vip_guarantee=False, note=""):
+	if not frappe.db.exists("Sales Order", name):
+		frappe.throw("Không tìm thấy đơn hàng " + str(name))
+	doc = frappe.get_doc("Sales Order", name)
+	if doc.docstatus == 2:
+		frappe.throw("Đơn hàng đã bị hủy, không thể ghi nhận cọc.")
+
+	amt = frappe.utils.flt(amount)
+	if is_vip_guarantee:
+		doc.flags.ignore_permissions = True
+		doc.add_comment("Comment", text=f"Bảo lãnh cọc VIP (Giám đốc duyệt): {note or 'Khách có hạn mức công nợ gối đầu'}")
+		return {"name": doc.name, "success": True, "is_vip_guarantee": True}
+
+	if amt <= 0:
+		frappe.throw("Số tiền cọc phải lớn hơn 0.")
+
+	new_advance = frappe.utils.flt(doc.advance_paid) + amt
+	doc.db_set("advance_paid", new_advance)
+	doc.add_comment("Comment", text=f"Ghi nhận cọc: {amt:,.0f} đ. Tổng đã cọc: {new_advance:,.0f} đ. Ghi chú: {note}")
+	doc.reload()
+	return {
+		"name": doc.name,
+		"advance_paid": doc.advance_paid,
+		"outstanding_amount": max(0.0, frappe.utils.flt(doc.grand_total) - frappe.utils.flt(doc.advance_paid)),
+		"success": True,
+	}
+
+
+@frappe.whitelist()
+def submit_sales_order(name, is_vip_guarantee=False):
+	if not frappe.db.exists("Sales Order", name):
+		frappe.throw("Không tìm thấy đơn hàng " + str(name))
+	doc = frappe.get_doc("Sales Order", name)
+	if doc.docstatus != 0:
+		frappe.throw("Chỉ có thể submit đơn hàng ở trạng thái Nháp (Draft).")
+
+	grand_total = frappe.utils.flt(doc.grand_total)
+	advance_paid = frappe.utils.flt(doc.advance_paid)
+	deposit_pct = (advance_paid / grand_total * 100) if grand_total > 0 else 100
+
+	if deposit_pct < 30.0 and not is_vip_guarantee:
+		credit_limit = frappe.db.get_value("Customer", doc.customer, "credit_limit") or 0
+		if credit_limit <= 0:
+			frappe.throw(f"Đơn hàng chưa đủ cọc tối thiểu 30% (Hiện có: {deposit_pct:.1f}%). Vui lòng xác nhận cọc hoặc bảo lãnh VIP.")
+
+	doc.submit()
+	return {"name": doc.name, "status": doc.status, "docstatus": doc.docstatus}
 
 
 @frappe.whitelist()
