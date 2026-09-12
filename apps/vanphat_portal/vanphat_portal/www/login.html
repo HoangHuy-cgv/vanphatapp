@@ -12,10 +12,6 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 	<style>
-		:root {
-			color-scheme: dark;
-		}
-
 		*, *::before, *::after {
 			box-sizing: border-box;
 			margin: 0;
@@ -25,13 +21,10 @@
 		html, body {
 			min-height: 100vh;
 			width: 100%;
-			font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+			font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 			font-size: 16px;
 			line-height: 1.5;
 			-webkit-font-smoothing: antialiased;
-			-moz-osx-font-smoothing: grayscale;
-			-webkit-text-size-adjust: 100%;
-			text-size-adjust: 100%;
 			background-color: #0b0f17;
 			color: #f3f4f6;
 		}
@@ -43,27 +36,18 @@
 			align-items: center;
 			justify-content: center;
 			padding: 24px 16px;
-			background-color: #0b0f17;
-			background-image:
+			background:
 				linear-gradient(180deg, rgba(11, 15, 23, 0.82) 0%, rgba(15, 23, 42, 0.88) 50%, rgba(11, 15, 23, 0.94) 100%),
-				url('/assets/vanphat_portal/images/bg-factory.webp');
-			background-position: center center;
-			background-size: cover;
-			background-repeat: no-repeat;
+				url('/assets/vanphat_portal/images/bg-factory.webp') center / cover no-repeat #0b0f17;
 		}
 
-		/* Khung đăng nhập tối giản: Căn thẳng hàng hoàn hảo với chữ BAO BÌ VẠN PHÁT */
 		.auth-card {
 			display: flex;
 			flex-direction: column;
 			align-items: center;
-			width: fit-content;
-			max-width: 90vw;
+			width: 100%;
+			max-width: 320px;
 			margin: 0 auto;
-			background: transparent;
-			border: none;
-			box-shadow: none;
-			padding: 0;
 		}
 
 		.auth-header {
@@ -92,8 +76,6 @@
 			color: #ffffff;
 			text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
 			white-space: nowrap;
-			display: inline-block;
-			text-align: center;
 		}
 
 		.auth-form {
@@ -110,32 +92,25 @@
 			width: 100%;
 		}
 
-		/* Khung viền tinh tế, tập trung thị giác vào ô nhập liệu */
 		.form-input {
 			width: 100%;
-			min-width: 0;
 			height: 46px;
 			padding: 0 14px;
-			font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+			font-family: inherit;
 			font-size: 16px !important;
 			font-weight: 500;
-			line-height: normal;
 			color: #ffffff;
-			color-scheme: dark;
 			background: rgba(15, 23, 42, 0.85);
 			backdrop-filter: blur(8px);
 			-webkit-backdrop-filter: blur(8px);
 			border: 1px solid rgba(255, 255, 255, 0.22);
 			border-radius: 10px;
 			outline: none;
-			box-sizing: border-box;
 			transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 		}
 
-		/* Đồng bộ phông chữ hệ thống cho ô password để dấu chấm bullet luôn đồng đều */
 		.form-input[type="password"] {
-			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-			font-size: 16px !important;
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 			letter-spacing: 0.05em;
 		}
 
@@ -144,11 +119,9 @@
 		}
 
 		.form-input::placeholder {
-			font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 			font-size: 14px;
 			font-weight: 400;
 			color: #9ca3af;
-			opacity: 1;
 		}
 
 		.form-input:hover {
@@ -162,73 +135,20 @@
 			background: rgba(15, 23, 42, 0.98);
 		}
 
-		/* Animation hack để ép trình duyệt giữ đúng font style khi Autofill kích hoạt */
-		@keyframes autofill-lock {
-			0%, 100% {
-				font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-				font-size: 16px;
-				font-weight: 500;
-				color: #ffffff;
-				-webkit-text-fill-color: #ffffff;
-			}
-		}
-
-		/* Khóa giao diện nền và màu chữ cho Autofill */
+		/* Dark Autofill styling */
 		.form-input:-webkit-autofill,
 		.form-input:-webkit-autofill:hover,
 		.form-input:-webkit-autofill:focus,
-		.form-input:-webkit-autofill:active {
-			font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+		.form-input:-webkit-autofill:active,
+		.form-input:autofill {
+			font-family: inherit !important;
 			font-size: 16px !important;
 			font-weight: 500 !important;
 			-webkit-text-fill-color: #ffffff !important;
 			-webkit-box-shadow: 0 0 0 50px #0f172a inset !important;
 			box-shadow: 0 0 0 50px #0f172a inset !important;
 			caret-color: #ffffff !important;
-			animation: autofill-lock 0.001s forwards;
-			-webkit-animation: autofill-lock 0.001s forwards;
 			transition: background-color 5000s ease-in-out 0s;
-		}
-
-		/* GIẢI PHÁP CHỦ CHỐT CHO WEBKIT / CHROMIUM:
-		   Chromium cho phép override font-size và typography của Autofill thông qua pseudo ::first-line */
-		.form-input:-webkit-autofill::first-line,
-		.form-input:-webkit-autofill:hover::first-line,
-		.form-input:-webkit-autofill:focus::first-line,
-		.form-input:-webkit-autofill:active::first-line {
-			font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
-			font-size: 16px !important;
-			font-weight: 500 !important;
-			line-height: normal !important;
-			color: #ffffff !important;
-			-webkit-text-fill-color: #ffffff !important;
-		}
-
-		.form-input[type="password"]:-webkit-autofill::first-line {
-			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
-			font-size: 16px !important;
-			letter-spacing: 0.05em !important;
-		}
-
-		/* Chuẩn CSS tiêu chuẩn hiện đại cho browser mới */
-		.form-input:autofill,
-		.form-input:autofill:hover,
-		.form-input:autofill:focus,
-		.form-input:autofill:active {
-			font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
-			font-size: 16px !important;
-			font-weight: 500 !important;
-			-webkit-text-fill-color: #ffffff !important;
-			box-shadow: 0 0 0 50px #0f172a inset !important;
-			caret-color: #ffffff !important;
-		}
-
-		.form-input:autofill::first-line {
-			font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
-			font-size: 16px !important;
-			font-weight: 500 !important;
-			color: #ffffff !important;
-			-webkit-text-fill-color: #ffffff !important;
 		}
 
 		.toggle-pwd {
@@ -275,7 +195,6 @@
 			display: block;
 		}
 
-		/* Khung viền và khối nút Đăng nhập nổi bật, thẳng hàng */
 		.submit-btn {
 			width: 100%;
 			height: 46px;
@@ -294,7 +213,6 @@
 			border-radius: 10px;
 			cursor: pointer;
 			box-shadow: 0 4px 16px rgba(37, 99, 235, 0.35);
-			box-sizing: border-box;
 			transition: background-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
 		}
 
@@ -395,63 +313,20 @@
 
 	<script>
 		(function () {
-			var form = document.getElementById("login-form");
-			var usrInput = document.getElementById("usr");
-			var pwdInput = document.getElementById("pwd");
-			var toggleBtn = document.getElementById("toggle-pwd");
-			var alertBox = document.getElementById("error-alert");
-			var submitBtn = document.getElementById("submit-btn");
+			const form = document.getElementById("login-form");
+			const usrInput = document.getElementById("usr");
+			const pwdInput = document.getElementById("pwd");
+			const toggleBtn = document.getElementById("toggle-pwd");
+			const alertBox = document.getElementById("error-alert");
+			const submitBtn = document.getElementById("submit-btn");
 
-			// Căn chỉnh chiều ngang khung form thẳng hàng chính xác với chữ "Bao Bì Vạn Phát"
-			function alignWithTitle() {
-				var title = document.querySelector(".auth-title");
-				if (title && form && title.offsetWidth > 0) {
-					form.style.width = title.offsetWidth + "px";
-				}
-			}
+			const eyeIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+			const eyeOffIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
 
-			if (document.fonts && document.fonts.ready) {
-				document.fonts.ready.then(alignWithTitle);
-			}
-			window.addEventListener("load", alignWithTitle);
-			window.addEventListener("resize", alignWithTitle);
-			alignWithTitle();
-			setTimeout(alignWithTitle, 50);
-			setTimeout(alignWithTitle, 200);
-
-			// Đồng bộ và khóa chặt font-size 16px mọi trạng thái (kể cả khi Autofill kích hoạt ngầm)
-			function enforceConsistentFont(input) {
-				if (!input) return;
-				input.style.fontSize = "16px";
-			}
-
-			[usrInput, pwdInput].forEach(function (input) {
-				if (!input) return;
-				input.addEventListener("animationstart", function (e) {
-					if (e.animationName === "autofill-lock") {
-						enforceConsistentFont(input);
-					}
-				});
-				input.addEventListener("change", function () { enforceConsistentFont(input); });
-				input.addEventListener("input", function () { enforceConsistentFont(input); });
-				enforceConsistentFont(input);
-			});
-
-			setTimeout(function () {
-				enforceConsistentFont(usrInput);
-				enforceConsistentFont(pwdInput);
-			}, 50);
-			setTimeout(function () {
-				enforceConsistentFont(usrInput);
-				enforceConsistentFont(pwdInput);
-			}, 300);
-
-			toggleBtn.addEventListener("click", function () {
-				var isPassword = pwdInput.type === "password";
+			toggleBtn.addEventListener("click", () => {
+				const isPassword = pwdInput.type === "password";
 				pwdInput.type = isPassword ? "text" : "password";
-				toggleBtn.innerHTML = isPassword
-					? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>'
-					: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>';
+				toggleBtn.innerHTML = isPassword ? eyeOffIcon : eyeIcon;
 			});
 
 			function showError(msg) {
@@ -466,12 +341,12 @@
 				alertBox.classList.remove("show");
 			}
 
-			form.addEventListener("submit", async function (e) {
+			form.addEventListener("submit", async (e) => {
 				e.preventDefault();
 				clearError();
 
-				var usr = (usrInput.value || "").trim();
-				var pwd = pwdInput.value || "";
+				const usr = (usrInput.value || "").trim();
+				const pwd = pwdInput.value || "";
 
 				if (!usr || !pwd) {
 					showError("Vui lòng nhập số điện thoại và mật khẩu.");
@@ -482,24 +357,23 @@
 				submitBtn.classList.add("loading");
 
 				try {
-					var res = await fetch("/api/method/login", {
+					const res = await fetch("/api/method/login", {
 						method: "POST",
 						headers: { "Content-Type": "application/x-www-form-urlencoded" },
-						body: new URLSearchParams({ usr: usr, pwd: pwd }),
+						body: new URLSearchParams({ usr, pwd }),
 					});
 
-					var data = await res.json();
+					const data = await res.json();
 					if (res.ok && data.message === "Logged In") {
-						var params = new URLSearchParams(window.location.search);
-						var redirect = params.get("redirect-to") || "/app";
-						window.location.href = redirect;
+						const params = new URLSearchParams(window.location.search);
+						window.location.href = params.get("redirect-to") || "/app";
 					} else {
-						var errMsg = "Số điện thoại hoặc mật khẩu không chính xác.";
+						let errMsg = "Số điện thoại hoặc mật khẩu không chính xác.";
 						if (data && data._server_messages) {
 							try {
-								var msgs = JSON.parse(data._server_messages);
+								const msgs = JSON.parse(data._server_messages);
 								if (msgs.length > 0) {
-									var parsed = JSON.parse(msgs[0]);
+									const parsed = JSON.parse(msgs[0]);
 									if (parsed.message) errMsg = parsed.message;
 								}
 							} catch (_) {}

@@ -23,7 +23,7 @@
 					<div class="switch-row">
 						<button
 							type="button"
-							class="switch-btn switch-btn-50"
+							class="switch-btn"
 							:class="{ on: form.product_type === 'Túi đáy đứng' }"
 							@click="setProductType('Túi đáy đứng')"
 						>
@@ -31,7 +31,7 @@
 						</button>
 						<button
 							type="button"
-							class="switch-btn switch-btn-50"
+							class="switch-btn"
 							:class="{ on: form.product_type === 'Cuộn màng ghép' }"
 							@click="setProductType('Cuộn màng ghép')"
 						>
@@ -41,7 +41,7 @@
 					<div class="switch-row" style="margin-top: 8px;">
 						<button
 							type="button"
-							class="switch-btn switch-btn-33"
+							class="switch-btn"
 							:class="{ on: form.product_type === 'Túi 3 biên' }"
 							@click="setProductType('Túi 3 biên')"
 						>
@@ -49,7 +49,7 @@
 						</button>
 						<button
 							type="button"
-							class="switch-btn switch-btn-33"
+							class="switch-btn"
 							:class="{ on: form.product_type === 'Túi xếp hông' }"
 							@click="setProductType('Túi xếp hông')"
 						>
@@ -57,7 +57,7 @@
 						</button>
 						<button
 							type="button"
-							class="switch-btn switch-btn-33"
+							class="switch-btn"
 							:class="{ on: form.product_type === 'Túi 8 cạnh' }"
 							@click="setProductType('Túi 8 cạnh')"
 						>
@@ -71,7 +71,7 @@
 					<div class="switch-row">
 						<button
 							type="button"
-							class="switch-btn switch-btn-33"
+							class="switch-btn"
 							:class="{
 								on: form.accessory === 'Có vòi' && !isRoll,
 								'is-blocked': isRoll
@@ -83,7 +83,7 @@
 						</button>
 						<button
 							type="button"
-							class="switch-btn switch-btn-33"
+							class="switch-btn"
 							:class="{
 								on: form.accessory === 'Zipper' && !isRoll,
 								'is-blocked': isRoll
@@ -95,7 +95,7 @@
 						</button>
 						<button
 							type="button"
-							class="switch-btn switch-btn-33"
+							class="switch-btn"
 							:class="{
 								on: form.accessory === 'Hàn kín' && !isRoll,
 								'is-blocked': isRoll
@@ -113,7 +113,7 @@
 					<div class="switch-row">
 						<button
 							type="button"
-							class="switch-btn switch-btn-33"
+							class="switch-btn"
 							:class="{ on: form.print_type === 'In trục' }"
 							@click="form.print_type = 'In trục'"
 						>
@@ -121,7 +121,7 @@
 						</button>
 						<button
 							type="button"
-							class="switch-btn switch-btn-33"
+							class="switch-btn"
 							:class="{ on: form.print_type === 'In offset' }"
 							@click="form.print_type = 'In offset'"
 						>
@@ -129,7 +129,7 @@
 						</button>
 						<button
 							type="button"
-							class="switch-btn switch-btn-33"
+							class="switch-btn"
 							:class="{ on: form.print_type === 'Không in' }"
 							@click="form.print_type = 'Không in'"
 						>
@@ -139,7 +139,7 @@
 					<div class="switch-row" style="margin-top: 8px;">
 						<button
 							type="button"
-							class="switch-btn switch-btn-50"
+							class="switch-btn"
 							:class="{
 								on: form.cylinder_status === 'Đã có trục' && !isNoPrint,
 								'is-blocked': isNoPrint
@@ -151,7 +151,7 @@
 						</button>
 						<button
 							type="button"
-							class="switch-btn switch-btn-50"
+							class="switch-btn"
 							:class="{
 								on: form.cylinder_status === 'Chưa có trục' && !isNoPrint,
 								'is-blocked': isNoPrint
@@ -432,6 +432,8 @@ function onContinue() {
 }
 
 .switch-btn {
+	flex: 1;
+	min-width: 0;
 	height: 54px;
 	font-family: inherit;
 	font-size: 14.5px;
@@ -465,14 +467,6 @@ function onContinue() {
 	opacity: 0.35;
 	cursor: not-allowed;
 	pointer-events: none;
-}
-
-.switch-btn-50 {
-	flex: 1;
-}
-
-.switch-btn-33 {
-	flex: 1;
 }
 
 .wizard-sep {

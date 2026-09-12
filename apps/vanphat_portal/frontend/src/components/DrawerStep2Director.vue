@@ -317,11 +317,6 @@ function formatCurrency(val) {
 	return Number(val).toLocaleString('vi-VN') + ' đ';
 }
 
-function formatNumber(val) {
-	if (val == null || val === '') return '0';
-	return Number(val).toLocaleString('vi-VN');
-}
-
 const isRoll = computed(() => props.formData.product_type === 'Cuộn màng ghép');
 const needCylinder = computed(() => props.formData.print_type === 'In trục' && props.formData.cylinder_status === 'Chưa có trục');
 

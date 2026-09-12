@@ -264,8 +264,6 @@ const figures = ref({
 });
 
 const calcResult = ref(null);
-const selectedScenario = ref('optimal_whole_roll');
-
 const currentUser = ref('giamdoc@vanphat.com');
 
 // API Caller wrapper
@@ -387,14 +385,12 @@ async function fetchPricePreview() {
 	const isPrintCylinder =
 		step1Data.value.print_type === 'In trục' &&
 		step1Data.value.cylinder_status === 'Chưa có trục';
-	const cylTotal = isPrintCylinder
-		? (calcResult.value?.cylinder_quote?.total ?? (Number(step2Data.value.cylinder_qty) || 1) * 3500000)
-		: 0;
+	const cylTotal = isPrintCylinder ? (calcResult.value?.cylinder_quote?.total || 0) : 0;
 
 	if (res) {
 		const sub = Number(res.subtotal) || 0;
-		const tax = Math.round(sub * 0.08);
-		const grand = sub + cylTotal + tax;
+		const tax = Number(res.tax_amount) || Math.round(sub * 0.08);
+		const grand = Number(res.grand_total) || (sub + cylTotal + tax);
 		figures.value = {
 			total_qty: String(res.total_qty ?? '0'),
 			subtotal: formatCurrency(sub),
