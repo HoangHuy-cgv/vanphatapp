@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+	<meta http-equiv="Pragma" content="no-cache">
+	<meta http-equiv="Expires" content="0">
+	<title>Đăng nhập — Vạn Phát</title>
+	<style>
+		:root {
+			--canvas: #12151a;
+			--outline: #3a424e;
+			--outline-focus: #4ea1e0;
+			--ink: #eef1f6;
+			--ink-secondary: #9da7b5;
+			--primary: #4ea1e0;
+			--primary-press: #3b8ac4;
+			--blocked: #f97066;
+			--font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+		}
+
+		*, *::before, *::after {
+			box-sizing: border-box;
+			margin: 0;
+			padding: 0;
+		}
+
+		html, body {
+			height: 100%;
+			font-family: var(--font-sans);
+			background-color: var(--canvas);
+			color: var(--ink);
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+			-webkit-text-size-adjust: 100%;
+		}
+
+		.login-screen {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			min-height: 100vh;
+			padding: 24px 16px;
+			background-color: var(--canvas);
+			background-image:
+				linear-gradient(
+					180deg,
+					rgba(13, 17, 23, 0.84) 0%,
+					rgba(18, 24, 34, 0.88) 50%,
+					rgba(13, 17, 23, 0.93) 100%
+				),
+				url('/assets/vanphat_portal/images/bg-factory.webp');
+			background-position: center center;
+			background-size: cover;
+			background-repeat: no-repeat;
+		}
+
+		.login-container {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			width: 100%;
+			max-width: 300px;
+		}
+
+		.login-hero {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			text-align: center;
+			margin-bottom: 22px;
+			width: 100%;
+		}
+
+		.hero-logo {
+			width: 135px;
+			height: auto;
+			object-fit: contain;
+			margin-bottom: 12px;
+			filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.6));
+		}
+
+		.hero-brand {
+			font-size: 20px;
+			font-weight: 800;
+			letter-spacing: 0.05em;
+			color: #ffffff;
+			text-transform: uppercase;
+			white-space: nowrap;
+			text-align: center;
+			width: 100%;
+			text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+		}
+
+		.login-card {
+			width: 100%;
+			background: rgba(22, 27, 34, 0.82);
+			border: 1px solid rgba(255, 255, 255, 0.12);
+			border-radius: 12px;
+			padding: 24px 20px;
+			box-shadow:
+				0 20px 40px -10px rgba(0, 0, 0, 0.7),
+				0 0 0 1px rgba(255, 255, 255, 0.05);
+		}
+
+		.login-form {
+			display: flex;
+			flex-direction: column;
+			align-items: stretch;
+			gap: 14px;
+			width: 100%;
+		}
+
+		/* Lock input font-size to exactly 18px in all states */
+		.form-input,
+		.form-input:hover,
+		.form-input:focus,
+		.form-input:active {
+			width: 100%;
+			min-width: 0;
+			height: 50px;
+			padding: 0 14px;
+			background: rgba(18, 21, 26, 0.92);
+			border: 1px solid var(--outline);
+			border-radius: 8px;
+			font-family: var(--font-sans) !important;
+			font-size: 18px !important;
+			font-weight: 500 !important;
+			color: #ffffff !important;
+			line-height: normal !important;
+			outline: none;
+			touch-action: manipulation;
+		}
+
+		.form-input::placeholder {
+			font-family: var(--font-sans) !important;
+			font-size: 18px !important;
+			font-weight: 400 !important;
+			color: var(--ink-secondary) !important;
+			opacity: 0.85 !important;
+		}
+
+		.form-input:focus {
+			border-color: var(--outline-focus) !important;
+			box-shadow: 0 0 0 3px rgba(78, 161, 224, 0.25) !important;
+		}
+
+		/* Autofill styling override for WebKit/Chrome/Safari */
+		.form-input:-webkit-autofill,
+		.form-input:-webkit-autofill:hover,
+		.form-input:-webkit-autofill:focus,
+		.form-input:-webkit-autofill:active {
+			font-family: var(--font-sans) !important;
+			font-size: 18px !important;
+			font-weight: 500 !important;
+			line-height: normal !important;
+			-webkit-text-fill-color: #ffffff !important;
+			-webkit-box-shadow: 0 0 0 50px rgba(18, 21, 26, 0.95) inset !important;
+			caret-color: #ffffff !important;
+			transition: background-color 5000s ease-in-out 0s;
+		}
+
+		.form-input:-webkit-autofill::first-line {
+			font-family: var(--font-sans) !important;
+			font-size: 18px !important;
+			font-weight: 500 !important;
+			color: #ffffff !important;
+			-webkit-text-fill-color: #ffffff !important;
+		}
+
+		.btn {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 100%;
+			height: 46px;
+			font-family: var(--font-sans) !important;
+			font-size: 18px !important;
+			font-weight: 700 !important;
+			letter-spacing: 0.02em;
+			color: #ffffff;
+			background: var(--primary);
+			border: 0;
+			border-radius: 8px;
+			cursor: pointer;
+			user-select: none;
+			touch-action: manipulation;
+			transition: background-color 0.2s ease, transform 0.1s ease;
+		}
+
+		.btn:hover {
+			background: var(--primary-press);
+		}
+
+		.btn:active {
+			transform: scale(0.98);
+		}
+
+		.btn:disabled {
+			opacity: 0.6;
+			cursor: not-allowed;
+		}
+
+		.login-error {
+			color: var(--blocked);
+			font-size: 14px;
+			font-weight: 500;
+			line-height: 1.4;
+			text-align: center;
+		}
+	</style>
+</head>
+<body>
+	<div class="login-screen">
+		<div class="login-container">
+			<div class="login-hero">
+				<img src="/assets/vanphat_portal/images/logo-vanphat.png" alt="Bao Bì Vạn Phát" class="hero-logo" />
+				<h1 class="hero-brand">BAO BÌ VẠN PHÁT</h1>
+			</div>
+			<form class="login-card" id="login-form" novalidate>
+				<div class="login-form">
+					<input name="usr" class="form-input" autocomplete="username" placeholder="Tên đăng nhập hoặc Email" required />
+					<input name="pwd" class="form-input" type="password" autocomplete="current-password" placeholder="Mật khẩu" required />
+					<p class="login-error" id="login-error" hidden></p>
+					<button class="btn" type="submit" id="btn-submit">Đăng nhập</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<script>
+		(function () {
+			var form = document.getElementById("login-form");
+			var errEl = document.getElementById("login-error");
+			var btn = document.getElementById("btn-submit");
+
+			function fail(msg) {
+				errEl.textContent = msg;
+				errEl.hidden = false;
+				btn.disabled = false;
+			}
+
+			form.addEventListener("submit", async function (e) {
+				e.preventDefault();
+				errEl.hidden = true;
+				errEl.textContent = "";
+				btn.disabled = true;
+				try {
+					var res = await fetch("/api/method/login", {
+						method: "POST",
+						headers: { "Content-Type": "application/x-www-form-urlencoded" },
+						body: new URLSearchParams(new FormData(form)),
+					});
+					var data = await res.json();
+					if (res.ok && data.message === "Logged In") {
+						var redirectTo = new URLSearchParams(window.location.search).get("redirect-to") || "/portal";
+						window.location.href = redirectTo;
+					} else {
+						fail("Tài khoản hoặc mật khẩu không chính xác.");
+					}
+				} catch (err) {
+					fail("Không thể kết nối đến máy chủ. Vui lòng thử lại.");
+				}
+			});
+		}());
+	</script>
+</body>
+</html>
