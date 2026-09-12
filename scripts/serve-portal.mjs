@@ -4,33 +4,194 @@ import path from 'path';
 
 const PORT = 8080;
 const ROOT_DIR = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const CLEAN_DATA_DIR = path.join(ROOT_DIR, 'data/clean-data');
+const DATA_DIR = path.join(ROOT_DIR, 'data');
 const FRONTEND_DIR = path.join(ROOT_DIR, 'apps/vanphat_portal/vanphat_portal/public/frontend');
 const PUBLIC_DIR = path.join(ROOT_DIR, 'apps/vanphat_portal/vanphat_portal/public');
 const LOGIN_HTML = path.join(ROOT_DIR, 'apps/vanphat_portal/vanphat_portal/www/login.html');
 const PORTAL_HTML = path.join(ROOT_DIR, 'apps/vanphat_portal/vanphat_portal/www/portal.html');
 const PROTO_HTML = path.join(ROOT_DIR, 'appvanphat/preview-modal-step1.html');
 
-const MOCK_QUOTATIONS = [
-	{
-		name: 'BG-2026-0001',
-		creation: '2026-09-10 14:30:00',
-		party_name: 'Công ty TNHH Nhựa Ánh Dương',
-		brand: 'Ánh Dương Pack',
-		rounded_total: 18684000,
-		status: 'Đã duyệt',
-		owner: 'giamdoc@vanphat.com'
-	},
-	{
-		name: 'BG-2026-0002',
-		creation: '2026-09-10 10:15:00',
-		party_name: 'Công ty CP Bao Bì Nam Long',
-		brand: 'Nam Long Eco',
-		rounded_total: 8950000,
-		status: 'Chờ duyệt',
-		owner: 'sale@vanphat.com'
-	}
-];
+const QUOTATIONS_FILE = path.join(DATA_DIR, 'local_quotations.json');
+const ORDERS_FILE = path.join(DATA_DIR, 'local_orders.json');
 
+// --- CSV Parser ---
+function parseCSV(content) {
+	if (!content) return [];
+	const lines = content.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+	if (lines.length < 2) return [];
+	const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, ''));
+	const rows = [];
+	for (let i = 1; i < lines.length; i++) {
+		const line = lines[i].trim();
+		if (!line) continue;
+		const values = [];
+		let current = '';
+		let inQuotes = false;
+		for (let c = 0; c < line.length; c++) {
+			const char = line[c];
+			if (char === '"') {
+				inQuotes = !inQuotes;
+			} else if (char === ',' && !inQuotes) {
+				values.push(current.trim());
+				current = '';
+			} else {
+				current += char;
+			}
+		}
+		values.push(current.trim());
+		const obj = {};
+		headers.forEach((h, idx) => {
+			let val = values[idx] || '';
+			if (val.startsWith('"') && val.endsWith('"')) {
+				val = val.slice(1, -1).replace(/""/g, '"');
+			}
+			obj[h] = val;
+		});
+		rows.push(obj);
+	}
+	return rows;
+}
+
+function safeReadCSV(filename) {
+	const p = path.join(CLEAN_DATA_DIR, filename);
+	if (fs.existsSync(p)) {
+		return parseCSV(fs.readFileSync(p, 'utf8'));
+	}
+	return [];
+}
+
+// --- Load Clean Datasets Nhóm A ---
+const MASTER_ITEMS = safeReadCSV('item_master.csv');
+const ITEM_SPECS = safeReadCSV('item_spec.csv');
+const BOM_MASTERS = safeReadCSV('bom_master.csv');
+const BOM_ITEMS = safeReadCSV('bom_items.csv');
+const WAREHOUSES = safeReadCSV('warehouses.csv');
+const SUPPLIERS = safeReadCSV('suppliers.csv');
+const OPERATIONS = safeReadCSV('operations.csv');
+const CUSTOMER_MATRIX = safeReadCSV('customer_brand_matrix.csv');
+
+// Build Unified Customers List
+const CUSTOMERS_MAP = new Map();
+CUSTOMER_MATRIX.forEach(r => {
+	const name = (r.customer_name || '').trim();
+	if (name) {
+		CUSTOMERS_MAP.set(name, {
+			name: `CUST-${String(CUSTOMERS_MAP.size + 1).padStart(4, '0')}`,
+			customer_name: name,
+			brand: r.brand_pattern || '',
+			type: r.applied_item_type || ''
+		});
+	}
+});
+MASTER_ITEMS.forEach(m => {
+	const c = (m.customer || '').trim();
+	if (c && !CUSTOMERS_MAP.has(c)) {
+		CUSTOMERS_MAP.set(c, {
+			name: `CUST-${String(CUSTOMERS_MAP.size + 1).padStart(4, '0')}`,
+			customer_name: c,
+			brand: m.brand || '',
+			type: m.item_group || ''
+		});
+	}
+});
+const UNIFIED_CUSTOMERS = Array.from(CUSTOMERS_MAP.values());
+
+// Build BOM grouped hierarchy
+const BOM_TREE = new Map();
+BOM_MASTERS.forEach(b => {
+	BOM_TREE.set(b.bom_no, {
+		master: b,
+		items: []
+	});
+});
+BOM_ITEMS.forEach(bi => {
+	if (BOM_TREE.has(bi.bom_no)) {
+		BOM_TREE.get(bi.bom_no).items.push(bi);
+	}
+});
+
+// Seed quotations if not present
+if (!fs.existsSync(QUOTATIONS_FILE)) {
+	const initialQuotes = [
+		{
+			name: 'BG-2026-0001',
+			creation: '2026-09-12 14:30:00',
+			transaction_date: '2026-09-12',
+			party_name: 'CÔNG TY TNHH TM-DV HÓA MỸ PHẨM LÂM GIA',
+			customer_name: 'CÔNG TY TNHH TM-DV HÓA MỸ PHẨM LÂM GIA',
+			brand: 'SuperClean',
+			rounded_total: 28450000,
+			grand_total: 28450000,
+			status: 'Draft',
+			owner: 'giamdoc@vanphat.com'
+		},
+		{
+			name: 'BG-2026-0002',
+			creation: '2026-09-12 10:15:00',
+			transaction_date: '2026-09-12',
+			party_name: 'CÔNG TY CP QUỐC TẾ VMT GROUP',
+			customer_name: 'CÔNG TY CP QUỐC TẾ VMT GROUP',
+			brand: 'NEMO',
+			rounded_total: 45600000,
+			grand_total: 45600000,
+			status: 'Open',
+			owner: 'sale@vanphat.com'
+		},
+		{
+			name: 'BG-2026-0003',
+			creation: '2026-09-11 16:45:00',
+			transaction_date: '2026-09-11',
+			party_name: 'CÔNG TY TNHH SẢN XUẤT MỸ PHẨM AN NHIÊN',
+			customer_name: 'CÔNG TY TNHH SẢN XUẤT MỸ PHẨM AN NHIÊN',
+			brand: 'AN PERFUN',
+			rounded_total: 15200000,
+			grand_total: 15200000,
+			status: 'Ordered',
+			owner: 'sale@vanphat.com'
+		}
+	];
+	fs.writeFileSync(QUOTATIONS_FILE, JSON.stringify(initialQuotes, null, 2), 'utf8');
+}
+
+if (!fs.existsSync(ORDERS_FILE)) {
+	const initialOrders = [
+		{
+			name: 'SO-2026-0001',
+			transaction_date: '2026-09-11',
+			customer_name: 'CÔNG TY TNHH SẢN XUẤT MỸ PHẨM AN NHIÊN',
+			grand_total: 15200000,
+			status: 'To Deliver and Bill'
+		}
+	];
+	fs.writeFileSync(ORDERS_FILE, JSON.stringify(initialOrders, null, 2), 'utf8');
+}
+
+function getQuotations() {
+	try {
+		return JSON.parse(fs.readFileSync(QUOTATIONS_FILE, 'utf8'));
+	} catch (e) {
+		return [];
+	}
+}
+
+function saveQuotations(quotes) {
+	fs.writeFileSync(QUOTATIONS_FILE, JSON.stringify(quotes, null, 2), 'utf8');
+}
+
+function getOrders() {
+	try {
+		return JSON.parse(fs.readFileSync(ORDERS_FILE, 'utf8'));
+	} catch (e) {
+		return [];
+	}
+}
+
+function saveOrders(orders) {
+	fs.writeFileSync(ORDERS_FILE, JSON.stringify(orders, null, 2), 'utf8');
+}
+
+// --- HTTP Server ---
 const server = http.createServer((req, res) => {
 	const url = new URL(req.url, `http://127.0.0.1:${PORT}`);
 	const pathname = url.pathname;
@@ -38,7 +199,7 @@ const server = http.createServer((req, res) => {
 	// CORS headers
 	res.setHeader('Access-Control-Allow-Origin', '*');
 	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-	res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+	res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Frappe-CSRF-Token');
 	if (req.method === 'OPTIONS') {
 		res.statusCode = 204;
 		res.end();
@@ -51,6 +212,10 @@ const server = http.createServer((req, res) => {
 		req.on('data', chunk => body += chunk);
 		req.on('end', () => {
 			res.setHeader('Content-Type', 'application/json');
+			let parsed = {};
+			try { parsed = JSON.parse(body); } catch (e) { void e; }
+
+			// 1. Auth & Session
 			if (pathname === '/api/method/login') {
 				res.end(JSON.stringify({ message: 'Logged In' }));
 				return;
@@ -59,59 +224,183 @@ const server = http.createServer((req, res) => {
 				res.end(JSON.stringify({ message: 'Logged Out' }));
 				return;
 			}
-			if (pathname === '/api/method/vanphat_portal.api.bao_gia.list_quotations') {
-				res.end(JSON.stringify({ message: MOCK_QUOTATIONS }));
-				return;
-			}
-			if (pathname === '/api/method/vanphat_portal.api.bao_gia.create_quotation') {
-				let parsed = {};
-				try { parsed = JSON.parse(body); } catch (e) { void e; }
-				const newDoc = {
-					name: 'BG-2026-0003',
-					creation: '2026-09-10 16:35:00',
-					party_name: parsed.customer || 'Khách Hàng Mới',
-					brand: parsed.brand || 'Brand Mới',
-					rounded_total: 18684000,
-					status: 'Chờ duyệt',
-					owner: 'giamdoc@vanphat.com'
-				};
-				MOCK_QUOTATIONS.unshift(newDoc);
-				res.end(JSON.stringify({ message: newDoc }));
-				return;
-			}
 			if (pathname === '/api/method/vanphat_portal.api.bao_gia.get_boot') {
 				res.end(JSON.stringify({
 					message: {
 						user: 'Administrator',
 						csrf_token: 'mock_csrf_token',
-						company: 'Công ty TNHH Bao Bì Vạn Phát'
+						company: 'Công ty TNHH Bao Bì Vạn Phát',
+						master_counts: {
+							items: MASTER_ITEMS.length,
+							specs: ITEM_SPECS.length,
+							boms: BOM_MASTERS.length,
+							customers: UNIFIED_CUSTOMERS.length,
+							warehouses: WAREHOUSES.length,
+							suppliers: SUPPLIERS.length,
+							operations: OPERATIONS.length
+						}
 					}
 				}));
 				return;
 			}
+
+			// 2. Customer Autocomplete from Master Data
 			if (pathname === '/api/method/vanphat_portal.api.bao_gia.search_customers') {
-				res.end(JSON.stringify({
-					message: [
-						{ name: 'CUST-0001', customer_name: 'Công ty TNHH Mỹ Phẩm DS Cosmetic' },
-						{ name: 'CUST-0002', customer_name: 'Công ty CP Khăn Ướt Eco Wipes' }
-					]
-				}));
+				const q = (parsed.query || '').trim().toLowerCase();
+				let matched = UNIFIED_CUSTOMERS;
+				if (q) {
+					matched = UNIFIED_CUSTOMERS.filter(c =>
+						c.customer_name.toLowerCase().includes(q) ||
+						(c.brand && c.brand.toLowerCase().includes(q))
+					);
+				}
+				res.end(JSON.stringify({ message: matched.slice(0, 15) }));
 				return;
 			}
+
+			// 3. List Quotations
+			if (pathname === '/api/method/vanphat_portal.api.bao_gia.list_quotations') {
+				const quotes = getQuotations();
+				res.end(JSON.stringify({ message: quotes }));
+				return;
+			}
+
+			// 4. Create Quotation (End-to-End Persistence)
+			if (pathname === '/api/method/vanphat_portal.api.bao_gia.create_quotation') {
+				const payload = parsed.payload || parsed;
+				const quotes = getQuotations();
+				const nextIndex = quotes.length + 1;
+				const docCode = `BG-2026-${String(nextIndex).padStart(4, '0')}`;
+				const now = new Date();
+				const dateStr = now.toISOString().slice(0, 10);
+				const timeStr = now.toTimeString().slice(0, 8);
+
+				const rows = payload.lines || [];
+				let linesSubtotal = 0;
+				rows.forEach(r => {
+					linesSubtotal += (Number(r.qty) || 0) * (Number(r.rate) || 0);
+				});
+
+				const isPrintCylinder = payload.print_type === 'In trục' && payload.cylinder_status === 'Chưa có trục';
+				const cylQty = isPrintCylinder ? (Number(payload.cylinder_qty) || 1) : 0;
+				const cylinderTotal = cylQty * 3500000;
+
+				const grandTotal = Math.round((linesSubtotal + cylinderTotal) * 1.08);
+
+				const newDoc = {
+					name: docCode,
+					creation: `${dateStr} ${timeStr}`,
+					transaction_date: dateStr,
+					party_name: payload.customer || 'Khách hàng mới',
+					customer_name: payload.customer || 'Khách hàng mới',
+					brand: payload.brand || '',
+					product_type: payload.product_type || 'Túi đáy đứng',
+					accessory: payload.accessory || 'Có vòi',
+					print_type: payload.print_type || 'In trục',
+					cylinder_status: payload.cylinder_status || 'Chưa có trục',
+					dimensions: `${payload.width || 280} x ${payload.length || 340} + ${payload.bottom || 40} mm`,
+					materials: payload.materials || ['PET', 'PE sữa'],
+					cylinder_qty: cylQty,
+					lines: rows,
+					subtotal: linesSubtotal,
+					cylinder_total: cylinderTotal,
+					grand_total: grandTotal,
+					rounded_total: grandTotal,
+					status: 'Draft',
+					owner: 'giamdoc@vanphat.com'
+				};
+
+				quotes.unshift(newDoc);
+				saveQuotations(quotes);
+				res.end(JSON.stringify({ message: newDoc }));
+				return;
+			}
+
+			// 5. Submit Quotation (Gửi QLSX)
+			if (pathname === '/api/method/vanphat_portal.api.bao_gia.submit_quotation') {
+				const quotes = getQuotations();
+				const doc = quotes.find(q => q.name === parsed.name);
+				if (doc) {
+					doc.status = 'Open';
+					saveQuotations(quotes);
+					res.end(JSON.stringify({ message: doc }));
+				} else {
+					res.statusCode = 404;
+					res.end(JSON.stringify({ error: 'Quotation not found' }));
+				}
+				return;
+			}
+
+			// 6. Mark Lost (Rớt báo giá)
+			if (pathname === '/api/method/vanphat_portal.api.bao_gia.mark_quotation_lost') {
+				const quotes = getQuotations();
+				const doc = quotes.find(q => q.name === parsed.name);
+				if (doc) {
+					doc.status = 'Lost';
+					doc.lost_reason = parsed.reason || '';
+					saveQuotations(quotes);
+					res.end(JSON.stringify({ message: doc }));
+				} else {
+					res.statusCode = 404;
+					res.end(JSON.stringify({ error: 'Quotation not found' }));
+				}
+				return;
+			}
+
+			// 7. Make Order from Quotation (Chốt đơn hàng)
+			if (pathname === '/api/method/vanphat_portal.api.bao_gia.make_order_from_quotation') {
+				const quotes = getQuotations();
+				const orders = getOrders();
+				const doc = quotes.find(q => q.name === parsed.name);
+				if (doc) {
+					doc.status = 'Ordered';
+					saveQuotations(quotes);
+
+					const nextSo = `SO-2026-${String(orders.length + 1).padStart(4, '0')}`;
+					const now = new Date();
+					const soDoc = {
+						name: nextSo,
+						quotation_ref: doc.name,
+						transaction_date: now.toISOString().slice(0, 10),
+						customer_name: doc.customer_name,
+						grand_total: doc.grand_total,
+						status: 'To Deliver and Bill'
+					};
+					orders.unshift(soDoc);
+					saveOrders(orders);
+
+					res.end(JSON.stringify({ message: { sales_order: nextSo } }));
+				} else {
+					res.statusCode = 404;
+					res.end(JSON.stringify({ error: 'Quotation not found' }));
+				}
+				return;
+			}
+
+			// 8. List Orders
+			if (pathname === '/api/method/vanphat_portal.api.bao_gia.list_orders') {
+				const orders = getOrders();
+				res.end(JSON.stringify({ message: orders }));
+				return;
+			}
+
+			// 9. Packaging Technical Calculation Engine (SSOT AGENTS.md)
 			if (pathname === '/api/method/vanphat_portal.api.bao_gia.calculate_packaging_quotation') {
-				let p = {};
-				try { p = JSON.parse(body); } catch (e) { void e; }
-				const desired_qty = Number(p.desired_qty) || 5000;
-				const width = Number(p.width_mm) || 280;
-				const length = Number(p.length_mm) || 340;
+				const desired_qty = Number(parsed.desired_qty) || 5000;
+				const width = Number(parsed.width_mm) || 280;
+				const length = Number(parsed.length_mm) || 340;
+				const cut_length_m = (length || 340) / 1000.0;
 				const lanes = width <= 360 ? 2 : 1;
-				const bags_per_roll = Math.floor((1500.0 * lanes * 0.92) / (length / 1000.0));
+				const bags_per_roll = Math.floor((1500.0 * lanes * 0.92) / (cut_length_m || 0.34));
 				const num_rolls = Math.max(1, Math.ceil(desired_qty / (bags_per_roll || 8000)));
 				const q_opt = num_rolls * bags_per_roll;
 				const q_surp = Math.max(0, q_opt - desired_qty);
-				const cyl_qty = Number(p.cylinder_qty) || 0;
+
+				const isPrintCyl = parsed.print_type === 'In trục' && parsed.cylinder_status === 'Chưa có trục';
+				const cyl_qty = isPrintCyl ? (Number(parsed.cylinder_qty) || 1) : 0;
 				const opt_rate = 4965;
 				const req_rate = desired_qty >= q_opt ? 4965 : 5258;
+
 				res.end(JSON.stringify({
 					message: {
 						lanes,
@@ -148,10 +437,10 @@ const server = http.createServer((req, res) => {
 				}));
 				return;
 			}
+
+			// 10. Price Preview
 			if (pathname === '/api/method/vanphat_portal.api.bao_gia.get_price_preview') {
-				let p = {};
-				try { p = JSON.parse(body); } catch (e) { void e; }
-				const rows = p.lines || [];
+				const rows = parsed.lines || [];
 				let total_qty = 0;
 				let subtotal = 0;
 				for (const r of rows) {
@@ -171,30 +460,44 @@ const server = http.createServer((req, res) => {
 				}));
 				return;
 			}
+
 			res.statusCode = 404;
 			res.end(JSON.stringify({ error: 'Not Found' }));
 		});
 		return;
 	}
 
-	// Pages
+	// --- Pages & UI Routing ---
+
+	// Main Portal Page
 	if (pathname === '/' || pathname === '/portal') {
 		res.setHeader('Content-Type', 'text/html; charset=utf-8');
 		res.end(fs.readFileSync(PORTAL_HTML));
 		return;
 	}
+
+	// Login Page
 	if (pathname === '/login') {
 		res.setHeader('Content-Type', 'text/html; charset=utf-8');
 		res.end(fs.readFileSync(LOGIN_HTML));
 		return;
 	}
+
+	// Prototype Preview
 	if (pathname === '/preview' || pathname === '/preview-modal-step1.html') {
 		res.setHeader('Content-Type', 'text/html; charset=utf-8');
 		res.end(fs.readFileSync(PROTO_HTML));
 		return;
 	}
 
-	// Static assets
+	// Master Data Reviewer Web Page (/master-data)
+	if (pathname === '/master-data' || pathname === '/review') {
+		res.setHeader('Content-Type', 'text/html; charset=utf-8');
+		res.end(renderMasterDataReviewerHtml());
+		return;
+	}
+
+	// Static assets from frontend build
 	if (pathname.startsWith('/assets/vanphat_portal/frontend/')) {
 		const rel = pathname.replace('/assets/vanphat_portal/frontend/', '');
 		const fullPath = path.join(FRONTEND_DIR, rel);
@@ -206,6 +509,7 @@ const server = http.createServer((req, res) => {
 		}
 	}
 
+	// Static assets from public folder
 	if (pathname.startsWith('/assets/vanphat_portal/')) {
 		const rel = pathname.replace('/assets/vanphat_portal/', '');
 		const fullPath = path.join(PUBLIC_DIR, rel);
@@ -222,8 +526,491 @@ const server = http.createServer((req, res) => {
 	res.end('Not found: ' + pathname);
 });
 
+// --- Master Data Reviewer HTML Generator ---
+function renderMasterDataReviewerHtml() {
+	return `<!DOCTYPE html>
+<html lang="vi">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Rà Soát Master Data Nhóm A — Bao Bì Vạn Phát</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+	<style>
+		* { box-sizing: border-box; margin: 0; padding: 0; }
+		body {
+			font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+			background: #0d1117;
+			color: #e6edf3;
+			min-height: 100vh;
+			display: flex;
+			flex-direction: column;
+		}
+		header {
+			background: #161b22;
+			border-bottom: 1px solid #30363d;
+			padding: 16px 28px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			position: sticky;
+			top: 0;
+			z-index: 50;
+		}
+		.brand {
+			display: flex;
+			align-items: center;
+			gap: 14px;
+		}
+		.brand img {
+			height: 38px;
+			object-fit: contain;
+			filter: drop-shadow(0 2px 6px rgba(237, 28, 36, 0.4));
+		}
+		.brand h1 {
+			font-size: 17px;
+			font-weight: 800;
+			letter-spacing: 0.5px;
+			color: #ffffff;
+		}
+		.brand span {
+			font-size: 13px;
+			color: #8b949e;
+			font-weight: 500;
+		}
+		.actions {
+			display: flex;
+			gap: 12px;
+		}
+		.btn {
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			padding: 8px 16px;
+			border-radius: 6px;
+			font-size: 13.5px;
+			font-weight: 600;
+			text-decoration: none;
+			cursor: pointer;
+			transition: all 0.2s;
+			border: 1px solid transparent;
+		}
+		.btn-primary {
+			background: #ED1C24;
+			color: #ffffff;
+		}
+		.btn-primary:hover {
+			background: #d61920;
+		}
+		.btn-secondary {
+			background: #21262d;
+			color: #c9d1d9;
+			border-color: #30363d;
+		}
+		.btn-secondary:hover {
+			background: #30363d;
+			color: #fff;
+		}
+		main {
+			flex: 1;
+			max-width: 1400px;
+			width: 100%;
+			margin: 0 auto;
+			padding: 24px 28px;
+		}
+		.metrics-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+			gap: 16px;
+			margin-bottom: 24px;
+		}
+		.metric-card {
+			background: #161b22;
+			border: 1px solid #30363d;
+			border-radius: 8px;
+			padding: 16px;
+		}
+		.metric-val {
+			font-size: 26px;
+			font-weight: 800;
+			color: #58a6ff;
+			line-height: 1.2;
+		}
+		.metric-card:nth-child(1) .metric-val { color: #f78166; }
+		.metric-card:nth-child(2) .metric-val { color: #58a6ff; }
+		.metric-card:nth-child(3) .metric-val { color: #7ee787; }
+		.metric-card:nth-child(4) .metric-val { color: #d2a8ff; }
+		.metric-card:nth-child(5) .metric-val { color: #ffa657; }
+		.metric-card:nth-child(6) .metric-val { color: #79c0ff; }
+		.metric-lbl {
+			font-size: 13px;
+			color: #8b949e;
+			margin-top: 4px;
+			font-weight: 500;
+		}
+		.nav-tabs {
+			display: flex;
+			gap: 8px;
+			border-bottom: 1px solid #30363d;
+			margin-bottom: 20px;
+			overflow-x: auto;
+		}
+		.tab-btn {
+			background: transparent;
+			border: none;
+			border-bottom: 2px solid transparent;
+			color: #8b949e;
+			font-size: 14.5px;
+			font-weight: 600;
+			padding: 10px 16px;
+			cursor: pointer;
+			white-space: nowrap;
+		}
+		.tab-btn:hover { color: #e6edf3; }
+		.tab-btn.active {
+			color: #58a6ff;
+			border-bottom-color: #58a6ff;
+		}
+		.search-bar {
+			display: flex;
+			gap: 12px;
+			margin-bottom: 16px;
+		}
+		.search-input {
+			flex: 1;
+			max-width: 450px;
+			background: #0d1117;
+			border: 1px solid #30363d;
+			border-radius: 6px;
+			padding: 10px 14px;
+			color: #e6edf3;
+			font-size: 14px;
+			outline: none;
+		}
+		.search-input:focus {
+			border-color: #58a6ff;
+			box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.2);
+		}
+		.table-box {
+			background: #161b22;
+			border: 1px solid #30363d;
+			border-radius: 8px;
+			overflow: hidden;
+		}
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			text-align: left;
+			font-size: 14px;
+		}
+		th {
+			background: #1c2128;
+			color: #8b949e;
+			font-weight: 600;
+			padding: 12px 14px;
+			border-bottom: 1px solid #30363d;
+			white-space: nowrap;
+		}
+		td {
+			padding: 11px 14px;
+			border-bottom: 1px solid #21262d;
+			color: #c9d1d9;
+		}
+		tr:hover td {
+			background: #1f242c;
+		}
+		.badge {
+			display: inline-block;
+			padding: 3px 8px;
+			border-radius: 12px;
+			font-size: 12px;
+			font-weight: 600;
+		}
+		.badge-tp { background: rgba(247, 129, 102, 0.15); color: #f78166; }
+		.badge-btp { background: rgba(210, 168, 255, 0.15); color: #d2a8ff; }
+		.badge-nvl { background: rgba(126, 231, 135, 0.15); color: #7ee787; }
+		.badge-truc { background: rgba(88, 166, 255, 0.15); color: #58a6ff; }
+		.bom-item-line {
+			margin-left: 20px;
+			color: #8b949e;
+			font-size: 13px;
+			display: flex;
+			gap: 8px;
+			padding: 2px 0;
+		}
+	</style>
+</head>
+<body>
+	<header>
+		<div class="brand">
+			<img src="/assets/vanphat_portal/frontend/assets/logo-vanphat-WKCGA4lf.png" alt="Logo">
+			<div>
+				<h1>BAO BÌ VẠN PHÁT</h1>
+				<span>Bảng Rà Soát Dữ Liệu Nền Tảng (Master Data Nhóm A)</span>
+			</div>
+		</div>
+		<div class="actions">
+			<a href="/portal" class="btn btn-primary">🚀 Mở Portal Báo Giá</a>
+			<a href="/login" class="btn btn-secondary">Đăng Nhập</a>
+		</div>
+	</header>
+
+	<main>
+		<!-- Metrics Header -->
+		<div class="metrics-grid">
+			<div class="metric-card">
+				<div class="metric-val">${MASTER_ITEMS.length}</div>
+				<div class="metric-lbl">Mặt Hàng (Item Master)</div>
+			</div>
+			<div class="metric-card">
+				<div class="metric-val">${ITEM_SPECS.length}</div>
+				<div class="metric-lbl">Quy Cách Kỹ Thuật (Specs)</div>
+			</div>
+			<div class="metric-card">
+				<div class="metric-val">${BOM_MASTERS.length}</div>
+				<div class="metric-lbl">Định Mức BOM 2 Cấp</div>
+			</div>
+			<div class="metric-card">
+				<div class="metric-val">${BOM_ITEMS.length}</div>
+				<div class="metric-lbl">Dòng Chi Tiết Vật Tư BOM</div>
+			</div>
+			<div class="metric-card">
+				<div class="metric-val">${WAREHOUSES.length} Kho / ${OPERATIONS.length} Trạm</div>
+				<div class="metric-lbl">Kho Bãi & Máy Móc</div>
+			</div>
+			<div class="metric-card">
+				<div class="metric-val">${SUPPLIERS.length} NCC / ${UNIFIED_CUSTOMERS.length} KH</div>
+				<div class="metric-lbl">Đối Tác & Khách Hàng</div>
+			</div>
+		</div>
+
+		<!-- Navigation Tabs -->
+		<div class="nav-tabs">
+			<button class="tab-btn active" onclick="switchTab('items')">🏷️ Mặt Hàng (${MASTER_ITEMS.length})</button>
+			<button class="tab-btn" onclick="switchTab('specs')">📐 Quy Cách Kỹ Thuật (${ITEM_SPECS.length})</button>
+			<button class="tab-btn" onclick="switchTab('boms')">⚙️ Định Mức BOM (${BOM_MASTERS.length})</button>
+			<button class="tab-btn" onclick="switchTab('warehouses')">🏭 Kho & Công Đoạn</button>
+			<button class="tab-btn" onclick="switchTab('suppliers')">🤝 Nhà Cung Cấp (${SUPPLIERS.length})</button>
+			<button class="tab-btn" onclick="switchTab('customers')">👥 Khách Hàng (${UNIFIED_CUSTOMERS.length})</button>
+		</div>
+
+		<!-- Search Bar -->
+		<div class="search-bar">
+			<input type="text" id="searchInput" class="search-input" placeholder="🔍 Tìm kiếm nhanh mã hàng, tên khách hàng, thông số..." oninput="filterCurrentTable()">
+		</div>
+
+		<!-- Content Containers -->
+		<div id="itemsContainer" class="table-box">
+			<table>
+				<thead>
+					<tr>
+						<th>Mã hàng (Code)</th>
+						<th>Tên sản phẩm</th>
+						<th>Nhóm hàng</th>
+						<th>ĐVT</th>
+						<th>Khách hàng</th>
+						<th>Trạng thái</th>
+					</tr>
+				</thead>
+				<tbody id="itemsBody">
+					${MASTER_ITEMS.map(it => `
+						<tr>
+							<td style="font-weight: 700; font-family: monospace;">${it.item_code}</td>
+							<td>${it.item_name}</td>
+							<td><span class="badge ${it.item_code.startsWith('TP-') || it.item_code.startsWith('NGCS-') ? 'badge-tp' : it.item_code.startsWith('BTP-') ? 'badge-btp' : it.item_code.startsWith('NVL-') ? 'badge-nvl' : 'badge-truc'}">${it.item_group}</span></td>
+							<td>${it.stock_uom}</td>
+							<td>${it.customer || '—'}</td>
+							<td>${it.disabled == '1' ? '<span style="color: #f85149;">Ngừng bán</span>' : '<span style="color: #3fb950;">Hoạt động</span>'}</td>
+						</tr>
+					`).join('')}
+				</tbody>
+			</table>
+		</div>
+
+		<div id="specsContainer" class="table-box" style="display: none;">
+			<table>
+				<thead>
+					<tr>
+						<th>Mã hàng</th>
+						<th>Cấu trúc ghép</th>
+						<th>Độ dày (mic)</th>
+						<th>Kích thước (D x R + Đáy mm)</th>
+						<th>Loại túi</th>
+						<th>Loại vòi</th>
+					</tr>
+				</thead>
+				<tbody id="specsBody">
+					${ITEM_SPECS.map(sp => `
+						<tr>
+							<td style="font-weight: 700; font-family: monospace;">${sp.item_code}</td>
+							<td>${sp.custom_structure_layers || '—'}</td>
+							<td style="text-align: right; font-weight: 600;">${sp.custom_thickness_mic || '—'}</td>
+							<td>${sp.custom_pouch_length_mm ? `${sp.custom_pouch_length_mm} x ${sp.custom_pouch_width_mm} + ${sp.custom_gusset_mm || 0} mm` : '—'}</td>
+							<td>${sp.custom_bottom_type || '—'}</td>
+							<td>${sp.custom_spout_type ? `${sp.custom_spout_type} (${sp.custom_spout_position || 'Góc'})` : '—'}</td>
+						</tr>
+					`).join('')}
+				</tbody>
+			</table>
+		</div>
+
+		<div id="bomsContainer" class="table-box" style="display: none;">
+			<table>
+				<thead>
+					<tr>
+						<th>Mã BOM</th>
+						<th>Sản phẩm thành phẩm</th>
+						<th>Cơ số sản xuất</th>
+						<th>Chi tiết thành phần vật tư (BOM Items)</th>
+					</tr>
+				</thead>
+				<tbody id="bomsBody">
+					${Array.from(BOM_TREE.values()).map(b => `
+						<tr>
+							<td style="font-weight: 700; font-family: monospace; vertical-align: top;">${b.master.bom_no}</td>
+							<td style="vertical-align: top; font-weight: 600;">
+								${b.master.item}
+								<div style="font-size: 12px; color: #8b949e;">${b.master.item_name}</div>
+							</td>
+							<td style="vertical-align: top;">${Number(b.master.quantity).toLocaleString()} ${b.master.uom}</td>
+							<td>
+								${b.items.map(bi => `
+									<div class="bom-item-line">
+										<span style="font-family: monospace; color: #58a6ff;">${bi.item_code}</span>
+										<span>${bi.item_name}</span>
+										<strong style="color: #e6edf3;">${Number(bi.qty).toLocaleString()} ${bi.uom}</strong>
+										<span style="color: #6e7681; font-style: italic;">(${bi.note || ''})</span>
+									</div>
+								`).join('')}
+							</td>
+						</tr>
+					`).join('')}
+				</tbody>
+			</table>
+		</div>
+
+		<div id="warehousesContainer" class="table-box" style="display: none;">
+			<table>
+				<thead>
+					<tr>
+						<th>Mã kho</th>
+						<th>Tên kho bãi</th>
+						<th>Chức năng & Nhiệm vụ</th>
+					</tr>
+				</thead>
+				<tbody>
+					${WAREHOUSES.map(w => `
+						<tr>
+							<td style="font-weight: 700; font-family: monospace;">${w.name}</td>
+							<td style="font-weight: 600;">${w.warehouse_name}</td>
+							<td>${w.description}</td>
+						</tr>
+					`).join('')}
+				</tbody>
+			</table>
+			<div style="padding: 16px; background: #1c2128; border-top: 1px solid #30363d; font-weight: 700; color: #58a6ff;">
+				⚙️ 5 Công đoạn sản xuất & Trạm máy:
+			</div>
+			<table>
+				<thead>
+					<tr>
+						<th>Công đoạn</th>
+						<th>Trạm máy thực hiện</th>
+						<th>Chi phí tiêu chuẩn (đ/giờ)</th>
+					</tr>
+				</thead>
+				<tbody>
+					${OPERATIONS.map(op => `
+						<tr>
+							<td style="font-weight: 600;">${op.operation}</td>
+							<td>${op.workstation}</td>
+							<td style="text-align: right; font-weight: 700;">${Number(op.cost_per_hour || 0).toLocaleString()} đ/h</td>
+						</tr>
+					`).join('')}
+				</tbody>
+			</table>
+		</div>
+
+		<div id="suppliersContainer" class="table-box" style="display: none;">
+			<table>
+				<thead>
+					<tr>
+						<th>Tên Nhà Cung Cấp</th>
+						<th>Nhóm cung ứng</th>
+						<th>Sản phẩm / Dịch vụ tiêu biểu</th>
+					</tr>
+				</thead>
+				<tbody id="suppliersBody">
+					${SUPPLIERS.map(s => `
+						<tr>
+							<td style="font-weight: 700; color: #58a6ff;">${s.supplier_name}</td>
+							<td>${s.supplier_group}</td>
+							<td>${s.products}</td>
+						</tr>
+					`).join('')}
+				</tbody>
+			</table>
+		</div>
+
+		<div id="customersContainer" class="table-box" style="display: none;">
+			<table>
+				<thead>
+					<tr>
+						<th>Mã KH</th>
+						<th>Tên Khách Hàng</th>
+						<th>Thương hiệu (Brand)</th>
+						<th>Loại sản phẩm áp dụng</th>
+					</tr>
+				</thead>
+				<tbody id="customersBody">
+					${UNIFIED_CUSTOMERS.map(c => `
+						<tr>
+							<td style="font-weight: 700; font-family: monospace;">${c.name}</td>
+							<td style="font-weight: 600;">${c.customer_name}</td>
+							<td style="color: #7ee787; font-weight: 600;">${c.brand || '—'}</td>
+							<td>${c.type || '—'}</td>
+						</tr>
+					`).join('')}
+				</tbody>
+			</table>
+		</div>
+	</main>
+
+	<script>
+		let currentTab = 'items';
+		const tabs = ['items', 'specs', 'boms', 'warehouses', 'suppliers', 'customers'];
+
+		function switchTab(tab) {
+			currentTab = tab;
+			tabs.forEach(t => {
+				const container = document.getElementById(t + 'Container');
+				if (container) container.style.display = t === tab ? 'block' : 'none';
+			});
+			document.querySelectorAll('.tab-btn').forEach(btn => {
+				btn.classList.toggle('active', btn.getAttribute('onclick').includes(tab));
+			});
+			filterCurrentTable();
+		}
+
+		function filterCurrentTable() {
+			const q = document.getElementById('searchInput').value.trim().toLowerCase();
+			const activeContainer = document.getElementById(currentTab + 'Container');
+			if (!activeContainer) return;
+			const rows = activeContainer.querySelectorAll('tbody tr');
+			rows.forEach(r => {
+				const text = r.innerText.toLowerCase();
+				r.style.display = text.includes(q) ? '' : 'none';
+			});
+		}
+	</script>
+</body>
+</html>`;
+}
+
+// Start Server
 server.listen(PORT, '0.0.0.0', () => {
 	console.log(`[VANPHAT-PORTAL] Serving live portal on http://localhost:${PORT}/portal`);
+	console.log(`[VANPHAT-PORTAL] Master Data Reviewer on http://localhost:${PORT}/master-data`);
 	console.log(`[VANPHAT-PORTAL] Login page on http://localhost:${PORT}/login`);
-	console.log(`[VANPHAT-PORTAL] Prototype Step 1 on http://localhost:${PORT}/preview`);
 });

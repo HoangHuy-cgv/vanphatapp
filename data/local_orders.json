@@ -1,0 +1,17 @@
+[
+  {
+    "name": "SO-2026-0002",
+    "quotation_ref": "BG-2026-0004",
+    "transaction_date": "2026-09-12",
+    "customer_name": "CÔNG TY TNHH TM-DV HÓA MỸ PHẨM LÂM GIA",
+    "grand_total": 71280000,
+    "status": "To Deliver and Bill"
+  },
+  {
+    "name": "SO-2026-0001",
+    "transaction_date": "2026-09-11",
+    "customer_name": "CÔNG TY TNHH SẢN XUẤT MỸ PHẨM AN NHIÊN",
+    "grand_total": 15200000,
+    "status": "To Deliver and Bill"
+  }
+]
