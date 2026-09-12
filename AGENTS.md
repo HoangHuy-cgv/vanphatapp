@@ -1,64 +1,44 @@
-# Van Phat ERP & Portal (vanphatapp) - Agent Operating Directive
+# AGENTS.md - Van Phat Packaging ERP & Portal
 
-## 1. Operating Rules & Role Boundary
-- **Language & Persona**: Vietnamese communication with User (`Sếp`). Assistant (`em`) pairs with User. User dictates business rules; Assistant dictates technical architecture and implementation.
-- **Git Operations**: Commit atomically and frequently per completed task or passing test slice using conventional semantic commit messages (`feat:`, `fix:`, `refactor:`, `test:`). Never `git push` to remote unless explicitly requested by User.
-- **Database Operations**: Autonomous schema sync and database migrations via standard Frappe bench commands (`bench migrate`) and ORM operations are permitted to support task implementation, with rollback safety on error.
-- **Skill-Driven Execution & Anti-Skip**: Strictly adhere to the engineering lifecycle (Define -> Plan -> Build -> Verify -> Review). Never implement directly without a clear spec and task breakdown. Do not skip verification checkpoints.
-- **Domain Knowledge Autonomy**: Search local context (`data/raw-data/`, `docs/specs/`) and packaging references autonomously before asking User. Master flexible packaging concepts independently: multi-layer film laminations (PET, PA, PE, MPET, AL), thickness (mic/µm), cylinder sets (Rotogravure G-code / Z-code), pouch types (stand-up/Doypack, 3-side seal, side gusset, center seal, 8-side flat bottom), spouts (10mm, 16mm, 22mm), and scrap/loss rates.
+## 1. Operating Persona & Protocol
+- **Language & Persona**: ALWAYS communicate with User in Vietnamese. Address User as `Sếp`, refer to self as `em`. User dictates business rules; Assistant dictates technical architecture and implementation.
+- **Anti-Sycophancy**: NEVER agree performatively. Point out flaws, performance regressions, or boundary violations directly with quantitative evidence before proposing alternatives.
+- **Skill-Driven Execution (Anti-Skip)**: STRICTLY follow the engineering lifecycle for any non-trivial task:
+  1. *Define*: `interview-me` -> `spec-driven-development` (extract intent, define API contracts and acceptance criteria).
+  2. *Plan*: `planning-and-task-breakdown` (decompose into vertical slices in `tasks/plan.md` and `tasks/todo.md`).
+  3. *Build*: `incremental-implementation` + `source-driven-development` (verified against official documentation).
+  4. *Verify*: `test-driven-development` + `browser-testing-with-devtools` (unit tests and Chrome DevTools MCP verification).
+  5. *Review*: `code-review-and-quality` (verify 5 axes against `definition-of-done.md`).
+  NEVER implement code directly without an approved specification and task breakdown.
 
-## 2. System Architecture & Tech Stack (Strict SSOT)
-- **App Target**: Integrated ERP & Commercial Portal for Van Phat Packaging Manufacturing.
-- **Architecture Paradigm**: Headless ERP with a thin client presentation shell. Single Source of Truth (SSOT).
+## 2. System Architecture & Tech Stack (SSOT)
+- **Architecture**: Headless ERP with a thin presentation client.
+- **Backend Core (SSOT)**: Frappe Framework v16 + ERPNext v16 (Python). Holds 100% of business logic, packaging algorithms, pricing tiers, BOM derivations, inventory valuation, and whitelisted REST APIs (`vanphat_portal.api`).
+- **Frontend Shell**: Vue 3 + Frappe UI + Tailwind CSS (Vite SPA) under `apps/vanphat_portal/frontend/`. Pure presentation shell.
+- **Database**: MariaDB 10.6+.
+- **Production Runtime**: Zero-Node. Vite static assets served directly by Frappe Nginx / Gunicorn. No Node.js process on production.
 
-### Primary Tech Stack
-| Component | Technology | Scope & Responsibilities |
-| :--- | :--- | :--- |
-| **Backend Core (SSOT)** | **Frappe Framework v16 + ERPNext v16** (Python) | Holds 100% of business logic, packaging math (film consumption, surface density, scrap %), tiered pricing matrices, BOMs, inventory valuation, accounting, RBAC, and whitelisted REST APIs (`vanphat_portal.api`). |
-| **Frontend Shell** | **Vue 3 + Frappe UI + Tailwind CSS** (Vite SPA) | Pure presentation shell (`apps/vanphat_portal/frontend/` mounted at `/portal`). Zero business calculations. Renders 5-pouch-type interactive quotation wizard and passes user intents to backend. |
-| **Database** | **MariaDB 10.6+** | Single persistent datastore for ERPNext standard doc types and packaging custom fields. |
-| **Production Runtime** | **Zero-Node Runtime** | Vite builds static assets to `apps/vanphat_portal/vanphat_portal/public/frontend/`. Served directly by Frappe Nginx / Gunicorn. No Node.js process runs on production. |
+## 3. Strict Exclusions & Operational Constraints
+- **Forbidden Stacks**: React, Next.js, Svelte, HTMX, Alpine.js, ad-hoc Jinja web applications.
+- **Forbidden Libraries**: `openpyxl` is STRICTLY PROHIBITED due to memory stalls. Use `fastexcel` or `python-calamine` (Rust-backed) for all spreadsheet operations.
+- **Forbidden Client-side Logic**: NEVER perform film consumption math, unit pricing tiers, scrap rates, or BOM derivations in `.vue`, `.js`, or `.ts` files. All computations MUST resolve via backend Python APIs.
 
-### Strict Exclusions
-- **Forbidden Stacks**: React, Next.js, Svelte, HTMX, Alpine.js, ad-hoc Jinja apps.
-- **Forbidden Libraries**: `openpyxl` is strictly prohibited due to high memory consumption and process stalls. All Excel reading tasks must use `fastexcel` or `python-calamine` (Rust-backed).
-- **Forbidden Client-side Logic**: No film consumption calculations, unit pricing tiers, or BOM derivations inside `.vue` or `.js` files. All computations must resolve via backend Python APIs.
+## 4. Git & Database Operations
+- **Git Operations**: Commit atomically and frequently per completed task or passing test slice using conventional commit types (`feat:`, `fix:`, `refactor:`, `test:`). NEVER run `git push` unless explicitly requested by User.
+- **Database Operations**: Autonomous schema sync and database migrations via standard Frappe bench commands (`bench migrate`, doctype reload) and ORM scripts are permitted with rollback safety. Raw SQL mutations against production MariaDB MUST be used with caution.
 
-## 3. Data SSOT Scope
-- **Raw SSOT Sources**: `data/raw-data/` (Excel files: `MÀNG.xlsx`, `TIẾN ĐỘ SẢN XUẤT.xlsx`, `TỔNG HỢP ĐƠN HÀNG ĐÃ CỌC CHƯA GIAO.xlsx`, debt ledgers).
-- **Clean Master Datasets**: `data/clean-data/` (`item_master.csv`, `item_spec.csv`, `customer_brand_matrix.csv`).
-- **Domain Specifications**: `docs/specs/` (`erpnext-packaging-masterdata-spec.md`, `packaging-calculation-spec.md`).
-- **Item Coding Series**: `TP-` (Finished Pouches), `NVL-` (Raw Materials: Film, Resin, Solvents, Spouts), `BTP-` (Laminated Film Rolls), `TRUC-` (Rotogravure Cylinders).
-- **Canonical Length UOM**: `m` (meters only; `Mét Dài` is strictly eliminated).
-
-## 4. Consolidated Rules & Operational Policies (Single Source of Truth)
-
-### Rule 1: Headless Presentation Boundary (Strict Presentation Shell)
-- **Zero Business Calculations in Client**: Never write film consumption formulas, scrap rate logic, tiered unit pricing, or BOM derivations inside `.vue`, `.js`, or `.ts` files under `apps/vanphat_portal/frontend/`.
-- **Backend Resolution Only**: All computations, quotes, and validations must resolve via backend Python APIs (`vanphat_portal.api`).
-- **Unidirectional Intent**: Frontend only captures user inputs, dispatches backend API requests via `createResource` / `call()`, and presents returned results.
-
-### Rule 2: Packaging Domain Standards, Coding Series & Canonical Units
-- **Standardized Units**: Canonical length is strictly `m` (meters). Never use `Mét Dài`. Film thickness is measured in `mic` ($\mu m$). Currency is strictly `VND`.
-- **Item Coding Taxonomy**:
-  - `TP-`: Thành phẩm túi (Finished Pouches: Doypack, 3 biên, 4 biên, 8 cạnh, túi lưng).
-  - `NVL-`: Nguyên vật liệu thô (Màng nguyên liệu, hạt nhựa, keo ghép, dung môi EA, vòi).
-  - `BTP-`: Bán thành phẩm màng ghép cuộn.
-  - `TRUC-`: Bộ trục in ống đồng (Rotogravure Cylinders).
-- **Physical Law & Compatibility**: PE spouts only weld to PE sealant layer; PP spouts only weld to CPP sealant layer. Cross-welding is strictly prohibited.
-
-### Rule 3: Safe Data Operations, Banned Libraries & Database Policy
-- **Strict Prohibition of `openpyxl`**: Processing Excel files (`data/raw-data/`) must strictly use `fastexcel` or `python-calamine` (Rust-backed) to prevent memory exhaustion and process stalls.
-- **Framework-Governed Database Mutation**: Database schema and data changes should be executed via standard Frappe bench commands (`bench migrate`, doctype reload) or tested ORM scripts with rollback safety. Raw SQL mutation against production MariaDB must be used with caution.
-- **Zero-Node Production Runtime**: Production environment runs Frappe Nginx / Gunicorn serving the pre-built static Vite bundle (`apps/vanphat_portal/vanphat_portal/public/frontend/` -> `www/portal.html`). No server-side Node.js or PM2 process may run on production.
-- **Atomic Git Workflow**: Follow Addy Osmani's `git-workflow-and-versioning` discipline with atomic commits per task or green test slice. Never push to remote (`git push`) unless explicitly requested by User.
-
-### Rule 4: Production Quotation & Batching Directives (SSOT Sếp Chốt)
-- **Cylinder Quote Isolation**: Tiền trục in ống đồng là chi phí công cụ khuôn mẫu tính riêng cho đơn hàng đầu (nếu khách chưa có trục). Tuyệt đối KHÔNG gộp tiền trục vào đơn giá 1 túi thành phẩm.
-- **2-Lane Wide-web Optimization**: Với các khổ túi vừa/nhỏ ($W \le 360\text{mm}$), xưởng bố trí trục in dài ($750 - 900\text{mm}$) và màng khổ to ($700 - 800\text{mm}$) để chạy 2 con (2 lane). Tăng gấp đôi sản lượng/mét dài, tối ưu tốc độ máy và triệt tiêu nguy cơ cuộn màng bị cắt dở.
-- **2-Tier Quotation & Surplus Risk Buffer Strategy**:
-  - *Nấc 1 - Tròn cuộn tối ưu (ĐƠN GIÁ TỐT NHẤT)*: Khách đồng ý đặt đủ số lượng tròn cuộn màng ($1.500\text{m}$) để tiêu thụ 100% sản lượng ra máy. Đơn giá túi rẻ nhất do setup máy chia đều cho lô lớn và công ty không chịu rủi ro tồn dư.
-  - *Nấc 2 - Đúng số lượng yêu cầu (ĐƠN GIÁ CAO HƠN)*: Khách chỉ lấy đúng số lượng lẻ (ít hơn số túi tròn cuộn), xưởng vẫn bắt buộc chạy trọn cuộn màng. Đơn giá báo cho khách bắt buộc phải **CAO HƠN** để bù đắp định phí setup và rủi ro chi phí màng thừa mà công ty phải ôm nếu khách không bao giờ đặt hàng lại (re-order).
-  - *Hiệu ứng đòn bẩy up-sell*: Báo giá song song 2 nấc giúp Sale chỉ cho khách thấy chỉ cần thêm một khoản tiền nhỏ là lấy được trọn vẹn số túi của cả cuộn với đơn giá rẻ hơn nhiều.
-
-
+## 5. Domain Standards & Specs Reference
+- **Canonical Units**: Canonical length is strictly `m` (meters only; `Mét Dài` is prohibited). Film thickness MUST be in `mic` ($\mu m$). Currency MUST be `VND`.
+- **Item Taxonomy**:
+  - `TP-`: Finished Pouches (Doypack, 3-side seal, center seal, side gusset, 8-side flat bottom).
+  - `NVL-`: Raw Materials (Film rolls, resins, dry lamination adhesives, EA solvents, spouts).
+  - `BTP-`: Semi-finished laminated rolls.
+  - `TRUC-`: Rotogravure cylinder tooling sets.
+- **Physical Law**: PE spouts weld ONLY to PE sealant layers; PP spouts weld ONLY to CPP sealant layers. Cross-welding is strictly prohibited.
+- **Quotation & Batching Directives**:
+  - MUST isolate cylinder tooling costs (`TRUC-`) from pouch unit prices.
+  - MUST optimize 2-lane wide-web layout for pouches with width $W \le 360\text{mm}$.
+  - MUST calculate 2-tier quotations: Tier 1 (Optimal whole-roll $1.500\text{m}$) vs Tier 2 (Requested quantity with surplus risk buffer).
+- **Domain Specifications**:
+  - Packaging calculation engine & quotation: [docs/specs/packaging-calculation-spec.md](file:///var/home/huy/vanphatapp/docs/specs/packaging-calculation-spec.md)
+  - Master data & Item taxonomy: [docs/specs/erpnext-packaging-masterdata-spec.md](file:///var/home/huy/vanphatapp/docs/specs/erpnext-packaging-masterdata-spec.md)

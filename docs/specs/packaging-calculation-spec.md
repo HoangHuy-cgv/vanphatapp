@@ -125,4 +125,38 @@ Trong đó:
 ### 6.2. Giá bán dự toán
 $$\text{Giá bán} = \frac{C_{unit}}{1 - \text{Margin \%}}$$
 
-*Tiền trục in ống đồng (Tooling Cost):* Khách hàng chi trả riêng cho đơn hàng đầu tiên (Số trục $\times$ Đơn giá khắc trục/màu).
+*Tiền trục in ống đồng (Tooling Cost):* Khách hàng chi trả riêng cho đơn hàng đầu tiên (Số trục $\times$ Đơn giá khắc trục/màu). Tuyệt đối KHÔNG gộp tiền trục vào đơn giá 1 túi thành phẩm.
+
+---
+
+## 7. Chiến lược Báo giá 2 Nấc & Tối ưu Hóa Sản xuất (SSOT Nghiệp vụ)
+
+### 7.1. Bóc tách Độc lập Tiền Trục In Ống Đồng (Cylinder Isolation)
+* Tiền trục in ống đồng ($TRUC$) là chi phí công cụ khuôn mẫu (tooling/mold asset) tính riêng cho đơn hàng đầu tiên của mẫu bao bì mới.
+* **Nguyên tắc kế toán & định giá:** Tuyệt đối KHÔNG gộp tiền trục vào đơn giá túi thành phẩm ($TP$). Đơn giá túi chỉ phản ánh chi phí biến đổi (màng, keo, mực, vòi, điện, nhân công) và khấu hao máy chạy.
+
+### 7.2. Tối ưu Khổ Màng Rộng Chạy 2 Con (2-Lane Wide-Web Optimization)
+* Đối với các mẫu túi vừa và nhỏ có chiều rộng $W \le 360\text{ mm}$, xưởng bố trí:
+  * Trục in dài: $750 - 900\text{ mm}$.
+  * Màng mạ / màng in khổ to: $700 - 800\text{ mm}$.
+  * Thiết kế chạy 2 lane (2 con song song).
+* **Hiệu quả kinh tế & kỹ thuật:**
+  * Nhân đôi sản lượng túi trên mỗi mét dài màng chạy máy in/ghép.
+  * Tối ưu tốc độ máy in ống đồng và triệt tiêu nguy cơ cuộn màng bị cắt dở, dư biên xén không đồng đều.
+
+### 7.3. Chiến lược Báo giá 2 Nấc & Cơ chế Dự phòng Rủi ro Màng Thừa (2-Tier Quotation & Surplus Buffer)
+Khi khách hàng yêu cầu báo giá cho số lượng đặt hàng ($Q_{req}$), hệ thống luôn tính toán và trả về đồng thời 2 nấc giá:
+
+1. **Nấc 1 - Tròn cuộn tối ưu (ĐƠN GIÁ TỐT NHẤT - Best Unit Price):**
+   * Tính theo sản lượng túi tối đa thu được khi chạy trọn vẹn số cuộn màng tiêu chuẩn (bội số của cuộn màng cơ sở $1.500\text{ m}$).
+   * *Đặc điểm:* Khách nhận toàn bộ số lượng túi thực tế ra máy ($Q_{opt} \ge Q_{req}$). Đơn giá túi rẻ nhất do chi phí setup máy được chia đều cho lô lớn và xưởng không chịu rủi ro tồn kho màng in thừa.
+
+2. **Nấc 2 - Đúng số lượng yêu cầu (ĐƠN GIÁ CAO HƠN - Requested Quantity with Risk Buffer):**
+   * Áp dụng khi khách kiên quyết chỉ lấy đúng số lượng $Q_{req}$ ($Q_{req} < Q_{opt}$).
+   * *Cơ chế định giá bù đắp rủi ro:* Do quy trình in ống đồng và ghép màng bắt buộc phải chạy trọn cuộn màng ($1.500\text{ m}$), phần màng in dở còn lại xưởng không thể tái sử dụng cho khách hàng khác. Đơn giá báo cho khách hàng bắt buộc phải **CAO HƠN** để bù đắp:
+     * Định phí setup máy in, máy ghép, máy cắt chia cho số lượng túi nhỏ hơn.
+     * Chi phí dự phòng rủi ro màng in thừa mà công ty phải lưu kho hoặc hủy nếu khách hàng không tái đặt hàng (re-order).
+
+3. **Hiệu ứng đòn bẩy thương mại (Upsell Leverage):**
+   * Báo giá song song 2 nấc tạo ra đòn bẩy tâm lý rõ ràng cho đội ngũ kinh doanh (Sales): Chỉ cần thêm một khoản ngân sách nhỏ, khách hàng sẽ nhận được số lượng túi nhiều hơn đáng kể với đơn giá trên từng túi giảm mạnh.
+
