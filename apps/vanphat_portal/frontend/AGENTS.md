@@ -9,8 +9,10 @@
 
 ## 2. Tech Stack & Engineering Standards
 - **Framework**: Vue 3 using Composition API with `<script setup>` and TypeScript. Options API is PROHIBITED.
-- **UI Components**: MUST use official `frappe-ui` components (`Button`, `Dialog`, `FormControl`, `TextInput`, `Select`, `Badge`, `Tabs`) to maintain design consistency with Frappe ecosystem.
-- **Styling**: Tailwind CSS only. Ad-hoc scoped `<style>` blocks should be minimized and adhere to Frappe UI design tokens.
+- **UI Components**: MUST use official `frappe-ui` components (`Button`, `Dialog`, `FormControl`, `TextInput`, `Select`, `Badge`, `Tabs`, `ListView`) to maintain design consistency with Frappe ecosystem.
+- **Community Pattern Leverage**: Generic list/detail views MUST reuse patterns and composables (`createListResource`, `useCall`) from `frappe/crm`. Unvetted dependencies or external bloatware (VoIP, mailers) are STRICTLY FORBIDDEN.
+- **Styling**: Tailwind CSS adhering to Van Phat's Unified Industrial Dark tokens. All copied components MUST map to `#0b0f19` (base), `#161b22` (cards), `#1a1f27` (inputs), `#3a424e` (borders), `#4ea1e0` (accent).
+- **Core Domain Isolation**: Core packaging workflows (`ModalStep1Sale`, `DrawerStep2Director`) MUST NOT be replaced by generic ERP forms.
 - **Build Target**: Vite builds static bundle to `apps/vanphat_portal/vanphat_portal/public/frontend/` served by Frappe Nginx/Gunicorn. Zero-Node production runtime.
 
 ## 3. Data Fetching & State Management

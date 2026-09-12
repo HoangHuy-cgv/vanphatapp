@@ -18,16 +18,27 @@
 - **Database**: MariaDB 10.6+.
 - **Production Runtime**: Zero-Node. Vite static assets served directly by Frappe Nginx / Gunicorn. No Node.js process on production.
 
-## 3. Strict Exclusions & Operational Constraints
+## 3. Frontend Architecture & Community Pattern Reuse (frappe/crm)
+- **Canonical UI Reference**: Generic management views (e.g., Customer list, Sales Order list, filters, tables, search pagination) MUST reuse proven patterns and composables (`createListResource`, `createDocumentResource`, `useCall`) from official Frappe apps (`frappe/crm`, `frappe/helpdesk`, `@frappe/ui`).
+- **Packaging Domain Exclusivity**: Core flexible packaging flows (pouch dimensions, multi-layer film selection, 2-lane layout, cylinder tooling isolation) MUST maintain dedicated, high-speed custom interfaces (`ModalStep1Sale`, `DrawerStep2Director`). Never replace tailored packaging flows with generic ERP forms.
+- **Theme & Aesthetic Uniformity**: All imported or adapted views MUST strictly conform to Van Phat's Unified Industrial Dark Design System:
+  - Background palette: `#0b0f19` (base), `#161b22` (cards/modals), `#1a1f27` (inputs/table headers).
+  - Borders: `#3a424e` / `rgba(255,255,255,0.08)`.
+  - Brand accents: `#4ea1e0` / `#0284c7`.
+  - Packaging layer badges: Sky Blue (print), Amber (barrier), Purple (PA), Emerald (sealant).
+  - Typography: Unified font `Inter` with `tabular-nums` for all financial and dimensional figures.
+
+## 4. Strict Exclusions & Operational Constraints
 - **Forbidden Stacks**: React, Next.js, Svelte, HTMX, Alpine.js, ad-hoc Jinja web applications.
 - **Forbidden Libraries**: `openpyxl` is STRICTLY PROHIBITED due to memory stalls. Use `fastexcel` or `python-calamine` (Rust-backed) for all spreadsheet operations.
+- **Forbidden Bloatware**: Third-party VoIP (Twilio), external marketing mailers, or unvetted npm packages from copied repos are STRICTLY PROHIBITED.
 - **Forbidden Client-side Logic**: NEVER perform film consumption math, unit pricing tiers, scrap rates, or BOM derivations in `.vue`, `.js`, or `.ts` files. All computations MUST resolve via backend Python APIs.
 
-## 4. Git & Database Operations
+## 5. Git & Database Operations
 - **Git Operations**: Commit atomically and frequently per completed task or passing test slice using conventional commit types (`feat:`, `fix:`, `refactor:`, `test:`). NEVER run `git push` unless explicitly requested by User.
 - **Database Operations**: Autonomous schema sync and database migrations via standard Frappe bench commands (`bench migrate`, doctype reload) and ORM scripts are permitted with rollback safety. Raw SQL mutations against production MariaDB MUST be used with caution.
 
-## 5. Domain Standards & Specs Reference
+## 6. Domain Standards & Specs Reference
 - **Canonical Units**: Canonical length is strictly `m` (meters only; `Mét Dài` is prohibited). Film thickness MUST be in `mic` ($\mu m$). Currency MUST be `VND`.
 - **Item Taxonomy**:
   - `TP-`: Finished Pouches (Doypack, 3-side seal, center seal, side gusset, 8-side flat bottom).

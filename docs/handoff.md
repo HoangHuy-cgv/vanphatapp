@@ -61,26 +61,27 @@ Cả `vanphat_portal` và `frappe/crm` đều dùng chung thư viện **`frappe-
 
 ---
 
-## 3. DANH MỤC CÔNG VIỆC CHO SESSION SAU (NEXT SESSION TODO)
+## 3. HÀNH ĐỘNG BẮT BUỘC KHI KHỞI ĐỘNG SESSION TIẾP THEO
 
-1. **Bước 1: Thiết lập Design System Tokens chung (`tailwind.config.js` & `index.css`)**:
-   - Khóa các biến CSS màu tối công nghiệp và font Inter để dùng chung cho cả portal.
-2. **Bước 2: Xây dựng Trang Khách hàng (`Customer List`) theo mẫu `frappe/crm`**:
-   - Tận dụng component `ListView` và composable `createListResource` từ `@frappe/ui`.
-   - Kết nối trực tiếp vào REST API `/api/resource/Customer` của Frappe.
-3. **Bước 3: Xây dựng Trang Đơn hàng (`Sales Order List`) theo mẫu `frappe/crm`**:
-   - Hiển thị danh sách đơn hàng được sinh ra từ nút "Chốt" của Báo giá.
-   - Thêm bộ lọc trạng thái: `Draft`, `To Deliver and Bill`, `Completed`.
-4. **Bước 4: Tích hợp sâu luồng Soạn báo giá vào màn hình Customer**:
-   - Nút "+ Báo giá" nằm ngay trong trang chi tiết Khách hàng, bấm là kích hoạt ngay Modal 1 và Drawer 2 đã hoàn thiện.
+1. **Thực thi Kỹ năng Phỏng vấn Workflow thực tế (`interview-me`)**:
+   - Agent **bắt buộc phải kích hoạt skill `interview-me`** ngay đầu phiên.
+   - Tiến hành hỏi - đáp từng câu một (one-question-at-a-time) với Sếp về **Workflow thực tế của Nhà máy Bao Bì Vạn Phát**:
+     - *Khâu 1 (Tiếp nhận & Báo giá)*: Sale nhận yêu cầu túi/cuộn $\rightarrow$ kiểm tra lịch sử giá hoặc tính giá mới $\rightarrow$ Giám đốc duyệt giá & cơ cấu màng.
+     - *Khâu 2 (Mẫu in & Trục in)*: Duyệt maquette thiết kế $\rightarrow$ tình trạng trục in (khách gửi hay làm mới tại Vạn Phát) $\rightarrow$ ghi nhận cây trục.
+     - *Khâu 3 (Chốt đơn & Lệnh sản xuất)*: Chốt báo giá thành Đơn bán hàng (`Sales Order`) $\rightarrow$ Kích hoạt Lệnh sản xuất (`Work Order`) & Lệnh cắt/ghép/in (`Job Card`).
+     - *Khâu 4 (Kho & Giao hàng)*: Xuất kho màng NVL $\rightarrow$ Nhập kho thành phẩm túi TP- $\rightarrow$ Phiếu giao hàng (`Delivery Note`).
+     - *Khâu 5 (Thanh toán & Công nợ)*: Đặt cọc $\rightarrow$ Thanh toán đợt cuối khi giao hàng.
+   - **Mục tiêu**: Loại bỏ mọi chức năng thừa thãi của ERPNext tiêu chuẩn, chỉ giữ lại đúng những bước thực sự phát sinh tại xưởng Vạn Phát để đạt tiêu chí **Tối giản nhưng Đủ và Sắc bén**.
+
+2. **Lập Spec & Vertical Slices (`spec-driven-development` + `planning-and-task-breakdown`)**:
+   - Từ kết quả phỏng vấn, lập `tasks/plan.md` xác định các trang nền cần copy từ `frappe/crm` (Khách hàng, Đơn hàng, Lệnh sản xuất).
+   - Thiết lập các endpoint Frappe REST API tương ứng.
 
 ---
 
 ## 4. CÂU LỆNH MẪU KHI MỞ SESSION TIẾP THEO
 
 ```text
-Đọc docs/handoff.md và tiếp tục triển khai theo định hướng đã thống nhất:
-1. Đồng bộ Design System (dark theme tokens, font Inter) giữa vanphat_portal và frappe/crm.
-2. Xây dựng trang Khách hàng (Customer List) và Đơn hàng (Sales Order List) dựa trên mẫu từ frappe/crm.
-3. Kết nối mượt mà với Modal 1 và Drawer 2 báo giá bao bì hiện tại.
+Đọc docs/handoff.md và bắt đầu ngay bằng kỹ năng `interview-me`:
+Phỏng vấn Sếp từng câu hỏi một về workflow thực tế của Nhà máy Bao bì Vạn Phát để chốt danh mục màn hình tối giản cần thiết trước khi lấy mẫu từ frappe/crm.
 ```
