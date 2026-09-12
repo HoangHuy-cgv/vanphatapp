@@ -17,8 +17,8 @@
 						</span>
 					</div>
 					<div class="customer-subtitle mt-1">
-						<b>{{ order?.customer_name || order?.customer || '—' }}</b>
-						<span v-if="order?.pouch_type_detail" class="text-xs text-secondary ml-2">({{ order.pouch_type_detail }})</span>
+						<b>{{ order?.customer_alias || order?.customer_name || order?.customer || '—' }}</b>
+						<span v-if="order?.customer_alias && order?.customer_name && order.customer_alias !== order.customer_name" class="text-xs text-secondary ml-2 font-normal">({{ order.customer_name }})</span>
 					</div>
 				</div>
 				<button type="button" class="btn-close" @click="$emit('close')">✕</button>

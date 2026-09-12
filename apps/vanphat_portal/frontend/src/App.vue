@@ -170,15 +170,13 @@
 				<table class="data-table">
 					<thead>
 						<tr>
-							<th style="width: 9%;">Ngày</th>
-							<th style="width: 12%;">Mã đơn</th>
-							<th style="width: 18%;">Khách</th>
-							<th style="width: 12%;">Nhóm</th>
-							<th style="width: 18%;">Mặt hàng</th>
-							<th style="width: 6%; text-align: right;">SL</th>
-							<th style="width: 12%; text-align: right;">Tổng</th>
-							<th style="width: 13%; text-align: right;">Đã cọc</th>
-							<th style="width: 12%; text-align: center;">Trạng thái</th>
+							<th style="width: 10%;">Ngày</th>
+							<th style="width: 24%;">Khách</th>
+							<th style="width: 28%;">Mặt hàng</th>
+							<th style="width: 13%; text-align: right;">Số lượng</th>
+							<th style="width: 13%; text-align: right;">Tổng</th>
+							<th style="width: 12%; text-align: right;">Đã cọc</th>
+							<th style="width: 10%; text-align: center;">Trạng thái</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -188,25 +186,34 @@
 							class="table-row cursor-pointer"
 							@click="openOrderDetail(o)"
 						>
-							<td class="text-secondary font-mono">{{ o.transaction_date || '—' }}</td>
-							<td class="font-bold text-primary font-mono">{{ o.name }}</td>
+							<td class="text-secondary font-mono">{{ formatDateShort(o.transaction_date) }}</td>
 							<td>
-								<div class="font-bold">{{ o.customer_name || o.customer || '—' }}</div>
-								<div class="mt-0.5">
-									<span class="badge-tag-cust" :class="o.payment_type === 'Trả sau' ? 'tag-postpaid' : 'tag-prepaid'">
-										{{ o.payment_type || 'Trả trước' }}
-									</span>
-								</div>
+								<div class="font-bold text-white">{{ o.customer_alias || o.alias || o.customer || o.customer_name }}</div>
 							</td>
-							<td>
-								<span class="badge-tag-group">{{ o.product_group || 'Túi màng ghép' }}</span>
+							<td class="truncate" :title="o.item_name">
+								<span class="font-medium text-white">{{ o.item_name || '—' }}</span>
 							</td>
-							<td class="truncate" :title="o.item_name">{{ o.item_name || '—' }}</td>
-							<td class="text-right text-num">{{ formatNumber(o.qty) }}</td>
+							<td class="text-right text-num">
+								<span>{{ formatNumber(o.qty) }}</span>
+								<span class="text-xs text-secondary" style="margin-left: 5px;">{{ o.uom || o.stock_uom || 'Túi' }}</span>
+							</td>
 							<td class="text-right font-bold text-num">{{ formatCurrency(o.grand_total) }}</td>
-							<td class="text-right text-num font-bold" :class="o.advance_paid >= (o.required_deposit || o.grand_total * 0.5) ? 'text-emerald' : (o.advance_paid > 0 ? 'text-amber' : 'text-secondary')">
-								{{ formatCurrency(o.advance_paid) }}
-								<span v-if="o.deposit_pct" class="text-xs font-normal" style="opacity: 0.85;">({{ o.deposit_pct }}%)</span>
+							<td class="text-right">
+								<div v-if="o.payment_type === 'Trả sau'" class="text-xs text-secondary">
+									Trả sau
+								</div>
+								<div v-else class="deposit-mini-cell">
+									<div class="text-num font-bold" :class="o.advance_paid >= (o.required_deposit || o.grand_total * 0.5) ? 'text-emerald' : (o.advance_paid > 0 ? 'text-amber' : 'text-secondary')">
+										{{ formatCurrency(o.advance_paid) }}
+									</div>
+									<div class="mini-bar-track">
+										<div
+											class="mini-bar-fill"
+											:style="{ width: Math.min(100, Math.round((o.advance_paid / (o.required_deposit || (o.grand_total * 0.5))) * 100)) + '%' }"
+											:class="o.advance_paid >= (o.required_deposit || (o.grand_total * 0.5)) ? 'bg-emerald' : 'bg-amber'"
+										></div>
+									</div>
+								</div>
 							</td>
 							<td class="text-center">
 								<span class="status-badge" :class="orderStatusClass(o)">
@@ -215,7 +222,7 @@
 							</td>
 						</tr>
 						<tr v-if="orders.length === 0">
-							<td colspan="9" class="empty-cell">
+							<td colspan="7" class="empty-cell">
 								{{ loadingOrders ? 'Đang tải...' : 'Không có dữ liệu' }}
 							</td>
 						</tr>
@@ -523,6 +530,15 @@ function orderStatusClass(o) {
 function formatNumber(val) {
 	if (val == null || val === '') return '0';
 	return Number(val).toLocaleString('vi-VN');
+}
+
+function formatDateShort(val) {
+	if (!val) return '—';
+	const parts = String(val).split('-');
+	if (parts.length === 3) {
+		return `${parts[2]}/${parts[1]}`;
+	}
+	return val;
 }
 
 async function onMakeOrder(q) {
@@ -977,5 +993,34 @@ html, body {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+}
+
+.deposit-mini-cell {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 3px;
+}
+
+.mini-bar-track {
+	width: 100%;
+	max-width: 80px;
+	height: 3px;
+	background: rgba(255, 255, 255, 0.08);
+	border-radius: 2px;
+	overflow: hidden;
+}
+
+.mini-bar-fill {
+	height: 100%;
+	transition: width 0.3s ease;
+}
+
+.bg-emerald {
+	background-color: #34d399;
+}
+
+.bg-amber {
+	background-color: #f59e0b;
 }
 </style>
