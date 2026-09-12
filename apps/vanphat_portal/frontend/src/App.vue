@@ -87,17 +87,15 @@
 		<!-- Main Content Area -->
 		<main class="main-content">
 			<header class="page-head">
-				<h2 class="page-title">{{ view === 'orders' ? 'Danh sách Đơn hàng & Tiền cọc' : 'Danh sách Báo giá' }}</h2>
+				<div>
+					<h2 class="page-title">{{ view === 'orders' ? 'Danh sách Đơn hàng & Tiền cọc' : 'Báo giá R&D Sản Phẩm Mới' }}</h2>
+					<div class="text-xs text-secondary mt-0.5">
+						{{ view === 'orders'
+							? 'Đủ 4 nhóm hàng (Túi màng ghép, Cuộn màng ghép, Túi NGCS, Túi màng đơn) — Chuẩn cọc 50% hàng + 100% trục'
+							: 'Cung cấp thông số túi/màng cho Giám đốc & QLSX bóc tách cấu trúc và định giá (Chỉ áp dụng Túi & Cuộn màng ghép mới)' }}
+					</div>
+				</div>
 				<button
-					v-if="view === 'quotes'"
-					type="button"
-					class="btn-new-quote"
-					@click="openStep1Modal"
-				>
-					+ Báo giá
-				</button>
-				<button
-					v-else-if="view === 'orders'"
 					type="button"
 					class="btn-new-quote"
 					@click="openStep1Modal"
@@ -111,57 +109,62 @@
 				<table class="data-table">
 					<thead>
 						<tr>
-							<th style="width: 12%;">Ngày</th>
-							<th style="width: 16%;">Mã báo giá</th>
-							<th style="width: 26%;">Khách hàng & Brand</th>
-							<th style="width: 14%; text-align: right;">Tổng tiền</th>
-							<th style="width: 14%; text-align: center;">Trạng thái</th>
-							<th style="width: 18%; text-align: center;">Thao tác</th>
+							<th style="width: 11%;">Ngày</th>
+							<th style="width: 15%;">Mã báo giá</th>
+							<th style="width: 24%;">Khách hàng</th>
+							<th style="width: 14%;">Nhóm hàng</th>
+							<th style="width: 12%; text-align: right;">Tổng tiền</th>
+							<th style="width: 12%; text-align: center;">Trạng thái</th>
+							<th style="width: 12%; text-align: center;">Thao tác</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr
-							v-for="q in quotations"
-							:key="q.name"
-							class="table-row"
-						>
-							<td class="text-secondary">{{ q.transaction_date || '—' }}</td>
-							<td class="font-bold text-primary">{{ q.name }}</td>
-							<td class="font-bold">{{ q.customer_name || '—' }}</td>
+						<tr v-for="q in quotations" :key="q.name" class="table-row">
+							<td class="text-secondary font-mono">{{ q.transaction_date || '—' }}</td>
+							<td class="font-bold text-primary font-mono">{{ q.name }}</td>
+							<td>
+								<div class="font-semibold">{{ q.customer_name || 'Khách hàng mới' }}</div>
+								<div v-if="q.pouch_type" class="text-xs text-secondary">{{ q.pouch_type }}</div>
+							</td>
+							<td>
+								<span class="badge-tag-group">{{ q.product_group || 'Túi màng ghép' }}</span>
+							</td>
 							<td class="text-right font-bold text-num">{{ formatCurrency(q.grand_total) }}</td>
 							<td class="text-center">
-								<span class="status-badge" :class="statusClass(q.status)">{{ q.status || 'Draft' }}</span>
+								<span class="status-badge" :class="statusClass(q.status)">
+									{{ q.status || 'Draft' }}
+								</span>
 							</td>
-							<td class="text-center row-actions">
+							<td class="text-center action-cells">
 								<button
-									v-if="(q.status || 'Draft') === 'Draft'"
-									type="button"
-									class="row-btn"
-									@click="onSendQuotation(q)"
-								>
-									Gửi QLSX
-								</button>
-								<button
-									v-if="['Open', 'Partially Ordered'].includes(q.status || '')"
+									v-if="q.status === 'Open'"
 									type="button"
 									class="row-btn row-btn-primary"
 									@click="onMakeOrder(q)"
 								>
-									Chốt
+									Chốt đơn
 								</button>
 								<button
-									v-if="['Draft', 'Open'].includes(q.status || 'Draft')"
+									v-else-if="q.status === 'Draft'"
+									type="button"
+									class="row-btn row-btn-primary"
+									@click="onSendQuotation(q)"
+								>
+									Gửi duyệt
+								</button>
+								<button
+									v-if="q.status === 'Draft' || q.status === 'Open'"
 									type="button"
 									class="row-btn row-btn-danger"
 									@click="onMarkLost(q)"
 								>
 									Rớt
 								</button>
-								<span v-else-if="!['Draft', 'Open', 'Partially Ordered'].includes(q.status || 'Draft')" class="text-secondary">—</span>
+								<span v-else class="text-secondary text-xs">—</span>
 							</td>
 						</tr>
 						<tr v-if="quotations.length === 0">
-							<td colspan="6" class="empty-cell">
+							<td colspan="7" class="empty-cell">
 								{{ loading ? 'Đang tải dữ liệu...' : 'Chưa có báo giá nào trong hệ thống.' }}
 							</td>
 						</tr>
@@ -174,13 +177,14 @@
 				<table class="data-table">
 					<thead>
 						<tr>
-							<th style="width: 10%;">Ngày đặt</th>
-							<th style="width: 14%;">Mã đơn</th>
+							<th style="width: 9%;">Ngày đặt</th>
+							<th style="width: 12%;">Mã đơn</th>
 							<th style="width: 18%;">Khách hàng</th>
-							<th style="width: 20%;">Mặt hàng</th>
-							<th style="width: 8%; text-align: right;">SL</th>
-							<th style="width: 13%; text-align: right;">Tổng tiền</th>
-							<th style="width: 15%; text-align: right;">Đã cọc</th>
+							<th style="width: 12%;">Nhóm hàng</th>
+							<th style="width: 18%;">Mặt hàng</th>
+							<th style="width: 6%; text-align: right;">SL</th>
+							<th style="width: 12%; text-align: right;">Tổng tiền</th>
+							<th style="width: 13%; text-align: right;">Đã cọc</th>
 							<th style="width: 12%; text-align: center;">Trạng thái</th>
 						</tr>
 					</thead>
@@ -193,11 +197,21 @@
 						>
 							<td class="text-secondary font-mono">{{ o.transaction_date || '—' }}</td>
 							<td class="font-bold text-primary font-mono">{{ o.name }}</td>
-							<td class="font-bold">{{ o.customer_name || o.customer || '—' }}</td>
+							<td>
+								<div class="font-bold">{{ o.customer_name || o.customer || '—' }}</div>
+								<div class="mt-0.5">
+									<span class="badge-tag-cust" :class="o.payment_type === 'Trả sau' ? 'tag-postpaid' : 'tag-prepaid'">
+										{{ o.payment_type || 'Trả trước' }}
+									</span>
+								</div>
+							</td>
+							<td>
+								<span class="badge-tag-group">{{ o.product_group || 'Túi màng ghép' }}</span>
+							</td>
 							<td class="truncate" :title="o.item_name">{{ o.item_name || '—' }}</td>
 							<td class="text-right text-num">{{ formatNumber(o.qty) }}</td>
 							<td class="text-right font-bold text-num">{{ formatCurrency(o.grand_total) }}</td>
-							<td class="text-right text-num font-bold" :class="o.deposit_pct >= 30 ? 'text-emerald' : 'text-amber'">
+							<td class="text-right text-num font-bold" :class="o.advance_paid >= (o.required_deposit || o.grand_total * 0.5) ? 'text-emerald' : (o.advance_paid > 0 ? 'text-amber' : 'text-secondary')">
 								{{ formatCurrency(o.advance_paid) }}
 								<span v-if="o.deposit_pct" class="text-xs font-normal" style="opacity: 0.85;">({{ o.deposit_pct }}%)</span>
 							</td>
@@ -208,7 +222,7 @@
 							</td>
 						</tr>
 						<tr v-if="orders.length === 0">
-							<td colspan="8" class="empty-cell">
+							<td colspan="9" class="empty-cell">
 								{{ loadingOrders ? 'Đang tải dữ liệu...' : 'Chưa có đơn hàng nào trong hệ thống.' }}
 							</td>
 						</tr>
@@ -499,16 +513,19 @@ function openOrderDetail(o) {
 }
 
 function orderStatusText(o) {
-	if (o.docstatus === 1) return 'Chính thức';
-	if (o.deposit_pct >= 30) return 'Đã cọc 30%+';
-	if (o.advance_paid > 0) return 'Cọc 1 phần';
+	if (o.order_state) return o.order_state;
+	if (o.payment_type === 'Trả sau') return 'Chính thức (Trả sau)';
+	if (o.docstatus === 1) return 'Chính thức (Đã cọc >=50%)';
+	if (o.is_hold || (o.advance_paid > 0 && o.advance_paid < (o.required_deposit || o.grand_total * 0.5))) {
+		return 'HOLD (Thiếu cọc)';
+	}
 	return 'Chờ cọc';
 }
 
 function orderStatusClass(o) {
-	if (o.docstatus === 1) return 'status-ordered';
-	if (o.deposit_pct >= 30) return 'status-ordered';
-	if (o.advance_paid > 0) return 'status-open';
+	if (o.is_hold || o.order_state?.includes('HOLD')) return 'status-hold';
+	if (o.docstatus === 1 || o.order_state?.includes('Chính thức')) return 'status-ordered';
+	if (o.advance_paid > 0) return 'status-hold';
 	return 'status-draft';
 }
 
@@ -913,6 +930,43 @@ html, body {
 
 .table-row.cursor-pointer:hover {
 	background: rgba(78, 161, 224, 0.08) !important;
+}
+
+.status-hold {
+	background: rgba(239, 68, 68, 0.2);
+	color: #f87171;
+	border: 1px solid rgba(239, 68, 68, 0.4);
+}
+
+.badge-tag-cust {
+	display: inline-block;
+	font-size: 11px;
+	font-weight: 700;
+	padding: 2px 6px;
+	border-radius: 4px;
+}
+
+.tag-postpaid {
+	background: rgba(99, 102, 241, 0.2);
+	color: #a5b4fc;
+	border: 1px solid rgba(99, 102, 241, 0.4);
+}
+
+.tag-prepaid {
+	background: rgba(245, 158, 11, 0.15);
+	color: #fbbf24;
+	border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.badge-tag-group {
+	display: inline-block;
+	font-size: 11.5px;
+	font-weight: 600;
+	padding: 3px 8px;
+	border-radius: 5px;
+	background: #1c222d;
+	color: #93c5fd;
+	border: 1px solid #334155;
 }
 
 .text-emerald {

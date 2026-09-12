@@ -440,41 +440,99 @@ def get_order_details(name):
 		frappe.throw("Không tìm thấy đơn hàng " + str(name))
 	doc = frappe.get_doc("Sales Order", name)
 	credit_limit = frappe.db.get_value("Customer", doc.customer, "credit_limit") or 0
+	payment_type = "Trả sau" if credit_limit > 0 else "Trả trước"
+
 	advance_paid = frappe.utils.flt(doc.advance_paid)
 	grand_total = frappe.utils.flt(doc.grand_total)
 	outstanding_amount = max(0.0, grand_total - advance_paid)
-	deposit_pct = round((advance_paid / grand_total * 100), 1) if grand_total > 0 else 0
-	can_submit = (doc.docstatus == 0) and (deposit_pct >= 30.0 or credit_limit > 0)
 
+	# Bóc tách tiền trục in (TRUC-) và tiền hàng (túi/cuộn màng)
+	cylinder_total = 0.0
+	product_total = 0.0
 	items = []
+	product_group = "Túi màng ghép"
+
 	for it in doc.items:
+		code = (it.item_code or "").upper()
+		it_name = it.item_name or ""
+		amt = frappe.utils.flt(it.amount)
+		is_cyl = "TRUC-" in code or "trục" in it_name.lower() or "truc" in it_name.lower()
+
+		if is_cyl:
+			cylinder_total += amt * 1.08  # Giá sau VAT 8%
+		else:
+			product_total += amt * 1.08
+			# Phân loại nhóm hàng
+			if "NGCS" in code or "in sẵn" in it_name.lower() or "ngcs" in it_name.lower():
+				product_group = "Túi NGCS"
+			elif "cuộn" in it_name.lower() or "màng ghép" in it_name.lower():
+				product_group = "Cuộn màng ghép"
+			elif "màng đơn" in it_name.lower() or "hd" in code or "pe đơn" in it_name.lower():
+				product_group = "Túi màng đơn"
+			else:
+				product_group = "Túi màng ghép"
+
 		items.append({
+			"item_code": it.item_code,
 			"item_name": it.item_name,
 			"qty": it.qty,
 			"rate": it.rate,
 			"amount": it.amount,
 			"uom": it.uom,
+			"is_cylinder": is_cyl,
 		})
+
+	# Quy tắc Vàng: Cọc 50% tiền hàng (không bao gồm tiền trục) + 100% TIỀN TRỤC
+	required_deposit = round((product_total * 0.5) + cylinder_total)
+	deposit_pct = round((advance_paid / grand_total * 100), 1) if grand_total > 0 else 0
+
+	# Xác định trạng thái nghiệp vụ chuẩn
+	is_hold = False
+	can_submit = False
+
+	if payment_type == "Trả sau":
+		# Khách trả sau: Bypass cọc, tự động submit
+		can_submit = (doc.docstatus == 0)
+		order_state = "Chính thức (Trả sau)" if doc.docstatus == 1 else "Chờ kích hoạt (Trả sau)"
+	else:
+		# Khách trả trước:
+		if advance_paid >= required_deposit:
+			can_submit = (doc.docstatus == 0)
+			order_state = "Chính thức (Đã cọc >=50%)" if doc.docstatus == 1 else "Đủ cọc (Chờ kích hoạt)"
+		elif advance_paid > 0:
+			is_hold = True
+			can_submit = False
+			order_state = "HOLD (Thiếu cọc)"
+		else:
+			can_submit = False
+			order_state = "Chờ cọc"
 
 	return {
 		"name": doc.name,
 		"transaction_date": str(doc.transaction_date),
 		"customer": doc.customer,
 		"customer_name": doc.customer_name,
+		"payment_type": payment_type,
+		"product_group": product_group,
 		"grand_total": grand_total,
+		"product_total": product_total,
+		"cylinder_total": cylinder_total,
 		"advance_paid": advance_paid,
 		"outstanding_amount": outstanding_amount,
+		"required_deposit": required_deposit,
 		"deposit_pct": deposit_pct,
+		"order_state": order_state,
+		"is_hold": is_hold,
+		"can_submit": can_submit,
 		"status": doc.status,
 		"docstatus": doc.docstatus,
 		"credit_limit": credit_limit,
-		"can_submit": can_submit,
 		"items": items,
 	}
 
 
 @frappe.whitelist()
-def record_order_deposit(name, amount=0, is_vip_guarantee=False, note=""):
+def record_order_deposit(name, amount=0, note=""):
 	if not frappe.db.exists("Sales Order", name):
 		frappe.throw("Không tìm thấy đơn hàng " + str(name))
 	doc = frappe.get_doc("Sales Order", name)
@@ -482,11 +540,6 @@ def record_order_deposit(name, amount=0, is_vip_guarantee=False, note=""):
 		frappe.throw("Đơn hàng đã bị hủy, không thể ghi nhận cọc.")
 
 	amt = frappe.utils.flt(amount)
-	if is_vip_guarantee:
-		doc.flags.ignore_permissions = True
-		doc.add_comment("Comment", text=f"Bảo lãnh cọc VIP (Giám đốc duyệt): {note or 'Khách có hạn mức công nợ gối đầu'}")
-		return {"name": doc.name, "success": True, "is_vip_guarantee": True}
-
 	if amt <= 0:
 		frappe.throw("Số tiền cọc phải lớn hơn 0.")
 
@@ -494,30 +547,53 @@ def record_order_deposit(name, amount=0, is_vip_guarantee=False, note=""):
 	doc.db_set("advance_paid", new_advance)
 	doc.add_comment("Comment", text=f"Ghi nhận cọc: {amt:,.0f} đ. Tổng đã cọc: {new_advance:,.0f} đ. Ghi chú: {note}")
 	doc.reload()
+
+	# Kiểm tra nếu đủ cọc (50% hàng + 100% trục) -> Tự động submit thành đơn chính thức
+	details = get_order_details(name)
+	if details["can_submit"]:
+		doc.submit()
+		return {"name": doc.name, "auto_submitted": True, "order_state": "Chính thức (Đã cọc >=50%)", "success": True}
+
 	return {
 		"name": doc.name,
 		"advance_paid": doc.advance_paid,
 		"outstanding_amount": max(0.0, frappe.utils.flt(doc.grand_total) - frappe.utils.flt(doc.advance_paid)),
+		"order_state": details["order_state"],
+		"is_hold": details["is_hold"],
 		"success": True,
 	}
 
 
 @frappe.whitelist()
-def submit_sales_order(name, is_vip_guarantee=False):
+def accountant_approve_procurement(name, note=""):
+	"""Kế toán bấm 'Mua hàng NCC' đối với đơn hàng đang bị HOLD (cọc > 0 và < 50%).
+	Chỉ khi kế toán bấm nút này thì đơn mới được phép chuyển sang bước Mua hàng NCC.
+	"""
+	if not frappe.db.exists("Sales Order", name):
+		frappe.throw("Không tìm thấy đơn hàng " + str(name))
+	doc = frappe.get_doc("Sales Order", name)
+	doc.add_comment("Comment", text=f"Kế toán phê duyệt chuyển bước 'Mua hàng NCC' (Duyệt ngoại lệ đơn HOLD): {note or 'Kế toán xác nhận cho chạy tiếp'}")
+
+	if doc.docstatus == 0:
+		doc.flags.ignore_mandatory = True
+		doc.submit()
+
+	return {"name": doc.name, "status": "Đã chuyển Mua hàng NCC", "docstatus": doc.docstatus, "success": True}
+
+
+@frappe.whitelist()
+def submit_sales_order(name):
 	if not frappe.db.exists("Sales Order", name):
 		frappe.throw("Không tìm thấy đơn hàng " + str(name))
 	doc = frappe.get_doc("Sales Order", name)
 	if doc.docstatus != 0:
 		frappe.throw("Chỉ có thể submit đơn hàng ở trạng thái Nháp (Draft).")
 
-	grand_total = frappe.utils.flt(doc.grand_total)
-	advance_paid = frappe.utils.flt(doc.advance_paid)
-	deposit_pct = (advance_paid / grand_total * 100) if grand_total > 0 else 100
-
-	if deposit_pct < 30.0 and not is_vip_guarantee:
-		credit_limit = frappe.db.get_value("Customer", doc.customer, "credit_limit") or 0
-		if credit_limit <= 0:
-			frappe.throw(f"Đơn hàng chưa đủ cọc tối thiểu 30% (Hiện có: {deposit_pct:.1f}%). Vui lòng xác nhận cọc hoặc bảo lãnh VIP.")
+	details = get_order_details(name)
+	if details["is_hold"]:
+		frappe.throw("Đơn hàng đang ở trạng thái HOLD (cọc thiếu). Chỉ Kế toán mới có quyền bấm nút 'Mua hàng NCC' để duyệt tiếp.")
+	if not details["can_submit"]:
+		frappe.throw(f"Đơn hàng chưa đủ điều kiện (Cần cọc 50% tiền hàng + 100% tiền trục, tổng cần: {details['required_deposit']:,.0f} đ).")
 
 	doc.submit()
 	return {"name": doc.name, "status": doc.status, "docstatus": doc.docstatus}
