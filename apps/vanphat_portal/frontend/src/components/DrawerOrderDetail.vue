@@ -17,7 +17,7 @@
 						</span>
 					</div>
 					<div class="customer-subtitle mt-1">
-						Khách hàng: <b>{{ order?.customer_name || order?.customer || '—' }}</b>
+						<b>{{ order?.customer_name || order?.customer || '—' }}</b>
 						<span v-if="order?.pouch_type_detail" class="text-xs text-secondary ml-2">({{ order.pouch_type_detail }})</span>
 					</div>
 				</div>
@@ -26,85 +26,74 @@
 
 			<!-- Body (Loading / Content) -->
 			<div v-if="loading" class="drawer-loading">
-				Đang tải thông tin đơn hàng...
+				Đang tải...
 			</div>
 
 			<div v-else-if="order" class="drawer-body">
-				<!-- 1. Thẻ Phân Bổ Tiền Hàng, Tiền Trục & Mức Cọc -->
+				<!-- 1. Thẻ Tài Chính -->
 				<div class="financial-card">
 					<!-- Khách trả sau -->
 					<div v-if="order.payment_type === 'Trả sau'" class="postpaid-banner">
 						<div class="flex-between">
-							<span class="font-bold text-sm text-indigo-light">KHÁCH TRẢ SAU (HẠN MỨC CÔNG NỢ)</span>
-							<span class="text-num text-xs">Hạn mức: <b>{{ formatCurrency(order.credit_limit) }}</b></span>
-						</div>
-						<div class="text-xs text-secondary mt-1">
-							Đơn hàng tự động bypass cọc và submit vào hệ thống để mua hàng & sản xuất.
+							<span class="font-bold text-xs text-indigo-light">TRẢ SAU</span>
+							<span class="text-num text-xs">Hạn mức nợ: <b>{{ formatCurrency(order.credit_limit) }}</b></span>
 						</div>
 					</div>
 
-					<!-- Khách trả trước: Bóc tách 50% tiền hàng và 100% TIỀN TRỤC -->
+					<!-- Khách trả trước: 50% tiền hàng và 100% trục -->
 					<div v-else class="deposit-breakdown">
 						<div class="financial-row">
 							<div>
-								<div class="lbl">TIỀN HÀNG (TÚI / MÀNG)</div>
+								<div class="lbl">HÀNG (CỌC 50%)</div>
 								<div class="val text-num">{{ formatCurrency(order.product_total || order.grand_total) }}</div>
-								<div class="text-xs text-secondary">Mốc cọc yêu cầu: <b class="text-amber">50%</b></div>
 							</div>
 							<div class="text-right">
-								<div class="lbl">TIỀN TRỤC IN (NẾU CÓ)</div>
+								<div class="lbl">TRỤC IN (100%)</div>
 								<div class="val text-num" :class="order.cylinder_total > 0 ? 'text-purple' : 'text-secondary'">
 									{{ formatCurrency(order.cylinder_total || 0) }}
-								</div>
-								<div class="text-xs" :class="order.cylinder_total > 0 ? 'text-purple' : 'text-secondary'">
-									Thu trước: <b>100%</b>
 								</div>
 							</div>
 						</div>
 
-						<div class="deposit-summary-box mt-3">
+						<div class="deposit-summary-box mt-2">
 							<div class="flex-between text-xs">
-								<span class="lbl">YÊU CẦU THU TRƯỚC (50% HÀNG + 100% TRỤC):</span>
+								<span class="lbl">CẦN CỌC:</span>
 								<span class="text-num font-bold text-amber">{{ formatCurrency(order.required_deposit) }}</span>
 							</div>
 							<div class="flex-between text-xs mt-1">
-								<span class="lbl">ĐÃ THU:</span>
+								<span class="lbl">ĐÃ CỌC:</span>
 								<span class="text-num font-bold text-emerald">{{ formatCurrency(order.advance_paid) }} ({{ order.deposit_pct }}%)</span>
 							</div>
 						</div>
 
-						<!-- Progress bar với mốc 50% chuẩn -->
+						<!-- Progress bar -->
 						<div class="deposit-track mt-2">
 							<div
 								class="deposit-fill"
 								:style="{ width: Math.min(100, Math.round((order.advance_paid / (order.required_deposit || order.grand_total)) * 100)) + '%' }"
 								:class="order.advance_paid >= order.required_deposit ? 'bg-emerald' : 'bg-amber'"
 							></div>
-							<div class="marker-50" title="Mốc thu đủ để chạy tự động"></div>
+							<div class="marker-50"></div>
 						</div>
 						<div class="flex-between text-xs mt-1 text-secondary">
-							<span>Cần thu tối thiểu 100% mốc yêu cầu</span>
-							<span class="text-num">Còn nợ: <b class="text-white">{{ formatCurrency(order.outstanding_amount) }}</b></span>
+							<span>Tiến độ cọc</span>
+							<span class="text-num">Nợ: <b class="text-white">{{ formatCurrency(order.outstanding_amount) }}</b></span>
 						</div>
 					</div>
 				</div>
 
-				<!-- 2. CẢNH BÁO HOLD VÀ HỘP QUYẾT ĐỊNH CỦA KẾ TOÁN (Khi cọc > 0 và < 50%) -->
+				<!-- 2. HOLD & Duyệt Kế Toán -->
 				<div v-if="order.is_hold && order.docstatus === 0" class="hold-action-card">
 					<div class="hold-header">
-						<span class="text-amber font-bold text-sm">⚠️ ĐƠN HÀNG ĐANG BỊ HOLD (TẠM GIỮ)</span>
-						<span class="hold-tag">THIẾU CỌC</span>
-					</div>
-					<div class="text-xs text-secondary mt-1">
-						Khách đã cọc <b class="text-white">{{ formatCurrency(order.advance_paid) }}</b>, chưa đạt mức thu tối thiểu <b class="text-amber">{{ formatCurrency(order.required_deposit) }}</b>. Toàn bộ khâu Mua hàng NCC và Xưởng sản xuất tạm khóa.
+						<span class="text-amber font-bold text-xs">HOLD (THIẾU CỌC)</span>
+						<span class="hold-tag">CHỜ DUYỆT</span>
 					</div>
 
-					<div class="accountant-box mt-3">
-						<div class="text-xs font-semibold text-white mb-1">QUYẾT ĐỊNH CỦA KẾ TOÁN:</div>
+					<div class="accountant-box mt-2">
 						<input
 							v-model="accountantNote"
 							type="text"
-							placeholder="Ghi chú lý do duyệt ngoại lệ (nếu có)..."
+							placeholder="Ghi chú duyệt..."
 							class="input-dark text-xs mb-2"
 						/>
 						<button
@@ -113,17 +102,14 @@
 							:disabled="approvingProcurement"
 							@click="handleAccountantApproveProcurement"
 						>
-							{{ approvingProcurement ? 'Đang duyệt chuyển bước...' : '👉 KẾ TOÁN PHÊ DUYỆT: MUA HÀNG NCC' }}
+							{{ approvingProcurement ? 'Đang duyệt...' : 'Duyệt mua hàng NCC' }}
 						</button>
-						<div class="text-xs text-muted text-center mt-1">
-							Chỉ khi Kế toán bấm nút trên, đơn hàng mới được mở khóa để chuyển sang bước Mua hàng NCC.
-						</div>
 					</div>
 				</div>
 
-				<!-- 3. Danh Sách Mặt Hàng Đặt -->
+				<!-- 3. Mặt hàng -->
 				<div class="section-box">
-					<div class="section-title">DANH SÁCH MẶT HÀNG</div>
+					<div class="section-title">MẶT HÀNG</div>
 					<table class="items-table">
 						<thead>
 							<tr>
@@ -141,7 +127,7 @@
 									<div v-if="it.item_code" class="text-xs font-mono text-secondary">{{ it.item_code }}</div>
 								</td>
 								<td class="text-center">
-									<span v-if="it.is_cylinder" class="badge-tag-cyl">Trục in</span>
+									<span v-if="it.is_cylinder" class="badge-tag-cyl">Trục</span>
 									<span v-else class="badge-tag-item">Hàng</span>
 								</td>
 								<td class="text-right text-num">{{ formatNumber(it.qty) }} {{ it.uom || 'Túi' }}</td>
@@ -149,45 +135,45 @@
 								<td class="text-right text-num font-bold">{{ formatCurrency(it.amount) }}</td>
 							</tr>
 							<tr v-if="!order.items || order.items.length === 0">
-								<td colspan="5" class="text-center text-secondary py-3">Chưa có chi tiết mặt hàng</td>
+								<td colspan="5" class="text-center text-secondary py-3">Không có dữ liệu</td>
 							</tr>
 						</tbody>
 					</table>
 				</div>
 
-				<!-- 4. Hộp Ghi Nhận Tiền Cọc (Khi đơn chưa submit) -->
+				<!-- 4. Ghi nhận cọc -->
 				<div v-if="order.docstatus === 0" class="section-box">
-					<div class="section-title">GHI NHẬN TIỀN CỌC</div>
+					<div class="section-title">GHI NHẬN CỌC</div>
 
 					<div class="deposit-form">
 						<div class="input-group">
-							<label>Số tiền khách chuyển (đ):</label>
+							<label>Số tiền (đ):</label>
 							<input
 								v-model="depositInput"
 								type="number"
-								placeholder="Nhập số tiền cọc bổ sung..."
+								placeholder="0"
 								class="input-dark text-num"
 							/>
 						</div>
 
 						<div class="input-group mt-2">
-							<label>Ghi chú chuyển khoản / biên lai:</label>
+							<label>Ghi chú:</label>
 							<input
 								v-model="depositNote"
 								type="text"
-								placeholder="Ví dụ: VCB 10:30 ngày 15/08, cọc 50%..."
+								placeholder="Mã GD / Biên lai..."
 								class="input-dark"
 							/>
 						</div>
 
-						<div class="mt-3 flex gap-2">
+						<div class="mt-2 flex gap-2">
 							<button
 								type="button"
 								class="btn-action btn-secondary"
 								:disabled="savingDeposit || !depositInput"
 								@click="handleSaveDeposit"
 							>
-								{{ savingDeposit ? 'Đang lưu...' : 'Lưu Tiền Cọc' }}
+								{{ savingDeposit ? 'Đang lưu...' : 'Lưu cọc' }}
 							</button>
 						</div>
 					</div>
@@ -195,10 +181,7 @@
 
 				<!-- 5. Trạng Thái Hoàn Tất -->
 				<div v-if="order.docstatus === 1" class="submitted-banner">
-					<div class="text-emerald font-bold text-sm">✓ ĐƠN HÀNG CHÍNH THỨC (ĐÃ DUYỆT)</div>
-					<div class="text-secondary text-xs mt-0.5">
-						Đã chuyển sang khâu <b>Trang 2: Mua hàng NCC</b> và lệnh sản xuất xưởng.
-					</div>
+					<div class="text-emerald font-bold text-sm">✓ ĐÃ DUYỆT CHÍNH THỨC</div>
 				</div>
 			</div>
 		</aside>

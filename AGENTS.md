@@ -27,6 +27,7 @@
   - Brand accents: `#4ea1e0` / `#0284c7`.
   - Packaging layer badges: Sky Blue (print), Amber (barrier), Purple (PA), Emerald (sealant).
   - Typography: Unified font `Inter` with `tabular-nums` for all financial and dimensional figures.
+- **Minimalist Content & Elon Musk Philosophy**: When designing pages/views, write ultra-minimalist content. Use short, high-density labels. STRICTLY PROHIBIT tutorial notes, explanatory prose, subheadings that "explain for humans", or verbose helper text unless explicitly requested by User. The UI is an industrial operational cockpit, not a manual.
 
 ## 4. Strict Exclusions & Operational Constraints
 - **Forbidden Stacks**: React, Next.js, Svelte, HTMX, Alpine.js, ad-hoc Jinja web applications.

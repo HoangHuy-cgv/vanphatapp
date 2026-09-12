@@ -87,20 +87,13 @@
 		<!-- Main Content Area -->
 		<main class="main-content">
 			<header class="page-head">
-				<div>
-					<h2 class="page-title">{{ view === 'orders' ? 'Danh sách Đơn hàng & Tiền cọc' : 'Báo giá R&D Sản Phẩm Mới' }}</h2>
-					<div class="text-xs text-secondary mt-0.5">
-						{{ view === 'orders'
-							? 'Đủ 4 nhóm hàng (Túi màng ghép, Cuộn màng ghép, Túi NGCS, Túi màng đơn) — Chuẩn cọc 50% hàng + 100% trục'
-							: 'Cung cấp thông số túi/màng cho Giám đốc & QLSX bóc tách cấu trúc và định giá (Chỉ áp dụng Túi & Cuộn màng ghép mới)' }}
-					</div>
-				</div>
+				<h2 class="page-title">{{ view === 'orders' ? 'Đơn hàng' : 'Báo giá' }}</h2>
 				<button
 					type="button"
 					class="btn-new-quote"
 					@click="openStep1Modal"
 				>
-					+ Báo giá SP Mới
+					+ Báo giá
 				</button>
 			</header>
 
@@ -111,9 +104,9 @@
 						<tr>
 							<th style="width: 11%;">Ngày</th>
 							<th style="width: 15%;">Mã báo giá</th>
-							<th style="width: 24%;">Khách hàng</th>
-							<th style="width: 14%;">Nhóm hàng</th>
-							<th style="width: 12%; text-align: right;">Tổng tiền</th>
+							<th style="width: 24%;">Khách</th>
+							<th style="width: 14%;">Nhóm</th>
+							<th style="width: 12%; text-align: right;">Tổng</th>
 							<th style="width: 12%; text-align: center;">Trạng thái</th>
 							<th style="width: 12%; text-align: center;">Thao tác</th>
 						</tr>
@@ -123,7 +116,7 @@
 							<td class="text-secondary font-mono">{{ q.transaction_date || '—' }}</td>
 							<td class="font-bold text-primary font-mono">{{ q.name }}</td>
 							<td>
-								<div class="font-semibold">{{ q.customer_name || 'Khách hàng mới' }}</div>
+								<div class="font-semibold">{{ q.customer_name || '—' }}</div>
 								<div v-if="q.pouch_type" class="text-xs text-secondary">{{ q.pouch_type }}</div>
 							</td>
 							<td>
@@ -165,7 +158,7 @@
 						</tr>
 						<tr v-if="quotations.length === 0">
 							<td colspan="7" class="empty-cell">
-								{{ loading ? 'Đang tải dữ liệu...' : 'Chưa có báo giá nào trong hệ thống.' }}
+								{{ loading ? 'Đang tải...' : 'Không có dữ liệu' }}
 							</td>
 						</tr>
 					</tbody>
@@ -177,13 +170,13 @@
 				<table class="data-table">
 					<thead>
 						<tr>
-							<th style="width: 9%;">Ngày đặt</th>
+							<th style="width: 9%;">Ngày</th>
 							<th style="width: 12%;">Mã đơn</th>
-							<th style="width: 18%;">Khách hàng</th>
-							<th style="width: 12%;">Nhóm hàng</th>
+							<th style="width: 18%;">Khách</th>
+							<th style="width: 12%;">Nhóm</th>
 							<th style="width: 18%;">Mặt hàng</th>
 							<th style="width: 6%; text-align: right;">SL</th>
-							<th style="width: 12%; text-align: right;">Tổng tiền</th>
+							<th style="width: 12%; text-align: right;">Tổng</th>
 							<th style="width: 13%; text-align: right;">Đã cọc</th>
 							<th style="width: 12%; text-align: center;">Trạng thái</th>
 						</tr>
@@ -223,7 +216,7 @@
 						</tr>
 						<tr v-if="orders.length === 0">
 							<td colspan="9" class="empty-cell">
-								{{ loadingOrders ? 'Đang tải dữ liệu...' : 'Chưa có đơn hàng nào trong hệ thống.' }}
+								{{ loadingOrders ? 'Đang tải...' : 'Không có dữ liệu' }}
 							</td>
 						</tr>
 					</tbody>
@@ -513,12 +506,10 @@ function openOrderDetail(o) {
 }
 
 function orderStatusText(o) {
-	if (o.order_state) return o.order_state;
-	if (o.payment_type === 'Trả sau') return 'Chính thức (Trả sau)';
-	if (o.docstatus === 1) return 'Chính thức (Đã cọc >=50%)';
-	if (o.is_hold || (o.advance_paid > 0 && o.advance_paid < (o.required_deposit || o.grand_total * 0.5))) {
-		return 'HOLD (Thiếu cọc)';
-	}
+	if (o.is_hold || o.order_state?.includes('HOLD')) return 'HOLD';
+	if (o.payment_type === 'Trả sau' && o.docstatus === 1) return 'Trả sau';
+	if (o.docstatus === 1) return 'Đã duyệt';
+	if (o.advance_paid > 0 && o.advance_paid < (o.required_deposit || o.grand_total * 0.5)) return 'HOLD';
 	return 'Chờ cọc';
 }
 
