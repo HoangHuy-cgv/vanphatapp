@@ -111,13 +111,14 @@ def load_all_nhom_a_data():
     return {
         "items": [{"master": m, "spec": m} for m in master_items],
         "customers": customers,
-        "warehouses": load_csv("warehouse_master.csv") if os.path.exists(os.path.join(CLEAN_DIR, "warehouse_master.csv")) else load_csv("warehouses.csv"),
-        "suppliers": load_csv("supplier_master.csv") if os.path.exists(os.path.join(CLEAN_DIR, "supplier_master.csv")) else load_csv("suppliers.csv"),
-        "operations": load_csv("operation_master.csv") if os.path.exists(os.path.join(CLEAN_DIR, "operation_master.csv")) else load_csv("operations.csv"),
-        "workstations": load_csv("workstation_master.csv") if os.path.exists(os.path.join(CLEAN_DIR, "workstation_master.csv")) else [],
+        "warehouses": load_csv("warehouse_master.csv"),
+        "suppliers": load_csv("supplier_master.csv"),
+        "operations": load_csv("operation_master.csv"),
+        "workstations": load_csv("workstation_master.csv"),
         "boms": list(boms_grouped.values()),
-        "users": load_csv("user_master.csv") if os.path.exists(os.path.join(CLEAN_DIR, "user_master.csv")) else []
+        "users": load_csv("user_master.csv")
     }
+
 
 
 def import_to_frappe(data):

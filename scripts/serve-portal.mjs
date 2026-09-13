@@ -61,14 +61,13 @@ function safeReadCSV(filename) {
 	return [];
 }
 
-// --- Load Clean Datasets Nhóm A ---
+// --- Load Clean Datasets Nhóm A (Chỉ sử dụng 9 file CSV mới tạo trong session này) ---
 const MASTER_ITEMS = safeReadCSV('item_master.csv');
-const ITEM_SPECS = safeReadCSV('item_spec.csv');
 const BOM_MASTERS = safeReadCSV('bom_master.csv');
 const BOM_ITEMS = safeReadCSV('bom_items.csv');
-const WAREHOUSES = safeReadCSV('warehouse_master.csv').length > 0 ? safeReadCSV('warehouse_master.csv') : safeReadCSV('warehouses.csv');
-const SUPPLIERS = safeReadCSV('supplier_master.csv').length > 0 ? safeReadCSV('supplier_master.csv') : safeReadCSV('suppliers.csv');
-const OPERATIONS = safeReadCSV('operation_master.csv').length > 0 ? safeReadCSV('operation_master.csv') : safeReadCSV('operations.csv');
+const WAREHOUSES = safeReadCSV('warehouse_master.csv');
+const SUPPLIERS = safeReadCSV('supplier_master.csv');
+const OPERATIONS = safeReadCSV('operation_master.csv');
 const WORKSTATIONS = safeReadCSV('workstation_master.csv');
 const USERS = safeReadCSV('user_master.csv');
 const CUSTOMERS_RAW = safeReadCSV('customer_master.csv');
@@ -221,7 +220,7 @@ const server = http.createServer((req, res) => {
 						company: 'Công ty TNHH Bao Bì Vạn Phát',
 						master_counts: {
 							items: MASTER_ITEMS.length,
-							specs: ITEM_SPECS.length,
+							specs: MASTER_ITEMS.length,
 							boms: BOM_MASTERS.length,
 							customers: UNIFIED_CUSTOMERS.length,
 							warehouses: WAREHOUSES.length,
