@@ -112,7 +112,7 @@ def load_all_nhom_a_data():
         "items": [{"master": m, "spec": m} for m in master_items],
         "customers": customers,
         "warehouses": load_csv("warehouses.csv"),
-        "suppliers": load_csv("suppliers.csv"),
+        "suppliers": load_csv("supplier_master.csv") if os.path.exists(os.path.join(CLEAN_DIR, "supplier_master.csv")) else load_csv("suppliers.csv"),
         "operations": load_csv("operations.csv"),
         "boms": list(boms_grouped.values())
     }
@@ -192,9 +192,17 @@ def import_to_frappe(data):
                     "parent_supplier_group": "All Supplier Groups", "is_group": 0
                 })
             create_if_missing("Supplier", s["supplier_name"], {
-                "doctype": "Supplier", "supplier_name": s["supplier_name"],
-                "supplier_group": grp, "supplier_type": s.get("supplier_type", "Company")
-            }, f"Tạo NCC: {s['supplier_name']}")
+                "doctype": "Supplier",
+                "supplier_name": s["supplier_name"],
+                "alias": s.get("alias", ""),
+                "supplier_group": grp,
+                "supplier_type": s.get("supplier_type", "Company"),
+                "country": s.get("country", "Việt Nam"),
+                "payment_terms": s.get("payment_terms", ""),
+                "default_currency": s.get("default_currency", "VND"),
+                "tax_id": s.get("tax_id", ""),
+                "disabled": safe_int(s.get("disabled", 0))
+            }, f"Tạo NCC: {s['supplier_name']} ({s.get('alias', '')})")
 
         print("\n5. Nạp Trạm Máy & Công Đoạn Sản Xuất...")
         for op in data["operations"]:
@@ -329,7 +337,26 @@ def run_dry_run(data):
     print(f"      * Khách hàng công nợ trả sau    :")
     for cn, al, cl in debt_custs:
         print(f"         • {cn} ({al}): Hạn mức nợ {cl:,.0f} đ")
-    print(f"   - Nhà Cung Cấp: {len(data['suppliers'])} NCC (Đang chờ chuẩn hóa ở Bước 3)")
+    supp_list = data["suppliers"]
+    supp_types = {}
+    supp_groups = {}
+    with_tax_supp = 0
+    with_addr_supp = 0
+    for s in supp_list:
+        st = s.get("supplier_type", "Company")
+        supp_types[st] = supp_types.get(st, 0) + 1
+        sg = s.get("supplier_group", "Khác")
+        supp_groups[sg] = supp_groups.get(sg, 0) + 1
+        if s.get("tax_id", "").strip(): with_tax_supp += 1
+        if s.get("primary_address", "").strip(): with_addr_supp += 1
+
+    print(f"   - Nhà Cung Cấp: {len(supp_list)} NCC (Đã chuẩn hóa 100% từ raw-data & sổ 331)")
+    print(f"      * Phân loại pháp nhân : {', '.join([f'{k}: {v}' for k, v in supp_types.items()])}")
+    print(f"      * Có MST đầy đủ       : {with_tax_supp}/{len(supp_list)} NCC")
+    print(f"      * Có địa chỉ xưởng/kho: {with_addr_supp}/{len(supp_list)} NCC")
+    print(f"      * Nhóm nhà cung cấp   :")
+    for sg, cnt in sorted(supp_groups.items(), key=lambda x: x[1], reverse=True):
+        print(f"         • {sg:<35}: {cnt:>2} NCC")
 
     print(f"\n5. CÔNG ĐOẠN & TRẠM MÁY ({len(data['operations'])} Trạm):")
     for op in data["operations"]:

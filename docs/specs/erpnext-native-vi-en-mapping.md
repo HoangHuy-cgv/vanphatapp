@@ -123,13 +123,19 @@
 
 | ERPNext Native English | Ý nghĩa | Đề xuất map VI là... |
 | :--- | :--- | :--- |
-| `name` | Mã định danh nhà cung cấp tự sinh | **Mã nhà cung cấp** |
-| `supplier_name` | Tên pháp nhân đầy đủ của nhà cung cấp | **Tên nhà cung cấp** |
-| `supplier_group` | Nhóm nhà cung cấp (`Màng thô`, `Trục in`, `Gia công in lụa`, `Keo & Dung môi`) | **Nhóm nhà cung cấp** |
+| `name` | Mã định danh nhà cung cấp tự sinh (`SUPP-#####`) | **Mã nhà cung cấp** |
+| `supplier_name` | Tên pháp nhân đầy đủ theo GPKD / Hóa đơn tài chính | **Tên nhà cung cấp** |
+| `alias` | Tên gọi tắt / tên thương mại hiển thị trên UI cockpit & Đơn mua hàng PO (Native v16) | **Tên gọi tắt** |
+| `supplier_group` | Nhóm nhà cung cấp (`Gia Công In & Túi Màng Ghép`, `Màng Thô NVL & Gia Công In`, `Hóa Chất & Keo Ghép`, `Hóa Chất & Dung Môi`, `Phụ Kiện Bao Bì`, `Vật Tư Đóng Gói`, `Gia Công Túi Màng Đơn`, `Gia Công In Lụa`, `Máy Móc & Phụ Tùng Cơ Khí`, `Nội Bộ & Phân Xưởng Vạn Phát`) | **Nhóm nhà cung cấp** |
 | `supplier_type` | Phân loại tư cách pháp nhân (`Company`, `Individual`) | **Loại nhà cung cấp** |
-| `country` | Quốc gia xuất xứ của nhà cung cấp | **Quốc gia** |
-| `payment_terms` | Điều khoản thanh toán công nợ mua hàng với NCC | **Điều khoản thanh toán** |
-| `disabled` | Cờ ngừng mua hàng từ nhà cung cấp này | **Ngừng hợp tác** |
+| `country` | Quốc gia xuất xứ của nhà cung cấp (`Việt Nam`) | **Quốc gia** |
+| `payment_terms` | Điều khoản thanh toán công nợ mua hàng với NCC (`Công nợ gối đầu 30 ngày`, `Theo từng lô`, ...) | **Điều khoản thanh toán** |
+| `default_currency` | Tiền tệ giao dịch mua hàng (`VND`) | **Loại tiền tệ** |
+| `tax_id` | Mã số thuế doanh nghiệp / hộ kinh doanh | **Mã số thuế** |
+| `primary_address` | Địa chỉ nhà máy, xưởng gia công hoặc trụ sở | **Địa chỉ xưởng/trụ sở** |
+| `supplier_primary_contact` | Người liên hệ đại diện kinh doanh của NCC | **Người liên hệ** |
+| `supplier_primary_phone` | Số điện thoại liên hệ đặt hàng | **Điện thoại liên hệ** |
+| `disabled` | Cờ ngừng mua hàng từ nhà cung cấp này (0: Đang giao dịch, 1: Ngừng) | **Ngừng hợp tác** |
 
 ---
 

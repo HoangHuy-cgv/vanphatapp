@@ -67,7 +67,7 @@ const ITEM_SPECS = safeReadCSV('item_spec.csv');
 const BOM_MASTERS = safeReadCSV('bom_master.csv');
 const BOM_ITEMS = safeReadCSV('bom_items.csv');
 const WAREHOUSES = safeReadCSV('warehouses.csv');
-const SUPPLIERS = safeReadCSV('suppliers.csv');
+const SUPPLIERS = safeReadCSV('supplier_master.csv').length > 0 ? safeReadCSV('supplier_master.csv') : safeReadCSV('suppliers.csv');
 const OPERATIONS = safeReadCSV('operations.csv');
 const CUSTOMER_MATRIX = safeReadCSV('customer_brand_matrix.csv');
 
@@ -936,17 +936,25 @@ function renderMasterDataReviewerHtml() {
 			<table>
 				<thead>
 					<tr>
-						<th>Tên Nhà Cung Cấp</th>
-						<th>Nhóm cung ứng</th>
-						<th>Sản phẩm / Dịch vụ tiêu biểu</th>
+						<th>Mã NCC</th>
+						<th>Tên Pháp Nhân</th>
+						<th>Tên Gọi Tắt</th>
+						<th>Nhóm Cung Ứng</th>
+						<th>Mã Số Thuế</th>
+						<th>Địa Chỉ Xưởng / Trụ Sở</th>
+						<th>Liên Hệ / SĐT</th>
 					</tr>
 				</thead>
 				<tbody id="suppliersBody">
 					${SUPPLIERS.map(s => `
 						<tr>
-							<td style="font-weight: 700; color: #58a6ff;">${s.supplier_name}</td>
-							<td>${s.supplier_group}</td>
-							<td>${s.products}</td>
+							<td style="font-family: monospace; color: #4ea1e0;">${s.name || ''}</td>
+							<td style="font-weight: 600; color: #f0f6fc;">${s.supplier_name || ''}</td>
+							<td><span class="badge badge-info">${s.alias || ''}</span></td>
+							<td>${s.supplier_group || ''}</td>
+							<td style="font-family: monospace;">${s.tax_id || '-'}</td>
+							<td style="font-size: 11px; color: #8b949e;">${s.primary_address || '-'}</td>
+							<td style="font-size: 11px;">${s.supplier_primary_contact ? s.supplier_primary_contact + (s.supplier_primary_phone ? ' (' + s.supplier_primary_phone + ')' : '') : (s.supplier_primary_phone || '-')}</td>
 						</tr>
 					`).join('')}
 				</tbody>
