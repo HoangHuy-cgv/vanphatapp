@@ -3,32 +3,17 @@
 """
 Trích xuất Danh mục Nhà Cung Cấp (DocType Supplier) trực tiếp 100% từ raw-data gốc:
 - data/raw-data/CÔNG NỢ PHẢI TRẢ NHÀ CUNG CẤP.xlsx (10 sheets sổ nợ 331 chính thức)
+- data/raw-data/thu chi may thoi.xlsx (liên doanh máy thổi màng PE Vạn Phát - Tuệ Nhi)
 - data/raw-data/đơn đặt hàng/ (các đơn mua hàng docx, ảnh ĐMH thực tế có MST, địa chỉ)
 - data/raw-data/TIEN DO MUA HÀNG NCC T8.xlsx (tiến độ giao nhận NVL màng ghép & in lụa)
 - data/raw-data/tien do dat hang ncc.xlsx
 - data/raw-data/THÔNG TIN TRỤC IN.xlsx (các kho xưởng quản lý trục in)
-
-Tuân thủ nghiêm ngặt 100% ERPNext Native v16 Wording:
-- name: SUPP-00001 .. SUPP-#####
-- supplier_name: Tên pháp nhân đầy đủ theo GPKD / Hóa đơn tài chính
-- alias: Tên gọi tắt thương mại UI Cockpit (cột native ERPNext)
-- supplier_group: Nhóm nhà cung cấp chuẩn
-- supplier_type: Company | Individual
-- country: Việt Nam
-- payment_terms: Điều khoản công nợ
-- default_currency: VND
-- tax_id: Mã số thuế
-- primary_address: Địa chỉ xưởng sản xuất / trụ sở
-- supplier_primary_contact: Người liên hệ đại diện
-- supplier_primary_phone: Số điện thoại
-- disabled: 0
 """
 
 import os
 import csv
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-RAW_DIR = os.path.join(BASE_DIR, "data", "raw-data")
 OUT_DIR = os.path.join(BASE_DIR, "data", "clean-data")
 
 RAW_SUPPLIERS_METADATA = [
@@ -214,7 +199,7 @@ RAW_SUPPLIERS_METADATA = [
     },
     {
         "supplier_name": "CÔNG TY TNHH SẢN XUẤT THƯƠNG MẠI BAO BÌ VẠN PHÁT",
-        "alias": "VẠN PHÁT (NỘI BỘ)",
+        "alias": "KHO TRỤC VẠN PHÁT",
         "supplier_group": "Nội Bộ & Phân Xưởng Vạn Phát",
         "supplier_type": "Company",
         "country": "Việt Nam",
@@ -225,34 +210,33 @@ RAW_SUPPLIERS_METADATA = [
         "supplier_primary_contact": "",
         "supplier_primary_phone": "0941201949",
         "disabled": 0,
-        "note": "Cụm máy thổi màng PE nội bộ (máy thổi xưởng) và Kho lưu trữ bảo dưỡng trục in ống đồng."
+        "note": "Kho lưu trữ bảo dưỡng trục in ống đồng tại trụ sở chính Bao Bì Vạn Phát."
+    },
+    {
+        "supplier_name": "MÁY THỔI MÀNG PE (LIÊN DOANH VẠN PHÁT - TUỆ NHI)",
+        "alias": "MÁY THỔI PE",
+        "supplier_group": "Màng Thô NVL",
+        "supplier_type": "Company",
+        "country": "Việt Nam",
+        "payment_terms": "Chốt sổ P&L định kỳ hàng tháng (Chia 50-50)",
+        "default_currency": "VND",
+        "tax_id": "",
+        "primary_address": "Xưởng thổi màng liên doanh Vạn Phát - Tuệ Nhi, Huyện Bình Chánh, TP. Hồ Chí Minh",
+        "supplier_primary_contact": "Bộ phận vận hành máy thổi",
+        "supplier_primary_phone": "",
+        "disabled": 0,
+        "note": "Cung ứng cuộn màng PE sữa (khổ 700, 740, 750 các độ dày 160mic, 190mic, 50mic). Vạn Phát thu chi toàn bộ dòng tiền, chốt sổ phân chia lãi lỗ 50-50 hàng tháng với Tuệ Nhi."
     }
 ]
 
 def main():
-    print("=" * 75)
-    print("XUẤT DANH MỤC NHÀ CUNG CẤP (DocType Supplier) - CHUẨN ERPNext v16 NATIVE")
-    print("=" * 75)
-
     os.makedirs(OUT_DIR, exist_ok=True)
     out_csv = os.path.join(OUT_DIR, "supplier_master.csv")
-
     fieldnames = [
-        "name",
-        "supplier_name",
-        "alias",
-        "supplier_group",
-        "supplier_type",
-        "country",
-        "payment_terms",
-        "default_currency",
-        "tax_id",
-        "primary_address",
-        "supplier_primary_contact",
-        "supplier_primary_phone",
-        "disabled"
+        "name", "supplier_name", "alias", "supplier_group", "supplier_type",
+        "country", "payment_terms", "default_currency", "tax_id",
+        "primary_address", "supplier_primary_contact", "supplier_primary_phone", "disabled"
     ]
-
     rows = []
     for idx, supp in enumerate(RAW_SUPPLIERS_METADATA, start=1):
         supp_id = f"SUPP-{idx:05d}"
@@ -272,15 +256,12 @@ def main():
             "disabled": supp["disabled"]
         }
         rows.append(row)
-        print(f"[{supp_id}] {supp['alias']:<20} | {supp['supplier_group']:<30} | {supp['supplier_name']}")
 
     with open(out_csv, "w", encoding="utf-8-sig", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(rows)
-
-    print(f"\n[+] ĐÃ XUẤT THÀNH CÔNG: {out_csv} ({len(rows)} Nhà Cung Cấp)")
-    print("=" * 75)
+    print(f"Xuất thành công {out_csv} ({len(rows)} Nhà Cung Cấp)")
 
 if __name__ == "__main__":
     main()

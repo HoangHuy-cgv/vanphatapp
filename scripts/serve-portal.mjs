@@ -68,7 +68,7 @@ const BOM_MASTERS = safeReadCSV('bom_master.csv');
 const BOM_ITEMS = safeReadCSV('bom_items.csv');
 const WAREHOUSES = safeReadCSV('warehouse_master.csv').length > 0 ? safeReadCSV('warehouse_master.csv') : safeReadCSV('warehouses.csv');
 const SUPPLIERS = safeReadCSV('supplier_master.csv').length > 0 ? safeReadCSV('supplier_master.csv') : safeReadCSV('suppliers.csv');
-const OPERATIONS = safeReadCSV('operations.csv');
+const OPERATIONS = safeReadCSV('operation_master.csv').length > 0 ? safeReadCSV('operation_master.csv') : safeReadCSV('operations.csv');
 const CUSTOMER_MATRIX = safeReadCSV('customer_brand_matrix.csv');
 
 // Build Unified Customers List
@@ -914,22 +914,24 @@ function renderMasterDataReviewerHtml() {
 				</tbody>
 			</table>
 			<div style="padding: 16px; background: #1c2128; border-top: 1px solid #30363d; font-weight: 700; color: #58a6ff;">
-				⚙️ 5 Công đoạn sản xuất & Trạm máy:
+				⚙️ Công Đoạn Sản Xuất & Trạm Máy Xưởng (${OPERATIONS.length} Công đoạn):
 			</div>
 			<table>
 				<thead>
 					<tr>
-						<th>Công đoạn</th>
-						<th>Trạm máy thực hiện</th>
-						<th>Chi phí tiêu chuẩn (đ/giờ)</th>
+						<th>Mã Công Đoạn</th>
+						<th>Tên Công Đoạn</th>
+						<th>Trạm Máy Thực Hiện</th>
+						<th>Chức Năng & Quy Trình Kỹ Thuật</th>
 					</tr>
 				</thead>
 				<tbody>
 					${OPERATIONS.map(op => `
 						<tr>
-							<td style="font-weight: 600;">${op.operation}</td>
-							<td>${op.workstation}</td>
-							<td style="text-align: right; font-weight: 700;">${Number(op.cost_per_hour || 0).toLocaleString()} đ/h</td>
+							<td style="font-weight: 700; font-family: monospace; color: #4ea1e0;">${op.name || ''}</td>
+							<td style="font-weight: 600; color: #f0f6fc;">${op.operation_name || op.operation || ''}</td>
+							<td><span class="badge badge-info">${op.workstation || ''}</span></td>
+							<td style="font-size: 12px; color: #8b949e;">${op.description || ''}</td>
 						</tr>
 					`).join('')}
 				</tbody>

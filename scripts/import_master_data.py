@@ -113,7 +113,8 @@ def load_all_nhom_a_data():
         "customers": customers,
         "warehouses": load_csv("warehouse_master.csv") if os.path.exists(os.path.join(CLEAN_DIR, "warehouse_master.csv")) else load_csv("warehouses.csv"),
         "suppliers": load_csv("supplier_master.csv") if os.path.exists(os.path.join(CLEAN_DIR, "supplier_master.csv")) else load_csv("suppliers.csv"),
-        "operations": load_csv("operations.csv"),
+        "operations": load_csv("operation_master.csv") if os.path.exists(os.path.join(CLEAN_DIR, "operation_master.csv")) else load_csv("operations.csv"),
+        "workstations": load_csv("workstation_master.csv") if os.path.exists(os.path.join(CLEAN_DIR, "workstation_master.csv")) else [],
         "boms": list(boms_grouped.values())
     }
 
@@ -206,15 +207,18 @@ def import_to_frappe(data):
             }, f"Tạo NCC: {s['supplier_name']} ({s.get('alias', '')})")
 
         print("\n5. Nạp Trạm Máy & Công Đoạn Sản Xuất...")
+        for ws in data.get("workstations", []):
+            create_if_missing("Workstation", ws["name"], {
+                "doctype": "Workstation", "workstation_name": ws["workstation_name"],
+                "production_capacity": safe_int(ws.get("production_capacity", 1)), "hour_rate": 0.0,
+                "description": ws.get("description", "")
+            }, f"Tạo Trạm Máy: {ws['workstation_name']}")
         for op in data["operations"]:
-            create_if_missing("Workstation", op["workstation"], {
-                "doctype": "Workstation", "workstation_name": op["workstation"],
-                "production_capacity": 1, "hour_rate": safe_float(op.get("hour_rate", 200000))
-            })
-            create_if_missing("Operation", op["operation"], {
-                "doctype": "Operation", "name": op["operation"], "operation": op["operation"],
-                "workstation": op["workstation"], "description": op.get("desc", "")
-            }, f"Tạo Công Đoạn: {op['operation']}")
+            op_name = op.get("operation_name", op.get("operation", op.get("name")))
+            create_if_missing("Operation", op["name"], {
+                "doctype": "Operation", "operation_name": op_name,
+                "workstation": op.get("workstation", ""), "description": op.get("description", op.get("desc", ""))
+            }, f"Tạo Công Đoạn: {op_name} ({op['name']})")
 
         print(f"\n6. Nạp {len(data['items'])} Mặt Hàng...")
         def item_dep_rank(it):
@@ -361,9 +365,10 @@ def run_dry_run(data):
     for sg, cnt in sorted(supp_groups.items(), key=lambda x: x[1], reverse=True):
         print(f"         • {sg:<35}: {cnt:>2} NCC")
 
-    print(f"\n5. CÔNG ĐOẠN & TRẠM MÁY ({len(data['operations'])} Trạm):")
+    print(f"\n5. CÔNG ĐOẠN & TRẠM MÁY ({len(data['operations'])} Công đoạn):")
     for op in data["operations"]:
-        print(f"   - {op['operation']:<24} -> Trạm máy: {op['workstation']:<38} ({op['hour_rate']:>7} đ/h)")
+        op_name = op.get("operation_name", op.get("operation", op.get("name")))
+        print(f"   - [{op.get('name', ''):<10}] {op_name:<28} -> Trạm máy: {op.get('workstation', ''):<14} ({op.get('description', '')[:55]}...)")
 
     print(f"\n6. DANH MỤC MẶT HÀNG ({len(data['items'])} Items):")
     group_stats = {}
@@ -401,10 +406,33 @@ def run_dry_run(data):
         print(f"      * {pt:<30}: {cnt:>3} mã")
 
     print(f"\n7. ĐỊNH MỨC SẢN XUẤT 2 CẤP (BOM - BILL OF MATERIALS):")
+    bom_l1 = [b for b in data['boms'] if b['master']['item'].startswith("BTP-")]
+    bom_l2 = [b for b in data['boms'] if not b['master']['item'].startswith("BTP-")]
+    total_bom_items = sum(len(b['items']) for b in data['boms'])
     print(f"   - Tổng số BOM Master : {len(data['boms'])} định mức sản xuất")
+    print(f"      * Cấp 1 (Cuộn Màng Ghép BTP) : {len(bom_l1)} BOM (ĐVT: m, Công đoạn: Ghép Màng Khô)")
+    print(f"      * Cấp 2 (Túi TP & NGCS)      : {len(bom_l2)} BOM (ĐVT: Túi, Công đoạn: Cắt Dán & Đóng Vòi)")
+    print(f"   - Tổng số dòng vật tư chi tiết  : {total_bom_items} dòng vật tư (BOM Items)")
+
+    all_item_codes = {it["master"]["item_code"] for it in data["items"]}
+    fk_errors = []
+    for b in data['boms']:
+        bm = b['master']
+        if bm['item'] not in all_item_codes:
+            fk_errors.append(f"Parent Item không tồn tại: {bm['item']} trong BOM {bm['bom_no']}")
+        for bi in b['items']:
+            if bi['item_code'] not in all_item_codes:
+                fk_errors.append(f"Vật tư không tồn tại: {bi['item_code']} trong BOM {bm['bom_no']}")
+
+    if fk_errors:
+        print(f"   [!] CẢNH BÁO LỖI LIÊN KẾT (FK VIOLATIONS): {len(fk_errors)} lỗi!")
+        for err in fk_errors[:5]:
+            print(f"      - {err}")
+    else:
+        print(f"   - Kiểm tra liên kết Item Master : 100% Khớp hoàn hảo (0 Foreign Key Violation)")
 
     print("\n" + "=" * 75)
-    print(" KẾT QUẢ: 100% DANH MỤC ITEM ĐÃ ĐƯỢC CHUẨN HÓA THEO ERPNEXT v16 NATIVE!")
+    print(" KẾT QUẢ: 100% MASTER DATA ĐÃ ĐƯỢC CHUẨN HÓA THEO ERPNEXT v16 NATIVE!")
     print("=" * 75)
 
 

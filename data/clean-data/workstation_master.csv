@@ -1,0 +1,5 @@
+﻿name,workstation_name,production_capacity,hour_rate,description
+WS-GHEP-01,Máy Ghép Màng Khô,1,0.0,"Máy ghép màng phức hợp khô (Dry Lamination), sử dụng keo polyurethane và dung môi Ethyl Acetate ghép màng PET in với màng PE sữa hoặc PA."
+WS-CAT-01,Máy Cắt Dán Túi Đáy Đứng / 3 Biên,1,0.0,"Máy cắt dán làm túi màng ghép, dập nhiệt biên hông, gấp đáy đứng (doypack) hoặc túi 3 biên từ cuộn màng ghép BTP."
+WS-VOI-01,Máy Đóng Vòi Tự Động,1,0.0,"Máy hàn nhiệt vòi nhựa tự động, hàn vòi 16mm hoặc 10mm kèm nắp chống tràn lên góc hoặc giữa miệng túi nước giặt xả."
+WS-THOI-01,Máy Thổi Màng PE,1,0.0,Máy thổi màng nhựa PE sữa khổ rộng 700 - 750mm thuộc cụm máy thổi liên doanh Vạn Phát - Tuệ Nhi.

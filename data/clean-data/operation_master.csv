@@ -1,0 +1,5 @@
+﻿name,operation_name,workstation,description
+GHEP-MANG,Ghép Màng Khô,WS-GHEP-01,Công đoạn ghép cuộn màng PET in với cuộn màng PE sữa/PA bằng keo PU và dung môi EA tạo cuộn màng ghép BTP.
+CAT-TUI,Cắt Dán Túi,WS-CAT-01,"Công đoạn cắt và dán nhiệt cuộn màng ghép phức hợp thành túi thành phẩm (túi đáy đứng doypack, túi 3 biên)."
+DONG-VOI,Đóng Vòi Hàn Nhiệt,WS-VOI-01,Công đoạn hàn nhiệt vòi nhựa phi 16mm/10mm lên túi thành phẩm chứa chất lỏng.
+THOI-MANG,Thổi Màng PE,WS-THOI-01,Công đoạn đùn thổi hạt nhựa PE thành cuộn màng PE sữa nguyên liệu (thuộc liên doanh máy thổi).
