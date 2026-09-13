@@ -1,87 +1,85 @@
 # Handoff Chuyển Giao Session Mới — ERP & Portal Vạn Phát (vanphatapp)
-*Thời điểm cập nhật: 2026-09-12 | Trọng tâm: Chiến lược Copy-and-Customize Frontend từ frappe/crm & Đồng bộ Design System*
+*Thời điểm cập nhật: 2026-09-13 | Trọng tâm: Chuẩn hoá Danh mục Master Data & Raw-Data theo Wording ERPNext Native*
 
 ---
 
 ## 1. TỔNG KẾT HIỆN TRẠNG ĐÃ HOÀN THÀNH (SESSION NÀY)
 
-### 1.1. Chuẩn hóa Quy trình Kỹ thuật & Tinh giản Mã nguồn
-- **Chuẩn hóa cấu trúc tài liệu & Skill suite**:
-  - Tách bạch rõ 3 cấp độ: Global (`~/.agents/AGENTS.md`), Repo (`vanphatapp/AGENTS.md`), Frontend (`frontend/AGENTS.md`).
-  - Cài đặt đầy đủ 25 skills và 7 checklists chuẩn mực từ Addy Osmani suite.
-- **Dọn dẹp & Tinh giản (Code Simplification)**:
-  - `login.html`: Giảm từ 517 dòng còn 264 dòng, loại bỏ các timer layout giật lag, giữ nguyên dark UI và xác thực an toàn.
-  - `App.vue`: Triệt tiêu hoàn toàn tính toán số học ở client (thuế, tiền trục), đạt chuẩn 100% Headless ERP SSOT.
-  - `ModalStep1Sale.vue` & `DrawerStep2Director.vue`: Dọn sạch dead code, tối ưu CSS gom class.
-  - **Kiểm thử Browser tự động bằng Chrome DevTools Protocol (CDP)**: 100% các nút bấm, switch button, toggle password, thêm/xóa dòng in, bật/tắt chip màng ghép đã được test và pass trên Chrome Headless v153 thật.
+### 1.1. Hoàn Thiện Toàn Diện Trang Đơn Hàng (`/orders`) — 100% Sạch & Chuẩn
+1. **Chia 3 Tab Nghiệp Vụ Riêng Biệt (Phương án 2 SSOT)**:
+   - Tab 1: **`Xưởng sản xuất`** (Theo dõi hàng tự gia công Ghép $\rightarrow$ Cắt $\rightarrow$ Vòi, cột `VẬT TƯ & MÁY`).
+   - Tab 2: **`Túi NGCS`** (Theo dõi phôi túi nước giặt in sẵn & tiến độ NCC in lụa, cột `IN LỤA NCC`).
+   - Tab 3: **`Mua ngoài trọn gói`** (Theo dõi túi màng đơn HD/PE/PP và túi mua đứt NCC, cột `HẠN GIAO NCC`).
+   - Tích hợp **Smart SLA Alert**: Tự động tính hạn giao NCC (`Còn x ngày`, `Hôm nay giao`, `Trễ x ngày` đỏ rực báo động giục hàng).
+   - Triệt tiêu 100% mã code rác (`DH-`, `TP-`, `KH-`) trên tiêu đề và dữ liệu hiển thị table.
+2. **Modal Tạo Đơn Hàng Mới (`ModalCreateOrder.vue`) — 1 Bước Duy Nhất (Single-Step Cockpit)**:
+   - Tách rời hoàn toàn khỏi form Báo giá. Header trang Đơn hàng đổi thành nút **`+ Tạo đơn hàng`**.
+   - Thao tác trực tiếp trên **Sản phẩm ĐÃ CÓ MÃ trong danh mục**: Chọn mã hàng là tự bung kích thước, cấu trúc màng, đơn giá chuẩn, người dùng **không phải gõ lại**.
+   - **Tự động thích ứng thông minh theo 2 quy trình sản xuất**:
+     - **Quy trình 1: MTO Sản phẩm độc quyền theo khách (`Túi màng ghép` / `Cuộn màng ghép`)**: Chọn khách $\rightarrow$ Lọc sản phẩm độc quyền của khách (VD: `Minh Râu 3.2Kg` của `DS 888`) $\rightarrow$ Bung bảng nhập các **Mẫu in / Màu sắc** (`Màu Hồng 10.000`, `Màu Tím 10.000`), nút `+ Thêm mẫu in`, checkbox trục in.
+     - **Quy trình 2: MTS Phôi dùng chung (`Túi NGCS` / `Túi màng đơn`)**: Chọn khách $\rightarrow$ Nhập thương hiệu in lụa của khách (VD: `FUSIMI - Nước giặt cao cấp`) $\rightarrow$ Bảng chọn **Nhiều mã phôi khác nhau** (`NGCS Đỏ lớn 5.000`, `NGCS Đen lớn 5.000`), nút `+ Thêm loại phôi`.
+   - Tự động tính tiền hàng, thuế VAT 8%, tiền trục, tổng thanh toán và tiền cọc yêu cầu 50%.
+3. **Drawer Chi Tiết Đơn Hàng Mới (`DrawerOrderDetail.vue`)**:
+   - **Hỗ trợ Multi-SKU / Multi-Variants**: Liệt kê rõ từng dòng mẫu in/hương vị kèm thumbnail ảnh maquette riêng (`44px`, click bung Lightbox phóng to), số lượng, đơn giá, thành tiền.
+   - **Ẩn triệt để 100% chất liệu không dùng**: Chỉ hiển thị các chip màng thực tế của sản phẩm (VD chỉ dùng `PET`, `PA`, `PE sữa` thì chỉ render đúng 3 chip này).
+   - **Tài chính tối giản, font to rõ**: Tiền hàng, VAT 8%, Tiền trục, **TỔNG THANH TOÁN** (In đậm `18px`), Đã cọc, Còn phải thu.
+   - **Tiến độ vận hành không nhãn rác**: Triệt tiêu chữ "Vật tư màng", "Công đoạn máy", "Sản lượng", hiển thị trực tiếp value kèm thanh tiến độ mỏng.
+   - **Font chữ chuẩn**: Chuẩn hóa toàn bộ lên `14px - 16px`, tương phản cao, số liệu `tabular-nums`.
+   - **Footer State Machine**: HOLD $\rightarrow$ Ô cọc nhanh tại chỗ; Đang chạy $\rightarrow$ Báo cáo xưởng; Sẵn sàng giao $\rightarrow$ `+ XUẤT GIAO HÀNG` full-width sáng xanh.
+
+### 1.2. Kiểm Thử & Quản Lý Mã Nguồn
+- **Vite Build**: Pass 100% trong ~1.05s, không lỗi cảnh báo.
+- **Headless Chrome Visual Proof**: Đã chụp và đối soát trực quan 5 màn hình:
+  - `modal_create_order_mto.png` (Modal MTO DS888)
+  - `modal_create_order_ngcs.png` (Modal MTS FUSIMI)
+  - `drawer_baba_variants.png` (BABA 2 Mẫu in + Trục)
+  - `drawer_minhrau_variants.png` (Minh Râu 2 Màu)
+  - `drawer_fusimi_ngcs.png` (NGCS 2 Mã phôi)
+- **Git Commit**: `83f980c` trên branch `master`. Working tree sạch tinh 100%.
 
 ---
 
-## 2. TRỌNG TÂM CHIẾN LƯỢC CHO SESSION TIẾP THEO: COPY-AND-CUSTOMIZE TỪ FRAPPE/CRM
+## 2. TRỌNG TÂM CHO SESSION TIẾP THEO: MASTER DATA & RAW-DATA THEO ERPNEXT NATIVE
 
-### 2.1. Định Hướng Kiến Trúc (Hybrid Architecture)
-Thay vì code thủ công từng trang từ đầu, Vạn Phát Portal sẽ áp dụng chiến lược **"Tận dụng khung nền có sẵn + Custom lõi bao bì"**:
+Theo chỉ đạo của Sếp, session tiếp theo sẽ tập trung vào **phần lõi dữ liệu master**:
 
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                       VAN PHAT PACKAGING PORTAL                         │
-├────────────────────────────────────┬────────────────────────────────────┤
-│   TẦNG 1: GENERIC VIEWS TỪ CRM     │    TẦNG 2: CORE PACKAGING DOMAIN   │
-│   (Copy pattern từ frappe/crm)     │   (Custom đặc thù theo AGENTS.md)  │
-├────────────────────────────────────┼────────────────────────────────────┤
-│ • Danh sách Khách hàng (Customer)  │ • Modal 1: Chọn quy cách dáng túi  │
-│ • Danh sách Đơn hàng (Sales Order) │   & phụ kiện (vòi, zipper, hàn kín)│
-│ • Bảng công nợ & lịch sử giao dịch │ • Drawer 2: Chọn 9 chip màng ghép  │
-│ • Bộ lọc đa điều kiện (ListFilter) │   & bảng mẫu in, phân tách TRUC-   │
-│ • Phân trang, Search realtime      │ • Engine tính giá 2-tier (1.500m)  │
-│ • Shell Navigation & User Profile  │ • Logic vật lý: PE-PE, PP-CPP      │
-└────────────────────────────────────┴────────────────────────────────────┘
-```
+### 2.1. Hoàn Thiện Các Danh Mục Master Data (Catalogs)
+1. **Danh mục Mặt Hàng (`Item`)**:
+   - Phân cấp rõ ràng theo Item Group và tiền tố mã:
+     - `TP-`: Thành phẩm túi (Doypack đáy đứng, 3 biên, 8 cạnh, túi dán lưng...).
+     - `BTP-`: Bán thành phẩm màng cuộn ghép (OPP/PE, PET/AL/PE...).
+     - `NVL-`: Nguyên vật liệu (Màng đơn cuộn lớn, hạt nhựa, keo ghép khô, dung môi EA, vòi nhựa 16mm/22mm).
+     - `TRUC-`: Bộ trục in ống đồng Rotogravure.
+   - Lưu trữ đầy đủ thông số kỹ thuật bao bì trong ERPNext: Chiều rộng ($W$), Chiều dài ($L$), Xếp hông/Đáy ($G$), Cấu trúc màng (Layers), Độ dày ($\mu m$), Phụ kiện vòi, Quy cách đóng gói.
+2. **Danh mục Khách Hàng (`Customer`)**:
+   - Danh sách khách hàng, bí danh (Alias), thương hiệu (Brand), hạn mức công nợ & hình thức thanh toán (`Trả trước cọc 50%` / `Trả sau công nợ`).
+3. **Danh mục Nhà Cung Cấp (`Supplier`)**:
+   - NCC in lụa: Mộc Ấn, Anh Tùng...
+   - NCC màng đơn/túi mua ngoài: Trang Tín, Hà Linh...
+   - NCC màng in/màng ghép: Kiến Tâm, Tân Cường Phát...
+4. **Danh mục Xưởng & Sản Xuất**:
+   - Trạm máy (`Workstation`): Máy ghép màng, Máy chia cuộn, Máy cắt túi đáy đứng, Máy đóng vòi tự động.
+   - Công đoạn (`Operation`): In gia công $\rightarrow$ Ghép màng khô $\rightarrow$ Cắt dán túi $\rightarrow$ Đóng vòi $\rightarrow$ Đóng thùng KCS.
 
-### 2.2. Nhất Quán Màu Sắc & Phong Cách (Unified Industrial Dark Design System)
-**Khẳng định: 100% NHẤT QUÁN ĐƯỢC VỀ MÀU SẮC, FONT CHỮ VÀ PHONG CÁCH.**
-
-#### Cơ sở kỹ thuật:
-Cả `vanphat_portal` và `frappe/crm` đều dùng chung thư viện **`frappe-ui`** kết hợp **Tailwind CSS**.
-Để các page copy từ `frappe/crm` tự động "thay áo" sang phong cách Industrial Dark của Vạn Phát:
-1. **Design Tokens chung (Tailwind Config & CSS Variables)**:
-   - Màu nền chính (Background): `#0b0f19` (toàn trang), `#161b22` (panel/card/modal), `#1a1f27` (input/table header).
-   - Đường viền (Border): `#3a424e` (subtle border `rgba(255,255,255,0.08)`).
-   - Màu nhấn hành động (Accent): `#4ea1e0` (Primary Blue), `#0284c7` (Brand Blue).
-   - Màu nghiệp vụ (Status Badges):
-     - Màng in: `#38bdf8` (Sky Blue)
-     - Màng cản: `#f59e0b` (Amber)
-     - Màng dẻo PA: `#c084fc` (Purple)
-     - Màng hàn dán: `#34d399` (Emerald)
-2. **Font chữ & Typography**:
-   - Toàn hệ thống thống nhất dùng duy nhất một font: `Inter` (hỗ trợ hiển thị số tabular-nums sắc nét cho kế toán và kích thước bao bì).
-3. **Cơ chế Override tự động**:
-   - Khi copy component từ `frappe/crm` sang, component đó sử dụng các class semantic của Frappe UI (ví dụ `text-ink-gray-9`, `bg-surface-gray-2`, `border-outline-gray-2`).
-   - Ta chỉ cần map các token này trong `frontend/src/index.css` hoặc `tailwind.config.js`, toàn bộ các view mới sẽ tự động hòa vào tông màu tối công nghiệp của Vạn Phát mà không cần chỉnh sửa từng file Vue!
+### 2.2. Chuẩn Hoá Raw-Data Theo Wording Chuẩn ERPNext Native
+- **Tuyệt đối tuân thủ SSOT**: [docs/specs/erpnext-native-vi-en-mapping.md](file:///var/home/huy/vanphatapp/docs/specs/erpnext-native-vi-en-mapping.md).
+- **Cấm suy diễn**: Không sử dụng trường tự chế hoặc dữ liệu từ `archive/`. Mọi DocType và Fieldname phải khớp 1:1 với schema ERPNext v16:
+  - Báo giá: `Quotation`
+  - Đơn bán hàng: `Sales Order` (Child table: `Sales Order Item`)
+  - Đơn mua hàng: `Purchase Order`
+  - Lệnh sản xuất: `Work Order`
+  - Phiếu giao hàng: `Delivery Note`
+  - Phiếu nhập kho mua hàng: `Purchase Receipt`
+  - Hóa đơn bán hàng: `Sales Invoice`
+  - Bút toán thanh toán: `Payment Entry`
 
 ---
 
-## 3. HÀNH ĐỘNG BẮT BUỘC KHI KHỞI ĐỘNG SESSION TIẾP THEO
+## 3. CÂU LỆNH MẪU KHI MỞ ĐẦU SESSION TIẾP THEO
 
-1. **Thực thi Kỹ năng Phỏng vấn Workflow thực tế (`interview-me`)**:
-   - Agent **bắt buộc phải kích hoạt skill `interview-me`** ngay đầu phiên.
-   - Tiến hành hỏi - đáp từng câu một (one-question-at-a-time) với Sếp về **Workflow thực tế của Nhà máy Bao Bì Vạn Phát**:
-     - *Khâu 1 (Tiếp nhận & Báo giá)*: Sale nhận yêu cầu túi/cuộn $\rightarrow$ kiểm tra lịch sử giá hoặc tính giá mới $\rightarrow$ Giám đốc duyệt giá & cơ cấu màng.
-     - *Khâu 2 (Mẫu in & Trục in)*: Duyệt maquette thiết kế $\rightarrow$ tình trạng trục in (khách gửi hay làm mới tại Vạn Phát) $\rightarrow$ ghi nhận cây trục.
-     - *Khâu 3 (Chốt đơn & Lệnh sản xuất)*: Chốt báo giá thành Đơn bán hàng (`Sales Order`) $\rightarrow$ Kích hoạt Lệnh sản xuất (`Work Order`) & Lệnh cắt/ghép/in (`Job Card`).
-     - *Khâu 4 (Kho & Giao hàng)*: Xuất kho màng NVL $\rightarrow$ Nhập kho thành phẩm túi TP- $\rightarrow$ Phiếu giao hàng (`Delivery Note`).
-     - *Khâu 5 (Thanh toán & Công nợ)*: Đặt cọc $\rightarrow$ Thanh toán đợt cuối khi giao hàng.
-   - **Mục tiêu**: Loại bỏ mọi chức năng thừa thãi của ERPNext tiêu chuẩn, chỉ giữ lại đúng những bước thực sự phát sinh tại xưởng Vạn Phát để đạt tiêu chí **Tối giản nhưng Đủ và Sắc bén**.
-
-2. **Lập Spec & Vertical Slices (`spec-driven-development` + `planning-and-task-breakdown`)**:
-   - Từ kết quả phỏng vấn, lập `tasks/plan.md` xác định các trang nền cần copy từ `frappe/crm` (Khách hàng, Đơn hàng, Lệnh sản xuất).
-   - Thiết lập các endpoint Frappe REST API tương ứng.
-
----
-
-## 4. CÂU LỆNH MẪU KHI MỞ SESSION TIẾP THEO
+Sếp chỉ cần copy câu lệnh sau và gửi cho em:
 
 ```text
-Đọc docs/handoff.md và bắt đầu ngay bằng kỹ năng `interview-me`:
-Phỏng vấn Sếp từng câu hỏi một về workflow thực tế của Nhà máy Bao bì Vạn Phát để chốt danh mục màn hình tối giản cần thiết trước khi lấy mẫu từ frappe/crm.
+Đọc docs/handoff.md và bắt tay ngay vào việc:
+Hoàn thiện toàn diện các danh mục Master Data (Item, Customer, Supplier, Workstation, Operation) và chuẩn hoá raw-data theo đúng 100% wording ERPNext Native (dựa trên docs/specs/erpnext-native-vi-en-mapping.md).
 ```
