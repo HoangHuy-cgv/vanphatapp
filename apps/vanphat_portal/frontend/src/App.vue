@@ -89,11 +89,20 @@
 			<header class="page-head">
 				<h2 class="page-title">{{ view === 'orders' ? 'Đơn hàng' : 'Báo giá' }}</h2>
 				<button
+					v-if="view === 'quotes'"
 					type="button"
 					class="btn-new-quote"
 					@click="openStep1Modal"
 				>
 					+ Báo giá
+				</button>
+				<button
+					v-else-if="view === 'orders'"
+					type="button"
+					class="btn-new-quote"
+					@click="showCreateOrderModal = true"
+				>
+					+ Tạo đơn hàng
 				</button>
 			</header>
 
@@ -347,12 +356,23 @@
 			@submit="onQuotationSubmit"
 		/>
 
+		<!-- Modal Tạo Đơn Hàng Mới -->
+		<ModalCreateOrder
+			v-if="showCreateOrderModal"
+			:is-open="showCreateOrderModal"
+			:initial-tab="activeOrderTab"
+			@close="showCreateOrderModal = false"
+			@create-order="handleNewOrderCreated"
+		/>
+
 		<!-- Order Detail Drawer (Click Row to Open) -->
 		<DrawerOrderDetail
+			:order="selectedOrder"
 			:order-id="selectedOrderId"
 			:is-open="showOrderDetail"
 			@close="showOrderDetail = false"
-			@order-updated="loadOrders"
+			@update-order="onOrderUpdated"
+			@create-delivery="onOrderDelivery"
 		/>
 	</div>
 </template>
@@ -362,6 +382,7 @@ import { ref, computed, onMounted } from 'vue';
 import ModalStep1Sale from './components/ModalStep1Sale.vue';
 import DrawerStep2Director from './components/DrawerStep2Director.vue';
 import DrawerOrderDetail from './components/DrawerOrderDetail.vue';
+import ModalCreateOrder from './components/ModalCreateOrder.vue';
 import logoUrl from './assets/logo-vanphat.png';
 import { INITIAL_ORDERS, INITIAL_QUOTATIONS } from './data/mockData';
 
@@ -407,6 +428,11 @@ function supplierSlaBadge(days) {
 
 const selectedOrderId = ref('');
 const showOrderDetail = ref(false);
+const showCreateOrderModal = ref(false);
+
+const selectedOrder = computed(() => {
+	return orders.value.find((o) => o.name === selectedOrderId.value) || null;
+});
 
 const showStep1 = ref(false);
 const showStep2 = ref(false);
@@ -642,6 +668,30 @@ function openOrderDetail(o) {
 	showOrderDetail.value = true;
 }
 
+function handleNewOrderCreated(newOrder) {
+	orders.value.unshift(newOrder);
+	activeOrderTab.value = newOrder.order_tab;
+	selectedOrderId.value = newOrder.name;
+	showOrderDetail.value = true;
+}
+
+function onOrderUpdated(updatedOrder) {
+	const idx = orders.value.findIndex((o) => o.name === updatedOrder.name);
+	if (idx !== -1) {
+		orders.value[idx] = { ...updatedOrder };
+	}
+}
+
+function onOrderDelivery(order) {
+	const idx = orders.value.findIndex((o) => o.name === order.name);
+	if (idx !== -1) {
+		orders.value[idx].order_state = 'Đã giao hàng';
+		orders.value[idx].outstanding_amount = 0;
+		orders.value[idx].advance_paid = orders.value[idx].grand_total;
+	}
+	showOrderDetail.value = false;
+}
+
 function orderStatusText(o) {
 	if (o.is_hold || o.order_state?.includes('HOLD')) return 'HOLD';
 	if (o.payment_type === 'Trả sau' && o.docstatus === 1) return 'Trả sau';
@@ -693,6 +743,9 @@ onMounted(async () => {
 	if (urlParams.get('order')) {
 		selectedOrderId.value = urlParams.get('order');
 		showOrderDetail.value = true;
+	}
+	if (urlParams.get('modal') === 'create') {
+		showCreateOrderModal.value = true;
 	}
 });
 </script>
