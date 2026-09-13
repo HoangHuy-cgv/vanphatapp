@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Script: import_master_data.py (ERPNext v16 Native - Simplified & Robust)"""
+"""Script: import_master_data.py (ERPNext v16 Native - Streamlined & Robust)"""
 
 import os
 import sys
@@ -44,6 +44,7 @@ ITEM_GROUPS = [
     {"name": "2. BÁN THÀNH PHẨM (BTP)", "parent": "All Item Groups", "is_group": 1},
     {"name": "3. THÀNH PHẨM (TP)", "parent": "All Item Groups", "is_group": 1},
     {"name": "4. TRỤC IN (TRUC)", "parent": "All Item Groups", "is_group": 1},
+    {"name": "5. PHẾ LIỆU & THU HỒI", "parent": "All Item Groups", "is_group": 1},
     {"name": "Màng Thô NVL", "parent": "1. NGUYÊN VẬT LIỆU (NVL)", "is_group": 0},
     {"name": "Hóa Chất & Keo Ghép", "parent": "1. NGUYÊN VẬT LIỆU (NVL)", "is_group": 0},
     {"name": "Phụ Kiện Bao Bì", "parent": "1. NGUYÊN VẬT LIỆU (NVL)", "is_group": 0},
@@ -53,18 +54,17 @@ ITEM_GROUPS = [
     {"name": "Túi Màng Ghép Đặt Riêng", "parent": "3. THÀNH PHẨM (TP)", "is_group": 0},
     {"name": "Túi Màng Đơn", "parent": "3. THÀNH PHẨM (TP)", "is_group": 0},
     {"name": "Trục In Ống Đồng", "parent": "4. TRỤC IN (TRUC)", "is_group": 0},
+    {"name": "Phế Liệu Thu Hồi", "parent": "5. PHẾ LIỆU & THU HỒI", "is_group": 0},
 ]
 
 SPEC_NUMERIC_FIELDS = [
-    "custom_thickness_mic", "custom_film_width_mm", "custom_density_g_cm3",
-    "custom_pouch_width_mm", "custom_pouch_length_mm", "custom_cut_length_mm", "custom_gusset_mm",
-    "custom_print_width_mm", "custom_cylinder_length_mm", "custom_cylinder_circ_mm"
+    "custom_thickness_mic", "custom_film_width_mm",
+    "custom_pouch_width_mm", "custom_pouch_length_mm", "custom_gusset_mm", "custom_cut_length_mm",
+    "custom_cylinder_length_mm", "custom_cylinder_circ_mm"
 ]
 SPEC_TEXT_FIELDS = [
-    "custom_structure_layers", "custom_capacity", "custom_bottom_type",
-    "custom_closure_type", "custom_spout_type", "custom_spout_position",
-    "custom_handle_type", "custom_print_method", "custom_design_variant",
-    "custom_cylinder_item", "custom_cylinder_location", "custom_cylinder_code"
+    "custom_structure_layers", "custom_print_tech", "custom_accessory_spec",
+    "custom_cylinder_item", "custom_cylinder_code", "custom_cylinder_location"
 ]
 
 FRAPPE_AVAILABLE = False
@@ -201,32 +201,36 @@ def import_to_frappe(data):
         for it in sorted_items:
             m, s = it["master"], it["spec"]
             code = m["item_code"]
+            brand = m.get("brand", "").strip()
+            if brand and not frappe.db.exists("Brand", brand):
+                frappe.get_doc({"doctype": "Brand", "brand": brand}).insert(ignore_permissions=True)
+
             doc_dict = {
-                "doctype": "Item", "item_code": code, "item_name": m["item_name"],
-                "item_group": m["item_group"], "stock_uom": m["stock_uom"],
+                "doctype": "Item",
+                "item_code": code,
+                "item_name": m["item_name"],
+                "item_group": m["item_group"],
+                "stock_uom": m["stock_uom"],
+                "brand": brand or None,
+                "description": m.get("description", ""),
+                "default_material_request_type": m.get("default_material_request_type", "Manufacture"),
+                "standard_rate": safe_float(m.get("standard_rate", 0.0)),
+                "min_order_qty": safe_float(m.get("min_order_qty", 0.0)),
+                "safety_stock": safe_float(m.get("safety_stock", 0.0)),
                 "disabled": safe_int(m.get("disabled", 0)),
                 "is_stock_item": safe_int(m.get("is_stock_item", 1)),
                 "is_sales_item": safe_int(m.get("is_sales_item", 1)),
                 "is_purchase_item": safe_int(m.get("is_purchase_item", 0)),
-                "description": m.get("description", ""),
             }
             if s:
                 for k in SPEC_NUMERIC_FIELDS:
-                    val = s.get(k)
-                    if val is None or val == "":
-                        if k == "custom_cylinder_length_mm": val = s.get("cylinder_length_mm")
-                        elif k == "custom_cylinder_circ_mm": val = s.get("cylinder_circ_mm")
-                    doc_dict[k] = safe_float(val)
+                    doc_dict[k] = safe_float(s.get(k))
                 for k in SPEC_TEXT_FIELDS:
-                    val = s.get(k)
-                    if not val:
-                        if k == "custom_cylinder_location": val = s.get("cylinder_warehouse") or ""
-                        elif k == "custom_cylinder_code": val = s.get("cylinder_code") or ""
-                    doc_dict[k] = str(val or "")
-                doc_dict["custom_print_colors"] = safe_int(s.get("custom_print_colors"))
-                doc_dict["custom_cylinder_qty"] = safe_int(s.get("custom_cylinder_qty") or s.get("cylinder_qty"))
+                    doc_dict[k] = str(s.get(k) or "")
+                doc_dict["custom_cylinder_qty"] = safe_int(s.get("custom_cylinder_qty"))
                 if code.startswith("TRUC-") or doc_dict.get("custom_cylinder_item") == code:
                     doc_dict["custom_cylinder_item"] = ""
+
             if frappe.db.exists("Item", code):
                 doc = frappe.get_doc("Item", code)
                 for k, v in doc_dict.items():
@@ -262,14 +266,14 @@ def import_to_frappe(data):
 
 def run_dry_run(data):
     print("=" * 75)
-    print(" BÁO CÁO TỔNG KIỂM TRA BỘ DANH MỤC NỀN TẢNG (NHÓM A) - DỰ ÁN VẠN PHÁT")
+    print(" BÁO CÁO KIỂM THỬ TOÀN VẸN MASTER DATA (NHÓM A) - CHUẨN ERPNEXT v16 NATIVE")
     print("=" * 75)
 
     print("\n1. ĐƠN VỊ TÍNH CHUẨN (5 UOMs):")
     for u in UOM_DEFINITIONS:
         print(f"   - {u['name']:<6} (Số nguyên: {u['must_be_whole_number']})")
 
-    print("\n2. CÂY NHÓM HÀNG CHUẨN HÓA 4 TRỤ CỘT (ITEM GROUPS):")
+    print("\n2. CÂY NHÓM HÀNG CHUẨN HÓA (ITEM GROUPS):")
     for g in ITEM_GROUPS:
         indent = "   " if g["parent"] == "All Item Groups" else "      └── "
         print(f"{indent}{g['name']} ({'Nhóm cha' if g['is_group'] else 'Nhóm lá gán Item'})")
@@ -280,43 +284,53 @@ def run_dry_run(data):
         print(f"{indent}[{w['warehouse_code']:<9}] {w['warehouse_name']:<25} ({w['desc']})")
 
     print(f"\n4. ĐỐI TÁC NGHIỆP VỤ (PARTNERS):")
-    print(f"   - Khách Hàng: {len(data['customers'])} pháp nhân (DS Cosmetic, TopGia/Phong Tín, KOVAA, Eco Wipes, Amyco...)")
-    print(f"   - Nhà Cung Cấp: {len(data['suppliers'])} NCC verified từ sổ công nợ:")
-    for s in data["suppliers"]:
-        print(f"      * {s['supplier_name']:<48} | Sản phẩm: {s['products']}")
+    print(f"   - Khách Hàng: {len(data['customers'])} đối tượng")
+    print(f"   - Nhà Cung Cấp: {len(data['suppliers'])} NCC verified từ sổ công nợ")
 
     print(f"\n5. CÔNG ĐOẠN & TRẠM MÁY ({len(data['operations'])} Trạm):")
     for op in data["operations"]:
         print(f"   - {op['operation']:<24} -> Trạm máy: {op['workstation']:<38} ({op['hour_rate']:>7} đ/h)")
 
-    print(f"\n6. MẶT HÀNG SẢN PHẨM & QUY CÁCH ({len(data['items'])} Items):")
+    print(f"\n6. DANH MỤC MẶT HÀNG ({len(data['items'])} Items):")
     group_stats = {}
+    req_stats = {}
+    acc_stats = {}
+    print_tech_stats = {}
     disabled_cnt = 0
     for it in data["items"]:
-        m = it["master"]
+        m, s = it["master"], it["spec"]
         grp = m["item_group"]
         group_stats[grp] = group_stats.get(grp, 0) + 1
+        rt = m.get("default_material_request_type", "Manufacture")
+        req_stats[rt] = req_stats.get(rt, 0) + 1
+        acc = s.get("custom_accessory_spec", "")
+        if acc: acc_stats[acc] = acc_stats.get(acc, 0) + 1
+        pt = s.get("custom_print_tech", "")
+        if pt: print_tech_stats[pt] = print_tech_stats.get(pt, 0) + 1
         if safe_int(m.get("disabled", 0)) == 1:
             disabled_cnt += 1
+
     for grp, cnt in sorted(group_stats.items(), key=lambda x: x[1], reverse=True):
         print(f"   - {grp:<32}: {cnt:>3} mã")
-    print(f"   - Trong đó đã DISABLE (Ngừng bán thương mại): {disabled_cnt} mã (dòng 888 0.6Kg)")
+    print(f"   - Tổng mặt hàng đã DISABLE (Ngừng bán thương phẩm): {disabled_cnt} mã (dòng 888 0.6Kg)")
+
+    print("\n   - Thống kê theo Hình Thức Cung Ứng (default_material_request_type):")
+    for rt, cnt in req_stats.items():
+        print(f"      * {rt:<20}: {cnt:>3} mã")
+
+    print("\n   - Thống kê theo Phụ Kiện Miệng Túi (custom_accessory_spec):")
+    for acc, cnt in sorted(acc_stats.items(), key=lambda x: x[1], reverse=True):
+        print(f"      * {acc:<30}: {cnt:>3} mã")
+
+    print("\n   - Thống kê theo Công Nghệ In (custom_print_tech):")
+    for pt, cnt in sorted(print_tech_stats.items(), key=lambda x: x[1], reverse=True):
+        print(f"      * {pt:<30}: {cnt:>3} mã")
 
     print(f"\n7. ĐỊNH MỨC SẢN XUẤT 2 CẤP (BOM - BILL OF MATERIALS):")
     print(f"   - Tổng số BOM Master : {len(data['boms'])} định mức sản xuất")
-    total_components = sum(len(b["items"]) for b in data["boms"])
-    print(f"   - Tổng dòng vật tư   : {total_components} thành phần chi tiết")
-    print("   - Cấu trúc BOM minh họa:")
-    for sample_bom in data["boms"][:2]:
-        bm = sample_bom["master"]
-        print(f"      * [{bm['bom_no']}] Sản xuất: {bm['item']} ({bm['item_name']}) | Cơ số: {bm['quantity']} {bm['uom']}")
-        for bi in sample_bom["items"]:
-            print(f"         + {bi['item_code']:<12} ({bi['item_name']:<24}): {bi['qty']:>7} {bi['uom']:<4} | {bi['note']}")
 
     print("\n" + "=" * 75)
-    print(" KẾT QUẢ: 100% DANH MỤC NỀN TẢNG (NHÓM A) ĐÃ HOÀN THIỆN & SẠCH TUYỆT ĐỐI!")
-    print(" Lệnh nạp trực tiếp trên máy chủ VPS:")
-    print("   bench --site app.vanphat.io.vn run-script scripts/import_master_data.py")
+    print(" KẾT QUẢ: 100% DANH MỤC ITEM ĐÃ ĐƯỢC CHUẨN HÓA THEO ERPNEXT v16 NATIVE!")
     print("=" * 75)
 
 
@@ -351,3 +365,4 @@ if __name__ == "__main__":
         execute()
     else:
         main()
+
