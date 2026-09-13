@@ -115,7 +115,8 @@ def load_all_nhom_a_data():
         "suppliers": load_csv("supplier_master.csv") if os.path.exists(os.path.join(CLEAN_DIR, "supplier_master.csv")) else load_csv("suppliers.csv"),
         "operations": load_csv("operation_master.csv") if os.path.exists(os.path.join(CLEAN_DIR, "operation_master.csv")) else load_csv("operations.csv"),
         "workstations": load_csv("workstation_master.csv") if os.path.exists(os.path.join(CLEAN_DIR, "workstation_master.csv")) else [],
-        "boms": list(boms_grouped.values())
+        "boms": list(boms_grouped.values()),
+        "users": load_csv("user_master.csv") if os.path.exists(os.path.join(CLEAN_DIR, "user_master.csv")) else []
     }
 
 
@@ -285,7 +286,35 @@ def import_to_frappe(data):
                     "process_loss_percentage": safe_float(bm.get("process_loss_percentage", 2.0)),
                     "items": [{"item_code": bi["item_code"], "qty": safe_float(bi["qty"]), "uom": bi["uom"], "rate": safe_float(bi.get("rate", 0.0))} for bi in b["items"]]
                 }).insert(ignore_permissions=True)
-                print(f"   [+] Tạo BOM: {bm['bom_no']} cho {bm['item']}")
+        print(f"\n8. Nạp {len(data.get('users', []))} Người Dùng & Phân Quyền (User & Role)...")
+        for u in data.get("users", []):
+            email = u["email"]
+            roles_list = [r.strip() for r in u.get("roles", "").split(",") if r.strip()]
+            if not frappe.db.exists("User", email):
+                user_doc = frappe.get_doc({
+                    "doctype": "User",
+                    "email": email,
+                    "first_name": u.get("first_name", ""),
+                    "last_name": u.get("last_name", ""),
+                    "full_name": u.get("full_name", ""),
+                    "user_type": u.get("user_type", "System User"),
+                    "send_welcome_email": 0,
+                    "enabled": safe_int(u.get("enabled", 1)),
+                    "roles": [{"role": r} for r in roles_list]
+                })
+                user_doc.insert(ignore_permissions=True)
+                print(f"   [+] Tạo User: {email} ({u.get('full_name', '')}) -> Roles: {', '.join(roles_list)}")
+            else:
+                user_doc = frappe.get_doc("User", email)
+                existing_roles = {r.role for r in user_doc.roles}
+                updated = False
+                for r in roles_list:
+                    if r not in existing_roles:
+                        user_doc.append("roles", {"role": r})
+                        updated = True
+                if updated:
+                    user_doc.save(ignore_permissions=True)
+                    print(f"   [*] Cập nhật Roles cho User: {email}")
 
         frappe.db.commit()
         print("\n" + "=" * 75)
@@ -430,6 +459,26 @@ def run_dry_run(data):
             print(f"      - {err}")
     else:
         print(f"   - Kiểm tra liên kết Item Master : 100% Khớp hoàn hảo (0 Foreign Key Violation)")
+
+    print(f"\n8. DANH MỤC TÀI KHOẢN NGƯỜI DÙNG & PHÂN QUYỀN ({len(data.get('users', []))} Users):")
+    dept_stats = {}
+    role_stats = {}
+    for u in data.get("users", []):
+        dept = u.get("department", "Khác")
+        dept_stats[dept] = dept_stats.get(dept, 0) + 1
+        for r in u.get("roles", "").split(","):
+            r = r.strip()
+            if r:
+                role_stats[r] = role_stats.get(r, 0) + 1
+        print(f"   - [{u['email']:<20}] {u['full_name']:<30} | {u.get('designation', ''):<32} | {u.get('roles', '')}")
+
+    print("\n   - Thống kê theo Phòng Ban / Bộ Phận:")
+    for dept, cnt in sorted(dept_stats.items(), key=lambda x: x[1], reverse=True):
+        print(f"      * {dept:<32}: {cnt:>2} nhân sự")
+
+    print("\n   - Thống kê theo Vai Trò Phân Quyền (Roles):")
+    for r, cnt in sorted(role_stats.items(), key=lambda x: x[1], reverse=True):
+        print(f"      * {r:<32}: {cnt:>2} tài khoản")
 
     print("\n" + "=" * 75)
     print(" KẾT QUẢ: 100% MASTER DATA ĐÃ ĐƯỢC CHUẨN HÓA THEO ERPNEXT v16 NATIVE!")

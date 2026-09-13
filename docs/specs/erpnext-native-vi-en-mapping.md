@@ -220,3 +220,74 @@
 | `account` | Tài khoản kế toán hàng tồn kho tương ứng (`152`, `154`, `155`, `153`) | **Tài khoản kho** |
 | `description` | Mô tả chi tiết loại hàng hóa và vật tư lưu trữ trong kho | **Mô tả hàng lưu trữ** |
 | `disabled` | Cờ ngừng sử dụng kho (0: Đang hoạt động, 1: Ngừng hoạt động) | **Ngừng sử dụng** |
+
+---
+
+## 14. CÔNG ĐOẠN & TRẠM MÁY (DocType `Operation` & `Workstation`)
+
+### 14.1. Công Đoạn Sản Xuất (DocType `Operation`)
+| ERPNext Native English | Ý nghĩa | Đề xuất map VI là... |
+| :--- | :--- | :--- |
+| `name` | Mã định danh công đoạn (`GHEP-MANG`, `CAT-TUI`, `DONG-VOI`, `THOI-MANG`) | **Mã công đoạn** |
+| `operation_name` | Tên tiếng Việt hiển thị trên lệnh sản xuất | **Tên công đoạn** |
+| `workstation` | Trạm máy mặc định thực hiện công đoạn | **Trạm máy thực hiện** |
+| `description` | Mô tả quy trình kỹ thuật vận hành máy | **Mô tả quy trình** |
+
+### 14.2. Trạm Máy Xưởng (DocType `Workstation`)
+| ERPNext Native English | Ý nghĩa | Đề xuất map VI là... |
+| :--- | :--- | :--- |
+| `name` / `workstation_name` | Tên/Mã trạm máy vật lý (`WS-GHEP-01`, `WS-CAT-01`, `WS-VOI-01`, `WS-THOI-01`) | **Mã trạm máy** |
+| `production_capacity` | Số chuyền hoặc số dòng sản phẩm máy có thể chạy cùng lúc (Mặc định: 1) | **Công suất chuyền** |
+| `hour_rate` | Chi phí chạy máy theo giờ (Quy định: 0.0 do xưởng tính công theo mét và cái) | **Chi phí giờ máy** |
+| `description` | Thông số kỹ thuật, cấu hình máy | **Thông số máy** |
+
+---
+
+## 15. ĐỊNH MỨC SẢN XUẤT (DocType `BOM` & `BOM Item`)
+
+### 15.1. Định Mức Tổng Thể (DocType `BOM`)
+| ERPNext Native English | Ý nghĩa | Đề xuất map VI là... |
+| :--- | :--- | :--- |
+| `name` / `bom_no` | Mã định mức duy nhất (`BOM-[item_code]-001`) | **Mã định mức BOM** |
+| `item` | Mã mặt hàng sản xuất (Cuộn BTP hoặc Túi TP) | **Sản phẩm BOM** |
+| `quantity` | Sản lượng định mức cơ sở ($1.000\text{ m}$ cuộn BTP hoặc $1.000\text{ Túi}$) | **Sản lượng định mức** |
+| `uom` | Đơn vị tính của sản lượng định mức (`m` hoặc `Túi`) | **Đơn vị tính** |
+| `is_active` | Cờ hiệu lực của định mức (1: Có hiệu lực) | **Đang áp dụng** |
+| `is_default` | Định mức mặc định để tự động kéo vào Lệnh sản xuất | **Định mức mặc định** |
+| `process_loss_percentage` | Tỷ lệ hao hụt sản xuất công nghệ (Ghép màng 2.0%, Cắt dán 2.5%) | **Tỷ lệ hao hụt (%)** |
+| `with_operations` | Có theo dõi chi phí công đoạn theo giờ không (0: Tắt để tối giản) | **Kèm chi phí công đoạn** |
+| `items` *(Child Table)* | Danh sách các vật tư cấu thành và định mức tiêu hao | **Chi tiết vật tư định mức** |
+
+### 15.2. Chi Tiết Vật Tư Định Mức (DocType `BOM Item`)
+| ERPNext Native English | Ý nghĩa | Đề xuất map VI là... |
+| :--- | :--- | :--- |
+| `item_code` | Mã nguyên vật liệu hoặc bán thành phẩm đầu vào | **Mã vật tư** |
+| `qty` | Định mức số lượng vật tư cần để sản xuất 1 lô cơ sở | **Định mức tiêu hao** |
+| `uom` | Đơn vị tính của vật tư (`m`, `Kg`, `Cái`, `Túi`) | **Đơn vị tính** |
+| `rate` | Đơn giá dự toán tham chiếu của vật tư (VND) | **Đơn giá dự toán** |
+| `note` | Ghi chú kỹ thuật pha chế hoặc quy cách đóng thùng | **Ghi chú kỹ thuật** |
+
+---
+
+## 16. TÀI KHOẢN NGƯỜI DÙNG & PHÂN QUYỀN (DocType `User` & `Role`)
+
+### 16.1. Tài Khoản Người Dùng (DocType `User`)
+| ERPNext Native English | Ý nghĩa | Đề xuất map VI là... |
+| :--- | :--- | :--- |
+| `email` | Email đăng nhập hệ thống duy nhất (Khóa chính) | **Tài khoản đăng nhập** |
+| `first_name` | Tên nhân sự hoặc tên gọi tác nghiệp hàng ngày | **Tên** |
+| `last_name` | Họ và chữ lót | **Họ và chữ đệm** |
+| `full_name` | Họ và tên đầy đủ hiển thị trên giao diện | **Họ và tên** |
+| `user_type` | Phân loại người dùng (`System User`: Nhân viên nội bộ; `Website User`: Khách hàng/NCC) | **Loại tài khoản** |
+| `role_profile_name` | Bộ vai trò phân quyền chuẩn gán cho nhân viên | **Hồ sơ vai trò** |
+| `enabled` | Trạng thái tài khoản (1: Đang hoạt động, 0: Khóa) | **Trạng thái hoạt động** |
+
+### 16.2. Bộ Vai Trò Quyền Hạn (Role Profiles & Roles)
+| Role ERPNext | Tên Vai Trò Tiếng Việt | Phạm Vi Quyền Hạn & Chứng Từ Tác Nghiệp |
+| :--- | :--- | :--- |
+| `System Manager` | **Quản Trị Hệ Thống** | Toàn quyền kiểm soát hệ thống, cấu hình, Master Data, duyệt giá và hạn mức tín dụng. |
+| `Sales User` | **Nhân Viên Kinh Doanh** | Lập Báo Giá (`Quotation`), Đơn Bán Hàng (`Sales Order`), xem thông tin Khách Hàng và Bảng giá. |
+| `Accounts User` | **Kế Toán Viên** | Quản lý Hóa Đơn (`Sales/Purchase Invoice`), Phiếu Thu/Chi (`Payment Entry`), Theo dõi công nợ 131/331 và dòng tiền máy thổi. |
+| `Manufacturing User` | **Quản Đốc Sản Xuất** | Lập và theo dõi Lệnh Sản Xuất (`Work Order`), kiểm tra Định Mức (`BOM`), điều độ máy cắt/ghép. |
+| `Stock User` | **Thủ Kho** | Lập Phiếu Nhập Kho NVL (`Purchase Receipt`), Phiếu Giao Hàng (`Delivery Note`), Quản lý 5 kho vật lý. |
+

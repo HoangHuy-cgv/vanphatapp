@@ -1,0 +1,12 @@
+﻿name,email,first_name,last_name,full_name,user_type,role_profile_name,roles,mobile_no,department,designation,enabled
+huy@vanphat.com,huy@vanphat.com,Huy,Võ Quang,Võ Quang Huy,System User,Ban Giám Đốc,"System Manager,Sales Master Manager,Accounts Manager,Manufacturing Manager,Stock Manager",0908888888,Ban Giám Đốc,Giám Đốc Điều Hành,1
+lai@vanphat.com,lai@vanphat.com,Lài,Nguyễn Thị,Nguyễn Thị Lài,System User,Nhân Viên Kinh Doanh,Sales User,0901111111,Phòng Kinh Doanh,Nhân Viên Kinh Doanh,1
+lam@vanphat.com,lam@vanphat.com,Lam,Trần Thị,Trần Thị Lam,System User,Nhân Viên Kinh Doanh,Sales User,0902222222,Phòng Kinh Doanh,Nhân Viên Kinh Doanh,1
+nhan@vanphat.com,nhan@vanphat.com,Nhàn,Lê Thị,Lê Thị Nhàn,System User,Nhân Viên Kinh Doanh,Sales User,0903333333,Phòng Kinh Doanh,Nhân Viên Kinh Doanh,1
+giang@vanphat.com,giang@vanphat.com,Giang,Phạm Hương,Phạm Hương Giang,System User,Nhân Viên Kinh Doanh,Sales User,0904444444,Phòng Kinh Doanh,Nhân Viên Kinh Doanh,1
+phuc@vanphat.com,phuc@vanphat.com,Phúc,Nguyễn Hoàng,Nguyễn Hoàng Phúc,System User,Nhân Viên Kinh Doanh,Sales User,0905555555,Phòng Kinh Doanh,Nhân Viên Kinh Doanh,1
+duyen@vanphat.com,duyen@vanphat.com,Duyên,Trần Mỹ,Trần Mỹ Duyên,System User,Nhân Viên Kinh Doanh,Sales User,0906666666,Phòng Kinh Doanh,Nhân Viên Kinh Doanh,1
+quynhanh@vanphat.com,quynhanh@vanphat.com,Quỳnh Anh,Đặng,Đặng Quỳnh Anh,System User,Kế Toán Viên,Accounts User,0907777777,Phòng Kế Toán,Kế Toán Công Nợ & Thu Chi,1
+ben@vanphat.com,ben@vanphat.com,Ben,Trần Văn,Trần Văn Ben,System User,Quản Đốc Sản Xuất,Manufacturing User,0909999991,Phân Xưởng Bao Bì,Quản Đốc Phân Xưởng Ghép - Cắt,1
+maythoi@vanphat.com,maythoi@vanphat.com,Dư & Chiến,Tổ Máy Thổi,Tổ Vận Hành Máy Thổi PE,System User,Vận Hành Sản Xuất,Manufacturing User,0909999992,Phân Xưởng Thổi Màng,Tổ Trưởng Kỹ Thuật Máy Thổi,1
+kho@vanphat.com,kho@vanphat.com,Vũ,Đội Kho & Xe,Tổ Thủ Kho & Giao Nhận Vạn Phát,System User,Thủ Kho,Stock User,0909999993,Bộ Phận Kho & Giao Nhận,Thủ Kho Vật Lý & Giao Vận,1

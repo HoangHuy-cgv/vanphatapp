@@ -69,33 +69,22 @@ const BOM_ITEMS = safeReadCSV('bom_items.csv');
 const WAREHOUSES = safeReadCSV('warehouse_master.csv').length > 0 ? safeReadCSV('warehouse_master.csv') : safeReadCSV('warehouses.csv');
 const SUPPLIERS = safeReadCSV('supplier_master.csv').length > 0 ? safeReadCSV('supplier_master.csv') : safeReadCSV('suppliers.csv');
 const OPERATIONS = safeReadCSV('operation_master.csv').length > 0 ? safeReadCSV('operation_master.csv') : safeReadCSV('operations.csv');
-const CUSTOMER_MATRIX = safeReadCSV('customer_brand_matrix.csv');
+const WORKSTATIONS = safeReadCSV('workstation_master.csv');
+const USERS = safeReadCSV('user_master.csv');
+const CUSTOMERS_RAW = safeReadCSV('customer_master.csv');
 
-// Build Unified Customers List
-const CUSTOMERS_MAP = new Map();
-CUSTOMER_MATRIX.forEach(r => {
-	const name = (r.customer_name || '').trim();
-	if (name) {
-		CUSTOMERS_MAP.set(name, {
-			name: `CUST-${String(CUSTOMERS_MAP.size + 1).padStart(4, '0')}`,
-			customer_name: name,
-			brand: r.brand_pattern || '',
-			type: r.applied_item_type || ''
-		});
-	}
-});
-MASTER_ITEMS.forEach(m => {
-	const c = (m.customer || '').trim();
-	if (c && !CUSTOMERS_MAP.has(c)) {
-		CUSTOMERS_MAP.set(c, {
-			name: `CUST-${String(CUSTOMERS_MAP.size + 1).padStart(4, '0')}`,
-			customer_name: c,
-			brand: m.brand || '',
-			type: m.item_group || ''
-		});
-	}
-});
-const UNIFIED_CUSTOMERS = Array.from(CUSTOMERS_MAP.values());
+// Build Unified Customers List from customer_master.csv (SSOT 100% ERPNext Native)
+const UNIFIED_CUSTOMERS = CUSTOMERS_RAW.length > 0 ? CUSTOMERS_RAW.map(c => ({
+	name: c.name,
+	customer_name: c.customer_name,
+	alias: c.alias,
+	brand: c.alias || '',
+	type: c.customer_group || '',
+	customer_type: c.customer_type || 'Company',
+	primary_address: c.primary_address || '',
+	credit_limit: c.credit_limit || 0
+})) : [];
+
 
 // Build BOM grouped hierarchy
 const BOM_TREE = new Map();
@@ -237,7 +226,9 @@ const server = http.createServer((req, res) => {
 							customers: UNIFIED_CUSTOMERS.length,
 							warehouses: WAREHOUSES.length,
 							suppliers: SUPPLIERS.length,
-							operations: OPERATIONS.length
+							operations: OPERATIONS.length,
+							workstations: WORKSTATIONS.length,
+							users: USERS.length
 						}
 					}
 				}));
@@ -764,35 +755,35 @@ function renderMasterDataReviewerHtml() {
 				<div class="metric-lbl">Mặt Hàng (Item Master)</div>
 			</div>
 			<div class="metric-card">
-				<div class="metric-val">${ITEM_SPECS.length}</div>
-				<div class="metric-lbl">Quy Cách Kỹ Thuật (Specs)</div>
-			</div>
-			<div class="metric-card">
-				<div class="metric-val">${BOM_MASTERS.length}</div>
-				<div class="metric-lbl">Định Mức BOM 2 Cấp</div>
-			</div>
-			<div class="metric-card">
-				<div class="metric-val">${BOM_ITEMS.length}</div>
-				<div class="metric-lbl">Dòng Chi Tiết Vật Tư BOM</div>
+				<div class="metric-val">${BOM_MASTERS.length} / ${BOM_ITEMS.length}</div>
+				<div class="metric-lbl">BOM 2 Cấp & Chi Tiết Vật Tư</div>
 			</div>
 			<div class="metric-card">
 				<div class="metric-val">${WAREHOUSES.length} Kho / ${OPERATIONS.length} Trạm</div>
-				<div class="metric-lbl">Kho Bãi & Máy Móc</div>
+				<div class="metric-lbl">Kho Bãi & Máy Móc (${WORKSTATIONS.length} Trạm)</div>
 			</div>
 			<div class="metric-card">
-				<div class="metric-val">${SUPPLIERS.length} NCC / ${UNIFIED_CUSTOMERS.length} KH</div>
-				<div class="metric-lbl">Đối Tác & Khách Hàng</div>
+				<div class="metric-val">${SUPPLIERS.length} NCC</div>
+				<div class="metric-lbl">Nhà Cung Cấp & Liên Doanh</div>
+			</div>
+			<div class="metric-card">
+				<div class="metric-val">${UNIFIED_CUSTOMERS.length} Đối Tác</div>
+				<div class="metric-lbl">Khách Hàng Chuẩn Hóa</div>
+			</div>
+			<div class="metric-card">
+				<div class="metric-val">${USERS.length} Tài Khoản</div>
+				<div class="metric-lbl">Người Dùng & Phân Quyền</div>
 			</div>
 		</div>
 
 		<!-- Navigation Tabs -->
 		<div class="nav-tabs">
 			<button class="tab-btn active" onclick="switchTab('items')">🏷️ Mặt Hàng (${MASTER_ITEMS.length})</button>
-			<button class="tab-btn" onclick="switchTab('specs')">📐 Quy Cách Kỹ Thuật (${ITEM_SPECS.length})</button>
 			<button class="tab-btn" onclick="switchTab('boms')">⚙️ Định Mức BOM (${BOM_MASTERS.length})</button>
-			<button class="tab-btn" onclick="switchTab('warehouses')">🏭 Kho & Công Đoạn</button>
+			<button class="tab-btn" onclick="switchTab('warehouses')">🏭 Kho & Công Đoạn (${WAREHOUSES.length}/${OPERATIONS.length})</button>
 			<button class="tab-btn" onclick="switchTab('suppliers')">🤝 Nhà Cung Cấp (${SUPPLIERS.length})</button>
 			<button class="tab-btn" onclick="switchTab('customers')">👥 Khách Hàng (${UNIFIED_CUSTOMERS.length})</button>
+			<button class="tab-btn" onclick="switchTab('users')">👤 Người Dùng & Quyền (${USERS.length})</button>
 		</div>
 
 		<!-- Search Bar -->
@@ -972,18 +963,57 @@ function renderMasterDataReviewerHtml() {
 				<thead>
 					<tr>
 						<th>Mã KH</th>
-						<th>Tên Khách Hàng</th>
-						<th>Thương hiệu (Brand)</th>
-						<th>Loại sản phẩm áp dụng</th>
+						<th>Tên Pháp Nhân Khách Hàng</th>
+						<th>Tên Gọi Tắt (Alias)</th>
+						<th>Nhóm Khách Hàng</th>
+						<th>Loại Hình</th>
+						<th>Hạn Mức Nợ (VND)</th>
+						<th>Địa Chỉ Thực Tế</th>
 					</tr>
 				</thead>
 				<tbody id="customersBody">
 					${UNIFIED_CUSTOMERS.map(c => `
 						<tr>
-							<td style="font-weight: 700; font-family: monospace;">${c.name}</td>
-							<td style="font-weight: 600;">${c.customer_name}</td>
-							<td style="color: #7ee787; font-weight: 600;">${c.brand || '—'}</td>
+							<td style="font-weight: 700; font-family: monospace; color: #4ea1e0;">${c.name}</td>
+							<td style="font-weight: 600; color: #f0f6fc;">${c.customer_name}</td>
+							<td><span class="badge badge-info">${c.alias || '—'}</span></td>
 							<td>${c.type || '—'}</td>
+							<td>${c.customer_type || 'Company'}</td>
+							<td style="font-family: monospace; color: ${Number(c.credit_limit) > 0 ? '#f87171; font-weight: 700;' : '#8b949e;'}">
+								${Number(c.credit_limit) > 0 ? Number(c.credit_limit).toLocaleString() + ' đ' : 'Tiền mặt/Cọc'}
+							</td>
+							<td style="font-size: 11px; color: #8b949e;">${c.primary_address || '—'}</td>
+						</tr>
+					`).join('')}
+				</tbody>
+			</table>
+		</div>
+
+		<div id="usersContainer" class="table-box" style="display: none;">
+			<table>
+				<thead>
+					<tr>
+						<th>Tài Khoản (Email)</th>
+						<th>Họ và Tên</th>
+						<th>Phòng Ban</th>
+						<th>Chức Danh Tác Nghiệp</th>
+						<th>Vai Trò Phân Quyền (ERPNext Roles)</th>
+						<th>Số Điện Thoại</th>
+						<th>Trạng Thái</th>
+					</tr>
+				</thead>
+				<tbody id="usersBody">
+					${USERS.map(u => `
+						<tr>
+							<td style="font-family: monospace; color: #4ea1e0; font-weight: 600;">${u.email}</td>
+							<td style="font-weight: 600; color: #f0f6fc;">${u.full_name}</td>
+							<td><span class="badge badge-info">${u.department || '—'}</span></td>
+							<td style="color: #c9d1d9;">${u.designation || '—'}</td>
+							<td>
+								${(u.roles || '').split(',').map(r => `<span style="display: inline-block; padding: 2px 6px; margin: 2px; font-size: 11px; background: rgba(56, 189, 248, 0.15); color: #38bdf8; border-radius: 4px; border: 1px solid rgba(56, 189, 248, 0.3); font-family: monospace;">${r.trim()}</span>`).join('')}
+							</td>
+							<td style="font-family: monospace;">${u.mobile_no || '—'}</td>
+							<td><span class="badge badge-success">Hoạt động</span></td>
 						</tr>
 					`).join('')}
 				</tbody>
@@ -993,7 +1023,7 @@ function renderMasterDataReviewerHtml() {
 
 	<script>
 		let currentTab = 'items';
-		const tabs = ['items', 'specs', 'boms', 'warehouses', 'suppliers', 'customers'];
+		const tabs = ['items', 'boms', 'warehouses', 'suppliers', 'customers', 'users'];
 
 		function switchTab(tab) {
 			currentTab = tab;
