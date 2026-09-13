@@ -14,18 +14,18 @@ NGCS-00012,NGCS Lớn Xanh - Hoa Hồng,PET/MPET/PA/PE sữa,250,800,300,380,50,
 NGCS-00013,NGCS Lớn Tím - Nước Hoa,PET/MPET/PA/PE sữa,250,800,300,380,50,380,In trục ống đồng,Vòi 16mm,,,0,0,0,
 NGCS-00014,NGCS Lớn Hồng - Cá Tính,PET/MPET/PA/PE sữa,250,800,300,380,50,380,In trục ống đồng,Vòi 16mm,,,0,0,0,
 NGCS-00015,NGCS Lớn Vàng - Ban Mai,PET/MPET/PA/PE sữa,250,800,300,380,50,380,In trục ống đồng,Vòi 16mm,,,0,0,0,
-TMD-00001,HD quai thỏ 17x25,HDPE,45,340,170,250,0,250,In lụa,Hàn kín (Không phụ kiện),,,0,0,0,
-TMD-00002,HD quai thỏ 26x40,HDPE,45,520,260,400,0,400,In lụa,Hàn kín (Không phụ kiện),,,0,0,0,
-TMD-00003,HD quai thỏ 30x50,HDPE,50,600,300,500,0,500,In lụa,Hàn kín (Không phụ kiện),,,0,0,0,
-TMD-00004,HD quai thỏ 26x43,HDPE,50,520,260,430,0,430,In lụa,Hàn kín (Không phụ kiện),,,0,0,0,
-TMD-00005,HD quai thỏ 30x60,HDPE,55,600,300,600,0,600,In lụa,Hàn kín (Không phụ kiện),,,0,0,0,
-TMD-00006,HD quai thỏ 30x20x30,HDPE,50,600,300,300,100,300,In lụa,Hàn kín (Không phụ kiện),,,0,0,0,
-TMD-00007,PE hột xoài 20x30,LDPE,60,400,200,300,0,300,In lụa,Hàn kín (Không phụ kiện),,,0,0,0,
-TMD-00008,PE hột xoài 17x22,LDPE,60,340,170,220,0,220,In lụa,Hàn kín (Không phụ kiện),,,0,0,0,
-TMD-00009,PE hột xoài 30x42,LDPE,70,600,300,420,0,420,In lụa,Hàn kín (Không phụ kiện),,,0,0,0,
-TMD-00010,PP 32x45,PP,70,640,320,450,0,450,In lụa,Hàn kín (Không phụ kiện),,,0,0,0,
-TMD-00011,PE 50x100,LDPE,70,1000,500,1000,0,1000,In lụa,Hàn kín (Không phụ kiện),,,0,0,0,
-TMD-00012,PE Cây Đàn,LDPE,60,600,300,485,0,485,In lụa,Hàn kín (Không phụ kiện),,,0,0,0,
+TMD-00001,HD quai thỏ 17x25,HDPE,45,340,170,250,0,250,In lụa,,,,0,0,0,
+TMD-00002,HD quai thỏ 26x40,HDPE,45,520,260,400,0,400,In lụa,,,,0,0,0,
+TMD-00003,HD quai thỏ 30x50,HDPE,50,600,300,500,0,500,In lụa,,,,0,0,0,
+TMD-00004,HD quai thỏ 26x43,HDPE,50,520,260,430,0,430,In lụa,,,,0,0,0,
+TMD-00005,HD quai thỏ 30x60,HDPE,55,600,300,600,0,600,In lụa,,,,0,0,0,
+TMD-00006,HD quai thỏ 30x20x30,HDPE,50,600,300,300,100,300,In lụa,,,,0,0,0,
+TMD-00007,PE hột xoài 20x30,LDPE,60,400,200,300,0,300,In lụa,,,,0,0,0,
+TMD-00008,PE hột xoài 17x22,LDPE,60,340,170,220,0,220,In lụa,,,,0,0,0,
+TMD-00009,PE hột xoài 30x42,LDPE,70,600,300,420,0,420,In lụa,,,,0,0,0,
+TMD-00010,PP 32x45,PP,70,640,320,450,0,450,In lụa,,,,0,0,0,
+TMD-00011,PE 50x100,LDPE,70,1000,500,1000,0,1000,In lụa,,,,0,0,0,
+TMD-00012,PE Cây Đàn,LDPE,60,600,300,485,0,485,In lụa,,,,0,0,0,
 TP-00001,888 3.2Kg Hồng,PET//PA/PE sữa,230,660,280,340,45,340,In trục ống đồng,Vòi 16mm,TRUC-G4006940,,0,0,0,
 TP-00002,888 3.2Kg Tím,PET//PA/PE sữa,230,660,280,340,45,340,In trục ống đồng,Vòi 16mm,TRUC-G4006961,,0,0,0,
 TP-00003,888 3.2Kg Đỏ,PET//PA/PE sữa,230,660,280,340,45,340,In trục ống đồng,Vòi 16mm,TRUC-G4006960,,0,0,0,
@@ -44,7 +44,7 @@ TP-00015,Lamy 2Kg Xanh,PET/MPET/PA/LLDPE,200,580,240,320,45,320,In trục ống 
 TP-00016,BABA 3.6Kg,PET/MPET/PA/PE sữa,230,660,280,380,45,380,In trục ống đồng,Vòi 16mm,TRUC-BABA,,0,0,0,
 TP-00017,Supergeo 5L,PET/PA/PA/PE sữa,240,740,320,340,45,340,In trục ống đồng,Vòi 16mm,TRUC-SUPERGEO,,0,0,0,
 TP-00018,Xốt Pho Mai KOVAA 200g,PET/PA/PES,150,400,150,220,45,220,In trục ống đồng,Vòi 10mm,,,0,0,0,
-TP-00019,TopGia MBTP,PET/PE,80,500,200,300,45,300,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
+TP-00019,TopGia MBTP,PET/PE,80,500,200,300,45,300,In trục ống đồng,,,,0,0,0,
 TP-00020,TopGia 1L Hoa Nắng,PET/PA/PE,190,460,180,250,45,250,In trục ống đồng,Vòi 16mm,TRUC-G4011425,,0,0,0,
 TP-00021,TopGia 1L Đắm Say,PET/PA/PE,190,460,180,250,45,250,In trục ống đồng,Vòi 16mm,TRUC-G4011427,,0,0,0,
 TP-00022,Softy 3L Tím,PET/PA/PE sữa,230,660,280,340,45,340,In trục ống đồng,Vòi 16mm,,,0,0,0,
@@ -64,231 +64,231 @@ TP-00035,Clean 2L,PET//PA/PE sữa,210,580,240,300,45,300,In trục ống đồn
 TP-00036,Futa True 3Kg,PET//PA/PE sữa,230,660,280,340,45,340,In trục ống đồng,Vòi 16mm,TRUC-G4013050,,0,0,0,
 TP-00037,Chakari Louis 3.2Kg,PET//PA/PE sữa,230,660,280,340,45,340,In trục ống đồng,Vòi 16mm,TRUC-G4014585,,0,0,0,
 TP-00038,Chloe'ly 2L,PET/MPET/PA/PE sữa,210,580,240,300,45,300,In trục ống đồng,Vòi 16mm,,,0,0,0,
-TP-00039,SKX Đậu Nành 16x23.5,OPPMalt/PE,160,420,160,235,45,235,In trục ống đồng,Hàn kín (Không phụ kiện),TRUC-G652829,,0,0,0,
+TP-00039,SKX Đậu Nành 16x23.5,OPPMalt/PE,160,420,160,235,45,235,In trục ống đồng,,TRUC-G652829,,0,0,0,
 TP-00040,Enzy Hạt Nêm 900g,PET/AL/PE,150,600,250,300,45,300,In trục ống đồng,Khóa Zipper,TRUC-G4012180,,0,0,0,
 TP-00041,Enzy Hạt Nêm 450g,PET/AL/PE,140,500,200,260,45,260,In trục ống đồng,Khóa Zipper,,,0,0,0,
 TP-00042,Enzy Hạt Nêm 220g,PET/AL/PE,120,440,170,220,45,220,In trục ống đồng,Khóa Zipper,,,0,0,0,
 TP-00043,Enzy Rắc Cơm 11x17,PET/AL/PE,100,320,110,170,45,170,In trục ống đồng,Khóa Zipper,,,0,0,0,
 TP-00044,Trang Uyên 2L Không Trục,PET/PA/PE sữa,200,580,240,300,45,300,In offset (Không trục),Vòi 16mm,,,0,0,0,
 TP-00045,Sofia 2L Ngọc Lan,PET/PA/PE sữa,210,580,240,300,45,300,In trục ống đồng,Vòi 16mm,TRUC-SOFIA2L,,0,0,0,
-TRUC-G4010806,Trục Sachpoong 3.2Kg (G4010806),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4010806,800.0,564.0,0,Kho VẠN PHÁT
-TRUC-G4010805,Trục Sachpoong 0.6Kg (G4010805),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4010805,750.0,456.0,0,Kho VẠN PHÁT
-TRUC-G4010947,Trục Raptor Clean 0.6Kg (G4010947),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4010947,750.0,456.0,0,Kho VẠN PHÁT
-TRUC-G4011425,Trục Topgia Hoa Nắng (G4011425),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4011425,750.0,404.0,0,Kho KIẾN TÂM
-TRUC-G4011427,Trục Topgia Đắm Say (G4011427),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4011427,750.0,404.0,0,Kho KIẾN TÂM
-TRUC-G4011409,Trục Trần Quân 2Kg (G4011409),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4011409,750.0,484.0,0,Kho VẠN PHÁT
-TRUC-G4011542,Trục Dpclean 0.6Kg (G4011542),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4011542,750.0,456.0,0,Kho VẠN PHÁT
-TRUC-G4006940,Trục 888 3.2Kg Hương (G4006940),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4006940,800.0,564.0,0,Kho KIẾN TÂM
-TRUC-G4006961,Trục 888 3.2Kg Hương (G4006961),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4006961,800.0,564.0,0,Kho KIẾN TÂM
-TRUC-G4006960,Trục 888 3.2Kg Hương (G4006960),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4006960,800.0,564.0,0,Kho VẠN PHÁT
-TRUC-G4012179,Trục Bluum 3Kg Đen (G4012179),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4012179,800.0,564.0,0,Kho VẠN PHÁT
-TRUC-G4012417,Trục 888 0.6Kg (G4012417),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4012417,750.0,456.0,0,Kho VẠN PHÁT
-TRUC-G4012418,Trục 888 0.6Kg (G4012418),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4012418,750.0,456.0,0,Kho VẠN PHÁT
-TRUC-G4012676,Trục Không Tên (G4012676),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4012676,800.0,564.0,0,Kho TUỆ NHI
-TRUC-G4005887,Trục Minh Râu 3.2Kg (G4005887),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4005887,780.0,564.0,0,Kho KIẾN TÂM
-TRUC-G4005883,Trục Minh Râu 3.2Kg (G4005883),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4005883,780.0,564.0,0,Kho KIẾN TÂM
-TRUC-G4012178,Trục Bluum 3Kg Xanh (G4012178),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4012178,800.0,564.0,0,Kho VẠN PHÁT
-TRUC-Z437761,Trục Yaourt Hoa Hồng (Z437761),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z437761,435.0,350.0,0,Kho VẠN PHÁT
-TRUC-G4005877,Trục 888 0.6Kg - (G4005877),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4005877,750.0,456.0,0,Kho VẠN PHÁT
-TRUC-G4006655,Trục 888 0.6Kg - (G4006655),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4006655,750.0,456.0,0,Kho VẠN PHÁT
-TRUC-G4006660,Trục 888 0.6Kg - (G4006660),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4006660,750.0,456.0,0,Kho VẠN PHÁT
-TRUC-G4005897,Trục 888 2Kg - (G4005897),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4005897,750.0,484.0,0,Kho VẠN PHÁT
-TRUC-G4005893,Trục 888 2Kg - (G4005893),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4005893,750.0,484.0,0,Kho VẠN PHÁT
-TRUC-G4006677,Trục 888 2Kg - (G4006677),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4006677,750.0,484.0,0,Kho VẠN PHÁT
-TRUC-G4006905,Trục Premium 3.2Kg Tím (G4006905),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4006905,800.0,564.0,0,Kho KIẾN TÂM
-TRUC-G4006924,Trục Premium 3.2Kg Đỏ (G4006924),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4006924,800.0,564.0,0,Kho VẠN PHÁT
-TRUC-Z417582,Trục Masa (Z417582),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z417582,900.0,568.0,0,Kho VẠN PHÁT
-TRUC-G631383,Trục Yumi Care 3.6L (G631383),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G631383,900.0,568.0,0,Kho VẠN PHÁT
-TRUC-G4002697,Trục Sofia 3Kg Xanh (G4002697),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4002697,850.0,526.0,0,Kho VẠN PHÁT
-TRUC-Z418556,Trục Clean (Cleanz) 3.6L (Z418556),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z418556,900.0,568.0,0,Kho VẠN PHÁT
-TRUC-G630657,Trục Clean (Cleanz) 2L (G630657),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G630657,800.0,466.0,0,Kho VẠN PHÁT
-TRUC-G628929,Trục Mè Vỏ Minh (G628929),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G628929,800.0,440.0,0,Kho VẠN PHÁT
-TRUC-G631044,Trục Cà Phê Bảo (G631044),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G631044,800.0,550.0,0,Kho VẠN PHÁT
-TRUC-G630788,Trục Cà Phê Việt (G630788),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G630788,800.0,468.0,0,Kho VẠN PHÁT
-TRUC-G628231,Trục Thức Ăn Cho (G628231),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G628231,800.0,480.0,0,Kho VẠN PHÁT
-TRUC-G628230,Trục Thức Ăn Cho (G628230),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G628230,800.0,480.0,0,Kho VẠN PHÁT
-TRUC-G627954,Trục Muối Tôm Muối (G627954),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G627954,800.0,460.0,0,Kho VẠN PHÁT
-TRUC-G630103,Trục Hạt Hướng Dương (G630103),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G630103,800.0,540.0,0,Kho VẠN PHÁT
-TRUC-G630102,Trục Hạt Hướng Dương (G630102),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G630102,800.0,540.0,0,Kho VẠN PHÁT
-TRUC-G628207,Trục Đựng Tiêu 50G (G628207),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G628207,800.0,480.0,0,Kho VẠN PHÁT
-TRUC-Z417825,Trục Sữa Nutri (Z417825),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z417825,800.0,510.0,0,Kho VẠN PHÁT
-TRUC-G630368,Trục Bột Lá Tía (G630368),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G630368,800.0,500.0,0,Kho VẠN PHÁT
-TRUC-G628866,Trục Cơm Cháy Tường (G628866),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G628866,800.0,520.0,0,Kho VẠN PHÁT
-TRUC-G630100,Trục Hạt Dưa Sạch (G630100),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G630100,800.0,510.0,0,Kho VẠN PHÁT
-TRUC-G630101,Trục Hạt Dưa Sạch (G630101),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G630101,800.0,510.0,0,Kho VẠN PHÁT
-TRUC-G630755,Trục Hạt Dưa Sạch (G630755),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G630755,800.0,540.0,0,Kho VẠN PHÁT
-TRUC-G630756,Trục Hạt Dưa Sạch (G630756),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G630756,800.0,640.0,0,Kho VẠN PHÁT
-TRUC-G630758,Trục Hướng Dương Sạch (G630758),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G630758,800.0,420.0,0,Kho VẠN PHÁT
-TRUC-G630757,Trục Hướng Dương Sạch (G630757),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G630757,800.0,420.0,0,Kho VẠN PHÁT
-TRUC-G629977,Trục Cơm Cháy Chà (G629977),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G629977,800.0,500.0,0,Kho VẠN PHÁT
-TRUC-G631221,Trục Bánh Wawel (G631221),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G631221,800.0,440.0,0,Kho VẠN PHÁT
-TRUC-G630072,Trục Bột Minh Châu (G630072),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G630072,900.0,420.0,0,Kho VẠN PHÁT
-TRUC-G631016,Trục Bánh Solidarnosc (G631016),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G631016,800.0,480.0,0,Kho VẠN PHÁT
-TRUC-G627906,Trục Sữa Đậu Nành (G627906),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G627906,900.0,440.0,0,Kho VẠN PHÁT
-TRUC-G631015,Trục Bánh Feodora (G631015),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G631015,900.0,540.0,0,Kho VẠN PHÁT
-TRUC-Z416438,Trục Ốc Cooked Whole (Z416438),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z416438,750.0,474.0,0,Kho VẠN PHÁT
-TRUC-Z416476,Trục Sốt Gia Vị (Z416476),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z416476,750.0,480.0,0,Kho VẠN PHÁT
-TRUC-Z433654,Trục Da Cá Sấy (Z433654),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z433654,720.0,546.0,0,Kho VẠN PHÁT
-TRUC-Z416475,Trục Sốt Gia Vị (Z416475),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z416475,750.0,480.0,0,Kho VẠN PHÁT
-TRUC-Z434004,"Trục Màng "" Nước (Z434004)",Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z434004,700.0,510.0,0,Kho VẠN PHÁT
-TRUC-Z434003,"Trục Màng "" Nước (Z434003)",Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z434003,700.0,510.0,0,Kho VẠN PHÁT
-TRUC-Z416685,"Trục Sò Điệp ""Whole (Z416685)",Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z416685,750.0,540.0,0,Kho VẠN PHÁT
-TRUC-Z435796,Trục Chả Cá Chiên (Z435796),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z435796,700.0,424.0,0,Kho VẠN PHÁT
-TRUC-Z416686,"Trục Ốc "" Bulot (Z416686)",Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z416686,750.0,540.0,0,Kho VẠN PHÁT
-TRUC-Z436110,Trục Bột Phô Mai (Z436110),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z436110,650.0,620.0,0,Kho VẠN PHÁT
-TRUC-Z434196,Trục Kem Hoa Vàng (Z434196),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z434196,650.0,570.0,0,Kho VẠN PHÁT
-TRUC-Z435698,Trục Kem Hoa Vàng (Z435698),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z435698,650.0,570.0,0,Kho TRANG TÍN
-TRUC-Z439843,Trục Kem Hoa Vàng (Z439843),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z439843,650.0,570.0,0,Kho VẠN PHÁT
-TRUC-Z437016,Trục Hạt Sáp Wax (Z437016),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z437016,700.0,488.0,0,Kho VẠN PHÁT
-TRUC-WAX500G,Trục Hạt Sáp Wax,Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,700.0,546.0,0,Kho VẠN PHÁT
-TRUC-G614772,Trục Nem Hoàng Tú (G614772),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G614772,805.0,575.0,0,Kho VẠN PHÁT
-TRUC-G612128,Trục Chả Lụa Hoàng (G612128),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G612128,750.0,525.0,0,Kho VẠN PHÁT
-TRUC-Z433493,Trục Chả Lụa Hoàng (Z433493),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z433493,650.0,501.0,0,Kho VẠN PHÁT
-TRUC-Z416845,Trục Hạt Điều Cashew (Z416845),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z416845,800.0,444.0,0,Kho VẠN PHÁT
-TRUC-G125806G2,Trục Phân Bón Guller (G125806G2),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G125806G2,1060.0,420.0,0,Kho VẠN PHÁT
-TRUC-G612508,Trục Nem Hoàng Tú (G612508),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G612508,805.0,575.0,0,Kho VẠN PHÁT
-TRUC-Z417577,Trục Mồi Câu T5-Mồi (Z417577),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z417577,750.0,440.0,0,Kho VẠN PHÁT
-TRUC-Z418260,Trục Dinh Dưỡng Ăn (Z418260),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z418260,800.0,420.0,0,Kho VẠN PHÁT
-TRUC-Z418425,Trục Kem Hương Vị (Z418425),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z418425,750.0,440.0,0,Kho VẠN PHÁT
-TRUC-Z435082,Trục Kem Hoa Vàng (Z435082),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z435082,650.0,570.0,0,Kho VẠN PHÁT
-TRUC-G652829,Trục Hạt Đậu Dinh (G652829),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G652829,650.0,480.0,0,Kho VẠN PHÁT
-TRUC-G493102,Trục Bột Ớt 500G (G493102),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G493102,700.0,570.0,0,Kho VẠN PHÁT
-TRUC-Z437240,Trục Cà Phê Nấm (Z437240),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z437240,700.0,450.0,0,Kho VẠN PHÁT
-TRUC-Z433450,Trục Màng Bột Ngọt (Z433450),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z433450,700.0,430.0,0,Kho VẠN PHÁT
-TRUC-Z433451,Trục Màng Bột Ngọt (Z433451),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z433451,650.0,435.0,0,Kho VẠN PHÁT
-TRUC-Z433306,Trục Thiết Bị Nhựa (Z433306),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z433306,650.0,448.0,0,Kho VẠN PHÁT
-TRUC-Z433449,Trục Màng Bột Ngọt (Z433449),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z433449,650.0,500.0,0,Kho VẠN PHÁT
-TRUC-Z416639,Trục Bánh Mì Sanwich (Z416639),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z416639,1050.0,490.0,0,Kho VẠN PHÁT
-TRUC-G4006649,Trục Passion 3.2Kg Hương (G4006649),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4006649,800.0,564.0,0,Kho KIẾN TÂM
-TRUC-G4006653,Trục Passion 3.2Kg Hương (G4006653),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4006653,800.0,564.0,0,Kho KIẾN TÂM
-TRUC-G4012674,Trục Bọc Thực Phẩm (G4012674),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4012674,750.0,730.0,0,Kho KIẾN TÂM
-TRUC-S515739,Trục Xốt Phô Mai (S515739),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,S515739,750.0,456.0,0,Kho KIẾN TÂM
-TRUC-G4014162,Trục Nui Thiên Long (G4014162),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4014162,800.0,520.0,0,Kho TRANG TÍN
-TRUC-G630618,Trục Cồi Sò Điệp (G630618),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G630618,800.0,460.0,0,Kho TRANG TÍN
-TRUC-KEM-DUANON,Trục MàNg Kem Hoa,Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,650.0,570.0,0,Kho TRANG TÍN
-TRUC-G4014589,Trục Hồng Loan 2.5L (G4014589),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4014589,850.0,504.0,0,Kho VẠN PHÁT
-TRUC-G4015277,Trục Topgia Huyền Diệu (G4015277),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4015277,820.0,464.0,0,Kho VẠN PHÁT
-TRUC-G4015340,Trục Topgia Đắm Say (G4015340),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4015340,750.0,404.0,0,Kho KIẾN TÂM
-TRUC-G4016016,Trục The Good Wife (G4016016),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4016016,750.0,564.0,0,Kho KIẾN TÂM
-TRUC-G4016051,Trục Cô Út 3.2Kg (G4016051),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4016051,750.0,564.0,0,Kho KIẾN TÂM
-TRUC-G4007070,Trục Premium Gold 3L (G4007070),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4007070,900.0,568.0,0,Kho TRANG TÍN
-TRUC-G4016395,Trục Mẹ Chọn 3.2Kg (G4016395),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4016395,640.0,540.0,0,Kho KIẾN TÂM
-TRUC-G4016394,Trục Mẹ Chọn 3.2Kg (G4016394),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4016394,820.0,564.0,0,Kho KIẾN TÂM
-TRUC-G4016428,Trục Hồ Tiêu Nhật (G4016428),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4016428,820.0,564.0,0,Kho KIẾN TÂM
-TRUC-G4006662,Trục Mimo 1L - (G4006662),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4006662,750.0,588.0,0,Kho VẠN PHÁT
-TRUC-G4010678,Trục Good Care 3.2Kg (G4010678),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4010678,750.0,564.0,0,Kho VẠN PHÁT
-TRUC-G4044368,Trục Aha 3Kg - (G4044368),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4044368,900.0,526.0,0,Kho TRANG TÍN
-TRUC-G4005957,Trục Xốt Ướp Nướng (G4005957),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4005957,750.0,475.0,0,Kho VẠN PHÁT
-TRUC-G4005954,Trục Xốt Ướp Nướng (G4005954),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4005954,750.0,475.0,0,Kho TRANG TÍN
-TRUC-G4005956,Trục Xốt Ướp Nướng (G4005956),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4005956,750.0,475.0,0,Kho VẠN PHÁT
-TRUC-G4005955,Trục Xốt Kho Thịt (G4005955),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4005955,750.0,475.0,0,Kho TRANG TÍN
-TRUC-G4005953,Trục Xốt Kho Cá (G4005953),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4005953,750.0,475.0,0,Kho TRANG TÍN
-TRUC-G4005948,Trục Gia Vị Phở (G4005948),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4005948,750.0,400.0,0,Kho VẠN PHÁT
-TRUC-G4005949,Trục Gia Vị Bò (G4005949),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4005949,750.0,400.0,0,Kho VẠN PHÁT
-TRUC-G4005950,Trục Gia Vị Bún (G4005950),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4005950,750.0,400.0,0,Kho VẠN PHÁT
-TRUC-G4005960,Trục Gia Vị Lẩu (G4005960),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4005960,880.0,480.0,0,Kho TRANG TÍN
-TRUC-G4005959,Trục Gia Vị Lẩu (G4005959),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4005959,880.0,480.0,0,Kho VẠN PHÁT
-TRUC-G4005958,Trục Gia Vị Lẩu (G4005958),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4005958,880.0,480.0,0,Kho VẠN PHÁT
-TRUC-G4012180,Trục Hạt Nêm Nền (G4012180),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4012180,750.0,568.0,0,Kho TRANG TÍN
-TRUC-G4010974,Trục Bánh Hạt Điều (G4010974),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4010974,750.0,524.0,0,Kho TRANG TÍN
-TRUC-G4010966,Trục Bánh Hạt Điều (G4010966),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4010966,750.0,498.0,0,Kho TRANG TÍN
-TRUC-G4010871,Trục Cuộn Bánh Hạt (G4010871),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4010871,750.0,500.0,0,Kho TRANG TÍN
-TRUC-G4010794,Trục Cuộn Kem Hương (G4010794),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4010794,750.0,440.0,0,Kho TRANG TÍN
-TRUC-Z418225,Trục Ngx Ko Tên (Z418225),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z418225,900.0,568.0,0,Kho TUỆ NHI
-TRUC-Z418262,Trục Ngx Ko Tên (Z418262),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z418262,900.0,568.0,0,Kho TUỆ NHI
-TRUC-Z418086,Trục Chả Ram Tôm (Z418086),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z418086,750.0,580.0,0,Kho VẠN PHÁT
-TRUC-G629036,Trục Cà Phê Lâm (G629036),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G629036,900.0,600.0,0,Kho VẠN PHÁT
-TRUC-G631656,Trục Viên Súp Hải (G631656),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G631656,900.0,600.0,0,Kho VẠN PHÁT
-TRUC-G631662,Trục Viên Súp Hải (G631662),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G631662,900.0,600.0,0,Kho VẠN PHÁT
-TRUC-G4005609,Trục Paris 1Kg (G4005609),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4005609,392.0,500.0,0,Kho VẠN PHÁT
-TRUC-SB02240264,Trục Chuối (SB02240264),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,SB02240264,670.0,470.0,0,Kho VẠN PHÁT
-TRUC-G626324,Trục Cuộn Cà Phê (G626324),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G626324,900.0,450.0,0,Kho VẠN PHÁT
-TRUC-G629613,Trục Cơm Chiên (G629613),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G629613,900.0,510.0,0,Kho VẠN PHÁT
-TRUC-Z416612,Trục Nước Cốt Hủ (Z416612),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z416612,750.0,480.0,0,Kho VẠN PHÁT
-TRUC-Z418465,Trục Aha 3Kg - (Z418465),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z418465,800.0,526.0,0,Kho VẠN PHÁT
-TRUC-Z433912,Trục Mì Quảng Khô (Z433912),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z433912,750.0,500.0,0,Kho VẠN PHÁT
-TRUC-G625648,Trục Cà Phê Muối (G625648),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G625648,800.0,550.0,0,Kho VẠN PHÁT
-TRUC-G631570,Trục Mồi Câu T5-Cá (G631570),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G631570,800.0,480.0,0,Kho VẠN PHÁT
-TRUC-Z433914,Trục Bánh Tráng Cuốn (Z433914),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z433914,700.0,520.0,0,Kho VẠN PHÁT
-TRUC-Z418580,Trục Hpro (Z418580),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z418580,900.0,546.0,0,Kho VẠN PHÁT
-TRUC-P96149,Trục Kem Apilo ( (P96149),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,P96149,650.0,440.0,0,Kho VẠN PHÁT
-TRUC-Z416634,Trục Nước Cốt Bò (Z416634),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,Z416634,750.0,480.0,0,Kho VẠN PHÁT
-TRUC-G628405,Trục Lyla Eats (G628405),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G628405,800.0,435.0,0,Kho VẠN PHÁT
-TRUC-G628206,Trục Màng Tiêu Đại (G628206),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G628206,800.0,500.0,0,Kho VẠN PHÁT
-TRUC-G4004063,Trục Không Tên 2L (G4004063),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4004063,850.0,486.0,0,Kho VẠN PHÁT
-TRUC-G4004064,Trục Không Tên 2L (G4004064),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4004064,850.0,486.0,0,Kho VẠN PHÁT
-TRUC-G4013050,Trục Nước Giặt Futa (G4013050),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4013050,900.0,544.0,0,Kho TRANG TÍN
-TRUC-G1005432,Trục Kem Hoa Vàng (G1005432),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G1005432,750.0,570.0,0,Kho TRANG TÍN
-TRUC-G4014585,Trục Chakari - Louis (G4014585),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G4014585,850.0,846.0,0,Kho TRANG TÍN
-TRUC-G628218,Trục Hạt Chia (G628218),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G628218,0,0,0,Kho TRANG TÍN
-TRUC-LUCKYSTAR,Trục Lucky Star,Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,Kho VẠN PHÁT
-TRUC-G3000042,Trục Thức Ăn Chó (G3000042),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G3000042,800.0,720.0,0,Kho VẠN PHÁT
-TRUC-E180920,Trục Thức Ăn Chó (E180920),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,E180920,860.0,486.0,0,Kho TRANG TÍN
-TRUC-G496512G8,Trục Cây Đàn (G496512G8),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,G496512G8,300.0,485.0,0,Kho TUỆ NHI
-TRUC-SUPERGEO,Trục Supergeo 5L,Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,TRUC-SUPERGEO,800,564,6,Kho Vạn Phát
-TRUC-BABA,Trục BABA 3.6Kg,Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,TRUC-BABA,800,564,8,Kho Vạn Phát
-TRUC-SOFIA2L,Trục Sửa Sofia 2L,Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,TRUC-SOFIA2L,750,484,2,Kho Vạn Phát
-NVL-00001,PE sữa K700 160mic,PE sữa,160,700,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00002,PE sữa K700 190mic,PE sữa,190,700,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00003,PE sữa K740 190mic,PE sữa,190,740,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00004,PE sữa K750 190mic,PE sữa,190,750,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00005,PE sữa K740 50mic,PE sữa,50,740,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00006,PA K700 15mic,PA,15,700,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00007,PA K740 15mic,PA,15,740,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00008,PA K760 15mic,PA,15,760,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00009,PA K800 15mic,PA,15,800,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00010,PA K380 15mic,PA,15,380,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00011,PET K560 12mic,PET,12,560,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00012,PET K610 12mic,PET,12,610,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00013,PET K700 12mic,PET,12,700,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00014,PET K740 12mic,PET,12,740,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00015,PET K800 12mic,PET,12,800,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00016,PET K790 190mic,PET,190,790,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00017,MPET K540 12mic,MPET,12,540,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00018,MPET K800 12mic,MPET,12,800,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00019,AL K560 6mic,AL,6,560,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00020,PE trong K720 70mic,PE trong,70,720,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00021,PE trong K660 75mic,PE trong,75,660,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00022,PE trong K700 150mic,PE trong,150,700,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00023,OPP K375 30mic,OPP,30,375,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00024,Màng Ngọc K800 40mic,Pearlescent BOPP,40,800,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00025,Keo D-9700,Polyurethane Adhesive,0,0,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00026,Chất Đóng Rắn CL-3192K,Curing Agent,0,0,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00027,Dung Môi Ethyl Acetate,Ethyl Acetate (EA),0,0,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00028,PET in 888 - Phấn Thơm,PET in,12,800,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00029,PET in 888 - Huyền Bí,PET in,12,800,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00030,PET in 888 - Đam Mê,PET in,12,800,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00031,PET in NGCS Đỏ - Tím,PET in,12,800,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00032,PET in NGCS Hồng - Xanh,PET in,12,800,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00033,PET in Minh Râu Tím,PET in,12,780,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00034,PET in TopGia 2L,PET in,12,750,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00035,PET in Softy 3L,PET in,12,800,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00036,PET in FUTA Xanh MT,PET in,12,900,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00037,PET in FUTA Xanh MS,PET in,12,900,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00038,PET in FUTA Tím MT,PET in,12,900,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00039,PET in FUTA Tím MS,PET in,12,900,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00045,PET in BABA,PET in,12,800,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00046,PET in Năm Tàu,PET in,12,800,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-00047,PET in TopGia 1L Đắm Say,PET in,12,750,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-BTP-00001,Cuộn 888 - Phấn Thơm,PET//PA/PE sữa,230,800,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-BTP-00002,Cuộn 888 - Huyền Bí,PET//PA/PE sữa,230,800,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-BTP-00003,Cuộn 888 - Đam Mê,PET//PA/PE sữa,230,800,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-BTP-00004,Cuộn NGCS Đỏ - Tím,PET//PA/PE sữa,230,800,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-BTP-00005,Cuộn NGCS Hồng - Xanh,PET//PA/PE sữa,230,800,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-BTP-00006,Cuộn Minh Râu Tím,PET//PA/PE sữa,230,780,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-BTP-00007,Cuộn TopGia 2L,PET/PA/PE,190,750,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-BTP-00008,Cuộn Softy 3L,PET/PA/PE sữa,230,800,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-BTP-00009,Cuộn FUTA Xanh MT,PET//PA/PE sữa,230,900,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-BTP-00010,Cuộn FUTA Xanh MS,PET//PA/PE sữa,230,900,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-BTP-00011,Cuộn FUTA Tím MT,PET//PA/PE sữa,230,900,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-BTP-00012,Cuộn FUTA Tím MS,PET//PA/PE sữa,230,900,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-BTP-00013,Cuộn màng đáy 3.2Kg,PET/PE sữa,150,180,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-BTP-00014,Cuộn BABA 3.6Kg,PET/MPET/PA/PE sữa,230,800,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-BTP-00015,Cuộn Năm Tàu,PET/PA/PE,200,800,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
-BTP-00016,Cuộn TopGia 1L Đắm Say,PET/PA/PE,190,750,0,0,0,0,In trục ống đồng,Hàn kín (Không phụ kiện),,,0,0,0,
+TRUC-G4010806,Trục Sachpoong 3.2Kg (G4010806),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4010806,800.0,564.0,0,Kho VẠN PHÁT
+TRUC-G4010805,Trục Sachpoong 0.6Kg (G4010805),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4010805,750.0,456.0,0,Kho VẠN PHÁT
+TRUC-G4010947,Trục Raptor Clean 0.6Kg (G4010947),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4010947,750.0,456.0,0,Kho VẠN PHÁT
+TRUC-G4011425,Trục Topgia Hoa Nắng (G4011425),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4011425,750.0,404.0,0,Kho KIẾN TÂM
+TRUC-G4011427,Trục Topgia Đắm Say (G4011427),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4011427,750.0,404.0,0,Kho KIẾN TÂM
+TRUC-G4011409,Trục Trần Quân 2Kg (G4011409),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4011409,750.0,484.0,0,Kho VẠN PHÁT
+TRUC-G4011542,Trục Dpclean 0.6Kg (G4011542),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4011542,750.0,456.0,0,Kho VẠN PHÁT
+TRUC-G4006940,Trục 888 3.2Kg Hương (G4006940),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4006940,800.0,564.0,0,Kho KIẾN TÂM
+TRUC-G4006961,Trục 888 3.2Kg Hương (G4006961),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4006961,800.0,564.0,0,Kho KIẾN TÂM
+TRUC-G4006960,Trục 888 3.2Kg Hương (G4006960),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4006960,800.0,564.0,0,Kho VẠN PHÁT
+TRUC-G4012179,Trục Bluum 3Kg Đen (G4012179),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4012179,800.0,564.0,0,Kho VẠN PHÁT
+TRUC-G4012417,Trục 888 0.6Kg (G4012417),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4012417,750.0,456.0,0,Kho VẠN PHÁT
+TRUC-G4012418,Trục 888 0.6Kg (G4012418),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4012418,750.0,456.0,0,Kho VẠN PHÁT
+TRUC-G4012676,Trục Không Tên (G4012676),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4012676,800.0,564.0,0,Kho TUỆ NHI
+TRUC-G4005887,Trục Minh Râu 3.2Kg (G4005887),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4005887,780.0,564.0,0,Kho KIẾN TÂM
+TRUC-G4005883,Trục Minh Râu 3.2Kg (G4005883),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4005883,780.0,564.0,0,Kho KIẾN TÂM
+TRUC-G4012178,Trục Bluum 3Kg Xanh (G4012178),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4012178,800.0,564.0,0,Kho VẠN PHÁT
+TRUC-Z437761,Trục Yaourt Hoa Hồng (Z437761),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z437761,435.0,350.0,0,Kho VẠN PHÁT
+TRUC-G4005877,Trục 888 0.6Kg - (G4005877),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4005877,750.0,456.0,0,Kho VẠN PHÁT
+TRUC-G4006655,Trục 888 0.6Kg - (G4006655),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4006655,750.0,456.0,0,Kho VẠN PHÁT
+TRUC-G4006660,Trục 888 0.6Kg - (G4006660),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4006660,750.0,456.0,0,Kho VẠN PHÁT
+TRUC-G4005897,Trục 888 2Kg - (G4005897),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4005897,750.0,484.0,0,Kho VẠN PHÁT
+TRUC-G4005893,Trục 888 2Kg - (G4005893),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4005893,750.0,484.0,0,Kho VẠN PHÁT
+TRUC-G4006677,Trục 888 2Kg - (G4006677),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4006677,750.0,484.0,0,Kho VẠN PHÁT
+TRUC-G4006905,Trục Premium 3.2Kg Tím (G4006905),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4006905,800.0,564.0,0,Kho KIẾN TÂM
+TRUC-G4006924,Trục Premium 3.2Kg Đỏ (G4006924),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4006924,800.0,564.0,0,Kho VẠN PHÁT
+TRUC-Z417582,Trục Masa (Z417582),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z417582,900.0,568.0,0,Kho VẠN PHÁT
+TRUC-G631383,Trục Yumi Care 3.6L (G631383),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G631383,900.0,568.0,0,Kho VẠN PHÁT
+TRUC-G4002697,Trục Sofia 3Kg Xanh (G4002697),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4002697,850.0,526.0,0,Kho VẠN PHÁT
+TRUC-Z418556,Trục Clean (Cleanz) 3.6L (Z418556),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z418556,900.0,568.0,0,Kho VẠN PHÁT
+TRUC-G630657,Trục Clean (Cleanz) 2L (G630657),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G630657,800.0,466.0,0,Kho VẠN PHÁT
+TRUC-G628929,Trục Mè Vỏ Minh (G628929),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G628929,800.0,440.0,0,Kho VẠN PHÁT
+TRUC-G631044,Trục Cà Phê Bảo (G631044),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G631044,800.0,550.0,0,Kho VẠN PHÁT
+TRUC-G630788,Trục Cà Phê Việt (G630788),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G630788,800.0,468.0,0,Kho VẠN PHÁT
+TRUC-G628231,Trục Thức Ăn Cho (G628231),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G628231,800.0,480.0,0,Kho VẠN PHÁT
+TRUC-G628230,Trục Thức Ăn Cho (G628230),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G628230,800.0,480.0,0,Kho VẠN PHÁT
+TRUC-G627954,Trục Muối Tôm Muối (G627954),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G627954,800.0,460.0,0,Kho VẠN PHÁT
+TRUC-G630103,Trục Hạt Hướng Dương (G630103),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G630103,800.0,540.0,0,Kho VẠN PHÁT
+TRUC-G630102,Trục Hạt Hướng Dương (G630102),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G630102,800.0,540.0,0,Kho VẠN PHÁT
+TRUC-G628207,Trục Đựng Tiêu 50G (G628207),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G628207,800.0,480.0,0,Kho VẠN PHÁT
+TRUC-Z417825,Trục Sữa Nutri (Z417825),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z417825,800.0,510.0,0,Kho VẠN PHÁT
+TRUC-G630368,Trục Bột Lá Tía (G630368),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G630368,800.0,500.0,0,Kho VẠN PHÁT
+TRUC-G628866,Trục Cơm Cháy Tường (G628866),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G628866,800.0,520.0,0,Kho VẠN PHÁT
+TRUC-G630100,Trục Hạt Dưa Sạch (G630100),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G630100,800.0,510.0,0,Kho VẠN PHÁT
+TRUC-G630101,Trục Hạt Dưa Sạch (G630101),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G630101,800.0,510.0,0,Kho VẠN PHÁT
+TRUC-G630755,Trục Hạt Dưa Sạch (G630755),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G630755,800.0,540.0,0,Kho VẠN PHÁT
+TRUC-G630756,Trục Hạt Dưa Sạch (G630756),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G630756,800.0,640.0,0,Kho VẠN PHÁT
+TRUC-G630758,Trục Hướng Dương Sạch (G630758),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G630758,800.0,420.0,0,Kho VẠN PHÁT
+TRUC-G630757,Trục Hướng Dương Sạch (G630757),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G630757,800.0,420.0,0,Kho VẠN PHÁT
+TRUC-G629977,Trục Cơm Cháy Chà (G629977),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G629977,800.0,500.0,0,Kho VẠN PHÁT
+TRUC-G631221,Trục Bánh Wawel (G631221),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G631221,800.0,440.0,0,Kho VẠN PHÁT
+TRUC-G630072,Trục Bột Minh Châu (G630072),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G630072,900.0,420.0,0,Kho VẠN PHÁT
+TRUC-G631016,Trục Bánh Solidarnosc (G631016),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G631016,800.0,480.0,0,Kho VẠN PHÁT
+TRUC-G627906,Trục Sữa Đậu Nành (G627906),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G627906,900.0,440.0,0,Kho VẠN PHÁT
+TRUC-G631015,Trục Bánh Feodora (G631015),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G631015,900.0,540.0,0,Kho VẠN PHÁT
+TRUC-Z416438,Trục Ốc Cooked Whole (Z416438),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z416438,750.0,474.0,0,Kho VẠN PHÁT
+TRUC-Z416476,Trục Sốt Gia Vị (Z416476),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z416476,750.0,480.0,0,Kho VẠN PHÁT
+TRUC-Z433654,Trục Da Cá Sấy (Z433654),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z433654,720.0,546.0,0,Kho VẠN PHÁT
+TRUC-Z416475,Trục Sốt Gia Vị (Z416475),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z416475,750.0,480.0,0,Kho VẠN PHÁT
+TRUC-Z434004,"Trục Màng "" Nước (Z434004)",Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z434004,700.0,510.0,0,Kho VẠN PHÁT
+TRUC-Z434003,"Trục Màng "" Nước (Z434003)",Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z434003,700.0,510.0,0,Kho VẠN PHÁT
+TRUC-Z416685,"Trục Sò Điệp ""Whole (Z416685)",Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z416685,750.0,540.0,0,Kho VẠN PHÁT
+TRUC-Z435796,Trục Chả Cá Chiên (Z435796),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z435796,700.0,424.0,0,Kho VẠN PHÁT
+TRUC-Z416686,"Trục Ốc "" Bulot (Z416686)",Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z416686,750.0,540.0,0,Kho VẠN PHÁT
+TRUC-Z436110,Trục Bột Phô Mai (Z436110),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z436110,650.0,620.0,0,Kho VẠN PHÁT
+TRUC-Z434196,Trục Kem Hoa Vàng (Z434196),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z434196,650.0,570.0,0,Kho VẠN PHÁT
+TRUC-Z435698,Trục Kem Hoa Vàng (Z435698),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z435698,650.0,570.0,0,Kho TRANG TÍN
+TRUC-Z439843,Trục Kem Hoa Vàng (Z439843),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z439843,650.0,570.0,0,Kho VẠN PHÁT
+TRUC-Z437016,Trục Hạt Sáp Wax (Z437016),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z437016,700.0,488.0,0,Kho VẠN PHÁT
+TRUC-WAX500G,Trục Hạt Sáp Wax,Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,,700.0,546.0,0,Kho VẠN PHÁT
+TRUC-G614772,Trục Nem Hoàng Tú (G614772),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G614772,805.0,575.0,0,Kho VẠN PHÁT
+TRUC-G612128,Trục Chả Lụa Hoàng (G612128),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G612128,750.0,525.0,0,Kho VẠN PHÁT
+TRUC-Z433493,Trục Chả Lụa Hoàng (Z433493),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z433493,650.0,501.0,0,Kho VẠN PHÁT
+TRUC-Z416845,Trục Hạt Điều Cashew (Z416845),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z416845,800.0,444.0,0,Kho VẠN PHÁT
+TRUC-G125806G2,Trục Phân Bón Guller (G125806G2),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G125806G2,1060.0,420.0,0,Kho VẠN PHÁT
+TRUC-G612508,Trục Nem Hoàng Tú (G612508),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G612508,805.0,575.0,0,Kho VẠN PHÁT
+TRUC-Z417577,Trục Mồi Câu T5-Mồi (Z417577),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z417577,750.0,440.0,0,Kho VẠN PHÁT
+TRUC-Z418260,Trục Dinh Dưỡng Ăn (Z418260),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z418260,800.0,420.0,0,Kho VẠN PHÁT
+TRUC-Z418425,Trục Kem Hương Vị (Z418425),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z418425,750.0,440.0,0,Kho VẠN PHÁT
+TRUC-Z435082,Trục Kem Hoa Vàng (Z435082),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z435082,650.0,570.0,0,Kho VẠN PHÁT
+TRUC-G652829,Trục Hạt Đậu Dinh (G652829),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G652829,650.0,480.0,0,Kho VẠN PHÁT
+TRUC-G493102,Trục Bột Ớt 500G (G493102),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G493102,700.0,570.0,0,Kho VẠN PHÁT
+TRUC-Z437240,Trục Cà Phê Nấm (Z437240),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z437240,700.0,450.0,0,Kho VẠN PHÁT
+TRUC-Z433450,Trục Màng Bột Ngọt (Z433450),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z433450,700.0,430.0,0,Kho VẠN PHÁT
+TRUC-Z433451,Trục Màng Bột Ngọt (Z433451),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z433451,650.0,435.0,0,Kho VẠN PHÁT
+TRUC-Z433306,Trục Thiết Bị Nhựa (Z433306),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z433306,650.0,448.0,0,Kho VẠN PHÁT
+TRUC-Z433449,Trục Màng Bột Ngọt (Z433449),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z433449,650.0,500.0,0,Kho VẠN PHÁT
+TRUC-Z416639,Trục Bánh Mì Sanwich (Z416639),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z416639,1050.0,490.0,0,Kho VẠN PHÁT
+TRUC-G4006649,Trục Passion 3.2Kg Hương (G4006649),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4006649,800.0,564.0,0,Kho KIẾN TÂM
+TRUC-G4006653,Trục Passion 3.2Kg Hương (G4006653),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4006653,800.0,564.0,0,Kho KIẾN TÂM
+TRUC-G4012674,Trục Bọc Thực Phẩm (G4012674),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4012674,750.0,730.0,0,Kho KIẾN TÂM
+TRUC-S515739,Trục Xốt Phô Mai (S515739),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,S515739,750.0,456.0,0,Kho KIẾN TÂM
+TRUC-G4014162,Trục Nui Thiên Long (G4014162),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4014162,800.0,520.0,0,Kho TRANG TÍN
+TRUC-G630618,Trục Cồi Sò Điệp (G630618),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G630618,800.0,460.0,0,Kho TRANG TÍN
+TRUC-KEM-DUANON,Trục MàNg Kem Hoa,Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,,650.0,570.0,0,Kho TRANG TÍN
+TRUC-G4014589,Trục Hồng Loan 2.5L (G4014589),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4014589,850.0,504.0,0,Kho VẠN PHÁT
+TRUC-G4015277,Trục Topgia Huyền Diệu (G4015277),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4015277,820.0,464.0,0,Kho VẠN PHÁT
+TRUC-G4015340,Trục Topgia Đắm Say (G4015340),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4015340,750.0,404.0,0,Kho KIẾN TÂM
+TRUC-G4016016,Trục The Good Wife (G4016016),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4016016,750.0,564.0,0,Kho KIẾN TÂM
+TRUC-G4016051,Trục Cô Út 3.2Kg (G4016051),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4016051,750.0,564.0,0,Kho KIẾN TÂM
+TRUC-G4007070,Trục Premium Gold 3L (G4007070),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4007070,900.0,568.0,0,Kho TRANG TÍN
+TRUC-G4016395,Trục Mẹ Chọn 3.2Kg (G4016395),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4016395,640.0,540.0,0,Kho KIẾN TÂM
+TRUC-G4016394,Trục Mẹ Chọn 3.2Kg (G4016394),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4016394,820.0,564.0,0,Kho KIẾN TÂM
+TRUC-G4016428,Trục Hồ Tiêu Nhật (G4016428),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4016428,820.0,564.0,0,Kho KIẾN TÂM
+TRUC-G4006662,Trục Mimo 1L - (G4006662),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4006662,750.0,588.0,0,Kho VẠN PHÁT
+TRUC-G4010678,Trục Good Care 3.2Kg (G4010678),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4010678,750.0,564.0,0,Kho VẠN PHÁT
+TRUC-G4044368,Trục Aha 3Kg - (G4044368),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4044368,900.0,526.0,0,Kho TRANG TÍN
+TRUC-G4005957,Trục Xốt Ướp Nướng (G4005957),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4005957,750.0,475.0,0,Kho VẠN PHÁT
+TRUC-G4005954,Trục Xốt Ướp Nướng (G4005954),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4005954,750.0,475.0,0,Kho TRANG TÍN
+TRUC-G4005956,Trục Xốt Ướp Nướng (G4005956),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4005956,750.0,475.0,0,Kho VẠN PHÁT
+TRUC-G4005955,Trục Xốt Kho Thịt (G4005955),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4005955,750.0,475.0,0,Kho TRANG TÍN
+TRUC-G4005953,Trục Xốt Kho Cá (G4005953),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4005953,750.0,475.0,0,Kho TRANG TÍN
+TRUC-G4005948,Trục Gia Vị Phở (G4005948),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4005948,750.0,400.0,0,Kho VẠN PHÁT
+TRUC-G4005949,Trục Gia Vị Bò (G4005949),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4005949,750.0,400.0,0,Kho VẠN PHÁT
+TRUC-G4005950,Trục Gia Vị Bún (G4005950),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4005950,750.0,400.0,0,Kho VẠN PHÁT
+TRUC-G4005960,Trục Gia Vị Lẩu (G4005960),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4005960,880.0,480.0,0,Kho TRANG TÍN
+TRUC-G4005959,Trục Gia Vị Lẩu (G4005959),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4005959,880.0,480.0,0,Kho VẠN PHÁT
+TRUC-G4005958,Trục Gia Vị Lẩu (G4005958),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4005958,880.0,480.0,0,Kho VẠN PHÁT
+TRUC-G4012180,Trục Hạt Nêm Nền (G4012180),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4012180,750.0,568.0,0,Kho TRANG TÍN
+TRUC-G4010974,Trục Bánh Hạt Điều (G4010974),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4010974,750.0,524.0,0,Kho TRANG TÍN
+TRUC-G4010966,Trục Bánh Hạt Điều (G4010966),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4010966,750.0,498.0,0,Kho TRANG TÍN
+TRUC-G4010871,Trục Cuộn Bánh Hạt (G4010871),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4010871,750.0,500.0,0,Kho TRANG TÍN
+TRUC-G4010794,Trục Cuộn Kem Hương (G4010794),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4010794,750.0,440.0,0,Kho TRANG TÍN
+TRUC-Z418225,Trục Ngx Ko Tên (Z418225),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z418225,900.0,568.0,0,Kho TUỆ NHI
+TRUC-Z418262,Trục Ngx Ko Tên (Z418262),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z418262,900.0,568.0,0,Kho TUỆ NHI
+TRUC-Z418086,Trục Chả Ram Tôm (Z418086),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z418086,750.0,580.0,0,Kho VẠN PHÁT
+TRUC-G629036,Trục Cà Phê Lâm (G629036),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G629036,900.0,600.0,0,Kho VẠN PHÁT
+TRUC-G631656,Trục Viên Súp Hải (G631656),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G631656,900.0,600.0,0,Kho VẠN PHÁT
+TRUC-G631662,Trục Viên Súp Hải (G631662),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G631662,900.0,600.0,0,Kho VẠN PHÁT
+TRUC-G4005609,Trục Paris 1Kg (G4005609),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4005609,392.0,500.0,0,Kho VẠN PHÁT
+TRUC-SB02240264,Trục Chuối (SB02240264),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,SB02240264,670.0,470.0,0,Kho VẠN PHÁT
+TRUC-G626324,Trục Cuộn Cà Phê (G626324),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G626324,900.0,450.0,0,Kho VẠN PHÁT
+TRUC-G629613,Trục Cơm Chiên (G629613),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G629613,900.0,510.0,0,Kho VẠN PHÁT
+TRUC-Z416612,Trục Nước Cốt Hủ (Z416612),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z416612,750.0,480.0,0,Kho VẠN PHÁT
+TRUC-Z418465,Trục Aha 3Kg - (Z418465),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z418465,800.0,526.0,0,Kho VẠN PHÁT
+TRUC-Z433912,Trục Mì Quảng Khô (Z433912),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z433912,750.0,500.0,0,Kho VẠN PHÁT
+TRUC-G625648,Trục Cà Phê Muối (G625648),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G625648,800.0,550.0,0,Kho VẠN PHÁT
+TRUC-G631570,Trục Mồi Câu T5-Cá (G631570),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G631570,800.0,480.0,0,Kho VẠN PHÁT
+TRUC-Z433914,Trục Bánh Tráng Cuốn (Z433914),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z433914,700.0,520.0,0,Kho VẠN PHÁT
+TRUC-Z418580,Trục Hpro (Z418580),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z418580,900.0,546.0,0,Kho VẠN PHÁT
+TRUC-P96149,Trục Kem Apilo ( (P96149),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,P96149,650.0,440.0,0,Kho VẠN PHÁT
+TRUC-Z416634,Trục Nước Cốt Bò (Z416634),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,Z416634,750.0,480.0,0,Kho VẠN PHÁT
+TRUC-G628405,Trục Lyla Eats (G628405),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G628405,800.0,435.0,0,Kho VẠN PHÁT
+TRUC-G628206,Trục Màng Tiêu Đại (G628206),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G628206,800.0,500.0,0,Kho VẠN PHÁT
+TRUC-G4004063,Trục Không Tên 2L (G4004063),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4004063,850.0,486.0,0,Kho VẠN PHÁT
+TRUC-G4004064,Trục Không Tên 2L (G4004064),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4004064,850.0,486.0,0,Kho VẠN PHÁT
+TRUC-G4013050,Trục Nước Giặt Futa (G4013050),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4013050,900.0,544.0,0,Kho TRANG TÍN
+TRUC-G1005432,Trục Kem Hoa Vàng (G1005432),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G1005432,750.0,570.0,0,Kho TRANG TÍN
+TRUC-G4014585,Trục Chakari - Louis (G4014585),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G4014585,850.0,846.0,0,Kho TRANG TÍN
+TRUC-G628218,Trục Hạt Chia (G628218),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G628218,0,0,0,Kho TRANG TÍN
+TRUC-LUCKYSTAR,Trục Lucky Star,Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,,0,0,0,Kho VẠN PHÁT
+TRUC-G3000042,Trục Thức Ăn Chó (G3000042),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G3000042,800.0,720.0,0,Kho VẠN PHÁT
+TRUC-E180920,Trục Thức Ăn Chó (E180920),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,E180920,860.0,486.0,0,Kho TRANG TÍN
+TRUC-G496512G8,Trục Cây Đàn (G496512G8),Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,G496512G8,300.0,485.0,0,Kho TUỆ NHI
+TRUC-SUPERGEO,Trục Supergeo 5L,Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,TRUC-SUPERGEO,800,564,6,Kho Vạn Phát
+TRUC-BABA,Trục BABA 3.6Kg,Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,TRUC-BABA,800,564,8,Kho Vạn Phát
+TRUC-SOFIA2L,Trục Sửa Sofia 2L,Thép mạ đồng crom,0,0,0,0,0,0,In trục ống đồng,,,TRUC-SOFIA2L,750,484,2,Kho Vạn Phát
+NVL-00001,PE sữa K700 160mic,PE sữa,160,700,0,0,0,0,Không in,,,,0,0,0,
+NVL-00002,PE sữa K700 190mic,PE sữa,190,700,0,0,0,0,Không in,,,,0,0,0,
+NVL-00003,PE sữa K740 190mic,PE sữa,190,740,0,0,0,0,Không in,,,,0,0,0,
+NVL-00004,PE sữa K750 190mic,PE sữa,190,750,0,0,0,0,Không in,,,,0,0,0,
+NVL-00005,PE sữa K740 50mic,PE sữa,50,740,0,0,0,0,Không in,,,,0,0,0,
+NVL-00006,PA K700 15mic,PA,15,700,0,0,0,0,Không in,,,,0,0,0,
+NVL-00007,PA K740 15mic,PA,15,740,0,0,0,0,Không in,,,,0,0,0,
+NVL-00008,PA K760 15mic,PA,15,760,0,0,0,0,Không in,,,,0,0,0,
+NVL-00009,PA K800 15mic,PA,15,800,0,0,0,0,Không in,,,,0,0,0,
+NVL-00010,PA K380 15mic,PA,15,380,0,0,0,0,Không in,,,,0,0,0,
+NVL-00011,PET K560 12mic,PET,12,560,0,0,0,0,Không in,,,,0,0,0,
+NVL-00012,PET K610 12mic,PET,12,610,0,0,0,0,Không in,,,,0,0,0,
+NVL-00013,PET K700 12mic,PET,12,700,0,0,0,0,Không in,,,,0,0,0,
+NVL-00014,PET K740 12mic,PET,12,740,0,0,0,0,Không in,,,,0,0,0,
+NVL-00015,PET K800 12mic,PET,12,800,0,0,0,0,Không in,,,,0,0,0,
+NVL-00016,PET K790 190mic,PET,190,790,0,0,0,0,Không in,,,,0,0,0,
+NVL-00017,MPET K540 12mic,MPET,12,540,0,0,0,0,Không in,,,,0,0,0,
+NVL-00018,MPET K800 12mic,MPET,12,800,0,0,0,0,Không in,,,,0,0,0,
+NVL-00019,AL K560 6mic,AL,6,560,0,0,0,0,Không in,,,,0,0,0,
+NVL-00020,PE trong K720 70mic,PE trong,70,720,0,0,0,0,Không in,,,,0,0,0,
+NVL-00021,PE trong K660 75mic,PE trong,75,660,0,0,0,0,Không in,,,,0,0,0,
+NVL-00022,PE trong K700 150mic,PE trong,150,700,0,0,0,0,Không in,,,,0,0,0,
+NVL-00023,OPP K375 30mic,OPP,30,375,0,0,0,0,Không in,,,,0,0,0,
+NVL-00024,Màng Ngọc K800 40mic,Pearlescent BOPP,40,800,0,0,0,0,Không in,,,,0,0,0,
+NVL-00025,Keo D-9700,Polyurethane Adhesive,0,0,0,0,0,0,Không in,,,,0,0,0,
+NVL-00026,Chất Đóng Rắn CL-3192K,Curing Agent,0,0,0,0,0,0,Không in,,,,0,0,0,
+NVL-00027,Dung Môi Ethyl Acetate,Ethyl Acetate (EA),0,0,0,0,0,0,Không in,,,,0,0,0,
+NVL-00028,PET in 888 - Phấn Thơm,PET in,12,800,0,0,0,0,In trục ống đồng,,,,0,0,0,
+NVL-00029,PET in 888 - Huyền Bí,PET in,12,800,0,0,0,0,In trục ống đồng,,,,0,0,0,
+NVL-00030,PET in 888 - Đam Mê,PET in,12,800,0,0,0,0,In trục ống đồng,,,,0,0,0,
+NVL-00031,PET in NGCS Đỏ - Tím,PET in,12,800,0,0,0,0,In trục ống đồng,,,,0,0,0,
+NVL-00032,PET in NGCS Hồng - Xanh,PET in,12,800,0,0,0,0,In trục ống đồng,,,,0,0,0,
+NVL-00033,PET in Minh Râu Tím,PET in,12,780,0,0,0,0,In trục ống đồng,,,,0,0,0,
+NVL-00034,PET in TopGia 2L,PET in,12,750,0,0,0,0,In trục ống đồng,,,,0,0,0,
+NVL-00035,PET in Softy 3L,PET in,12,800,0,0,0,0,In trục ống đồng,,,,0,0,0,
+NVL-00036,PET in FUTA Xanh MT,PET in,12,900,0,0,0,0,In trục ống đồng,,,,0,0,0,
+NVL-00037,PET in FUTA Xanh MS,PET in,12,900,0,0,0,0,In trục ống đồng,,,,0,0,0,
+NVL-00038,PET in FUTA Tím MT,PET in,12,900,0,0,0,0,In trục ống đồng,,,,0,0,0,
+NVL-00039,PET in FUTA Tím MS,PET in,12,900,0,0,0,0,In trục ống đồng,,,,0,0,0,
+NVL-00045,PET in BABA,PET in,12,800,0,0,0,0,In trục ống đồng,,,,0,0,0,
+NVL-00046,PET in Năm Tàu,PET in,12,800,0,0,0,0,In trục ống đồng,,,,0,0,0,
+NVL-00047,PET in TopGia 1L Đắm Say,PET in,12,750,0,0,0,0,In trục ống đồng,,,,0,0,0,
+BTP-00001,Cuộn 888 - Phấn Thơm,PET//PA/PE sữa,230,800,0,0,0,0,In trục ống đồng,,,,0,0,0,
+BTP-00002,Cuộn 888 - Huyền Bí,PET//PA/PE sữa,230,800,0,0,0,0,In trục ống đồng,,,,0,0,0,
+BTP-00003,Cuộn 888 - Đam Mê,PET//PA/PE sữa,230,800,0,0,0,0,In trục ống đồng,,,,0,0,0,
+BTP-00004,Cuộn NGCS Đỏ - Tím,PET//PA/PE sữa,230,800,0,0,0,0,In trục ống đồng,,,,0,0,0,
+BTP-00005,Cuộn NGCS Hồng - Xanh,PET//PA/PE sữa,230,800,0,0,0,0,In trục ống đồng,,,,0,0,0,
+BTP-00006,Cuộn Minh Râu Tím,PET//PA/PE sữa,230,780,0,0,0,0,In trục ống đồng,,,,0,0,0,
+BTP-00007,Cuộn TopGia 2L,PET/PA/PE,190,750,0,0,0,0,In trục ống đồng,,,,0,0,0,
+BTP-00008,Cuộn Softy 3L,PET/PA/PE sữa,230,800,0,0,0,0,In trục ống đồng,,,,0,0,0,
+BTP-00009,Cuộn FUTA Xanh MT,PET//PA/PE sữa,230,900,0,0,0,0,In trục ống đồng,,,,0,0,0,
+BTP-00010,Cuộn FUTA Xanh MS,PET//PA/PE sữa,230,900,0,0,0,0,In trục ống đồng,,,,0,0,0,
+BTP-00011,Cuộn FUTA Tím MT,PET//PA/PE sữa,230,900,0,0,0,0,In trục ống đồng,,,,0,0,0,
+BTP-00012,Cuộn FUTA Tím MS,PET//PA/PE sữa,230,900,0,0,0,0,In trục ống đồng,,,,0,0,0,
+BTP-00013,Cuộn màng đáy 3.2Kg,PET/PE sữa,150,180,0,0,0,0,In trục ống đồng,,,,0,0,0,
+BTP-00014,Cuộn BABA 3.6Kg,PET/MPET/PA/PE sữa,230,800,0,0,0,0,In trục ống đồng,,,,0,0,0,
+BTP-00015,Cuộn Năm Tàu,PET/PA/PE,200,800,0,0,0,0,In trục ống đồng,,,,0,0,0,
+BTP-00016,Cuộn TopGia 1L Đắm Say,PET/PA/PE,190,750,0,0,0,0,In trục ống đồng,,,,0,0,0,
 NVL-00040,Vòi 16mm,Nhựa PP/PE hoặc Carton,0,0,0,0,0,0,Không in,Vòi 16mm,,,0,0,0,
 NVL-00041,Vòi 10mm,Nhựa PP/PE hoặc Carton,0,0,0,0,0,0,Không in,Vòi 10mm,,,0,0,0,
 NVL-00043,Dây Zipper,Nhựa PP/PE hoặc Carton,0,0,0,0,0,0,Không in,Khóa Zipper,,,0,0,0,
-NVL-00044,Thùng carton đựng túi,Nhựa PP/PE hoặc Carton,0,0,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-P01,Phế liệu PE sữa,,0,0,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
-NVL-P02,Phế liệu màng ghép,,0,0,0,0,0,0,Không in,Hàn kín (Không phụ kiện),,,0,0,0,
+NVL-00044,Thùng carton đựng túi,Nhựa PP/PE hoặc Carton,0,0,0,0,0,0,Không in,,,,0,0,0,
+NVL-P01,Phế liệu PE sữa,,0,0,0,0,0,0,Không in,,,,0,0,0,
+NVL-P02,Phế liệu màng ghép,,0,0,0,0,0,0,Không in,,,,0,0,0,

@@ -135,8 +135,8 @@
     "fieldname": "custom_accessory_spec",
     "label": "Phụ Kiện Miệng Túi",
     "fieldtype": "Select",
-    "options": "Hàn kín (Không phụ kiện)\nVòi 16mm\nVòi 10mm\nKhóa Zipper",
-    "description": "Phụ kiện hàn miệng túi (Vòi, Zipper hoặc Hàn kín)",
+    "options": "Không\nVòi 16mm\nVòi 10mm\nKhóa Zipper",
+    "description": "Phụ kiện miệng túi: Vòi 16mm, Vòi 10mm, Khóa Zipper (để trống hoặc Không nếu không gắn phụ kiện)",
     "insert_after": "custom_print_tech"
   },
   {

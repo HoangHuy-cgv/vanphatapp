@@ -64,7 +64,7 @@ def add_item(code, name, group, uom, brand="", desc="", req_type="Manufacture",
         "custom_gusset_mm": 0,
         "custom_cut_length_mm": 0,
         "custom_print_tech": "Không in",
-        "custom_accessory_spec": "Hàn kín (Không phụ kiện)",
+        "custom_accessory_spec": "",
         "custom_cylinder_item": "",
         "custom_cylinder_code": "",
         "custom_cylinder_length_mm": 0,
@@ -148,7 +148,7 @@ for code, name, w, l, thick, layers, desc, gusset, rate in tmd_items:
             "custom_gusset_mm": gusset,
             "custom_cut_length_mm": l,
             "custom_print_tech": "In lụa",
-            "custom_accessory_spec": "Hàn kín (Không phụ kiện)"
+            "custom_accessory_spec": ""
         }
     )
 
@@ -175,7 +175,7 @@ custom_pouches = [
     ("TP-00016", "BABA 3.6Kg", "BABA", "CÔNG TY TNHH MTV SX TM XNK ANH PHÁT", "BABA-3.6KG", "3.6Kg", 280, 380, 230, "PET/MPET/PA/PE sữa", "TRUC-BABA", "Kho Vạn Phát", 800, 564, 8, "Vòi 16mm", "In trục ống đồng", 6759.0, "Manufacture"),
     ("TP-00017", "Supergeo 5L", "Supergeo", "CÔNG TY TNHH CÔNG NGHỆ VẬT LIỆU TIÊN PHONG VIETCOAT", "SUPERGEO-5L", "5L", 320, 340, 240, "PET/PA/PA/PE sữa", "TRUC-SUPERGEO", "Kho Vạn Phát", 800, 564, 6, "Vòi 16mm", "In trục ống đồng", 9685.0, "Manufacture"),
     ("TP-00018", "Xốt Pho Mai KOVAA 200g", "KOVAA", "CÔNG TY TNHH SX THƯƠNG MẠI BAO BÌ KOVAA", "KOVAA-200G", "200g", 150, 220, 150, "PET/PA/PES", "", "", "", "", "", "Vòi 10mm", "In trục ống đồng", 1944.0, "Manufacture"),
-    ("TP-00019", "TopGia MBTP", "TopGia", "CÔNG TY TNHH PHONG TÍN", "TOPGIA-MBTP", "Tiêu chuẩn", 200, 300, 80, "PET/PE", "", "", "", "", "", "Hàn kín (Không phụ kiện)", "In trục ống đồng", 1780.0, "Purchase"),
+    ("TP-00019", "TopGia MBTP", "TopGia", "CÔNG TY TNHH PHONG TÍN", "TOPGIA-MBTP", "Tiêu chuẩn", 200, 300, 80, "PET/PE", "", "", "", "", "", "", "In trục ống đồng", 1780.0, "Purchase"),
     ("TP-00020", "TopGia 1L Hoa Nắng", "TopGia", "CÔNG TY TNHH PHONG TÍN", "TOPGIA-1L-HN", "1L", 180, 250, 190, "PET/PA/PE", "G4011425", "Kho Kiến Tâm", 750, 404, 6, "Vòi 16mm", "In trục ống đồng", 2852.0, "Manufacture"),
     ("TP-00021", "TopGia 1L Đắm Say", "TopGia", "CÔNG TY TNHH PHONG TÍN", "TOPGIA-1L-DS", "1L", 180, 250, 190, "PET/PA/PE", "G4011427", "Kho Kiến Tâm", 750, 404, 6, "Vòi 16mm", "In trục ống đồng", 2852.0, "Manufacture"),
     ("TP-00022", "Softy 3L Tím", "Softy", "CTY TNHH SX - XNK AMYCO", "SOFTY-3L-TIM", "3L", 280, 340, 230, "PET/PA/PE sữa", "", "", "", "", "", "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture"),
@@ -196,7 +196,7 @@ custom_pouches = [
     ("TP-00037", "Chakari Louis 3.2Kg", "Chakari", "Khách hàng Chakari", "CHAKARI-3.2KG", "3.2Kg", 280, 340, 230, "PET//PA/PE sữa", "G4014585", "Kho Trang Tín", 850, 846, 7, "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture"),
     # CÁC MÃ BỔ SUNG MỚI TỪ ĐƠN CỌC CHƯA GIAO
     ("TP-00038", "Chloe'ly 2L", "Chloe'ly", "CÔNG TY TNHH SẢN XUẤT - XUẤT NHẬP KHẨU AMYCO", "CHLOELY-2L", "2L", 240, 300, 210, "PET/MPET/PA/PE sữa", "", "", "", "", "", "Vòi 16mm", "In trục ống đồng", 5074.0, "Manufacture"),
-    ("TP-00039", "SKX Đậu Nành 16x23.5", "SKX", "CÔNG TY CỔ PHẦN DINH DƯỠNG SKX", "SKX-DAUNANH", "500g", 160, 235, 160, "OPPMalt/PE", "G652829", "Kho Vạn Phát", 650, 470, 4, "Hàn kín (Không phụ kiện)", "In trục ống đồng", 1290.0, "Manufacture"),
+    ("TP-00039", "SKX Đậu Nành 16x23.5", "SKX", "CÔNG TY CỔ PHẦN DINH DƯỠNG SKX", "SKX-DAUNANH", "500g", 160, 235, 160, "OPPMalt/PE", "G652829", "Kho Vạn Phát", 650, 470, 4, "", "In trục ống đồng", 1290.0, "Manufacture"),
     ("TP-00040", "Enzy Hạt Nêm 900g", "Enzy", "CÔNG TY TNHH ENZY FOOD", "ENZY-900G", "900g", 250, 300, 150, "PET/AL/PE", "G4012180", "Kho Vạn Phát", 750, 500, 6, "Khóa Zipper", "In trục ống đồng", 3963.0, "Manufacture"),
     ("TP-00041", "Enzy Hạt Nêm 450g", "Enzy", "CÔNG TY TNHH ENZY FOOD", "ENZY-450G", "450g", 200, 260, 140, "PET/AL/PE", "", "", "", "", "", "Khóa Zipper", "In trục ống đồng", 3037.0, "Manufacture"),
     ("TP-00042", "Enzy Hạt Nêm 220g", "Enzy", "CÔNG TY TNHH ENZY FOOD", "ENZY-220G", "220g", 170, 220, 120, "PET/AL/PE", "", "", "", "", "", "Khóa Zipper", "In trục ống đồng", 2111.0, "Manufacture"),
@@ -265,7 +265,7 @@ for idx, r in enumerate(truc_rows[1:], 1):
         spec={
             "custom_structure_layers": "Thép mạ đồng crom",
             "custom_print_tech": "In trục ống đồng",
-            "custom_accessory_spec": "Hàn kín (Không phụ kiện)",
+            "custom_accessory_spec": "",
             "custom_cylinder_code": ma_truc,
             "custom_cylinder_length_mm": cd if isinstance(cd, (int, float)) else 0,
             "custom_cylinder_circ_mm": cv if isinstance(cv, (int, float)) else 0,
@@ -288,7 +288,7 @@ for c_code, c_name, c_laser, c_qty, c_len, c_circ, c_loc, c_rate in additional_c
         spec={
             "custom_structure_layers": "Thép mạ đồng crom",
             "custom_print_tech": "In trục ống đồng",
-            "custom_accessory_spec": "Hàn kín (Không phụ kiện)",
+            "custom_accessory_spec": "",
             "custom_cylinder_code": c_laser,
             "custom_cylinder_length_mm": c_len,
             "custom_cylinder_circ_mm": c_circ,
@@ -341,7 +341,7 @@ for code, name, layer, thick, w, uom, rate in nvl_items:
             "custom_thickness_mic": thick,
             "custom_film_width_mm": w,
             "custom_print_tech": "Không in",
-            "custom_accessory_spec": "Hàn kín (Không phụ kiện)"
+            "custom_accessory_spec": ""
         }
     )
 
@@ -374,7 +374,7 @@ for code, name, layer, w, thick, desc, uom, rate in pet_in_items:
             "custom_thickness_mic": thick,
             "custom_film_width_mm": w,
             "custom_print_tech": "In trục ống đồng",
-            "custom_accessory_spec": "Hàn kín (Không phụ kiện)"
+            "custom_accessory_spec": ""
         }
     )
 
@@ -408,7 +408,7 @@ for code, name, layer, w, thick, desc, uom, rate in btp_items:
             "custom_thickness_mic": thick,
             "custom_film_width_mm": w,
             "custom_print_tech": "In trục ống đồng",
-            "custom_accessory_spec": "Hàn kín (Không phụ kiện)"
+            "custom_accessory_spec": ""
         }
     )
 
@@ -428,7 +428,7 @@ for code, name, uom, desc, rate in pk_items:
         spec={
             "custom_structure_layers": "Nhựa PP/PE hoặc Carton",
             "custom_print_tech": "Không in",
-            "custom_accessory_spec": name if "Vòi" in name else ("Khóa Zipper" if "Zipper" in name else "Hàn kín (Không phụ kiện)")
+            "custom_accessory_spec": name if "Vòi" in name else ("Khóa Zipper" if "Zipper" in name else "")
         }
     )
 
@@ -445,7 +445,7 @@ for code, name, uom, desc, rate in scrap_items:
         desc=desc, req_type="Manufacture", standard_rate=rate, is_sales=1, is_purchase=0,
         spec={
             "custom_print_tech": "Không in",
-            "custom_accessory_spec": "Hàn kín (Không phụ kiện)"
+            "custom_accessory_spec": ""
         }
     )
 
