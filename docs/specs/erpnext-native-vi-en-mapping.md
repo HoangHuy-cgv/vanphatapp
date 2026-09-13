@@ -130,3 +130,72 @@
 | `country` | Quốc gia xuất xứ của nhà cung cấp | **Quốc gia** |
 | `payment_terms` | Điều khoản thanh toán công nợ mua hàng với NCC | **Điều khoản thanh toán** |
 | `disabled` | Cờ ngừng mua hàng từ nhà cung cấp này | **Ngừng hợp tác** |
+
+---
+
+## 8. LỆNH SẢN XUẤT XƯỞNG (DocType `Work Order`)
+
+| ERPNext Native English | Ý nghĩa | Đề xuất map VI là... |
+| :--- | :--- | :--- |
+| `name` | Mã lệnh sản xuất tự sinh (`LSX-.YY..MM.-.###`) | **Mã lệnh sản xuất** |
+| `production_item` | Mã mặt hàng cần sản xuất (`Link: Item`) | **Sản phẩm sản xuất** |
+| `item_name` | Tên thương mại sản phẩm hiển thị trên UI | **Tên sản phẩm** |
+| `bom_no` | Mã định mức vật tư kỹ thuật (`Link: BOM`) | **Mã định mức BOM** |
+| `qty` | Sản lượng túi hoặc mét màng cần sản xuất theo lệnh | **Số lượng sản xuất** |
+| `produced_qty` | Sản lượng thực tế các tổ máy đã hoàn thành nhập kho | **Số lượng hoàn thành** |
+| `sales_order` | Đơn hàng bán liên kết nguồn phát sinh lệnh | **Đơn hàng liên kết** |
+| `status` | Trạng thái thực tế (`Draft`, `Submitted`, `In Process`, `Completed`, `Stopped`) | **Tiến độ sản xuất** |
+| `planned_start_date` | Thời điểm bắt đầu lên chuyền chạy máy | **Ngày bắt đầu** |
+| `planned_end_date` | Thời điểm dự kiến xong hàng đóng thùng | **Ngày hoàn thành** |
+
+---
+
+## 9. PHIẾU GIAO HÀNG / XUẤT KHO (DocType `Delivery Note`)
+
+| ERPNext Native English | Ý nghĩa | Đề xuất map VI là... |
+| :--- | :--- | :--- |
+| `name` | Số phiếu xuất kho giao hàng (`GH-.YY..MM.-.###`) | **Mã phiếu giao** |
+| `customer` | Mã khách hàng nhận hàng | **Khách hàng** |
+| `posting_date` | Ngày thực hiện bốc hàng và xuất kho | **Ngày giao hàng** |
+| `total_qty` | Tổng số lượng túi/kg thực tế giao cho khách | **Tổng số lượng giao** |
+| `status` | Tiến độ giao nhận (`Draft`, `To Bill`, `Completed`, `Cancelled`) | **Trạng thái giao** |
+| `items` *(Child Table)* | Bảng con chi tiết các kiện hàng, số lượng xuất giao | **Chi tiết hàng xuất** |
+
+---
+
+## 10. PHIẾU NHẬN HÀNG NCC / GIA CÔNG (DocType `Purchase Receipt`)
+
+| ERPNext Native English | Ý nghĩa | Đề xuất map VI là... |
+| :--- | :--- | :--- |
+| `name` | Số phiếu nhập kho mua hàng (`NH-.YY..MM.-.###`) | **Mã phiếu nhận** |
+| `supplier` | Mã nhà cung cấp màng, keo, trục, in lụa | **Nhà cung cấp** |
+| `posting_date` | Ngày hàng về nhập kho xưởng Vạn Phát | **Ngày nhận hàng** |
+| `status` | Tiến độ nhập kho (`Draft`, `To Bill`, `Completed`) | **Trạng thái nhận** |
+| `items` *(Child Table)* | Chi tiết số lượng thực tế nhận (đối soát chênh lệch với đơn mua) | **Chi tiết hàng nhận** |
+
+---
+
+## 11. HÓA ĐƠN BÁN HÀNG & CÔNG NỢ (DocType `Sales Invoice`)
+
+| ERPNext Native English | Ý nghĩa | Đề xuất map VI là... |
+| :--- | :--- | :--- |
+| `name` | Số hóa đơn tài chính (`HD-.YY..MM.-.###`) | **Mã hóa đơn** |
+| `customer` | Khách hàng phát hành hóa đơn | **Khách hàng** |
+| `posting_date` | Ngày ghi nhận doanh thu và công nợ | **Ngày hóa đơn** |
+| `grand_total` | Tổng tiền thanh toán trên hóa đơn | **Tổng tiền hóa đơn** |
+| `outstanding_amount` | Số tiền khách hàng còn nợ chưa thanh toán | **Còn phải thu** |
+| `status` | Trạng thái hóa đơn (`Draft`, `Unpaid`, `Partially Paid`, `Paid`, `Overdue`) | **Tình trạng thanh toán** |
+
+---
+
+## 12. PHIẾU THU / CHI CỌC & THANH TOÁN (DocType `Payment Entry`)
+
+| ERPNext Native English | Ý nghĩa | Đề xuất map VI là... |
+| :--- | :--- | :--- |
+| `name` | Số chứng từ thu/chi (`PT-.YY..MM.-.###` / `PC-.YY..MM.-.###`) | **Số phiếu thu/chi** |
+| `payment_type` | Chiều dòng tiền (`Receive`: Thu tiền khách, `Pay`: Chi tiền NCC) | **Loại phiếu** |
+| `party_type` | Loại đối tác (`Customer` hoặc `Supplier`) | **Đối tượng** |
+| `party` | Mã đối tác khách hàng hoặc nhà cung cấp | **Đối tác** |
+| `paid_amount` | Số tiền thực tế nhận cọc hoặc thanh toán (VND) | **Số tiền giao dịch** |
+| `reference_no` | Mã tham chiếu ủy nhiệm chi / chuyển khoản ngân hàng | **Mã giao dịch NH** |
+| `status` | Tình trạng chứng từ (`Draft`, `Submitted`, `Cancelled`) | **Trạng thái** |

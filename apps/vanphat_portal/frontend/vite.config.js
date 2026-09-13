@@ -6,7 +6,7 @@ import frameworkUI from '@framework/ui/vite';
 // Build target: ../vanphat_portal/public/frontend (+ entry copied to ../vanphat_portal/www/portal.html)
 export default defineConfig({
 	plugins: [vue(), frameworkUI()],
-	server: { port: 8090, host: '0.0.0.0' },
+	server: { port: 8090, host: '0.0.0.0', allowedHosts: true },
 	resolve: {
 		alias: {
 			'@': path.resolve(__dirname, 'src'),
