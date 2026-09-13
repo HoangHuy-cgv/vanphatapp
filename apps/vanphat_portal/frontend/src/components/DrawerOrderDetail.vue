@@ -1,63 +1,132 @@
 <template>
 	<div v-if="isOpen" class="drawer-overlay" @click.self="$emit('close')">
-		<aside class="drawer-panel">
-			<!-- Header: Tối Giản & Bỏ Code Rác -->
-			<div class="drawer-header">
-				<div>
-					<div class="customer-title">
-						{{ order?.customer_alias || order?.customer_name || 'Khách hàng' }}
-					</div>
-					<div class="product-subtitle">
-						<span class="font-semibold text-white">{{ order?.item_name || 'Sản phẩm' }}</span>
-						<span class="text-secondary ml-2 text-num">({{ formatNumber(order?.qty) }} {{ order?.uom || 'Túi' }})</span>
-					</div>
-					<div class="flex items-center gap-2 flex-wrap mt-2">
-						<span class="badge-tab-type" :class="tabBadgeClass(order?.order_tab)">
-							{{ tabBadgeLabel(order?.order_tab) }}
-						</span>
-						<span class="badge-cust-type" :class="order?.payment_type === 'Trả sau' ? 'bg-indigo' : 'bg-amber-dim'">
-							{{ order?.payment_type || 'Trả trước' }}
-						</span>
-						<span class="status-badge" :class="orderStatusClass(order)">
-							{{ order?.order_state || 'Chờ cọc' }}
-						</span>
-					</div>
-				</div>
-				<button type="button" class="btn-close" title="Đóng" @click="$emit('close')">✕</button>
+		<aside class="drawer-panel" aria-label="Chi tiết đơn hàng">
+			<!-- Header -->
+			<div class="drawer-head">
+				<h3 class="drawer-title">Chi tiết đơn hàng</h3>
+				<button
+					type="button"
+					class="btn-icon"
+					title="Đóng (Esc)"
+					@click="$emit('close')"
+				>
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<line x1="18" y1="6" x2="6" y2="18"></line>
+						<line x1="6" y1="6" x2="18" y2="18"></line>
+					</svg>
+				</button>
 			</div>
 
-			<!-- Body (Loading / Content) -->
+			<!-- Top Summary: Chuẩn 100% Drawer 2 Báo Giá -->
+			<div v-if="order" class="drawer-top-summary">
+				<!-- LINE 1: Tên khách hàng & Brand Tag -->
+				<div class="cust-brand-bar">
+					<div class="cust-info">
+						<span class="icon-building">🏢</span>
+						<span class="cust-name">{{ order.customer_alias || order.customer_name }}</span>
+					</div>
+					<div class="brand-tag">
+						{{ order.brand || 'VẠN PHÁT' }}
+					</div>
+				</div>
+
+				<!-- LINE 2: 5 Badges màu nhận diện -->
+				<div class="axis-badges">
+					<span class="axis-badge badge-product">{{ order.product_type || order.product_group || 'Túi màng ghép' }}</span>
+					<span class="axis-badge badge-accessory">{{ order.accessory || 'Không vòi' }}</span>
+					<span class="axis-badge badge-print">{{ order.print_type || 'In trục' }}</span>
+					<span class="axis-badge badge-cylinder">{{ order.cylinder_status || 'Không trục' }}</span>
+					<span class="axis-badge badge-tab" :class="tabBadgeClass(order.order_tab)">
+						{{ tabBadgeLabel(order.order_tab) }}
+					</span>
+				</div>
+
+				<!-- KHỐI QUY CÁCH KỸ THUẬT -->
+				<div class="spec-box">
+					<!-- LINE 3: Mô tả sản phẩm -->
+					<div class="spec-line">
+						<span class="spec-icon">📦</span>
+						<span class="spec-desc-text">{{ order.description || order.item_name }}</span>
+					</div>
+
+					<!-- LINE 4: Kích thước & Độ dày -->
+					<div class="spec-line">
+						<span class="spec-icon">📐</span>
+						<span class="spec-dim-text">{{ order.dimensions_text || 'Quy cách chuẩn' }}</span>
+					</div>
+
+					<!-- LINE 5: 4 Nhóm Chips chất liệu chuẩn công nghiệp -->
+					<div class="mat-chips-wrap">
+						<!-- Nhóm 1: Màng in (Blue) -->
+						<div class="mat-group">
+							<span class="mat-chip chip-blue" :class="{ on: isMat('OPP') }">OPP</span>
+							<span class="mat-chip chip-blue" :class="{ on: isMat('PET') }">PET</span>
+						</div>
+
+						<div class="mat-divider"></div>
+
+						<!-- Nhóm 2: Màng cản (Amber) -->
+						<div class="mat-group">
+							<span class="mat-chip chip-amber" :class="{ on: isMat('AL') }">AL</span>
+							<span class="mat-chip chip-amber" :class="{ on: isMat('MPET') }">MPET</span>
+						</div>
+
+						<div class="mat-divider"></div>
+
+						<!-- Nhóm 3: Màng dẻo PA (Purple) -->
+						<div class="mat-group">
+							<span class="mat-chip chip-purple" :class="{ on: isMat('PA') }">PA</span>
+						</div>
+
+						<div class="mat-divider"></div>
+
+						<!-- Nhóm 4: Màng hàn dán (Emerald) -->
+						<div class="mat-group">
+							<span class="mat-chip chip-emerald" :class="{ on: isMat('PE sữa') }">PE sữa</span>
+							<span class="mat-chip chip-emerald" :class="{ on: isMat('PE trong') }">PE trong</span>
+							<span class="mat-chip chip-emerald" :class="{ on: isMat('CPP') }">CPP</span>
+							<span class="mat-chip chip-emerald" :class="{ on: isMat('HD') }">HD</span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!-- Body -->
 			<div v-if="loading" class="drawer-loading">
-				Đang tải...
+				Đang tải dữ liệu...
 			</div>
 
 			<div v-else-if="order" class="drawer-body">
-				<!-- 1. Thẻ Tài Chính & Cọc -->
-				<div class="financial-card">
-					<!-- Khách trả sau -->
-					<div v-if="order.payment_type === 'Trả sau'" class="postpaid-banner">
-						<div class="flex-between">
-							<span class="font-bold text-xs text-indigo-light">TRẢ SAU (CÔNG NỢ GỐI ĐẦU)</span>
-							<span class="text-num text-xs">Hạn mức nợ: <b>{{ formatCurrency(order.credit_limit || 200000000) }}</b></span>
-						</div>
-					</div>
+				<!-- BỐ CỤC 2 CỘT: ẢNH THIẾT KẾ (TRÁI) & TÀI CHÍNH CỌC (PHẢI) -->
+				<div class="fin-section">
+					<!-- Cột trái: Khung ảnh maquette 135px vuông, click bung lightbox -->
+					<ArtworkBox v-model="order.artwork_url" />
 
-					<!-- Khách trả trước: 50% tiền hàng và 100% trục -->
-					<div v-else class="deposit-breakdown">
-						<div class="financial-row">
-							<div>
-								<div class="lbl">HÀNG (CỌC 50%)</div>
-								<div class="val text-num">{{ formatCurrency(order.product_total || order.grand_total) }}</div>
-							</div>
-							<div class="text-right">
-								<div class="lbl">TRỤC IN (100%)</div>
-								<div class="val text-num" :class="order.cylinder_total > 0 ? 'text-purple font-bold' : 'text-secondary'">
-									{{ formatCurrency(order.cylinder_total || 0) }}
-								</div>
-							</div>
+					<!-- Cột phải: Khối tài chính & Tiến độ cọc -->
+					<div class="fin-cols">
+						<div class="fin-row">
+							<span class="fin-label">Số lượng đặt</span>
+							<span class="fin-val text-num font-bold">{{ formatNumber(order.qty) }} {{ order.uom || 'Túi' }}</span>
+						</div>
+						<div class="fin-row">
+							<span class="fin-label">Tiền hàng (cọc 50%)</span>
+							<span class="fin-val text-num font-bold">{{ formatCurrency(order.product_total || order.grand_total) }}</span>
+						</div>
+						<div v-if="order.cylinder_total > 0" class="fin-row">
+							<span class="fin-label text-purple">Trục in (100% riêng)</span>
+							<span class="fin-val text-purple text-num font-bold">{{ formatCurrency(order.cylinder_total) }}</span>
 						</div>
 
-						<div class="deposit-summary-box mt-2">
+						<div class="fin-divider"></div>
+
+						<!-- Box tóm tắt cọc -->
+						<div v-if="order.payment_type === 'Trả sau'" class="postpaid-tag-box">
+							<div class="flex-between">
+								<span class="font-bold text-xs text-indigo-light">TRẢ SAU (CÔNG NỢ GỐI ĐẦU)</span>
+								<span class="text-num text-xs">Hạn mức: <b>{{ formatCurrency(order.credit_limit || 200000000) }}</b></span>
+							</div>
+						</div>
+						<div v-else class="deposit-box">
 							<div class="flex-between text-xs">
 								<span class="lbl">CẦN CỌC:</span>
 								<span class="text-num font-bold text-amber">{{ formatCurrency(order.required_deposit) }}</span>
@@ -66,271 +135,190 @@
 								<span class="lbl">ĐÃ CỌC:</span>
 								<span class="text-num font-bold text-emerald">{{ formatCurrency(order.advance_paid) }} ({{ order.deposit_pct }}%)</span>
 							</div>
-						</div>
-
-						<!-- Progress bar -->
-						<div class="deposit-track mt-2">
-							<div
-								class="deposit-fill"
-								:style="{ width: Math.min(100, Math.round((order.advance_paid / (order.required_deposit || order.grand_total)) * 100)) + '%' }"
-								:class="order.advance_paid >= order.required_deposit ? 'bg-emerald' : 'bg-amber'"
-							></div>
-							<div class="marker-50"></div>
-						</div>
-						<div class="flex-between text-xs mt-1 text-secondary">
-							<span>Tiến độ cọc</span>
-							<span class="text-num">Còn thiếu: <b class="text-white">{{ formatCurrency(order.outstanding_amount) }}</b></span>
+							<!-- Thanh progress bar -->
+							<div class="deposit-track mt-1">
+								<div
+									class="deposit-fill"
+									:style="{ width: Math.min(100, Math.round((order.advance_paid / (order.required_deposit || order.grand_total)) * 100)) + '%' }"
+									:class="order.advance_paid >= order.required_deposit ? 'bg-emerald' : 'bg-amber'"
+								></div>
+								<div class="marker-50"></div>
+							</div>
+							<div class="flex-between text-xs mt-1 text-secondary">
+								<span>Còn thiếu</span>
+								<span class="text-num font-bold text-white">{{ formatCurrency(order.outstanding_amount) }}</span>
+							</div>
 						</div>
 					</div>
 				</div>
 
-				<!-- 2. STATE MACHINE ACTION HUB (Trình tự bước tuần tự) -->
-				<!-- BƯỚC A: ĐƠN BỊ HOLD (Thiếu Cọc / Nợ Trục) -->
-				<div v-if="order.is_hold" class="action-card hold-card">
-					<div class="card-head text-amber">
-						<span>⚠️ TRẠNG THÁI HOLD (THIẾU CỌC)</span>
-					</div>
-					<div class="text-xs text-secondary mt-1">
-						Đơn hàng chưa đủ 50% cọc hoặc nợ 100% tiền trục. Khóa mua hàng & sản xuất.
-					</div>
-
-					<!-- Ghi nhận cọc -->
-					<div class="deposit-form mt-3">
-						<div class="input-group">
-							<label>Số tiền nộp thêm (đ):</label>
-							<input
-								v-model="depositInput"
-								type="number"
-								placeholder="Nhập số tiền..."
-								class="input-dark text-num"
-							/>
-						</div>
-						<div class="input-group mt-2">
-							<label>Ghi chú / Mã GD:</label>
-							<input
-								v-model="depositNote"
-								type="text"
-								placeholder="UNC / Biên lai ngân hàng..."
-								class="input-dark"
-							/>
-						</div>
-						<div class="flex gap-2 mt-3">
-							<button
-								type="button"
-								class="btn-action btn-primary flex-1"
-								:disabled="savingDeposit || !depositInput"
-								@click="handleSaveDeposit"
-							>
-								{{ savingDeposit ? 'Đang lưu...' : 'Lưu cọc' }}
-							</button>
-							<button
-								type="button"
-								class="btn-action btn-warning flex-1"
-								:disabled="approvingProcurement"
-								@click="handleAccountantApproveProcurement"
-							>
-								{{ approvingProcurement ? 'Đang duyệt...' : 'Duyệt ngoại lệ' }}
-							</button>
-						</div>
-					</div>
-				</div>
-
-				<!-- BƯỚC B: ĐÃ ĐỦ CỌC - QUẢN LÝ CUNG ỨNG & SẢN XUẤT THEO TAB -->
-				<div v-else class="action-card process-card">
-					<!-- 1. Luồng Túi NGCS (In lụa) -->
-					<div v-if="order.order_tab === 'ngcs'">
-						<div class="card-head text-primary">
-							<span>TIẾN ĐỘ IN LỤA NCC</span>
-							<span class="badge-stage">{{ order.order_state }}</span>
-						</div>
-						<div class="info-grid mt-2">
-							<div class="info-row">
-								<span class="lbl">Phôi túi kho:</span>
-								<span class="val text-emerald">✓ Sẵn sàng {{ formatNumber(order.qty) }} túi</span>
+				<!-- KHỐI TRẠNG THÁI VẬN HÀNH (GỌN GÀNG 1 HÀNG) -->
+				<div class="ops-card">
+					<div class="ops-title">TIẾN ĐỘ THỰC HIỆN</div>
+					<div class="ops-grid">
+						<template v-if="order.order_tab === 'ngcs'">
+							<div class="ops-col">
+								<span class="ops-lbl">NCC IN LỤA</span>
+								<span class="ops-val font-bold text-white">{{ order.supplier_name || 'ANH TÙNG' }}</span>
 							</div>
-							<div class="info-row">
-								<span class="lbl">NCC In lụa:</span>
-								<span class="val font-bold text-white">{{ order.supplier_name || 'ANH TÙNG' }}</span>
-							</div>
-							<div class="info-row">
-								<span class="lbl">Mẫu in / Màu:</span>
-								<span class="val text-white">{{ order.screen_brand || 'Mẫu chuẩn' }} (2 mặt)</span>
-							</div>
-							<div class="info-row">
-								<span class="lbl">Hạn giao NCC:</span>
+							<div class="ops-col">
+								<span class="ops-lbl">HẠN GIAO NCC</span>
 								<span class="sla-badge" :class="supplierSlaBadge(order.supplier_eta_days).cls">
 									{{ supplierSlaBadge(order.supplier_eta_days).text }}
 								</span>
 							</div>
-						</div>
-
-						<!-- Nút bấm theo trạng thái NGCS -->
-						<div class="mt-3">
-							<button
-								v-if="order.order_state === 'Sẵn sàng'"
-								type="button"
-								class="btn-action btn-primary w-full"
-								@click="triggerNextStage('Đang xử lý', 'Đã gửi đơn in lụa sang NCC')"
-							>
-								+ Gửi in lụa NCC ({{ order.supplier_name }})
-							</button>
-							<button
-								v-else-if="order.order_state === 'Đang xử lý'"
-								type="button"
-								class="btn-action btn-success w-full"
-								@click="triggerNextStage('Sẵn sàng giao', 'Nhập kho thành phẩm in lụa')"
-							>
-								Xác nhận nhận hàng in lụa về kho
-							</button>
-							<button
-								v-else-if="order.order_state === 'Sẵn sàng giao'"
-								type="button"
-								class="btn-action btn-delivery w-full"
-								@click="triggerNextStage('Đã giao', 'Xuất kho giao khách')"
-							>
-								+ Xuất giao hàng
-							</button>
-							<div v-else-if="order.order_state === 'Đã giao'" class="text-center text-emerald font-bold py-2">
-								✓ Đơn hàng đã giao thành công
+							<div class="ops-col">
+								<span class="ops-lbl">PHÔI TÚI</span>
+								<span class="ops-val text-emerald font-bold">✓ Đủ trong kho</span>
 							</div>
-						</div>
-					</div>
+						</template>
 
-					<!-- 2. Luồng Xưởng Sản Xuất (Ghép -> Cắt -> Vòi) -->
-					<div v-else-if="order.order_tab === 'xuong_sx'">
-						<div class="card-head text-primary">
-							<span>VẬN HÀNH XƯỞNG NỘI BỘ</span>
-							<span class="badge-stage">{{ order.factory_stage || order.order_state }}</span>
-						</div>
-						<div class="info-grid mt-2">
-							<div class="info-row">
-								<span class="lbl">Vật tư màng & keo:</span>
-								<span class="val font-bold" :class="order.materials_status === 'Đủ màng' ? 'text-emerald' : 'text-amber'">
+						<template v-else-if="order.order_tab === 'xuong_sx'">
+							<div class="ops-col">
+								<span class="ops-lbl">VẬT TƯ MÀNG</span>
+								<span class="ops-val font-bold" :class="order.materials_status === 'Đủ màng' ? 'text-emerald' : 'text-amber'">
 									{{ order.materials_status || 'Chờ màng' }}
 								</span>
 							</div>
-							<div class="info-row">
-								<span class="lbl">Công đoạn hiện tại:</span>
-								<span class="val font-bold text-white">{{ order.factory_stage || 'Lên chuyền' }}</span>
+							<div class="ops-col">
+								<span class="ops-lbl">CÔNG ĐOẠN MÁY</span>
+								<span class="ops-val font-bold text-white">{{ order.factory_stage || 'Chờ lên chuyền' }}</span>
 							</div>
-							<div v-if="order.completed_qty" class="info-row">
-								<span class="lbl">Sản lượng hoàn thành:</span>
-								<span class="val text-num text-emerald">{{ formatNumber(order.completed_qty) }} / {{ formatNumber(order.qty) }}</span>
+							<div class="ops-col">
+								<span class="ops-lbl">SẢN LƯỢNG</span>
+								<span class="ops-val text-num text-emerald font-bold">
+									{{ order.completed_qty ? formatNumber(order.completed_qty) + ' / ' + formatNumber(order.qty) : '0 / ' + formatNumber(order.qty) }}
+								</span>
 							</div>
-						</div>
+						</template>
 
-						<!-- Nút bấm tuần tự Xưởng SX -->
-						<div class="mt-3">
-							<button
-								v-if="order.materials_status !== 'Đủ màng'"
-								type="button"
-								class="btn-action btn-warning w-full"
-								@click="order.materials_status = 'Đủ màng'; triggerNextStage('Sẵn sàng', 'Đã chuẩn bị đủ màng')"
-							>
-								+ Mua màng & Trục NCC
-							</button>
-							<button
-								v-else-if="order.factory_stage !== 'Xong hàng' && order.order_state !== 'Sẵn sàng giao'"
-								type="button"
-								class="btn-action btn-primary w-full"
-								@click="triggerNextStage('Sẵn sàng giao', 'Xưởng hoàn thành 100% sản lượng')"
-							>
-								+ Báo cáo hoàn thành xưởng (Nhập kho TP)
-							</button>
-							<button
-								v-else-if="order.order_state === 'Sẵn sàng giao' || order.factory_stage === 'Xong hàng'"
-								type="button"
-								class="btn-action btn-delivery w-full"
-								@click="triggerNextStage('Đã giao', 'Xuất kho giao khách')"
-							>
-								+ Xuất giao hàng
-							</button>
-							<div v-else-if="order.order_state === 'Đã giao'" class="text-center text-emerald font-bold py-2">
-								✓ Đơn hàng đã giao thành công
+						<template v-else>
+							<div class="ops-col">
+								<span class="ops-lbl">NHÀ CUNG CẤP</span>
+								<span class="ops-val font-bold text-white">{{ order.supplier_name || 'TRANG TÍN' }}</span>
 							</div>
-						</div>
-					</div>
-
-					<!-- 3. Luồng Mua Ngoài Trọn Gói (Túi màng đơn / Mua đứt NCC) -->
-					<div v-else>
-						<div class="card-head text-primary">
-							<span>TIẾN ĐỘ MUA NGOÀI NCC</span>
-							<span class="badge-stage">{{ order.order_state }}</span>
-						</div>
-						<div class="info-grid mt-2">
-							<div class="info-row">
-								<span class="lbl">Nhà cung cấp:</span>
-								<span class="val font-bold text-white">{{ order.supplier_name || 'NCC NGOÀI' }}</span>
-							</div>
-							<div class="info-row">
-								<span class="lbl">Hạn giao NCC:</span>
+							<div class="ops-col">
+								<span class="ops-lbl">HẠN GIAO NCC</span>
 								<span class="sla-badge" :class="supplierSlaBadge(order.supplier_eta_days).cls">
 									{{ supplierSlaBadge(order.supplier_eta_days).text }}
 								</span>
 							</div>
-							<div class="info-row">
-								<span class="lbl">Trạng thái giao:</span>
-								<span class="val text-white">{{ order.procurement_stage || 'Đang chờ hàng' }}</span>
+							<div class="ops-col">
+								<span class="ops-lbl">TRẠNG THÁI</span>
+								<span class="ops-val font-bold text-white">{{ order.procurement_stage || 'Đang chờ hàng' }}</span>
 							</div>
-						</div>
-
-						<!-- Nút bấm tuần tự Mua Ngoài -->
-						<div class="mt-3">
-							<button
-								v-if="order.order_state === 'Sẵn sàng'"
-								type="button"
-								class="btn-action btn-primary w-full"
-								@click="triggerNextStage('Đang xử lý', 'Đã phát hành đơn mua NCC')"
-							>
-								+ Gửi đơn mua NCC ({{ order.supplier_name }})
-							</button>
-							<button
-								v-else-if="order.order_state === 'Đang xử lý'"
-								type="button"
-								class="btn-action btn-success w-full"
-								@click="triggerNextStage('Sẵn sàng giao', 'NCC đã giao đủ hàng về kho')"
-							>
-								Xác nhận nhận hàng NCC về kho
-							</button>
-							<button
-								v-else-if="order.order_state === 'Sẵn sàng giao'"
-								type="button"
-								class="btn-action btn-delivery w-full"
-								@click="triggerNextStage('Đã giao', 'Xuất kho giao khách')"
-							>
-								+ Xuất giao hàng
-							</button>
-							<div v-else-if="order.order_state === 'Đã giao'" class="text-center text-emerald font-bold py-2">
-								✓ Đơn hàng đã giao thành công
-							</div>
-						</div>
+						</template>
 					</div>
 				</div>
+			</div>
 
-				<!-- 3. Mặt hàng trong đơn -->
-				<div class="section-box">
-					<div class="section-title">CHI TIẾT MẶT HÀNG</div>
-					<table class="items-table">
-						<thead>
-							<tr>
-								<th>Tên mặt hàng / Quy cách</th>
-								<th style="width: 20%; text-align: right;">Số lượng</th>
-								<th style="width: 25%; text-align: right;">Đơn giá</th>
-								<th style="width: 25%; text-align: right;">Thành tiền</th>
-							</tr>
-						</thead>
-						<tbody>
-							<tr v-for="(it, idx) in order.items" :key="idx" :class="{ 'row-cylinder': it.is_cylinder }">
-								<td>
-									<div class="font-semibold text-white">{{ it.item_name }}</div>
-									<span v-if="it.is_cylinder" class="badge-tag-cyl">Trục in</span>
-								</td>
-								<td class="text-right text-num">{{ formatNumber(it.qty) }} {{ it.uom || 'Túi' }}</td>
-								<td class="text-right text-num">{{ formatCurrency(it.rate) }}</td>
-								<td class="text-right text-num font-bold">{{ formatCurrency(it.amount) }}</td>
-							</tr>
-						</tbody>
-					</table>
+			<!-- Footer: Cụm Nút Hành Động 1-Chạm Theo Đúng Bước -->
+			<div v-if="order" class="drawer-footer">
+				<!-- TRƯỜNG HỢP 1: ĐƠN BỊ HOLD (Thiếu Cọc) - Nhập nhanh cọc ngay tại nút -->
+				<div v-if="order.is_hold" class="hold-action-row">
+					<div class="hold-inline-form">
+						<input
+							v-model.number="depositInput"
+							type="number"
+							class="deposit-input-inline"
+							placeholder="Nhập số tiền nộp cọc thêm (đ)..."
+						/>
+						<button
+							type="button"
+							class="btn-act-deposit"
+							:disabled="!depositInput || savingDeposit"
+							@click="handleSaveDeposit"
+						>
+							{{ savingDeposit ? 'Đang lưu...' : 'Lưu cọc' }}
+						</button>
+					</div>
+					<button
+						type="button"
+						class="btn-act-override"
+						:disabled="approvingProcurement"
+						title="Kế toán duyệt ngoại lệ cho phép mua hàng / chạy máy"
+						@click="handleAccountantApproveProcurement"
+					>
+						{{ approvingProcurement ? 'Đang duyệt...' : 'Duyệt ngoại lệ' }}
+					</button>
+				</div>
+
+				<!-- TRƯỜNG HỢP 2: ĐANG XỬ LÝ / SẴN SÀNG (Nút tương ứng duy nhất) -->
+				<div v-else-if="order.order_state !== 'Sẵn sàng giao' && order.order_state !== 'Đã giao'" class="w-full">
+					<!-- NGCS -->
+					<button
+						v-if="order.order_tab === 'ngcs' && order.order_state === 'Sẵn sàng'"
+						type="button"
+						class="act-btn-main btn-blue"
+						@click="triggerNextStage('Đang xử lý', 'Đã gửi in lụa NCC')"
+					>
+						+ Gửi in lụa NCC ({{ order.supplier_name }})
+					</button>
+					<button
+						v-else-if="order.order_tab === 'ngcs' && order.order_state === 'Đang xử lý'"
+						type="button"
+						class="act-btn-main btn-green"
+						@click="triggerNextStage('Sẵn sàng giao', 'Đã nhận hàng in lụa về kho')"
+					>
+						Xác nhận nhận hàng in lụa về kho
+					</button>
+
+					<!-- Xưởng SX -->
+					<button
+						v-else-if="order.order_tab === 'xuong_sx' && order.materials_status !== 'Đủ màng'"
+						type="button"
+						class="act-btn-main btn-amber"
+						@click="order.materials_status = 'Đủ màng'; triggerNextStage('Sẵn sàng', 'Đã chuẩn bị đủ màng')"
+					>
+						+ Đặt mua màng & Trục NCC
+					</button>
+					<button
+						v-else-if="order.order_tab === 'xuong_sx'"
+						type="button"
+						class="act-btn-main btn-blue"
+						@click="triggerNextStage('Sẵn sàng giao', 'Xưởng báo cáo hoàn thành 100%')"
+					>
+						+ Báo cáo hoàn thành xưởng (Nhập kho TP)
+					</button>
+
+					<!-- Mua ngoài -->
+					<button
+						v-else-if="order.order_tab === 'mua_ngoai' && order.order_state === 'Sẵn sàng'"
+						type="button"
+						class="act-btn-main btn-blue"
+						@click="triggerNextStage('Đang xử lý', 'Đã gửi đơn mua NCC')"
+					>
+						+ Gửi đơn mua NCC ({{ order.supplier_name }})
+					</button>
+					<button
+						v-else-if="order.order_tab === 'mua_ngoai' && order.order_state === 'Đang xử lý'"
+						type="button"
+						class="act-btn-main btn-green"
+						@click="triggerNextStage('Sẵn sàng giao', 'Đã nhận hàng NCC về kho')"
+					>
+						Xác nhận nhận hàng NCC về kho
+					</button>
+				</div>
+
+				<!-- TRƯỜNG HỢP 3: SẴN SÀNG GIAO (Sáng xanh toàn chiều ngang) -->
+				<button
+					v-else-if="order.order_state === 'Sẵn sàng giao'"
+					type="button"
+					class="act-btn-main btn-delivery"
+					@click="triggerNextStage('Đã giao', 'Xuất kho giao khách')"
+				>
+					<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<rect x="1" y="3" width="15" height="13"></rect>
+						<polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+						<circle cx="5.5" cy="18.5" r="2.5"></circle>
+						<circle cx="18.5" cy="18.5" r="2.5"></circle>
+					</svg>
+					<span>+ XUẤT GIAO HÀNG</span>
+				</button>
+
+				<!-- TRƯỜNG HỢP 4: ĐÃ GIAO -->
+				<div v-else class="w-full text-center text-emerald font-bold py-2">
+					✓ ĐƠN HÀNG ĐÃ GIAO THÀNH CÔNG
 				</div>
 			</div>
 		</aside>
@@ -339,6 +327,7 @@
 
 <script setup>
 import { ref, watch } from 'vue';
+import ArtworkBox from './ArtworkBox.vue';
 import { INITIAL_ORDERS } from '@/data/mockData';
 
 const props = defineProps({
@@ -354,7 +343,11 @@ const savingDeposit = ref(false);
 const approvingProcurement = ref(false);
 
 const depositInput = ref('');
-const depositNote = ref('');
+
+function isMat(mat) {
+	if (!order.value || !order.value.materials) return false;
+	return order.value.materials.includes(mat);
+}
 
 function tabBadgeLabel(tab) {
 	switch (tab) {
@@ -372,11 +365,11 @@ function tabBadgeLabel(tab) {
 function tabBadgeClass(tab) {
 	switch (tab) {
 		case 'ngcs':
-			return 'tab-badge-ngcs';
+			return 'badge-tab-ngcs';
 		case 'xuong_sx':
-			return 'tab-badge-xuong';
+			return 'badge-tab-xuong';
 		case 'mua_ngoai':
-			return 'tab-badge-ngoai';
+			return 'badge-tab-ngoai';
 		default:
 			return '';
 	}
@@ -404,7 +397,6 @@ watch(
 	(val) => {
 		if (val) {
 			depositInput.value = '';
-			depositNote.value = '';
 			fetchOrderDetails();
 		}
 	},
@@ -432,7 +424,6 @@ async function handleSaveDeposit() {
 			INITIAL_ORDERS[idx] = JSON.parse(JSON.stringify(order.value));
 		}
 		depositInput.value = '';
-		depositNote.value = '';
 		emit('order-updated');
 	}
 	savingDeposit.value = false;
@@ -467,15 +458,6 @@ function triggerNextStage(newState, desc) {
 	}
 }
 
-function orderStatusClass(o) {
-	if (!o) return 'badge-draft';
-	if (o.is_hold || o.order_state?.includes('Hold')) return 'badge-hold';
-	if (o.order_state === 'Sẵn sàng giao') return 'badge-ready-delivery';
-	if (o.order_state === 'Đã giao') return 'badge-delivered';
-	if (o.order_state === 'Đang xử lý') return 'badge-in-process';
-	return 'badge-submitted';
-}
-
 function formatCurrency(val) {
 	if (val == null || val === '') return '0 đ';
 	return Number(val).toLocaleString('vi-VN') + ' đ';
@@ -499,7 +481,7 @@ function formatNumber(val) {
 
 .drawer-panel {
 	width: 100%;
-	max-width: 540px;
+	max-width: 560px;
 	height: 100vh;
 	background: #161b22;
 	border-left: 1px solid #3a424e;
@@ -509,115 +491,202 @@ function formatNumber(val) {
 	box-shadow: -8px 0 24px rgba(0, 0, 0, 0.5);
 }
 
-.drawer-header {
-	padding: 16px 20px;
-	background: #141820;
-	border-bottom: 1px solid #262c37;
+.drawer-head {
 	display: flex;
-	align-items: flex-start;
+	align-items: center;
 	justify-content: space-between;
+	padding: 14px 20px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+	background: #141820;
 }
 
-.customer-title {
-	font-size: 18px;
+.drawer-title {
+	font-size: 16px;
 	font-weight: 800;
-	color: #ffffff;
+	color: #eef1f6;
+	letter-spacing: -0.01em;
 }
 
-.product-subtitle {
-	font-size: 13.5px;
+.btn-icon {
+	background: transparent;
+	border: none;
+	color: #9da7b5;
+	cursor: pointer;
+	padding: 4px;
+	display: flex;
+	align-items: center;
+	border-radius: 6px;
+}
+
+.btn-icon:hover {
+	color: #fff;
+	background: rgba(255, 255, 255, 0.08);
+}
+
+/* Top Summary - Chuẩn Drawer 2 Báo Giá */
+.drawer-top-summary {
+	padding: 14px 20px 12px;
+	background: #13171f;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.cust-brand-bar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 8px;
+}
+
+.cust-info {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	min-width: 0;
+}
+
+.icon-building {
+	font-size: 15px;
+	flex-shrink: 0;
+}
+
+.cust-name {
+	font-size: 15px;
+	font-weight: 800;
+	color: #eef1f6;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.brand-tag {
+	font-size: 12px;
+	font-weight: 800;
+	color: #0284c7;
+	background: rgba(2, 132, 199, 0.14);
+	border: 1px solid rgba(2, 132, 199, 0.3);
+	padding: 2px 8px;
+	border-radius: 6px;
+	flex-shrink: 0;
+}
+
+.axis-badges {
+	display: flex;
+	gap: 6px;
+	flex-wrap: wrap;
+}
+
+.axis-badge {
+	font-size: 11px;
+	font-weight: 700;
+	padding: 3px 8px;
+	border-radius: 5px;
+}
+
+.badge-product {
+	color: #38bdf8;
+	background: rgba(56, 189, 248, 0.12);
+	border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+.badge-accessory {
+	color: #c084fc;
+	background: rgba(192, 132, 252, 0.12);
+	border: 1px solid rgba(192, 132, 252, 0.25);
+}
+
+.badge-print {
 	color: #94a3b8;
+	background: rgba(148, 163, 184, 0.12);
+	border: 1px solid rgba(148, 163, 184, 0.25);
+}
+
+.badge-cylinder {
+	color: #f59e0b;
+	background: rgba(245, 158, 11, 0.12);
+	border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.badge-tab {
+	color: #34d399;
+	background: rgba(52, 211, 153, 0.12);
+	border: 1px solid rgba(52, 211, 153, 0.25);
+}
+
+.badge-tab-ngcs { color: #fbbf24; background: rgba(245, 158, 11, 0.15); border-color: rgba(245, 158, 11, 0.3); }
+.badge-tab-xuong { color: #4ea1e0; background: rgba(78, 161, 224, 0.15); border-color: rgba(78, 161, 224, 0.3); }
+.badge-tab-ngoai { color: #c084fc; background: rgba(168, 85, 247, 0.15); border-color: rgba(168, 85, 247, 0.3); }
+
+.spec-box {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
 	margin-top: 2px;
 }
 
-.badge-tab-type {
-	font-size: 10.5px;
+.spec-line {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+
+.spec-icon {
+	font-size: 13px;
+	flex-shrink: 0;
+}
+
+.spec-desc-text {
+	font-size: 12.5px;
 	font-weight: 700;
-	padding: 2px 7px;
-	border-radius: 4px;
+	color: #eef1f6;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
-.tab-badge-ngcs {
-	background: rgba(245, 158, 11, 0.15);
-	color: #fbbf24;
-	border: 1px solid rgba(245, 158, 11, 0.3);
-}
-
-.tab-badge-xuong {
-	background: rgba(78, 161, 224, 0.15);
-	color: #4ea1e0;
-	border: 1px solid rgba(78, 161, 224, 0.3);
-}
-
-.tab-badge-ngoai {
-	background: rgba(168, 85, 247, 0.15);
-	color: #c084fc;
-	border: 1px solid rgba(168, 85, 247, 0.3);
-}
-
-.badge-cust-type {
-	font-size: 10.5px;
+.spec-dim-text {
+	font-size: 12.5px;
 	font-weight: 700;
-	padding: 2px 7px;
-	border-radius: 4px;
-}
-
-.bg-indigo {
-	background: rgba(99, 102, 241, 0.2);
-	color: #a5b4fc;
-	border: 1px solid rgba(99, 102, 241, 0.4);
-}
-
-.bg-amber-dim {
-	background: rgba(245, 158, 11, 0.1);
-	color: #fbbf24;
-}
-
-.status-badge {
-	font-size: 10.5px;
-	font-weight: 700;
-	padding: 2px 7px;
-	border-radius: 4px;
-}
-
-.badge-hold {
-	background: rgba(239, 68, 68, 0.2);
-	color: #fca5a5;
-	border: 1px solid rgba(239, 68, 68, 0.4);
-}
-
-.badge-in-process {
-	background: rgba(59, 130, 246, 0.18);
-	color: #93c5fd;
-	border: 1px solid rgba(59, 130, 246, 0.3);
-}
-
-.badge-ready-delivery {
-	background: rgba(52, 211, 153, 0.2);
-	color: #34d399;
-	border: 1px solid rgba(52, 211, 153, 0.4);
-}
-
-.badge-delivered {
-	background: rgba(148, 163, 184, 0.15);
 	color: #94a3b8;
+	font-variant-numeric: tabular-nums;
 }
 
-.badge-submitted {
-	background: rgba(78, 161, 224, 0.15);
-	color: #4ea1e0;
+.mat-chips-wrap {
+	display: flex;
+	gap: 2px;
+	align-items: center;
+	padding: 3px 0 1px;
 }
 
-.btn-close {
-	background: transparent;
-	border: 0;
-	color: #9da7b5;
-	font-size: 18px;
-	cursor: pointer;
-	padding: 4px 8px;
+.mat-group {
+	display: flex;
+	gap: 2px;
+}
+
+.mat-divider {
+	width: 1px;
+	height: 12px;
+	background: rgba(255, 255, 255, 0.15);
+	margin: 0 3px;
+}
+
+.mat-chip {
+	font-size: 10px;
+	font-weight: 700;
+	padding: 2px 6px;
 	border-radius: 4px;
+	background: #1c222b;
+	color: #64748b;
 }
 
+.chip-blue.on { color: #38bdf8; background: rgba(56, 189, 248, 0.2); }
+.chip-amber.on { color: #fbbf24; background: rgba(245, 158, 11, 0.2); }
+.chip-purple.on { color: #c084fc; background: rgba(192, 132, 252, 0.2); }
+.chip-emerald.on { color: #34d399; background: rgba(52, 211, 153, 0.2); }
+
+/* Body: 2 Cột chuẩn */
 .drawer-loading {
 	padding: 40px;
 	text-align: center;
@@ -626,7 +695,7 @@ function formatNumber(val) {
 }
 
 .drawer-body {
-	padding: 16px;
+	padding: 16px 20px;
 	flex: 1;
 	overflow-y: auto;
 	display: flex;
@@ -634,47 +703,60 @@ function formatNumber(val) {
 	gap: 14px;
 }
 
-.financial-card {
-	background: #1a1f27;
-	border: 1px solid #3a424e;
-	border-radius: 8px;
-	padding: 14px;
+.fin-section {
+	display: flex;
+	gap: 16px;
+	align-items: flex-start;
 }
 
-.postpaid-banner {
-	background: rgba(99, 102, 241, 0.08);
-	border: 1px solid rgba(99, 102, 241, 0.25);
-	border-radius: 6px;
-	padding: 10px 12px;
+.fin-cols {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
 }
 
-.financial-row {
+.fin-row {
 	display: flex;
 	justify-content: space-between;
+	align-items: baseline;
 }
 
-.lbl {
-	font-size: 10.5px;
-	font-weight: 700;
-	color: #94a3b8;
-	text-transform: uppercase;
+.fin-label {
+	font-size: 12px;
+	color: #9da7b5;
+	font-weight: 500;
 }
 
-.val {
+.fin-val {
 	font-size: 13.5px;
-	font-weight: 700;
-	color: #f1f5f9;
+	color: #eef1f6;
+	font-variant-numeric: tabular-nums;
 }
 
-.deposit-summary-box {
-	background: rgba(0, 0, 0, 0.25);
+.fin-divider {
+	height: 1px;
+	background: rgba(255, 255, 255, 0.08);
+	margin: 3px 0;
+}
+
+.deposit-box {
+	background: rgba(0, 0, 0, 0.3);
+	border: 1px solid rgba(255, 255, 255, 0.06);
+	border-radius: 6px;
+	padding: 8px 10px;
+}
+
+.postpaid-tag-box {
+	background: rgba(99, 102, 241, 0.08);
+	border: 1px solid rgba(99, 102, 241, 0.25);
 	border-radius: 6px;
 	padding: 8px 10px;
 }
 
 .deposit-track {
 	width: 100%;
-	height: 6px;
+	height: 5px;
 	background: rgba(255, 255, 255, 0.08);
 	border-radius: 3px;
 	overflow: hidden;
@@ -701,192 +783,178 @@ function formatNumber(val) {
 	align-items: center;
 }
 
-.action-card {
+.lbl {
+	font-size: 10px;
+	font-weight: 700;
+	color: #94a3b8;
+}
+
+/* Khối Vận Hành Ops Card */
+.ops-card {
 	background: #1a1f27;
-	border-radius: 8px;
-	padding: 14px;
 	border: 1px solid #3a424e;
+	border-radius: 8px;
+	padding: 12px 14px;
 }
 
-.hold-card {
-	border-color: rgba(245, 158, 11, 0.4);
-	background: rgba(245, 158, 11, 0.04);
-}
-
-.process-card {
-	border-color: rgba(78, 161, 224, 0.3);
-}
-
-.card-head {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	font-size: 12px;
+.ops-title {
+	font-size: 10.5px;
 	font-weight: 800;
+	color: #94a3b8;
 	letter-spacing: 0.5px;
+	margin-bottom: 8px;
 }
 
-.info-grid {
+.ops-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 8px;
+}
+
+.ops-col {
 	display: flex;
 	flex-direction: column;
-	gap: 6px;
+	gap: 3px;
 }
 
-.info-row {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
+.ops-lbl {
+	font-size: 9.5px;
+	font-weight: 700;
+	color: #64748b;
+}
+
+.ops-val {
 	font-size: 12px;
 }
 
 .sla-badge {
+	display: inline-block;
 	font-size: 10.5px;
 	font-weight: 700;
-	padding: 2px 7px;
-	border-radius: 4px;
-}
-
-.sla-ontime {
-	background: rgba(148, 163, 184, 0.15);
-	color: #94a3b8;
-}
-
-.sla-today {
-	background: rgba(245, 158, 11, 0.18);
-	color: #fbbf24;
-}
-
-.sla-overdue {
-	background: rgba(239, 68, 68, 0.25);
-	color: #fca5a5;
-	border: 1px solid rgba(239, 68, 68, 0.5);
-}
-
-.badge-stage {
-	font-size: 11px;
-	font-weight: 600;
 	padding: 2px 6px;
 	border-radius: 4px;
-	background: rgba(78, 161, 224, 0.12);
-	color: #93c5fd;
-	border: 1px solid rgba(78, 161, 224, 0.3);
+	white-space: nowrap;
+	width: fit-content;
 }
 
-.deposit-form .input-group label {
-	display: block;
-	font-size: 11px;
-	font-weight: 700;
-	color: #94a3b8;
-	margin-bottom: 4px;
+.sla-ontime { background: rgba(148, 163, 184, 0.15); color: #94a3b8; }
+.sla-today { background: rgba(245, 158, 11, 0.18); color: #fbbf24; }
+.sla-overdue { background: rgba(239, 68, 68, 0.25); color: #fca5a5; }
+
+/* Footer Action */
+.drawer-footer {
+	padding: 14px 20px;
+	border-top: 1px solid rgba(255, 255, 255, 0.08);
+	background: #13171f;
 }
 
-.input-dark {
+.hold-action-row {
+	display: flex;
+	gap: 10px;
 	width: 100%;
-	background: #11141a;
+}
+
+.hold-inline-form {
+	flex: 1;
+	display: flex;
+	gap: 6px;
+}
+
+.deposit-input-inline {
+	flex: 1;
+	height: 40px;
+	padding: 0 10px;
+	background: #1a1f27;
 	border: 1px solid #3a424e;
+	border-radius: 6px;
 	color: #f1f5f9;
-	padding: 7px 10px;
-	border-radius: 6px;
 	font-size: 13px;
-	box-sizing: border-box;
-}
-
-.input-dark:focus {
+	font-variant-numeric: tabular-nums;
 	outline: none;
-	border-color: #4ea1e0;
 }
 
-.btn-action {
-	padding: 9px 14px;
-	border-radius: 6px;
+.deposit-input-inline:focus {
+	border-color: #f59e0b;
+}
+
+.btn-act-deposit {
+	height: 40px;
+	padding: 0 14px;
+	background: #f59e0b;
+	color: #0b0f19;
 	font-weight: 700;
 	font-size: 12.5px;
+	border: none;
+	border-radius: 6px;
 	cursor: pointer;
-	transition: all 0.15s ease;
-	border: 1px solid transparent;
+	white-space: nowrap;
 }
 
-.btn-primary {
+.btn-act-deposit:disabled {
+	opacity: 0.5;
+	cursor: not-allowed;
+}
+
+.btn-act-override {
+	height: 40px;
+	padding: 0 14px;
+	background: rgba(245, 158, 11, 0.15);
+	color: #fbbf24;
+	border: 1px solid rgba(245, 158, 11, 0.4);
+	font-weight: 700;
+	font-size: 12.5px;
+	border-radius: 6px;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.act-btn-main {
+	width: 100%;
+	height: 44px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	font-size: 13.5px;
+	font-weight: 800;
+	border-radius: 8px;
+	cursor: pointer;
+	border: none;
+	transition: all 0.15s ease;
+}
+
+.btn-blue {
 	background: #4ea1e0;
 	color: #0b0f19;
 }
 
-.btn-primary:hover {
+.btn-blue:hover {
 	background: #60a5fa;
 }
 
-.btn-warning {
-	background: rgba(245, 158, 11, 0.2);
-	color: #fbbf24;
-	border-color: rgba(245, 158, 11, 0.4);
-}
-
-.btn-success {
+.btn-green {
 	background: rgba(52, 211, 153, 0.2);
 	color: #34d399;
-	border-color: rgba(52, 211, 153, 0.4);
+	border: 1px solid rgba(52, 211, 153, 0.4);
+}
+
+.btn-amber {
+	background: rgba(245, 158, 11, 0.2);
+	color: #fbbf24;
+	border: 1px solid rgba(245, 158, 11, 0.4);
 }
 
 .btn-delivery {
 	background: #0284c7;
 	color: #ffffff;
-	font-size: 13.5px;
-	padding: 10px 16px;
-	box-shadow: 0 0 12px rgba(2, 132, 199, 0.4);
+	box-shadow: 0 0 14px rgba(2, 132, 199, 0.4);
 }
 
 .btn-delivery:hover {
 	background: #0369a1;
 }
 
-.section-box {
-	background: #1a1f27;
-	border: 1px solid #3a424e;
-	border-radius: 8px;
-	padding: 12px;
-}
-
-.section-title {
-	font-size: 11px;
-	font-weight: 700;
-	color: #94a3b8;
-	margin-bottom: 8px;
-	letter-spacing: 0.5px;
-}
-
-.items-table {
-	width: 100%;
-	border-collapse: collapse;
-	font-size: 12px;
-}
-
-.items-table th {
-	text-align: left;
-	color: #64748b;
-	font-size: 11px;
-	padding: 6px 4px;
-	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.items-table td {
-	padding: 8px 4px;
-	border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-}
-
-.badge-tag-cyl {
-	display: inline-block;
-	font-size: 10px;
-	font-weight: 700;
-	padding: 1px 5px;
-	border-radius: 4px;
-	background: rgba(168, 85, 247, 0.2);
-	color: #d8b4fe;
-	border: 1px solid rgba(168, 85, 247, 0.3);
-}
-
-.text-num {
-	font-variant-numeric: tabular-nums;
-}
+.text-num { font-variant-numeric: tabular-nums; }
 .text-emerald { color: #34d399; }
 .text-amber { color: #fbbf24; }
 .text-purple { color: #c084fc; }
