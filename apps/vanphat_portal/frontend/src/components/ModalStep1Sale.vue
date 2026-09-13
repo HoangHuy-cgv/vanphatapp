@@ -264,7 +264,7 @@
 </template>
 
 <script setup>
-import { reactive, computed, ref } from 'vue';
+import { reactive, computed, ref, onMounted, onUnmounted } from 'vue';
 
 const props = defineProps({
 	initialData: {
@@ -356,6 +356,20 @@ function hideCustomerResults() {
 function onContinue() {
 	emit('next', { ...form });
 }
+
+function handleKeydown(e) {
+	if (e.key === 'Escape') {
+		emit('close');
+	}
+}
+
+onMounted(() => {
+	window.addEventListener('keydown', handleKeydown);
+});
+
+onUnmounted(() => {
+	window.removeEventListener('keydown', handleKeydown);
+});
 </script>
 
 <style scoped>

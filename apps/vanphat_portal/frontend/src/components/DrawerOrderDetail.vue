@@ -326,7 +326,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted, onUnmounted } from 'vue';
 import ArtworkBox from './ArtworkBox.vue';
 import { INITIAL_ORDERS } from '@/data/mockData';
 
@@ -467,6 +467,20 @@ function formatNumber(val) {
 	if (val == null || val === '') return '0';
 	return Number(val).toLocaleString('vi-VN');
 }
+
+function handleKeydown(e) {
+	if (e.key === 'Escape' && props.isOpen) {
+		emit('close');
+	}
+}
+
+onMounted(() => {
+	window.addEventListener('keydown', handleKeydown);
+});
+
+onUnmounted(() => {
+	window.removeEventListener('keydown', handleKeydown);
+});
 </script>
 
 <style scoped>

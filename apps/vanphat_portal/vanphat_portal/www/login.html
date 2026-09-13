@@ -265,7 +265,12 @@
 	<main class="page-wrapper">
 		<div class="auth-card">
 			<header class="auth-header">
-				<img src="/assets/vanphat_portal/images/logo-vanphat.png" alt="Bao Bì Vạn Phát" class="auth-logo" />
+				<img
+					src="/assets/vanphat_portal/images/logo-vanphat.png"
+					onerror="if(!this.dataset.tried){this.dataset.tried='1';this.src='../public/images/logo-vanphat.png';}"
+					alt="Bao Bì Vạn Phát"
+					class="auth-logo"
+				/>
 				<h1 class="auth-title">Bao Bì Vạn Phát</h1>
 			</header>
 
@@ -313,6 +318,15 @@
 
 	<script>
 		(function () {
+			if (window.location.protocol === 'file:') {
+				const logo = document.querySelector('.auth-logo');
+				if (logo) logo.src = '../public/images/logo-vanphat.png';
+				const wrapper = document.querySelector('.page-wrapper');
+				if (wrapper) {
+					wrapper.style.backgroundImage = "linear-gradient(180deg, rgba(11, 15, 23, 0.82) 0%, rgba(15, 23, 42, 0.88) 50%, rgba(11, 15, 23, 0.94) 100%), url('../public/images/bg-factory.webp')";
+				}
+			}
+
 			const form = document.getElementById("login-form");
 			const usrInput = document.getElementById("usr");
 			const pwdInput = document.getElementById("pwd");

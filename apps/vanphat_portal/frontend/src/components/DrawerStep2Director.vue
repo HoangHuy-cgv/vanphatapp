@@ -281,7 +281,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
 import ArtworkBox from './ArtworkBox.vue';
 
 const props = defineProps({
@@ -419,6 +419,20 @@ function onSubmit() {
 		cylinder_qty: cylinderQty.value,
 	});
 }
+
+function handleKeydown(e) {
+	if (e.key === 'Escape') {
+		emit('close');
+	}
+}
+
+onMounted(() => {
+	window.addEventListener('keydown', handleKeydown);
+});
+
+onUnmounted(() => {
+	window.removeEventListener('keydown', handleKeydown);
+});
 </script>
 
 <style scoped>
