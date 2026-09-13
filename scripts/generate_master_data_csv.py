@@ -155,7 +155,7 @@ custom_pouches = [
     ("TP-00019", "Túi màng bọc thực phẩm TopGia", "TopGia MBTP", "TopGia", "CÔNG TY TNHH PHONG TÍN", "TOPGIA-MBTP", "Tiêu chuẩn", 200, 300, 80, "PET/PE", "", "", "", "", "", "", "In trục ống đồng", 1780.0, "Purchase", ""),
     ("TP-00020", "Túi đựng nước giặt TopGia 1L có vòi (Hoa Nắng)", "TopGia 1L Hoa Nắng", "TopGia", "CÔNG TY TNHH PHONG TÍN", "TOPGIA-1L-HN", "1L", 180, 250, 190, "PET/PA/PE", "G4011425", "Kho Kiến Tâm", 750, 404, 6, "Vòi 16mm", "In trục ống đồng", 2852.0, "Manufacture", ""),
     ("TP-00021", "Túi đựng nước giặt TopGia 1L có vòi (Đắm Say)", "TopGia 1L Đắm Say", "TopGia", "CÔNG TY TNHH PHONG TÍN", "TOPGIA-1L-DS", "1L", 180, 250, 190, "PET/PA/PE", "G4011427", "Kho Kiến Tâm", 750, 404, 6, "Vòi 16mm", "In trục ống đồng", 2852.0, "Manufacture", ""),
-    ("TP-00022", "Túi đựng nước giặt Softy 3L có vòi (Nền Tím)", "Softy 3L Tím", "Softy", "CTY TNHH SX - XNK AMYCO", "SOFTY-3L-TIM", "3L", 280, 340, 230, "PET/PA/PE sữa", "", "", "", "", "", "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture", ""),
+    ("TP-00022", "Túi đựng nước giặt Softy 3L có vòi (Nền Tím)", "Softy 3L Tím", "Softy", "CÔNG TY TNHH SẢN XUẤT - XUẤT NHẬP KHẨU AMYCO", "SOFTY-3L-TIM", "3L", 280, 340, 230, "PET/PA/PE sữa", "", "", "", "", "", "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture", ""),
     ("TP-00023", "Túi đựng nước giặt Sachpoong 3.2Kg có vòi", "Sachpoong 3.2Kg", "Sachpoong", "Khách hàng Sachpoong", "SACHPOONG-3.2KG", "3.2Kg", 280, 340, 230, "PET//PA/PE sữa", "G4010806", "Kho Vạn Phát", 800, 564, 5, "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture", ""),
     ("TP-00024", "Túi đựng nước giặt Sachpoong 0.6Kg có vòi", "Sachpoong 0.6Kg", "Sachpoong", "Khách hàng Sachpoong", "SACHPOONG-0.6KG", "0.6Kg", 180, 240, 180, "PET//PA/PE", "G4010805", "Kho Vạn Phát", 750, 456, 5, "Vòi 16mm", "In trục ống đồng", 2800.0, "Manufacture", ""),
     ("TP-00025", "Túi đựng nước giặt Raptor Clean 0.6Kg có vòi", "Raptor Clean 0.6Kg", "Raptor Clean", "Khách hàng Raptor Clean", "RAPTOR-0.6KG", "0.6Kg", 180, 240, 180, "PET//PA/PE", "G4010947", "Kho Vạn Phát", 750, 456, 7, "Vòi 16mm", "In trục ống đồng", 2800.0, "Manufacture", ""),
@@ -166,10 +166,10 @@ custom_pouches = [
     ("TP-00030", "Túi đựng nước giặt Premium 3.2Kg có vòi (Màu Tím)", "Premium 3.2Kg Tím", "Premium", "Khách hàng Premium", "PREMIUM-3.2KG-TIM", "3.2Kg", 280, 340, 230, "PET//PA/PE sữa", "G4006905", "Kho Kiến Tâm", 800, 564, 5, "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture", ""),
     ("TP-00031", "Túi đựng nước giặt Premium 3.2Kg có vòi (Màu Đỏ)", "Premium 3.2Kg Đỏ", "Premium", "Khách hàng Premium", "PREMIUM-3.2KG-DO", "3.2Kg", 280, 340, 230, "PET//PA/PE sữa", "G4006924", "Kho Vạn Phát", 800, 564, 5, "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture", ""),
     ("TP-00032", "Túi đựng nước giặt Yumi Care 3.6L có vòi", "Yumi Care 3.6L", "Yumi Care", "Khách hàng Yumi Care", "YUMICARE-3.6L", "3.6L", 280, 350, 230, "PET//PA/PE sữa", "G631383", "Kho Vạn Phát", 900, 568, 5, "Vòi 16mm", "In trục ống đồng", 7200.0, "Manufacture", ""),
-    ("TP-00033", "Túi đựng nước giặt Sofia 3Kg có vòi (Hương LyLy)", "Sofia 3Kg Xanh", "Sofia", "Khách hàng Sofia", "SOFIA-3KG-XANH", "3Kg", 280, 340, 230, "PET//PA/PE sữa", "G4002697", "Kho Vạn Phát", 850, 526, 5, "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture", ""),
+    ("TP-00033", "Túi đựng nước giặt Sofia 3Kg có vòi (Hương LyLy)", "Sofia 3Kg Xanh", "Sofia", "CÔNG TY CỔ PHẦN EZ COSMETIC VIỆT NAM – CHI NHÁNH LONG AN", "SOFIA-3KG-XANH", "3Kg", 280, 340, 230, "PET//PA/PE sữa", "G4002697", "Kho Vạn Phát", 850, 526, 5, "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture", ""),
     ("TP-00034", "Túi đựng nước giặt Clean 3.6L có vòi", "Clean 3.6L", "Clean", "Khách hàng Clean", "CLEAN-3.6L", "3.6L", 280, 350, 230, "PET//PA/PE sữa", "Z418556", "Kho Vạn Phát", 900, 568, 8, "Vòi 16mm", "In trục ống đồng", 7200.0, "Manufacture", ""),
     ("TP-00035", "Túi đựng nước giặt Clean 2L có vòi", "Clean 2L", "Clean", "Khách hàng Clean", "CLEAN-2L", "2L", 240, 300, 210, "PET//PA/PE sữa", "G630657", "Kho Vạn Phát", 800, 466, 8, "Vòi 16mm", "In trục ống đồng", 4500.0, "Manufacture", ""),
-    ("TP-00036", "Túi đựng nước giặt Futa True 3Kg có vòi", "Futa True 3Kg", "Futa True", "Khách hàng Futa True", "FUTA-3KG", "3Kg", 280, 340, 230, "PET//PA/PE sữa", "G4013050", "Kho Trang Tín", 900, 544, 6, "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture", ""),
+    ("TP-00036", "Túi đựng nước giặt Futa True 3Kg có vòi", "Futa True 3Kg", "Futa True", "CÔNG TY TNHH MTV TM TRANG UYÊN", "FUTA-3KG", "3Kg", 280, 340, 230, "PET//PA/PE sữa", "G4013050", "Kho Trang Tín", 900, 544, 6, "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture", ""),
     ("TP-00037", "Túi đựng nước giặt Chakari Louis 3.2Kg có vòi", "Chakari Louis 3.2Kg", "Chakari", "Khách hàng Chakari", "CHAKARI-3.2KG", "3.2Kg", 280, 340, 230, "PET//PA/PE sữa", "G4014585", "Kho Trang Tín", 850, 846, 7, "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture", ""),
     # CÁC MÃ BỔ SUNG MỚI TỪ ĐƠN CỌC CHƯA GIAO
     ("TP-00038", "Túi đựng nước giặt CHLOE'LY 2L có vòi", "Chloe'ly 2L", "Chloe'ly", "CÔNG TY TNHH SẢN XUẤT - XUẤT NHẬP KHẨU AMYCO", "CHLOELY-2L", "2L", 240, 300, 210, "PET/MPET/PA/PE sữa", "", "", "", "", "", "Vòi 16mm", "In trục ống đồng", 5074.0, "Manufacture", ""),
@@ -438,11 +438,11 @@ def write_csv(filename, rows, headers):
 
 # XUẤT DUY NHẤT 1 FILE item_master.csv
 write_csv("item_master.csv", item_master_list, MASTER_HEADERS)
-write_csv("customer_brand_matrix.csv", customer_brand_list, BRAND_HEADERS)
 
-# XÓA BỎ HOÀN TOÀN item_spec.csv
-spec_old_path = os.path.join(OUT_DIR, "item_spec.csv")
-if os.path.exists(spec_old_path):
-    os.remove(spec_old_path)
-    print(f" ĐÃ XÓA BỎ HOÀN TOÀN FILE THỪA: {spec_old_path}")
+# XÓA BỎ HOÀN TOÀN CÁC FILE THỪA LẠC HẬU
+for old_f in ["item_spec.csv", "customer_brand_matrix.csv"]:
+    old_p = os.path.join(OUT_DIR, old_f)
+    if os.path.exists(old_p):
+        os.remove(old_p)
+        print(f" ĐÃ XÓA BỎ FILE THỪA: {old_p}")
 

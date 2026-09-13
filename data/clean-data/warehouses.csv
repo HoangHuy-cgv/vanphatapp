@@ -1,6 +1,0 @@
-﻿warehouse_name,warehouse_code,parent_warehouse,is_group,desc
-Kho Nguyên Vật Liệu,NVL,All Warehouses,0,"Lưu trữ cuộn màng thô, hạt nhựa, keo ghép, dung môi, vòi và phụ kiện."
-Kho Bán Thành Phẩm,BTP,All Warehouses,0,Lưu trữ cuộn màng đã in ống đồng và cuộn màng ghép hoàn thiện chờ cắt túi.
-Kho Thành Phẩm,TP,All Warehouses,0,Lưu trữ túi thành phẩm (NGCS và túi đặt riêng) đã đóng thùng chờ giao hàng.
-Kho Phế Liệu & Thu Hồi,PHE-LIEU,All Warehouses,0,"Lưu trữ phế liệu màng biên xén, màng lỗi test máy và phế phẩm thu hồi."
-Kho Trục In,TRUC,All Warehouses,0,Quản lý lưu trữ các bộ trục in ống đồng của khách hàng.

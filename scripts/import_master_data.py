@@ -99,14 +99,9 @@ def load_csv(filename):
 
 def load_all_nhom_a_data():
     master_items = load_csv("item_master.csv")
+    customers = load_csv("customer_master.csv")
     bom_master = load_csv("bom_master.csv")
     bom_items = load_csv("bom_items.csv")
-
-    customers = {m["customer"].strip() for m in master_items if m.get("customer", "").strip()}
-    for r in load_csv("customer_brand_matrix.csv"):
-        c = r.get("customer_name", "").strip()
-        if c:
-            customers.add(c)
 
     boms_grouped = {b["bom_no"]: {"master": b, "items": []} for b in bom_master}
     for bi in bom_items:
@@ -115,7 +110,7 @@ def load_all_nhom_a_data():
 
     return {
         "items": [{"master": m, "spec": m} for m in master_items],
-        "customers": sorted(list(customers)),
+        "customers": customers,
         "warehouses": load_csv("warehouses.csv"),
         "suppliers": load_csv("suppliers.csv"),
         "operations": load_csv("operations.csv"),
@@ -161,9 +156,34 @@ def import_to_frappe(data):
                 "parent_warehouse": parent, "is_group": int(w["is_group"]), "company": company
             }, f"Tạo Kho: {wh_name}")
 
-        print(f"\n4. Nạp {len(data['customers'])} Khách Hàng & {len(data['suppliers'])} Nhà Cung Cấp...")
+        print(f"\n4. Nạp {len(data['customers'])} Khách Hàng...")
         for c in data["customers"]:
-            create_if_missing("Customer", c, {"doctype": "Customer", "customer_name": c, "customer_type": "Company"})
+            cname = c["customer_name"]
+            c_group = c.get("customer_group", "Khách Hàng Thương Mại & Phân Phối")
+            if c_group and not frappe.db.exists("Customer Group", c_group):
+                frappe.get_doc({"doctype": "Customer Group", "customer_group_name": c_group, "parent_customer_group": "All Customer Groups", "is_group": 0}).insert(ignore_permissions=True)
+            
+            c_terr = c.get("territory", "Việt Nam")
+            if c_terr and not frappe.db.exists("Territory", c_terr):
+                frappe.get_doc({"doctype": "Territory", "territory_name": c_terr, "parent_territory": "All Territories", "is_group": 0}).insert(ignore_permissions=True)
+
+            cust_doc = {
+                "doctype": "Customer",
+                "customer_name": cname,
+                "alias": c.get("alias", ""),
+                "customer_type": c.get("customer_type", "Company"),
+                "customer_group": c_group,
+                "territory": c_terr,
+                "default_currency": c.get("default_currency", "VND"),
+                "disabled": safe_int(c.get("disabled", 0))
+            }
+            cl = safe_float(c.get("credit_limit", 0))
+            if cl > 0:
+                cust_doc["credit_limits"] = [{
+                    "company": company,
+                    "credit_limit": cl
+                }]
+            create_if_missing("Customer", cname, cust_doc)
         for s in data["suppliers"]:
             grp = s.get("supplier_group", "All Supplier Groups")
             if grp and grp != "All Supplier Groups":
@@ -284,8 +304,32 @@ def run_dry_run(data):
         print(f"{indent}[{w['warehouse_code']:<9}] {w['warehouse_name']:<25} ({w['desc']})")
 
     print(f"\n4. ĐỐI TÁC NGHIỆP VỤ (PARTNERS):")
-    print(f"   - Khách Hàng: {len(data['customers'])} đối tượng")
-    print(f"   - Nhà Cung Cấp: {len(data['suppliers'])} NCC verified từ sổ công nợ")
+    cust_list = data["customers"]
+    cust_types = {}
+    cust_groups = {}
+    debt_custs = []
+    with_addr = 0
+    for c in cust_list:
+        ct = c.get("customer_type", "Company")
+        cust_types[ct] = cust_types.get(ct, 0) + 1
+        cg = c.get("customer_group", "Khác")
+        cust_groups[cg] = cust_groups.get(cg, 0) + 1
+        cl = safe_float(c.get("credit_limit", 0))
+        if cl > 0:
+            debt_custs.append((c["customer_name"], c.get("alias", ""), cl))
+        if c.get("primary_address", "").strip():
+            with_addr += 1
+
+    print(f"   - Khách Hàng: {len(cust_list)} đối tượng (Đã chuẩn hóa 100% từ raw-data)")
+    print(f"      * Phân loại pháp nhân : {', '.join([f'{k}: {v}' for k, v in cust_types.items()])}")
+    print(f"      * Nhóm khách hàng     :")
+    for cg, cnt in sorted(cust_groups.items(), key=lambda x: x[1], reverse=True):
+        print(f"         • {cg:<35}: {cnt:>3} đối tượng")
+    print(f"      * Khách hàng có địa chỉ thực tế : {with_addr}/{len(cust_list)} đối tượng")
+    print(f"      * Khách hàng công nợ trả sau    :")
+    for cn, al, cl in debt_custs:
+        print(f"         • {cn} ({al}): Hạn mức nợ {cl:,.0f} đ")
+    print(f"   - Nhà Cung Cấp: {len(data['suppliers'])} NCC (Đang chờ chuẩn hóa ở Bước 3)")
 
     print(f"\n5. CÔNG ĐOẠN & TRẠM MÁY ({len(data['operations'])} Trạm):")
     for op in data["operations"]:
