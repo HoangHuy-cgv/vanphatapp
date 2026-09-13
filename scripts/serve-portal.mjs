@@ -234,6 +234,47 @@ const server = http.createServer((req, res) => {
 				return;
 			}
 
+			// 1.1 Item APIs: List Items
+			if (pathname === '/api/method/vanphat_portal.api.item.get_list') {
+				const q = (parsed.query || '').trim().toLowerCase();
+				const grp = (parsed.item_group || '').trim();
+				let items = MASTER_ITEMS;
+				if (grp) {
+					items = items.filter(it => it.item_group === grp);
+				}
+				if (q) {
+					items = items.filter(it =>
+						it.item_code.toLowerCase().includes(q) ||
+						(it.item_name && it.item_name.toLowerCase().includes(q)) ||
+						(it.custom_alias && it.custom_alias.toLowerCase().includes(q)) ||
+						(it.customer && it.customer.toLowerCase().includes(q)) ||
+						(it.custom_structure_layers && it.custom_structure_layers.toLowerCase().includes(q))
+					);
+				}
+				res.end(JSON.stringify({ message: items }));
+				return;
+			}
+
+			// 1.2 Item APIs: Item Detail with Associated BOM
+			if (pathname === '/api/method/vanphat_portal.api.item.get_detail') {
+				const code = (parsed.item_code || '').trim();
+				const item = MASTER_ITEMS.find(it => it.item_code === code);
+				if (!item) {
+					res.statusCode = 404;
+					res.end(JSON.stringify({ error: 'Item not found' }));
+					return;
+				}
+				let bom = null;
+				for (const [bom_no, b] of BOM_TREE.entries()) {
+					if (b.master.item === code) {
+						bom = b;
+						break;
+					}
+				}
+				res.end(JSON.stringify({ message: { item, bom } }));
+				return;
+			}
+
 			// 2. Customer Autocomplete from Master Data
 			if (pathname === '/api/method/vanphat_portal.api.bao_gia.search_customers') {
 				const q = (parsed.query || '').trim().toLowerCase();
@@ -729,6 +770,158 @@ function renderMasterDataReviewerHtml() {
 			gap: 8px;
 			padding: 2px 0;
 		}
+		.clickable-row {
+			cursor: pointer;
+			transition: background 0.15s ease;
+		}
+		.clickable-row:hover td {
+			background: #21262d !important;
+		}
+		.badge-mfg { background: rgba(56, 189, 248, 0.15); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3); }
+		.badge-buy { background: rgba(163, 113, 247, 0.15); color: #a371f7; border: 1px solid rgba(163, 113, 247, 0.3); }
+		.badge-alias { background: rgba(255, 255, 255, 0.08); color: #8b949e; font-size: 11px; margin-top: 3px; display: inline-block; }
+		.btn-detail {
+			background: #21262d;
+			border: 1px solid #30363d;
+			color: #58a6ff;
+			padding: 4px 10px;
+			border-radius: 5px;
+			font-size: 12px;
+			font-weight: 600;
+			cursor: pointer;
+		}
+		.btn-detail:hover {
+			background: #30363d;
+			color: #79c0ff;
+		}
+
+		/* Slide-Over Drawer */
+		.drawer-overlay {
+			position: fixed;
+			top: 0; left: 0; right: 0; bottom: 0;
+			background: rgba(0, 0, 0, 0.75);
+			backdrop-filter: blur(4px);
+			z-index: 999;
+			opacity: 0;
+			pointer-events: none;
+			transition: opacity 0.25s ease;
+		}
+		.drawer-overlay.open {
+			opacity: 1;
+			pointer-events: auto;
+		}
+		.item-drawer {
+			position: fixed;
+			top: 0; right: 0; bottom: 0;
+			width: 620px;
+			max-width: 95vw;
+			background: #161b22;
+			border-left: 1px solid #3a424e;
+			z-index: 1000;
+			transform: translateX(100%);
+			transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+			display: flex;
+			flex-direction: column;
+			box-shadow: -12px 0 40px rgba(0, 0, 0, 0.75);
+		}
+		.item-drawer.open {
+			transform: translateX(0);
+		}
+		.drawer-header {
+			padding: 18px 24px;
+			background: #0d1117;
+			border-bottom: 1px solid #30363d;
+			display: flex;
+			align-items: flex-start;
+			justify-content: space-between;
+			gap: 16px;
+		}
+		.drawer-title-box {
+			display: flex;
+			flex-direction: column;
+			gap: 4px;
+		}
+		.drawer-code {
+			font-family: monospace;
+			font-size: 18px;
+			font-weight: 800;
+			color: #58a6ff;
+			letter-spacing: 0.5px;
+		}
+		.drawer-name {
+			font-size: 15px;
+			font-weight: 700;
+			color: #f0f6fc;
+			line-height: 1.3;
+		}
+		.drawer-body {
+			flex: 1;
+			padding: 20px 24px;
+			overflow-y: auto;
+			display: flex;
+			flex-direction: column;
+			gap: 18px;
+		}
+		.drawer-section {
+			background: #0d1117;
+			border: 1px solid #30363d;
+			border-radius: 8px;
+			padding: 16px;
+		}
+		.drawer-section-title {
+			font-size: 12px;
+			font-weight: 700;
+			text-transform: uppercase;
+			letter-spacing: 0.6px;
+			color: #58a6ff;
+			margin-bottom: 12px;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+		.spec-grid {
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			gap: 10px;
+		}
+		.spec-box {
+			background: #161b22;
+			border: 1px solid rgba(255, 255, 255, 0.06);
+			border-radius: 6px;
+			padding: 9px 12px;
+		}
+		.spec-label {
+			font-size: 11px;
+			color: #8b949e;
+			margin-bottom: 3px;
+			font-weight: 500;
+		}
+		.spec-val {
+			font-size: 13.5px;
+			font-weight: 600;
+			color: #e6edf3;
+			font-variant-numeric: tabular-nums;
+		}
+		.btn-close-drawer {
+			background: #21262d;
+			border: 1px solid #30363d;
+			color: #c9d1d9;
+			width: 34px;
+			height: 34px;
+			border-radius: 6px;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 18px;
+			font-weight: 700;
+			transition: all 0.2s;
+			flex-shrink: 0;
+		}
+		.btn-close-drawer:hover {
+			background: #30363d;
+			color: #fff;
+		}
 	</style>
 </head>
 <body>
@@ -795,52 +988,62 @@ function renderMasterDataReviewerHtml() {
 			<table>
 				<thead>
 					<tr>
-						<th>Mã hàng (Code)</th>
-						<th>Tên sản phẩm</th>
-						<th>Nhóm hàng</th>
-						<th>ĐVT</th>
-						<th>Khách hàng</th>
-						<th>Trạng thái</th>
+						<th style="width: 12%;">Mã hàng (Code)</th>
+						<th style="width: 22%;">Tên sản phẩm & Tên gọi tắt</th>
+						<th style="width: 14%;">Nhóm hàng</th>
+						<th style="width: 25%;">Quy cách kỹ thuật (Cấu trúc / Kích thước)</th>
+						<th style="width: 5%; text-align: center;">ĐVT</th>
+						<th style="width: 8%; text-align: center;">Cung ứng</th>
+						<th style="width: 12%;">Khách hàng</th>
+						<th style="width: 7%; text-align: center;">Trạng thái</th>
+						<th style="width: 5%; text-align: center;">Chi tiết</th>
 					</tr>
 				</thead>
 				<tbody id="itemsBody">
-					${MASTER_ITEMS.map(it => `
-						<tr>
-							<td style="font-weight: 700; font-family: monospace;">${it.item_code}</td>
-							<td>${it.item_name}</td>
-							<td><span class="badge ${it.item_code.startsWith('TP-') || it.item_code.startsWith('NGCS-') ? 'badge-tp' : it.item_code.startsWith('BTP-') ? 'badge-btp' : it.item_code.startsWith('NVL-') ? 'badge-nvl' : 'badge-truc'}">${it.item_group}</span></td>
-							<td>${it.stock_uom}</td>
-							<td>${it.customer || '—'}</td>
-							<td>${it.disabled == '1' ? '<span style="color: #f85149;">Ngừng bán</span>' : '<span style="color: #3fb950;">Hoạt động</span>'}</td>
-						</tr>
-					`).join('')}
-				</tbody>
-			</table>
-		</div>
+					${MASTER_ITEMS.map(it => {
+						const pouchDims = (it.custom_pouch_width_mm && it.custom_pouch_length_mm)
+							? `${it.custom_pouch_width_mm}x${it.custom_pouch_length_mm}${it.custom_gusset_mm ? '+' + it.custom_gusset_mm : ''}mm`
+							: '';
+						let specSummary = '—';
+						if (it.item_code.startsWith('TP-') || it.item_code.startsWith('NGCS-')) {
+							specSummary = `${it.custom_structure_layers || 'Màng ghép'} • ${it.custom_thickness_mic ? it.custom_thickness_mic + 'mic' : ''} • ${pouchDims} ${it.custom_accessory_spec ? '• ' + it.custom_accessory_spec : ''}`;
+						} else if (it.item_code.startsWith('BTP-')) {
+							specSummary = `${it.custom_structure_layers || 'Cuộn BTP'} • ${it.custom_thickness_mic ? it.custom_thickness_mic + 'mic' : ''} • Khổ ${it.custom_film_width_mm || '—'}mm`;
+						} else if (it.item_code.startsWith('TRUC-')) {
+							specSummary = `Dài ${it.custom_cylinder_length_mm || '—'} x Chu vi ${it.custom_cylinder_circ_mm || '—'} mm • ${it.custom_cylinder_qty || 1} cây (Kho ${it.custom_cylinder_location || 'VP'})`;
+						} else if (it.item_code.startsWith('NVL-')) {
+							specSummary = `${it.custom_thickness_mic ? it.custom_thickness_mic + 'mic • ' : ''}${it.custom_film_width_mm ? 'Khổ ' + it.custom_film_width_mm + 'mm • ' : ''}${it.custom_accessory_spec || it.item_name}`;
+						} else {
+							specSummary = pouchDims || it.description || '—';
+						}
 
-		<div id="specsContainer" class="table-box" style="display: none;">
-			<table>
-				<thead>
-					<tr>
-						<th>Mã hàng</th>
-						<th>Cấu trúc ghép</th>
-						<th>Độ dày (mic)</th>
-						<th>Kích thước (D x R + Đáy mm)</th>
-						<th>Loại túi</th>
-						<th>Loại vòi</th>
-					</tr>
-				</thead>
-				<tbody id="specsBody">
-					${ITEM_SPECS.map(sp => `
-						<tr>
-							<td style="font-weight: 700; font-family: monospace;">${sp.item_code}</td>
-							<td>${sp.custom_structure_layers || '—'}</td>
-							<td style="text-align: right; font-weight: 600;">${sp.custom_thickness_mic || '—'}</td>
-							<td>${sp.custom_pouch_length_mm ? `${sp.custom_pouch_length_mm} x ${sp.custom_pouch_width_mm} + ${sp.custom_gusset_mm || 0} mm` : '—'}</td>
-							<td>${sp.custom_bottom_type || '—'}</td>
-							<td>${sp.custom_spout_type ? `${sp.custom_spout_type} (${sp.custom_spout_position || 'Góc'})` : '—'}</td>
+						const isMfg = it.default_material_request_type === 'Manufacture';
+						return `
+						<tr class="clickable-row" onclick="openItemDrawer('${it.item_code}')">
+							<td>
+								<span style="font-weight: 700; font-family: monospace; color: #58a6ff;">${it.item_code}</span>
+							</td>
+							<td>
+								<div style="font-weight: 600; color: #f0f6fc;">${it.item_name}</div>
+								${it.custom_alias ? `<div class="badge badge-alias">${it.custom_alias}</div>` : ''}
+							</td>
+							<td>
+								<span class="badge ${it.item_code.startsWith('TP-') || it.item_code.startsWith('NGCS-') ? 'badge-tp' : it.item_code.startsWith('BTP-') ? 'badge-btp' : it.item_code.startsWith('NVL-') ? 'badge-nvl' : 'badge-truc'}">${it.item_group}</span>
+							</td>
+							<td style="font-size: 12.5px; color: #c9d1d9;">${specSummary}</td>
+							<td style="text-align: center; font-weight: 600;">${it.stock_uom}</td>
+							<td style="text-align: center;">
+								<span class="badge ${isMfg ? 'badge-mfg' : 'badge-buy'}">${isMfg ? 'Xưởng SX' : 'Mua ngoài'}</span>
+							</td>
+							<td style="font-size: 12px; color: #8b949e;">${it.customer || it.brand || 'Bán chung'}</td>
+							<td style="text-align: center;">
+								${it.disabled == '1' ? '<span style="color: #f85149; font-weight: 600; font-size: 12px;">Ngừng bán</span>' : '<span style="color: #3fb950; font-weight: 600; font-size: 12px;">Hoạt động</span>'}
+							</td>
+							<td style="text-align: center;">
+								<button type="button" class="btn-detail" onclick="event.stopPropagation(); openItemDrawer('${it.item_code}')">👁️ Xem</button>
+							</td>
 						</tr>
-					`).join('')}
+					`}).join('')}
 				</tbody>
 			</table>
 		</div>
@@ -1020,7 +1223,181 @@ function renderMasterDataReviewerHtml() {
 		</div>
 	</main>
 
+	<!-- Slide-Over Drawer for Item Detail -->
+	<div id="drawerOverlay" class="drawer-overlay" onclick="closeItemDrawer()"></div>
+	<div id="itemDrawer" class="item-drawer">
+		<div class="drawer-header">
+			<div class="drawer-title-box">
+				<div style="display: flex; align-items: center; gap: 8px;">
+					<span id="drawerItemCode" class="drawer-code"></span>
+					<span id="drawerItemGroupBadge" class="badge"></span>
+				</div>
+				<div id="drawerItemName" class="drawer-name"></div>
+				<div id="drawerItemAlias" style="font-size: 12px; color: #8b949e; margin-top: 2px;"></div>
+			</div>
+			<button type="button" class="btn-close-drawer" onclick="closeItemDrawer()" title="Đóng (Esc)">✕</button>
+		</div>
+		<div id="drawerBody" class="drawer-body">
+			<!-- Populated via JavaScript -->
+		</div>
+	</div>
+
 	<script>
+		// Serialized Master Items & BOM Data
+		const ITEMS_DATA = ${JSON.stringify(MASTER_ITEMS)};
+		const BOMS_DATA = ${JSON.stringify(Array.from(BOM_TREE.entries()).map(([k, v]) => ({ bom_no: k, master: v.master, items: v.items })))};
+
+		const ITEMS_MAP = new Map(ITEMS_DATA.map(it => [it.item_code, it]));
+		const BOMS_BY_ITEM = new Map();
+		BOMS_DATA.forEach(b => {
+			if (b.master && b.master.item) {
+				BOMS_BY_ITEM.set(b.master.item, b);
+			}
+		});
+
+		function formatVND(val) {
+			if (val === undefined || val === null || val === '') return '—';
+			const n = Number(val);
+			if (isNaN(n)) return val;
+			return n.toLocaleString('vi-VN') + ' đ';
+		}
+
+		function formatNum(val, unit = '') {
+			if (val === undefined || val === null || val === '') return '—';
+			const n = Number(val);
+			if (isNaN(n)) return val;
+			return n.toLocaleString('vi-VN') + (unit ? ' ' + unit : '');
+		}
+
+		function openItemDrawer(code) {
+			const item = ITEMS_MAP.get(code);
+			if (!item) return;
+
+			const isMfg = item.default_material_request_type === 'Manufacture';
+			const bom = BOMS_BY_ITEM.get(code);
+
+			// Header
+			document.getElementById('drawerItemCode').textContent = item.item_code;
+			document.getElementById('drawerItemName').textContent = item.item_name;
+			document.getElementById('drawerItemAlias').textContent = item.custom_alias ? 'Tên gọi tắt: ' + item.custom_alias : '';
+
+			const badge = document.getElementById('drawerItemGroupBadge');
+			badge.textContent = item.item_group || 'Mặt hàng';
+			badge.className = 'badge ' + (
+				item.item_code.startsWith('TP-') || item.item_code.startsWith('NGCS-') ? 'badge-tp' :
+				item.item_code.startsWith('BTP-') ? 'badge-btp' :
+				item.item_code.startsWith('NVL-') ? 'badge-nvl' : 'badge-truc'
+			);
+
+			const pouchDims = (item.custom_pouch_width_mm && item.custom_pouch_length_mm)
+				? (item.custom_pouch_width_mm + ' x ' + item.custom_pouch_length_mm + (item.custom_gusset_mm ? ' +' + item.custom_gusset_mm : '') + ' mm')
+				: '—';
+
+			const cylDims = (item.custom_cylinder_length_mm || item.custom_cylinder_circ_mm)
+				? (item.custom_cylinder_length_mm + ' x ' + item.custom_cylinder_circ_mm + ' mm')
+				: '—';
+
+			let bomSectionHtml = '';
+			if (bom) {
+				const rowsHtml = bom.items.map(function(bi) {
+					return '<tr>' +
+						'<td style="padding: 6px 8px; font-family: monospace; color: #58a6ff;">' + bi.item_code + '</td>' +
+						'<td style="padding: 6px 8px; color: #c9d1d9;">' + bi.item_name + '</td>' +
+						'<td style="padding: 6px 8px; text-align: right; font-weight: 600; color: #f0f6fc;">' + Number(bi.qty).toLocaleString('vi-VN') + '</td>' +
+						'<td style="padding: 6px 8px; text-align: center; color: #8b949e;">' + bi.uom + '</td>' +
+					'</tr>';
+				}).join('');
+
+				bomSectionHtml = 
+					'<div style="background: #161b22; border-radius: 6px; padding: 10px 12px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center;">' +
+						'<div>' +
+							'<div style="font-size: 11px; color: #8b949e;">Mã BOM Định Mức:</div>' +
+							'<div style="font-family: monospace; font-weight: 700; color: #58a6ff;">' + bom.master.bom_no + '</div>' +
+						'</div>' +
+						'<div style="text-align: right;">' +
+							'<div style="font-size: 11px; color: #8b949e;">Cơ Số Sản Xuất:</div>' +
+							'<div style="font-weight: 700; color: #3fb950;">' + formatNum(bom.master.quantity) + ' ' + bom.master.uom + '</div>' +
+						'</div>' +
+					'</div>' +
+					'<table style="font-size: 12px; width: 100%; border-collapse: collapse;">' +
+						'<thead>' +
+							'<tr>' +
+								'<th style="padding: 6px 8px; font-size: 11px;">Mã NVL / BTP</th>' +
+								'<th style="padding: 6px 8px; font-size: 11px;">Tên Vật Tư</th>' +
+								'<th style="padding: 6px 8px; font-size: 11px; text-align: right;">Định Mức</th>' +
+								'<th style="padding: 6px 8px; font-size: 11px; text-align: center;">ĐVT</th>' +
+							'</tr>' +
+						'</thead>' +
+						'<tbody>' + rowsHtml + '</tbody>' +
+					'</table>';
+			} else {
+				bomSectionHtml = '<div style="padding: 12px; background: rgba(163, 113, 247, 0.08); border: 1px dashed rgba(163, 113, 247, 0.3); border-radius: 6px; font-size: 12.5px; color: #d2a8ff; text-align: center;">' +
+					'📦 Hàng mua ngoài trực tiếp / Nguyên vật liệu gốc / Trục in — Không qua công đoạn sản xuất nội bộ (Không có BOM).' +
+				'</div>';
+			}
+
+			const html = 
+				'<div class="drawer-section">' +
+					'<div class="drawer-section-title">📋 1. Định Danh & Cung Ứng ERPNext</div>' +
+					'<div class="spec-grid">' +
+						'<div class="spec-box"><div class="spec-label">Khách Hàng Sở Hữu</div><div class="spec-val" style="color: #58a6ff;">' + (item.customer || 'Dùng chung / Bán lẻ') + '</div></div>' +
+						'<div class="spec-box"><div class="spec-label">Thương Hiệu (Brand)</div><div class="spec-val">' + (item.brand || '—') + '</div></div>' +
+						'<div class="spec-box"><div class="spec-label">Phương Thức Cung Ứng</div><div class="spec-val"><span class="badge ' + (isMfg ? 'badge-mfg' : 'badge-buy') + '">' + (isMfg ? '🏭 Xưởng SX Vạn Phát' : '🛒 Mua ngoài (Thương mại)') + '</span></div></div>' +
+						'<div class="spec-box"><div class="spec-label">Đơn Vị Tính Chuẩn (UOM)</div><div class="spec-val">' + item.stock_uom + '</div></div>' +
+						'<div class="spec-box"><div class="spec-label">Đơn Giá Chuẩn (Standard Rate)</div><div class="spec-val" style="color: #7ee787;">' + formatVND(item.standard_rate) + '</div></div>' +
+						'<div class="spec-box"><div class="spec-label">Đặt Hàng Tối Thiểu (MOQ)</div><div class="spec-val">' + formatNum(item.min_order_qty, item.stock_uom) + '</div></div>' +
+						'<div class="spec-box"><div class="spec-label">Mức Tồn Kho An Toàn</div><div class="spec-val">' + formatNum(item.safety_stock, item.stock_uom) + '</div></div>' +
+						'<div class="spec-box"><div class="spec-label">Trạng Thái Kinh Doanh</div><div class="spec-val">' + (item.disabled == '1' ? '<span style="color: #f85149;">⛔ Ngừng kinh doanh</span>' : '<span style="color: #3fb950;">✅ Đang hoạt động</span>') + '</div></div>' +
+					'</div>' +
+				'</div>' +
+
+				'<div class="drawer-section">' +
+					'<div class="drawer-section-title">📐 2. Cấu Trúc Màng & Quy Cách Túi</div>' +
+					'<div class="spec-grid">' +
+						'<div class="spec-box" style="grid-column: span 2;"><div class="spec-label">Cấu Trúc Lớp Ghép (Structure Layers)</div><div class="spec-val" style="color: #f78166; font-weight: 700;">' + (item.custom_structure_layers || '—') + '</div></div>' +
+						'<div class="spec-box"><div class="spec-label">Độ Dày Tổng Màng (Thickness)</div><div class="spec-val">' + (item.custom_thickness_mic ? item.custom_thickness_mic + ' mic (µm)' : '—') + '</div></div>' +
+						'<div class="spec-box"><div class="spec-label">Khổ Màng Ghép / In (Width)</div><div class="spec-val">' + (item.custom_film_width_mm ? item.custom_film_width_mm + ' mm' : '—') + '</div></div>' +
+						'<div class="spec-box"><div class="spec-label">Kích Thước Túi (W x L + G)</div><div class="spec-val">' + pouchDims + '</div></div>' +
+						'<div class="spec-box"><div class="spec-label">Bước Dao Cắt Túi (Cut Length)</div><div class="spec-val">' + (item.custom_cut_length_mm ? item.custom_cut_length_mm + ' mm' : '—') + '</div></div>' +
+						'<div class="spec-box" style="grid-column: span 2;"><div class="spec-label">Phụ Kiện Miệng Túi / Vòi / Zipper</div><div class="spec-val" style="color: #d2a8ff;">' + (item.custom_accessory_spec || 'Không có phụ kiện') + '</div></div>' +
+					'</div>' +
+				'</div>' +
+
+				'<div class="drawer-section">' +
+					'<div class="drawer-section-title">🖨️ 3. Trục In Ống Đồng & Công Nghệ In</div>' +
+					'<div class="spec-grid">' +
+						'<div class="spec-box"><div class="spec-label">Công Nghệ In</div><div class="spec-val">' + (item.custom_print_tech || '—') + '</div></div>' +
+						'<div class="spec-box"><div class="spec-label">Số Lượng Màu / Cây Trục</div><div class="spec-val" style="color: #79c0ff; font-weight: 700;">' + (item.custom_cylinder_qty ? item.custom_cylinder_qty + ' cây' : '—') + '</div></div>' +
+						'<div class="spec-box"><div class="spec-label">Mã Bộ Trục / Item Trục</div><div class="spec-val" style="font-family: monospace;">' + (item.custom_cylinder_item || item.custom_cylinder_code || '—') + '</div></div>' +
+						'<div class="spec-box"><div class="spec-label">Kích Thước Trục (Dài x Chu Vi)</div><div class="spec-val">' + cylDims + '</div></div>' +
+						'<div class="spec-box" style="grid-column: span 2;"><div class="spec-label">Vị Trí Lưu Trữ Trục Xưởng</div><div class="spec-val">' + (item.custom_cylinder_location || 'Kho Trục Vạn Phát') + '</div></div>' +
+					'</div>' +
+				'</div>' +
+
+				'<div class="drawer-section">' +
+					'<div class="drawer-section-title">⚙️ 4. Định Mức BOM 2 Cấp Liên Kết</div>' +
+					bomSectionHtml +
+				'</div>';
+
+			document.getElementById('drawerBody').innerHTML = html;
+			document.getElementById('drawerOverlay').classList.add('open');
+			document.getElementById('itemDrawer').classList.add('open');
+			document.body.style.overflow = 'hidden';
+		}
+
+		function closeItemDrawer() {
+			const overlay = document.getElementById('drawerOverlay');
+			const drawer = document.getElementById('itemDrawer');
+			if (overlay) overlay.classList.remove('open');
+			if (drawer) drawer.classList.remove('open');
+			document.body.style.overflow = '';
+		}
+
+		// Keyboard event: ESC to close
+		window.addEventListener('keydown', (e) => {
+			if (e.key === 'Escape') closeItemDrawer();
+		});
+
 		let currentTab = 'items';
 		const tabs = ['items', 'boms', 'warehouses', 'suppliers', 'customers', 'users'];
 
@@ -1057,3 +1434,5 @@ server.listen(PORT, '0.0.0.0', () => {
 	console.log(`[VANPHAT-PORTAL] Master Data Reviewer on http://localhost:${PORT}/master-data`);
 	console.log(`[VANPHAT-PORTAL] Login page on http://localhost:${PORT}/login`);
 });
+
+export { renderMasterDataReviewerHtml };
