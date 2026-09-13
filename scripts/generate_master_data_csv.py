@@ -6,23 +6,20 @@ OUT_DIR = "data/clean-data"
 os.makedirs(OUT_DIR, exist_ok=True)
 
 item_master_list = []
-item_spec_list = []
 customer_brand_list = []
 
 MASTER_HEADERS = [
-    "item_code", "item_name", "custom_alias", "item_group", "stock_uom", "brand", "description",
+    "item_code", "item_name", "custom_alias",
+    "item_group", "stock_uom", "brand",
     "default_material_request_type", "standard_rate", "min_order_qty", "safety_stock",
     "disabled", "is_stock_item", "is_sales_item", "is_purchase_item",
-    "customer", "customer_ref_code"
-]
-
-SPEC_HEADERS = [
-    "item_code", "item_name", "custom_structure_layers", "custom_thickness_mic",
-    "custom_film_width_mm", "custom_pouch_width_mm", "custom_pouch_length_mm",
-    "custom_gusset_mm", "custom_cut_length_mm", "custom_print_tech",
-    "custom_accessory_spec", "custom_cylinder_item",
+    "customer", "customer_ref_code",
+    "custom_structure_layers", "custom_thickness_mic", "custom_film_width_mm",
+    "custom_pouch_width_mm", "custom_pouch_length_mm", "custom_gusset_mm", "custom_cut_length_mm",
+    "custom_print_tech", "custom_accessory_spec", "custom_cylinder_item",
     "custom_cylinder_code", "custom_cylinder_length_mm", "custom_cylinder_circ_mm",
-    "custom_cylinder_qty", "custom_cylinder_location"
+    "custom_cylinder_qty", "custom_cylinder_location",
+    "description"
 ]
 
 BRAND_HEADERS = [
@@ -33,7 +30,10 @@ BRAND_HEADERS = [
 
 def add_item(code, legal_name, alias, group, uom, brand="", desc="", req_type="Manufacture",
              standard_rate=0.0, min_order_qty=0, safety_stock=0, disabled=0,
-             is_stock=1, is_sales=1, is_purchase=0, customer="", ref="", spec=None):
+             is_stock=1, is_sales=1, is_purchase=0, customer="", ref="",
+             layers="", thick=0, film_w=0, pw=0, pl=0, gusset=0, cut_l=0,
+             print_tech="Không in", accessory="", cyl_item="",
+             cyl_code="", cyl_len=0, cyl_circ=0, cyl_qty=0, cyl_loc=""):
     item_master_list.append({
         "item_code": code,
         "item_name": legal_name,
@@ -41,7 +41,6 @@ def add_item(code, legal_name, alias, group, uom, brand="", desc="", req_type="M
         "item_group": group,
         "stock_uom": uom,
         "brand": brand,
-        "description": desc,
         "default_material_request_type": req_type,
         "standard_rate": standard_rate,
         "min_order_qty": min_order_qty,
@@ -51,35 +50,29 @@ def add_item(code, legal_name, alias, group, uom, brand="", desc="", req_type="M
         "is_sales_item": is_sales,
         "is_purchase_item": is_purchase,
         "customer": customer,
-        "customer_ref_code": ref
+        "customer_ref_code": ref,
+        "custom_structure_layers": layers,
+        "custom_thickness_mic": thick,
+        "custom_film_width_mm": film_w,
+        "custom_pouch_width_mm": pw,
+        "custom_pouch_length_mm": pl,
+        "custom_gusset_mm": gusset,
+        "custom_cut_length_mm": cut_l,
+        "custom_print_tech": print_tech,
+        "custom_accessory_spec": accessory,
+        "custom_cylinder_item": cyl_item,
+        "custom_cylinder_code": cyl_code,
+        "custom_cylinder_length_mm": cyl_len,
+        "custom_cylinder_circ_mm": cyl_circ,
+        "custom_cylinder_qty": cyl_qty,
+        "custom_cylinder_location": cyl_loc,
+        "description": desc
     })
-    s = {h: "" for h in SPEC_HEADERS}
-    s.update({
-        "item_code": code,
-        "item_name": legal_name,
-        "custom_structure_layers": "",
-        "custom_thickness_mic": 0,
-        "custom_film_width_mm": 0,
-        "custom_pouch_width_mm": 0,
-        "custom_pouch_length_mm": 0,
-        "custom_gusset_mm": 0,
-        "custom_cut_length_mm": 0,
-        "custom_print_tech": "Không in",
-        "custom_accessory_spec": "",
-        "custom_cylinder_item": "",
-        "custom_cylinder_code": "",
-        "custom_cylinder_length_mm": 0,
-        "custom_cylinder_circ_mm": 0,
-        "custom_cylinder_qty": 0,
-        "custom_cylinder_location": ""
-    })
-    if spec:
-        s.update(spec)
-    item_spec_list.append(s)
 
 
 # ==============================================================================
 # 1. NHÓM TÚI NƯỚC GIẶT CÓ SẴN (NGCS - MTS)
+# Căn cứ: Bảng giá nội bộ chính thức & quy cách sheet 'túi ngcs' (TỔNG HỢP ĐƠN HÀNG ĐÃ CỌC CHƯA GIAO.xlsx)
 # ==============================================================================
 ngcs_colors = [
     ("Đỏ", "Đam Mê"),
@@ -102,23 +95,15 @@ for start_idx, size_lbl, cap, thick, film_w, pw, pl, gusset, rate, layers in ngc
         add_item(
             code=code, legal_name=legal_name, alias=alias,
             group="Túi Nước Giặt Có Sẵn (NGCS)", uom="Túi",
-            brand="Vạn Phát", desc="", req_type="Manufacture",
+            brand="Vạn Phát", req_type="Manufacture",
             standard_rate=rate, min_order_qty=500, safety_stock=2000,
-            spec={
-                "custom_structure_layers": layers,
-                "custom_thickness_mic": thick,
-                "custom_film_width_mm": film_w,
-                "custom_pouch_width_mm": pw,
-                "custom_pouch_length_mm": pl,
-                "custom_gusset_mm": gusset,
-                "custom_cut_length_mm": pl,
-                "custom_print_tech": "In trục ống đồng",
-                "custom_accessory_spec": "Vòi 16mm"
-            }
+            layers=layers, thick=thick, film_w=film_w, pw=pw, pl=pl, gusset=gusset, cut_l=pl,
+            print_tech="In trục ống đồng", accessory="Vòi 16mm"
         )
 
 # ==============================================================================
 # 2. NHÓM TÚI MÀNG ĐƠN DÙNG CHUNG (TMD - PTO / MUA NGOÀI NCC)
+# Căn cứ: Các đơn đặt hàng docx/pdf trong data/raw-data/đơn đặt hàng/
 # ==============================================================================
 tmd_items = [
     ("TMD-00001", "Túi nilon HD quai thỏ 17x25cm", "HD quai thỏ 17x25", 170, 250, 45, "HDPE", 0, 65000.0),
@@ -137,23 +122,15 @@ tmd_items = [
 for code, legal_name, alias, w, l, thick, layers, gusset, rate in tmd_items:
     add_item(
         code=code, legal_name=legal_name, alias=alias, group="Túi Màng Đơn", uom="Kg", brand="Mua ngoài",
-        desc="", req_type="Purchase", standard_rate=rate, min_order_qty=25, safety_stock=100,
-        is_purchase=1,
-        spec={
-            "custom_structure_layers": layers,
-            "custom_thickness_mic": thick,
-            "custom_film_width_mm": w * 2,
-            "custom_pouch_width_mm": w,
-            "custom_pouch_length_mm": l,
-            "custom_gusset_mm": gusset,
-            "custom_cut_length_mm": l,
-            "custom_print_tech": "In lụa",
-            "custom_accessory_spec": ""
-        }
+        req_type="Purchase", standard_rate=rate, min_order_qty=25, safety_stock=100, is_purchase=1,
+        layers=layers, thick=thick, film_w=w * 2, pw=w, pl=l, gusset=gusset, cut_l=l,
+        print_tech="In lụa", accessory=""
     )
 
 # ==============================================================================
 # 3. NHÓM TÚI MÀNG GHÉP ĐẶT RIÊNG (TP - MTO HOẶC MUA NGOÀI)
+# Căn cứ: Sheet 'TÚI HD (2)' trong TỔNG HỢP ĐƠN HÀNG ĐÃ CỌC CHƯA GIAO.xlsx
+#         và sheet 'Sheet1' trong THÔNG TIN TRỤC IN.xlsx
 # ==============================================================================
 custom_pouches = [
     # code, legal_name, alias, brand, cust, ref, cap, w, l, thick, layers, cyl_code, cyl_wh, cyl_l, cyl_c, cyl_q, accessory, print_tech, rate, req_type, desc
@@ -213,22 +190,13 @@ for code, legal_name, alias, brand, cust, ref, cap, w, l, thick, layers, cyl_cod
         desc=note, req_type=req_type, standard_rate=rate, min_order_qty=5000, safety_stock=0,
         disabled=1 if dis else 0, is_sales=0 if dis else 1, is_purchase=1 if req_type == "Purchase" else 0,
         customer=cust, ref=ref,
-        spec={
-            "custom_structure_layers": layers,
-            "custom_thickness_mic": thick,
-            "custom_film_width_mm": w * 2 + 100,
-            "custom_pouch_width_mm": w,
-            "custom_pouch_length_mm": l,
-            "custom_gusset_mm": 45,
-            "custom_cut_length_mm": l,
-            "custom_print_tech": print_tech,
-            "custom_accessory_spec": accessory,
-            "custom_cylinder_item": cyl_item
-        }
+        layers=layers, thick=thick, film_w=w * 2 + 100, pw=w, pl=l, gusset=45, cut_l=l,
+        print_tech=print_tech, accessory=accessory, cyl_item=cyl_item
     )
 
 # ==============================================================================
 # 4. NHÓM TRỤC IN ỐNG ĐỒNG (TRUC - CÔNG CỤ TRỤC IN)
+# Căn cứ: File raw-data/THÔNG TIN TRỤC IN.xlsx (Sheet1)
 # ==============================================================================
 def clean_cylinder_title(raw_sp, ma_truc):
     text = raw_sp.strip()
@@ -259,16 +227,12 @@ for idx, r in enumerate(truc_rows[1:], 1):
     add_item(
         code=item_code, legal_name=legal_name, alias=alias, group="Trục In Ống Đồng", uom="Cây", brand="Trục in",
         desc=note, req_type="Purchase", standard_rate=3000000.0, is_purchase=1, ref=ma_truc,
-        spec={
-            "custom_structure_layers": "Thép mạ đồng crom",
-            "custom_print_tech": "In trục ống đồng",
-            "custom_accessory_spec": "",
-            "custom_cylinder_code": ma_truc,
-            "custom_cylinder_length_mm": cd if isinstance(cd, (int, float)) else 0,
-            "custom_cylinder_circ_mm": cv if isinstance(cv, (int, float)) else 0,
-            "custom_cylinder_qty": sl if isinstance(sl, int) else (int(sl) if str(sl).isdigit() else 0),
-            "custom_cylinder_location": f"Kho {kho}" if kho else "Kho Vạn Phát"
-        }
+        layers="Thép mạ đồng crom", print_tech="In trục ống đồng",
+        cyl_code=ma_truc,
+        cyl_len=cd if isinstance(cd, (int, float)) else 0,
+        cyl_circ=cv if isinstance(cv, (int, float)) else 0,
+        cyl_qty=sl if isinstance(sl, int) else (int(sl) if str(sl).isdigit() else 0),
+        cyl_loc=f"Kho {kho}" if kho else "Kho Vạn Phát"
     )
 
 # Thêm 3 bộ trục mới từ đơn cọc
@@ -281,20 +245,13 @@ for c_code, c_legal, c_alias, c_laser, c_qty, c_len, c_circ, c_loc, c_rate in ad
     add_item(
         code=c_code, legal_name=c_legal, alias=c_alias, group="Trục In Ống Đồng", uom="Cây", brand="Trục in",
         desc="", req_type="Purchase", standard_rate=c_rate, is_purchase=1, ref=c_laser,
-        spec={
-            "custom_structure_layers": "Thép mạ đồng crom",
-            "custom_print_tech": "In trục ống đồng",
-            "custom_accessory_spec": "",
-            "custom_cylinder_code": c_laser,
-            "custom_cylinder_length_mm": c_len,
-            "custom_cylinder_circ_mm": c_circ,
-            "custom_cylinder_qty": c_qty,
-            "custom_cylinder_location": c_loc
-        }
+        layers="Thép mạ đồng crom", print_tech="In trục ống đồng",
+        cyl_code=c_laser, cyl_len=c_len, cyl_circ=c_circ, cyl_qty=c_qty, cyl_loc=c_loc
     )
 
 # ==============================================================================
 # 5. NHÓM MÀNG THÔ NVL & HÓA CHẤT KEO GHÉP
+# Căn cứ: Sheet 'MÃ NVL' trong Nhap xuat ton NVL-T9.xlsx và MÀNG.xlsx
 # ==============================================================================
 nvl_items = [
     ("NVL-00001", "Cuộn màng PE sữa khổ 700mm dày 160mic", "PE sữa K700 160mic", "PE sữa", 160, 700, "Kg", 58000.0),
@@ -329,19 +286,14 @@ for code, legal_name, alias, layer, thick, w, uom, rate in nvl_items:
     is_chem = code in ["NVL-00025", "NVL-00026", "NVL-00027"]
     grp = "Hóa Chất & Keo Ghép" if is_chem else "Màng Thô NVL"
     add_item(
-        code=code, legal_name=legal_name, alias=alias, group=grp, uom=uom, brand="NVL", desc="",
+        code=code, legal_name=legal_name, alias=alias, group=grp, uom=uom, brand="NVL",
         req_type="Purchase", standard_rate=rate, is_sales=0, is_purchase=1,
-        spec={
-            "custom_structure_layers": layer,
-            "custom_thickness_mic": thick,
-            "custom_film_width_mm": w,
-            "custom_print_tech": "Không in",
-            "custom_accessory_spec": ""
-        }
+        layers=layer, thick=thick, film_w=w
     )
 
 # ==============================================================================
 # 6. NHÓM MÀNG IN NVL (MUA TỪ NCC IN VỀ GHÉP)
+# Căn cứ: Sheet 'MÃ NVL' (A01 - A16) trong Nhap xuat ton NVL-T9.xlsx
 # ==============================================================================
 pet_in_items = [
     ("NVL-00028", "Cuộn màng PET in ống đồng mẫu 888 Phấn Thơm khổ 800mm", "PET in 888 Phấn Thơm", "PET in", 800, 12, "m", 4200.0),
@@ -363,18 +315,13 @@ pet_in_items = [
 for code, legal_name, alias, layer, w, thick, uom, rate in pet_in_items:
     add_item(
         code=code, legal_name=legal_name, alias=alias, group="Màng In Ống Đồng", uom=uom, brand="Màng in",
-        desc="", req_type="Purchase", standard_rate=rate, is_sales=0, is_purchase=1,
-        spec={
-            "custom_structure_layers": layer,
-            "custom_thickness_mic": thick,
-            "custom_film_width_mm": w,
-            "custom_print_tech": "In trục ống đồng",
-            "custom_accessory_spec": ""
-        }
+        req_type="Purchase", standard_rate=rate, is_sales=0, is_purchase=1,
+        layers=layer, thick=thick, film_w=w, print_tech="In trục ống đồng"
     )
 
 # ==============================================================================
 # 7. NHÓM CUỘN MÀNG GHÉP BTP (XƯỞNG GHÉP XONG -> BÁN CUỘN HOẶC CẮT TÚI)
+# Căn cứ: TIẾN ĐỘ SẢN XUẤT.xlsx (sheet THEO DÕI TỔNG)
 # ==============================================================================
 btp_items = [
     ("BTP-00001", "Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm", "Cuộn 888 Phấn Thơm", "PET//PA/PE sữa", 800, 230, "m", 12500.0),
@@ -397,18 +344,13 @@ btp_items = [
 for code, legal_name, alias, layer, w, thick, uom, rate in btp_items:
     add_item(
         code=code, legal_name=legal_name, alias=alias, group="Cuộn Màng Ghép BTP", uom=uom, brand="Cuộn ghép",
-        desc="", req_type="Manufacture", standard_rate=rate, is_sales=1, is_purchase=0,
-        spec={
-            "custom_structure_layers": layer,
-            "custom_thickness_mic": thick,
-            "custom_film_width_mm": w,
-            "custom_print_tech": "In trục ống đồng",
-            "custom_accessory_spec": ""
-        }
+        req_type="Manufacture", standard_rate=rate, is_sales=1, is_purchase=0,
+        layers=layer, thick=thick, film_w=w, print_tech="In trục ống đồng"
     )
 
 # ==============================================================================
 # 8. NHÓM PHỤ KIỆN BAO BÌ (VẬT TƯ TRONG BOM)
+# Căn cứ: Đơn cọc T8 và Nhap xuat ton NVL-T9.xlsx
 # ==============================================================================
 pk_items = [
     ("NVL-00040", "Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn", "Vòi 16mm", "Cái", 600.0),
@@ -419,16 +361,13 @@ pk_items = [
 for code, legal_name, alias, uom, rate in pk_items:
     add_item(
         code=code, legal_name=legal_name, alias=alias, group="Phụ Kiện Bao Bì", uom=uom, brand="Phụ kiện",
-        desc="", req_type="Purchase", standard_rate=rate, is_sales=0, is_purchase=1,
-        spec={
-            "custom_structure_layers": "Nhựa PP/PE hoặc Carton",
-            "custom_print_tech": "Không in",
-            "custom_accessory_spec": alias if "Vòi" in alias else ("Khóa Zipper" if "Zipper" in alias else "")
-        }
+        req_type="Purchase", standard_rate=rate, is_sales=0, is_purchase=1,
+        layers="Nhựa PP/PE hoặc Carton"
     )
 
 # ==============================================================================
 # 9. NHÓM PHẾ LIỆU THU HỒI
+# Căn cứ: Mã P01, P02 trong Nhap xuat ton NVL-T9.xlsx
 # ==============================================================================
 scrap_items = [
     ("NVL-P01", "Phế liệu màng nhựa PE sữa thu hồi từ xén biên", "Phế liệu PE sữa", "Kg", 15000.0),
@@ -437,11 +376,7 @@ scrap_items = [
 for code, legal_name, alias, uom, rate in scrap_items:
     add_item(
         code=code, legal_name=legal_name, alias=alias, group="Phế Liệu Thu Hồi", uom=uom, brand="Phế liệu",
-        desc="", req_type="Manufacture", standard_rate=rate, is_sales=1, is_purchase=0,
-        spec={
-            "custom_print_tech": "Không in",
-            "custom_accessory_spec": ""
-        }
+        req_type="Manufacture", standard_rate=rate, is_sales=1, is_purchase=0
     )
 
 # ==============================================================================
@@ -501,7 +436,13 @@ def write_csv(filename, rows, headers):
         w.writerows(rows)
     print(f" Xuất thành công {len(rows)} dòng vào: {path}")
 
+# XUẤT DUY NHẤT 1 FILE item_master.csv
 write_csv("item_master.csv", item_master_list, MASTER_HEADERS)
-write_csv("item_spec.csv", item_spec_list, SPEC_HEADERS)
 write_csv("customer_brand_matrix.csv", customer_brand_list, BRAND_HEADERS)
+
+# XÓA BỎ HOÀN TOÀN item_spec.csv
+spec_old_path = os.path.join(OUT_DIR, "item_spec.csv")
+if os.path.exists(spec_old_path):
+    os.remove(spec_old_path)
+    print(f" ĐÃ XÓA BỎ HOÀN TOÀN FILE THỪA: {spec_old_path}")
 

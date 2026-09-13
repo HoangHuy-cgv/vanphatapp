@@ -99,7 +99,6 @@ def load_csv(filename):
 
 def load_all_nhom_a_data():
     master_items = load_csv("item_master.csv")
-    spec_items = {r["item_code"]: r for r in load_csv("item_spec.csv")}
     bom_master = load_csv("bom_master.csv")
     bom_items = load_csv("bom_items.csv")
 
@@ -115,7 +114,7 @@ def load_all_nhom_a_data():
             boms_grouped[bi["bom_no"]]["items"].append(bi)
 
     return {
-        "items": [{"master": m, "spec": spec_items.get(m["item_code"], {})} for m in master_items],
+        "items": [{"master": m, "spec": m} for m in master_items],
         "customers": sorted(list(customers)),
         "warehouses": load_csv("warehouses.csv"),
         "suppliers": load_csv("suppliers.csv"),
