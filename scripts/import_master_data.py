@@ -209,6 +209,7 @@ def import_to_frappe(data):
                 "doctype": "Item",
                 "item_code": code,
                 "item_name": m["item_name"],
+                "custom_alias": m.get("custom_alias", ""),
                 "item_group": m["item_group"],
                 "stock_uom": m["stock_uom"],
                 "brand": brand or None,

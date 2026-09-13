@@ -1,5 +1,16 @@
 [
   {
+    "name": "Item-custom_alias",
+    "docstatus": 0,
+    "doctype": "Custom Field",
+    "dt": "Item",
+    "fieldname": "custom_alias",
+    "label": "Tên Gọi Tắt (Alias UI)",
+    "fieldtype": "Data",
+    "description": "Tên ngắn gọn hiển thị trên màn hình tác nghiệp UI/Cockpit",
+    "insert_after": "item_name"
+  },
+  {
     "name": "Item-packaging_tab",
     "docstatus": 0,
     "doctype": "Custom Field",
