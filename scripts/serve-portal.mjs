@@ -66,7 +66,7 @@ const MASTER_ITEMS = safeReadCSV('item_master.csv');
 const ITEM_SPECS = safeReadCSV('item_spec.csv');
 const BOM_MASTERS = safeReadCSV('bom_master.csv');
 const BOM_ITEMS = safeReadCSV('bom_items.csv');
-const WAREHOUSES = safeReadCSV('warehouses.csv');
+const WAREHOUSES = safeReadCSV('warehouse_master.csv').length > 0 ? safeReadCSV('warehouse_master.csv') : safeReadCSV('warehouses.csv');
 const SUPPLIERS = safeReadCSV('supplier_master.csv').length > 0 ? safeReadCSV('supplier_master.csv') : safeReadCSV('suppliers.csv');
 const OPERATIONS = safeReadCSV('operations.csv');
 const CUSTOMER_MATRIX = safeReadCSV('customer_brand_matrix.csv');
@@ -894,17 +894,21 @@ function renderMasterDataReviewerHtml() {
 			<table>
 				<thead>
 					<tr>
-						<th>Mã kho</th>
-						<th>Tên kho bãi</th>
-						<th>Chức năng & Nhiệm vụ</th>
+						<th>Mã Kho</th>
+						<th>Tên Kho Bãi</th>
+						<th>Loại Kho (ERPNext)</th>
+						<th>Tài Khoản Kế Toán</th>
+						<th>Mặt Hàng & Quy Cách Lưu Trữ Thực Tế</th>
 					</tr>
 				</thead>
 				<tbody>
 					${WAREHOUSES.map(w => `
 						<tr>
-							<td style="font-weight: 700; font-family: monospace;">${w.name}</td>
-							<td style="font-weight: 600;">${w.warehouse_name}</td>
-							<td>${w.description}</td>
+							<td style="font-weight: 700; font-family: monospace; color: #4ea1e0;">${w.warehouse_code || w.name || ''}</td>
+							<td style="font-weight: 600; color: #f0f6fc;">${w.warehouse_name || ''}</td>
+							<td><span class="badge badge-info">${w.warehouse_type || 'Stores'}</span></td>
+							<td style="font-family: monospace; color: #7ee787;">${w.account || '-'}</td>
+							<td style="font-size: 12px; color: #8b949e;">${w.description || w.desc || ''}</td>
 						</tr>
 					`).join('')}
 				</tbody>

@@ -205,3 +205,18 @@
 | `paid_amount` | Số tiền thực tế nhận cọc hoặc thanh toán (VND) | **Số tiền giao dịch** |
 | `reference_no` | Mã tham chiếu ủy nhiệm chi / chuyển khoản ngân hàng | **Mã giao dịch NH** |
 | `status` | Tình trạng chứng từ (`Draft`, `Submitted`, `Cancelled`) | **Trạng thái** |
+
+---
+
+## 13. DANH MỤC KHO HÀNG (DocType `Warehouse`)
+
+| ERPNext Native English | Ý nghĩa | Đề xuất map VI là... |
+| :--- | :--- | :--- |
+| `name` | Mã định danh kho theo quy chuẩn ERPNext (`[warehouse_code] - [company_abbr]`) | **Mã kho** |
+| `warehouse_name` | Tên kho thực tế bằng tiếng Việt | **Tên kho** |
+| `warehouse_type` | Loại hình kho chuẩn (`Stores`, `Work In Progress`, `Finished Goods`, `Scrap`) | **Loại kho** |
+| `parent_warehouse` | Kho cha cấp trên trong cấu trúc cây kho (`All Warehouses`) | **Kho cấp trên** |
+| `is_group` | Cờ phân định nhóm kho tổng hợp hay kho chi tiết thực tế (0: Kho chứa hàng) | **Là nhóm kho** |
+| `account` | Tài khoản kế toán hàng tồn kho tương ứng (`152`, `154`, `155`, `153`) | **Tài khoản kho** |
+| `description` | Mô tả chi tiết loại hàng hóa và vật tư lưu trữ trong kho | **Mô tả hàng lưu trữ** |
+| `disabled` | Cờ ngừng sử dụng kho (0: Đang hoạt động, 1: Ngừng hoạt động) | **Ngừng sử dụng** |

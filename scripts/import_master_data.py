@@ -111,7 +111,7 @@ def load_all_nhom_a_data():
     return {
         "items": [{"master": m, "spec": m} for m in master_items],
         "customers": customers,
-        "warehouses": load_csv("warehouses.csv"),
+        "warehouses": load_csv("warehouse_master.csv") if os.path.exists(os.path.join(CLEAN_DIR, "warehouse_master.csv")) else load_csv("warehouses.csv"),
         "suppliers": load_csv("supplier_master.csv") if os.path.exists(os.path.join(CLEAN_DIR, "supplier_master.csv")) else load_csv("suppliers.csv"),
         "operations": load_csv("operations.csv"),
         "boms": list(boms_grouped.values())
@@ -153,8 +153,9 @@ def import_to_frappe(data):
             parent = root_warehouse if w["parent_warehouse"] in ("All Warehouses", "") else f"{w['parent_warehouse']} - {company_abbr}"
             create_if_missing("Warehouse", {"warehouse_name": wh_name, "company": company}, {
                 "doctype": "Warehouse", "warehouse_name": wh_name,
-                "parent_warehouse": parent, "is_group": int(w["is_group"]), "company": company
-            }, f"Tạo Kho: {wh_name}")
+                "warehouse_type": w.get("warehouse_type", "Stores"),
+                "parent_warehouse": parent, "is_group": int(w.get("is_group", 0)), "company": company
+            }, f"Tạo Kho: {wh_name} ({w.get('warehouse_code', '')})")
 
         print(f"\n4. Nạp {len(data['customers'])} Khách Hàng...")
         for c in data["customers"]:
@@ -309,7 +310,9 @@ def run_dry_run(data):
     print(f"\n3. CÂY KHO BÃI SẢN XUẤT ({len(data['warehouses'])} Kho):")
     for w in data["warehouses"]:
         indent = "   " if w["parent_warehouse"] == "All Warehouses" else "      └── "
-        print(f"{indent}[{w['warehouse_code']:<9}] {w['warehouse_name']:<25} ({w['desc']})")
+        wh_type = w.get("warehouse_type", "Stores")
+        acc = w.get("account", "-")
+        print(f"{indent}[{w['warehouse_code']:<8}] {w['warehouse_name']:<25} | Loại: {wh_type:<16} | TK: {acc}")
 
     print(f"\n4. ĐỐI TÁC NGHIỆP VỤ (PARTNERS):")
     cust_list = data["customers"]
