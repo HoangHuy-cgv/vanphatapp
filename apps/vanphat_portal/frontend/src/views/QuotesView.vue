@@ -134,9 +134,12 @@ import ModalStep1Sale from '../components/ModalStep1Sale.vue';
 import DrawerStep2Director from '../components/DrawerStep2Director.vue';
 import { api } from '../composables/useSession';
 import { usePortalCounts } from '../composables/usePortalCounts';
+import { useCockpitFormat } from '../composables/useCockpitFormat';
 
 const router = useRouter();
 const { quotesCount } = usePortalCounts();
+// S7c: formatter dùng chung (xóa bản copy-paste)
+const { formatCurrency } = useCockpitFormat();
 
 const quotations = ref([]);
 const loading = ref(false);
@@ -187,12 +190,6 @@ const filteredQuotations = computed(() => {
 		return name.includes(q) || cust.includes(q);
 	});
 });
-
-function formatCurrency(val) {
-	if (val == null || val === '') return '0 đ';
-	if (typeof val === 'string' && isNaN(Number(val))) return val;
-	return Number(val).toLocaleString('vi-VN') + ' đ';
-}
 
 function quoteStatusLabel(status) {
 	switch (status) {

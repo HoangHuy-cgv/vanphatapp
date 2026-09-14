@@ -169,6 +169,7 @@
 
 <script setup>
 import { computed, onMounted, onUnmounted } from 'vue';
+import { useCockpitFormat } from '../composables/useCockpitFormat';
 
 const props = defineProps({
 	isOpen: { type: Boolean, default: false },
@@ -178,6 +179,13 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['close']);
+
+// S7c: formatter dùng chung; giữ empty '—' cho tiền (đặc thù drawer vật tư)
+const { formatNumber } = useCockpitFormat();
+const formatCurrency = (val) => {
+	if (!val && val !== 0) return '—';
+	return new Intl.NumberFormat('vi-VN').format(Math.round(val)) + ' đ';
+};
 
 const isMfg = computed(() => {
 	if (!props.item) return false;
@@ -233,16 +241,6 @@ const getLayerBadgeClass = (layer) => {
 		return 'badge-layer-pa'; // Purple
 	}
 	return 'badge-layer-sealant'; // Emerald (PE, CPP, LDPE, HDPE)
-};
-
-const formatCurrency = (val) => {
-	if (!val && val !== 0) return '—';
-	return new Intl.NumberFormat('vi-VN').format(Math.round(val)) + ' đ';
-};
-
-const formatNumber = (val) => {
-	if (!val && val !== 0) return '0';
-	return new Intl.NumberFormat('vi-VN').format(val);
 };
 
 // Keyboard listener for Escape

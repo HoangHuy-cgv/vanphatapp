@@ -329,6 +329,7 @@ import { watch, toRef } from 'vue';
 import { api } from '../composables/useSession';
 import { toast } from '../composables/useToast';
 import { useCreateOrderForm } from '../composables/useCreateOrderForm';
+import { useCockpitFormat } from '../composables/useCockpitFormat';
 
 const props = defineProps({
 	isOpen: { type: Boolean, default: false },
@@ -374,6 +375,9 @@ const {
 	removeGenericRow,
 	resetForOpen,
 } = form;
+
+// S7c: formatter dùng chung (xóa bản copy-paste)
+const { formatCurrency } = useCockpitFormat();
 
 // Default setup when modal opens
 watch(
@@ -518,11 +522,6 @@ const handleSubmit = async () => {
 	} finally {
 		isSubmitting.value = false;
 	}
-};
-
-const formatCurrency = (val) => {
-	if (!val && val !== 0) return '0 đ';
-	return new Intl.NumberFormat('vi-VN').format(Math.round(val)) + ' đ';
 };
 </script>
 

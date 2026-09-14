@@ -475,9 +475,12 @@ import DrawerSupplierDetail from '../components/DrawerSupplierDetail.vue';
 import DrawerUserDetail from '../components/DrawerUserDetail.vue';
 import { usePortalCounts } from '../composables/usePortalCounts';
 import { api } from '../composables/useSession';
+import { useCockpitFormat } from '../composables/useCockpitFormat';
 
 const route = useRoute();
 const { catalogCount } = usePortalCounts();
+// S7c: formatter dùng chung (giữ formatItemRate riêng vì empty '—' khác chuẩn)
+const { formatCurrency } = useCockpitFormat();
 const emit = defineEmits(['add-new']);
 
 // --- Table Container Ref & Scroll Reset ---
@@ -719,12 +722,6 @@ const paginatedUsers = computed(() => {
 	const start = (currentPage.value - 1) * pageSize.value;
 	return filteredUsers.value.slice(start, start + pageSize.value);
 });
-
-function formatCurrency(val) {
-	if (val == null || val === '') return '0 đ';
-	if (typeof val === 'string' && isNaN(Number(val))) return val;
-	return Number(val).toLocaleString('vi-VN') + ' đ';
-}
 
 function formatItemRate(val) {
 	if (!val && val !== 0) return '—';

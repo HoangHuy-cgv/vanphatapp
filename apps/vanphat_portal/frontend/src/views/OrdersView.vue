@@ -249,9 +249,12 @@ import DrawerOrderDetail from '../components/DrawerOrderDetail.vue';
 import ModalCreateOrder from '../components/ModalCreateOrder.vue';
 import { api } from '../composables/useSession';
 import { usePortalCounts } from '../composables/usePortalCounts';
+import { useCockpitFormat } from '../composables/useCockpitFormat';
 
 const route = useRoute();
 const { ordersCount } = usePortalCounts();
+// S7c: formatter dùng chung (xóa 2 bản copy-paste)
+const { formatCurrency, formatNumber } = useCockpitFormat();
 
 const orders = ref([]);
 const loadingOrders = ref(false);
@@ -375,11 +378,6 @@ function orderStatusColorClass(o) {
 	return 'text-amber';
 }
 
-function formatNumber(val) {
-	if (val == null || val === '') return '0';
-	return Number(val).toLocaleString('vi-VN');
-}
-
 function formatDateShort(val) {
 	if (!val) return '—';
 	const parts = String(val).split('-');
@@ -387,12 +385,6 @@ function formatDateShort(val) {
 		return `${parts[2]}/${parts[1]}`;
 	}
 	return val;
-}
-
-function formatCurrency(val) {
-	if (val == null || val === '') return '0 đ';
-	if (typeof val === 'string' && isNaN(Number(val))) return val;
-	return Number(val).toLocaleString('vi-VN') + ' đ';
 }
 
 async function loadOrders() {

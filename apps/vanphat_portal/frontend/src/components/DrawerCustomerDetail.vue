@@ -122,6 +122,7 @@
 
 <script setup>
 import { computed, onMounted, onUnmounted } from 'vue';
+import { useCockpitFormat } from '../composables/useCockpitFormat';
 
 const props = defineProps({
 	isOpen: {
@@ -140,10 +141,8 @@ const props = defineProps({
 
 const emit = defineEmits(['close']);
 
-function formatCurrency(val) {
-	if (!val) return '0';
-	return Number(val).toLocaleString('vi-VN');
-}
+// S7c: formatter dùng chung (bản cũ thiếu ' đ' + sai falsy 0 → chuẩn hóa)
+const { formatCurrency } = useCockpitFormat();
 
 const dedicatedItems = computed(() => {
 	if (!props.customer || !props.masterItems) return [];
