@@ -174,6 +174,23 @@ def python_tests() -> int:
     return int(match.group(1)) if match else 0
 
 
+def frontend_guard() -> int:
+    """Guard composable frontend: import + khởi tạo mọi composable trong Node.
+
+    Bắt lớp lỗi mà `vite build` không thấy (biến chưa định nghĩa trong composable).
+    """
+    frontend = ROOT / "apps/vanphat_portal/frontend"
+    if not (frontend / "check-composables.mjs").is_file():
+        return 0
+    try:
+        proc = subprocess.run(
+            ["node", "check-composables.mjs"], cwd=frontend, capture_output=True, text=True, timeout=300
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return 0
+    return 1 if proc.returncode == 0 else 0
+
+
 def measure(full: bool) -> tuple[dict[str, int], list[str], list[str]]:
     fe_paths = files({FE: FE_GLOBS})
     api_paths = files({API: API_GLOBS})
@@ -203,6 +220,7 @@ def measure(full: bool) -> tuple[dict[str, int], list[str], list[str]]:
     )
     if full:
         numbers["py_tests"] = python_tests()
+        numbers["fe_guard_ok"] = frontend_guard()
 
     return numbers, floor_failures, ungated
 
@@ -243,6 +261,7 @@ def main() -> int:
             ("api_ungated", "endpoint chưa có cổng quyền", None, None, "down"),
             ("entry_gzip_kb", "entry JS gzip (KB)", None, None, "down"),
             ("fe_test_files", "file test frontend", None, None, "up"),
+            ("fe_guard_ok", "guard composable frontend xanh", None, None, "up"),
             ("py_tests", "test backend xanh", None, None, "up"),
         ]:
             now = numbers.get(rule_id, 0)

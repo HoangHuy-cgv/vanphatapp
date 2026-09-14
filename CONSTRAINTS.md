@@ -41,7 +41,7 @@ Thêm luật cấm thì sửa `FLOOR_RULES` trong `scripts/constraints-check.py`
 |---|---|---|---|---|
 | 1 | **Sự thật (SSOT)** | Mọi con số hiển thị là field do API trả; client chỉ `Intl.NumberFormat`. Nhân/chia tiền, thuế, cọc, qty phải nằm ở backend. | `constraints-check.py` → `client_money_math`, `client_qty_reduce`, `client_magic_fallback`, `client_hardcoded_qty` | mỗi lần sửa |
 | 2 | **Quyền** | Mỗi `@frappe.whitelist()` phải có cổng quyền (`has_permission`/role/`only_for`) hoặc nằm trong allowlist có lý do. Đường `frappe.qb` phải lọc theo quyền như `get_list`. | `constraints-check.py` → `api_ungated` (ledger parse AST) | mỗi lần commit |
-| 3 | **Kiểm chứng** | Backend: 41 test xanh, không giảm. Frontend: test cho mọi composable có logic; coverage dòng đã sửa ≥ 80% (khi có Vitest). | `unittest discover` (đã nối) + `vitest --coverage` (**chưa cài**) | task end / CI |
+| 3 | **Kiểm chứng** | Backend: 41 test xanh, không giảm. Frontend: **guard composable** (`check-composables.mjs`) phải xanh; test cho mọi composable có logic; coverage dòng đã sửa ≥ 80% (khi có Vitest). | `unittest discover` + `node check-composables.mjs` (đã nối vào `constraints-check.py`) | task end / CI |
 | 4 | **Trọng lượng & tốc độ** | Entry JS ≤ 170KB gzip (warn) / 300KB (fail); async chunk ≤ 500KB. FCP < 0,8s; p95 API — **chưa đo được** (cần staging). | `scripts/budget-gate.sh` (đã có) + Lighthouse (**chưa cài**) | mỗi lần build |
 | 5 | **Tiếp cận & tin cậy** | 0 vi phạm axe mức critical/serious (WCAG AA). Trạng thái đọc được bằng chữ tiếng Việt + màu, không chỉ màu. | `axe` (**chưa cài**, cần URL) | preview deploy |
 
@@ -63,7 +63,13 @@ Baseline trong `.constraints-baseline.json`. Xấu đi = `GATE: FAIL`. Không đ
 | `catch` nuốt lỗi | **1** | giảm | 0 |
 | Entry JS gzip | **142 KB** | giảm/giữ | ≤ 170 warn / 300 fail |
 | File test frontend | **0** | tăng | ≥ 8 (các composable có logic) |
+| Guard composable frontend xanh | **1** | giữ 1 | 1 (không được tắt) |
 | Test backend xanh | **41** | tăng | không giảm |
+
+**Bằng chứng máy kiểm có tác dụng (2026-09-14):** guard `check-composables.mjs` bắt được
+`ReferenceError: serverPricingInitial is not defined` trong `useCreateOrderForm.js` — lỗi làm
+**modal "Tạo đơn hàng" chết hoàn toàn** ở bản build production, và đã lọt qua `vite build` vì
+Vite chỉ bundle chứ không phân tích phạm vi biến. Đã sửa + guard chạy trong `constraints-check.py`.
 
 ## 4. Biên giới kiến trúc (Sếp chốt 2026-09-14)
 

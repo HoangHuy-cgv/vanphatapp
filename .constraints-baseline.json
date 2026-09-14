@@ -7,6 +7,7 @@
   "client_money_math": 1,
   "client_qty_reduce": 2,
   "entry_gzip_kb": 142,
+  "fe_guard_ok": 1,
   "fe_test_files": 0,
   "py_tests": 41,
   "swallowed_catch": 1

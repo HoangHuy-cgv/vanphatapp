@@ -44,3 +44,6 @@ components.d.ts
 
 # Vite build hash-churn (regenerable per build — entry HTML + www/portal.html tracked)
 apps/vanphat_portal/vanphat_portal/public/frontend/assets/
+
+# Artifact tạm của guard composable (guard tự dọn; đây là lưới an toàn nếu guard crash)
+apps/vanphat_portal/frontend/.composables-check*

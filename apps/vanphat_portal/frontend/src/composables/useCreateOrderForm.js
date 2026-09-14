@@ -6,6 +6,22 @@ import { api } from './useSession';
  * Tách từ ModalCreateOrder.vue (1193L) — view chỉ còn template + submit wiring.
  * Mọi tiền/thuế/cọc do backend `order.get_price_preview` trả; client chỉ hiển thị.
  */
+/**
+ * Giá trị khởi tạo trước khi `order.get_price_preview` trả về.
+ * Cố ý KHÔNG hardcode thuế/cọc (ADR-002: VAT doc-driven, cọc theo Payment Terms).
+ * Hằng số này bị thiếu từ commit d30fdd6 khiến ModalCreateOrder ném ReferenceError lúc mount.
+ */
+const serverPricingInitial = {
+	net_total: 0,
+	vat_rate: 0,
+	vat_amount: 0,
+	cylinder_count: 0,
+	cylinder_rate: 0,
+	cylinder_total: 0,
+	grand_total: 0,
+	required_deposit: 0,
+};
+
 export function useCreateOrderForm(masterItemsRef) {
 	const customers = ref([]);
 	const isSubmitting = ref(false);

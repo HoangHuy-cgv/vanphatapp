@@ -1,10 +1,9 @@
-# Ephemeral Todo — Simplify backend API xong
+# TODO — phiên audit kiến trúc (đã đóng)
 
-## Done
-- Harness `frappe` giả + 41 test đặc tả (không cần bench).
-- `_common.py` gom helper; order/item/bao_gia/customer/supplier/user hết lặp + hết N+1.
-- Tiền native thống nhất (trục chưa VAT, qty bỏ trục), POST tự commit, bỏ hằng số chết.
-- Drawer dùng `product_total`; build + budget gate PASS.
+Đã xong trong phiên này: `CONSTRAINTS.md` + máy kiểm floor/ratchet + nối pre-commit;
+guard `check-composables.mjs`; fix lỗi production `serverPricingInitial`; POC đo bỏ frappe-ui
+(nhánh `poc/no-frappe-ui`); ghim `frappe-ui 1.0.0-beta.64`; đồng bộ plan/handoff.
 
-## Chờ Sếp (thứ tự trong tasks/plan.md)
-- Bench staging đo p95 thật; role check/permission nhánh qb; phân loại TMD; mốc HOLD list.
+Việc tiếp theo nằm ở `tasks/plan.md` mục "Còn lại" — chờ Sếp chọn thứ tự.
+Ưu tiên em đề xuất: **(1) chốt phân quyền 19 endpoint** → **(2) chốt stack UI theo số POC**
+→ **(3) dọn hardcode/logic client**.
