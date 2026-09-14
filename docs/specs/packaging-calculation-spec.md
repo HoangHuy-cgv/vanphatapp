@@ -61,8 +61,8 @@ Quy ước ký hiệu:
 $$\text{Khối lượng lớp màng } i \text{ (gram)} = A_{pouch} (m^2) \times \text{Độ dày } T_i (\mu m) \times \text{Tỷ trọng } \rho_i (g/cm^3)$$
 
 ### 3.2. Định mức Keo ghép khô (TDS Henkel Liofol / Toyo-Morton)
-* **Màng thông thường (BOPP//PE, PET//PE):** $2.0 - 2.5\text{ g/m}^2$.
-* **Màng có lớp bạc/nhôm (PET//MPET//PE, PET//AL//PE):** $3.0 - 4.0\text{ g/m}^2$.
+* **Màng thông thường (BOPP/PE trong, PET/PE sữa):** $2.0 - 2.5\text{ g/m}^2$.
+* **Màng có lớp bạc/nhôm (PET/MPET/PE sữa, PET/AL/PE sữa):** $3.0 - 4.0\text{ g/m}^2$.
 * **Túi đựng chất lỏng có vòi, hóa mỹ phẩm:** $3.5 - 4.5\text{ g/m}^2$.
 
 ### 3.3. Tiêu hao Keo gốc và Dung môi Ethyl Acetate (EA)
@@ -77,7 +77,7 @@ $$\text{Khối lượng lớp màng } i \text{ (gram)} = A_{pouch} (m^2) \times 
 ## 4. Quy chuẩn Kỹ thuật Đóng vòi (Spout Insertion)
 
 ### 4.1. Nguyên tắc tương thích nhiệt dẻo (Bắt buộc kiểm tra)
-* **Vòi PE (Polyethylene):** Chỉ hàn dính với lớp trong cùng là **LLDPE / LDPE**.
+* **Vòi PE (Polyethylene):** Chỉ hàn dính với lớp trong cùng là **PE sữa / PE trong** (LDPE / LLDPE).
 * **Vòi PP (Polypropylene):** Chỉ hàn dính với lớp trong cùng là **CPP / R-CPP**.
 * *Cấm tuyệt đối ghép chéo:* Không được dùng vòi PE cho màng CPP hoặc vòi PP cho màng PE do lệch nhiệt độ nóng chảy, gây bục xì 100%.
 

@@ -154,3 +154,17 @@ Trước khi commit bất kỳ giao diện nào (Page, Drawer, Modal), kỹ sư/
 6. [ ] **Clean Columns:** Không có cột rác hiển thị dấu `—` hoặc rỗng số liệu.
 7. [ ] **Drawer Integration:** Click vào hàng kích hoạt Drawer chi tiết; phím `Escape` đóng Drawer mượt mà.
 8. [ ] **Inter Font Consistency:** Kiểm tra bằng Chrome DevTools MCP đạt 100% node sử dụng font `Inter`.
+9. [ ] **Zero Client Logic:** Không có phép tính toán tiền, logic đặt cọc, hoặc phân tab nghiệp vụ nào được viết bằng JavaScript ở client.
+
+---
+
+## 6. Kiến Trúc Thin Presentation Layer (Zero Client-Side Logic)
+
+Mục tiêu tối thượng của hệ thống là: **ERPNext Native làm Backend chịu 100% logic nghiệp vụ; Frontend Vue 3 là lớp vỏ mỏng (Thin Presentation Layer) thuần túy hiển thị dữ liệu.**
+
+1. **Cấm tính toán tài chính & định mức ở client:** Toàn bộ công thức tính giá, chiết khấu, VAT, chia tách tiền trục, định mức BOM, và tồn kho khả dụng bắt buộc phải tính toán qua API Backend Python (`vanphat_portal.api`).
+2. **Cấm tính nhẩm trạng thái & điều kiện đặt cọc:**
+   - Trạng thái chứng từ (Đơn nháp, Chờ cọc, Đang sản xuất, Hoàn thành, HOLD) do Backend trả về trực tiếp theo trường `status` và `docstatus` của ERPNext native.
+   - Tuyệt đối cấm viết code JS dạng `if (o.advance_paid < o.grand_total * 0.5) return 'HOLD'` trên file Vue.
+3. **Phân tab nghiệp vụ điều khiển từ Backend:** Các bộ lọc tab lớn (Xưởng SX, Mua ngoài, NGCS) phải được phân loại qua query params gửi lên Backend API, không dùng `computed` ở frontend để tự suy đoán nhóm hàng.
+

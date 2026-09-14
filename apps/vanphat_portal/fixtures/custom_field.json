@@ -38,7 +38,7 @@
     "fieldname": "custom_structure_layers",
     "label": "Cấu Trúc Màng Ghép",
     "fieldtype": "Data",
-    "description": "Ví dụ: PET//PA/PE sữa, OPP//PE, PET/MPET/PA/PE sữa",
+    "description": "Ví dụ: PET/PA/PE sữa, OPP/PE trong, PET/MPET/PA/PE sữa",
     "insert_after": "sec_film_spec"
   },
   {

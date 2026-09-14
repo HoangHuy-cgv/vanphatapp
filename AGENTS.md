@@ -27,9 +27,9 @@
 - **Database Safety**: Autonomous schema sync via standard Frappe bench commands. Raw SQL mutations against production MariaDB must be used with caution.
 
 ## 4. Domain Knowledge & SSOT References
-Agent MUST read and adhere to official project specifications in `docs/specs/` instead of guessing business logic:
-- UI Cockpit Baseline: [docs/specs/ui-cockpit-baseline-spec.md](file:///var/home/huy/vanphatapp/docs/specs/ui-cockpit-baseline-spec.md)
+Agent MUST read and adhere to official project specifications in `docs/specs/` load on-demand instead of guessing business logic:
+- Central Capability Map: [docs/specs/README.md](file:///var/home/huy/vanphatapp/docs/specs/README.md)
+- ERPNext Native Schema, Fields & Naming Series: [docs/specs/erpnext-native-vi-en-mapping.md](file:///var/home/huy/vanphatapp/docs/specs/erpnext-native-vi-en-mapping.md)
+- Master Data & Packaging Taxonomy: [docs/specs/erpnext-packaging-masterdata-spec.md](file:///var/home/huy/vanphatapp/docs/specs/erpnext-packaging-masterdata-spec.md)
 - Packaging Calculation Engine & Math: [docs/specs/packaging-calculation-spec.md](file:///var/home/huy/vanphatapp/docs/specs/packaging-calculation-spec.md)
-- Master Data & Item Taxonomy: [docs/specs/erpnext-packaging-masterdata-spec.md](file:///var/home/huy/vanphatapp/docs/specs/erpnext-packaging-masterdata-spec.md)
-- ERPNext Native VI-EN Mapping: [docs/specs/erpnext-native-vi-en-mapping.md](file:///var/home/huy/vanphatapp/docs/specs/erpnext-native-vi-en-mapping.md)
-- Naming Series: [docs/specs/naming-series-spec.md](file:///var/home/huy/vanphatapp/docs/specs/naming-series-spec.md)
+- UI Cockpit Baseline & Thin Client: [docs/specs/ui-cockpit-baseline-spec.md](file:///var/home/huy/vanphatapp/docs/specs/ui-cockpit-baseline-spec.md)
