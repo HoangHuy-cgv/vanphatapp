@@ -269,6 +269,7 @@
 <script setup>
 import { ref, computed } from 'vue';
 import { api } from '../composables/useSession';
+import { toast } from '../composables/useToast';
 
 const props = defineProps({
 	isOpen: { type: Boolean, default: false },
@@ -373,6 +374,7 @@ const handleSaveDeposit = async () => {
 			note: 'Ghi nhận cọc qua cổng buồng lái ERP',
 		});
 		if (res && res.success) {
+			toast.success(`Đã ghi nhận cọc ${formatCurrency(amt)} cho đơn ${props.order.name}!`);
 			depositInputAmount.value = null;
 			emit('update-order', {
 				...props.order,
@@ -387,6 +389,7 @@ const handleSaveDeposit = async () => {
 			const newOutstanding = Math.max(0, (props.order.grand_total || 0) - newAdvance);
 			const reqDeposit = props.order.required_deposit || props.order.grand_total * 0.5;
 			const isResolved = newAdvance >= reqDeposit;
+			toast.success(`Đã ghi nhận cọc ${formatCurrency(amt)}!`);
 			emit('update-order', {
 				...props.order,
 				advance_paid: newAdvance,
@@ -399,6 +402,7 @@ const handleSaveDeposit = async () => {
 		}
 	} catch (err) {
 		console.error('Lỗi khi ghi nhận cọc:', err);
+		toast.error('Lỗi ghi nhận cọc đơn hàng.');
 	}
 };
 
@@ -410,12 +414,14 @@ const handleOverrideHold = async () => {
 			note: 'Kế toán xác nhận duyệt ngoại lệ chuyển mua hàng NCC',
 		});
 		if (res && res.success) {
+			toast.success(`Kế toán đã duyệt ngoại lệ cho đơn ${props.order.name}!`);
 			emit('update-order', {
 				...props.order,
 				is_hold: false,
 				order_state: 'Đang xử lý',
 			});
 		} else {
+			toast.success(`Đã chuyển đơn ${props.order.name} sang Đang xử lý`);
 			emit('update-order', {
 				...props.order,
 				is_hold: false,
@@ -424,6 +430,7 @@ const handleOverrideHold = async () => {
 		}
 	} catch (err) {
 		console.error('Lỗi khi duyệt ngoại lệ:', err);
+		toast.error('Lỗi khi duyệt ngoại lệ đơn hàng.');
 	}
 };
 
@@ -435,6 +442,7 @@ const handleReportProgress = async () => {
 				name: props.order.name,
 			});
 			if (res && res.name) {
+				toast.success(`Đã kích hoạt chính thức đơn hàng ${res.name}!`);
 				emit('update-order', {
 					...props.order,
 					docstatus: res.docstatus,
@@ -447,6 +455,7 @@ const handleReportProgress = async () => {
 	} catch (err) {
 		console.error('Lỗi khi submit đơn hàng:', err);
 	}
+	toast.success(`Đơn ${props.order.name} đã hoàn thành, sẵn sàng giao!`);
 	emit('update-order', {
 		...props.order,
 		completed_qty: props.order.qty,

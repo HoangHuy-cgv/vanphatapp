@@ -336,6 +336,7 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue';
 import { api } from '../composables/useSession';
+import { toast } from '../composables/useToast';
 
 const props = defineProps({
 	isOpen: { type: Boolean, default: false },
@@ -704,6 +705,7 @@ const handleSubmit = async () => {
 	try {
 		const res = await api('vanphat_portal.api.bao_gia.create_sales_order', { payload: orderPayload });
 		if (res && res.name) {
+			toast.success(`Đã tạo đơn hàng ${res.name} thành công!`);
 			emit('order-created', {
 				name: res.name,
 				order_tab: orderTab,
@@ -711,11 +713,11 @@ const handleSubmit = async () => {
 			});
 			emit('close');
 		} else {
-			alert('Không thể tạo đơn hàng trên hệ thống.');
+			toast.error('Không thể tạo đơn hàng trên hệ thống.');
 		}
 	} catch (err) {
 		console.error('Error creating sales order:', err);
-		alert('Lỗi kết nối khi tạo đơn hàng.');
+		toast.error('Lỗi kết nối khi tạo đơn hàng.');
 	} finally {
 		isSubmitting.value = false;
 	}

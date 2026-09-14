@@ -1,13 +1,12 @@
 # Handoff: Con Trỏ Vận Hành & Chuyển Giao Session
 
-- **Mã Commit Gần Nhất**: `2e07d29`
+- **Mã Commit Gần Nhất**: `dd8a75e`
 - **Trạng Thái CI/CD & Production Build**:
-  - Vite build: Thành công 100% (`npm run build`, bundle 69.29 kB gzip).
-  - Backend: `bao_gia.py` compiled cleanly, đã bổ sung native API `create_sales_order`.
+  - Vite build: Thành công 100% (`npm run build`, bundle 73.08 kB gzip).
+  - Runtime: Frappe Zero-Node production `portal.html` đồng bộ.
 - **Hạng Mục Vừa Hoàn Thành**:
-  - Xóa bỏ 100% `src/data/mockData.js` (~966 dòng mock data).
-  - Đấu nối `ModalCreateOrder.vue` trực tiếp vào API `create_sales_order` của ERPNext với Naming Series `DH-`.
-  - Đấu nối `DrawerOrderDetail.vue` vào `record_order_deposit`, `accountant_approve_procurement`, `submit_sales_order`.
-  - Đưa `OrdersView.vue`, `QuotesView.vue`, `CatalogView.vue` về chuẩn vỏ mỏng (thin client), nạp trực tiếp qua backend APIs.
+  - Triển khai Composable `useToast.js` & component `CockpitToast.vue` chuẩn buồng lái, triệt tiêu `alert()` và nuốt lỗi.
+  - Nâng cấp Empty State UX chuẩn NNG (phân biệt rỗng tìm kiếm vs rỗng hệ thống) kèm nút CTA tức thì trên cả 3 trang.
+  - Đã cập nhật 2 điều khoản pháp lệnh cấm Mock Data và bắt buộc API-First vào `AGENTS.md`.
 - **Nhiệm Vụ Trọng Tâm Tiếp Theo**:
-  - Tiến hành test luồng tạo đơn và duyệt cọc trực tiếp trên giao diện thực tế.
+  - Triển khai Giai đoạn P2: Compact Pagination bar và Dual-layer Form Validation Guard.

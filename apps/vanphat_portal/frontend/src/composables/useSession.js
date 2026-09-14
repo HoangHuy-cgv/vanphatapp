@@ -1,4 +1,5 @@
 import { ref } from 'vue';
+import { toast } from './useToast';
 
 const currentUser = ref('giamdoc@vanphat.com');
 
@@ -52,12 +53,30 @@ export async function api(method, args = {}, options = {}) {
 		if (!res.ok) {
 			const errJson = await res.json().catch(() => ({}));
 			console.warn(`[api] HTTP ${res.status} calling ${method}:`, errJson);
+			if (!options.silent) {
+				let msg = `Lỗi hệ thống (${res.status})`;
+				if (errJson._server_messages) {
+					try {
+						const parsed = JSON.parse(errJson._server_messages);
+						if (Array.isArray(parsed) && parsed.length > 0) {
+							const item = JSON.parse(parsed[0]);
+							msg = item.message || msg;
+						}
+					} catch (e) {}
+				} else if (errJson.exception) {
+					msg = errJson.exception.split(':').pop() || msg;
+				}
+				toast.error(msg);
+			}
 			return null;
 		}
 		const json = await res.json();
 		return json.message !== undefined ? json.message : json;
 	} catch (err) {
 		console.warn(`[api] Network error calling ${method}:`, err);
+		if (!options.silent) {
+			toast.error('Không thể kết nối máy chủ ERP');
+		}
 		return null;
 	}
 }

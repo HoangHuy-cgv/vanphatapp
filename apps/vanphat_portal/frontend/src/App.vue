@@ -106,6 +106,9 @@
 				</keep-alive>
 			</router-view>
 		</main>
+
+		<!-- Global Industrial Cockpit Toast -->
+		<CockpitToast />
 	</div>
 </template>
 
@@ -113,6 +116,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import logoUrl from './assets/logo-vanphat.png';
+import CockpitToast from './components/CockpitToast.vue';
 import { useSession } from './composables/useSession';
 import { usePortalCounts } from './composables/usePortalCounts';
 

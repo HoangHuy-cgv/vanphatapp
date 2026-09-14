@@ -155,21 +155,22 @@
 						</td>
 					</tr>
 					<tr v-if="filteredMasterItems.length === 0">
-						<td colspan="6" class="empty-cell" style="padding: 2.5rem 1rem; text-align: center;">
-							<div v-if="loadingMasterItems" class="text-secondary">Đang tải danh mục...</div>
-							<div v-else-if="itemSearchQuery" class="flex flex-col items-center justify-center gap-2">
-								<div class="text-secondary text-sm">
-									Không tìm thấy mặt hàng nào khớp với "<strong class="text-white">{{ itemSearchQuery }}</strong>" trong tab {{ currentTabLabel }}.
-								</div>
-								<button
-									type="button"
-									class="btn-clear-filter-inline"
-									@click="itemSearchQuery = ''"
-								>
-									✕ Xóa tìm kiếm để xem tất cả {{ currentTabMasterItems.length }} sản phẩm {{ currentTabLabel }}
+						<td colspan="6" class="empty-cell">
+							<div v-if="loadingMasterItems" class="cockpit-empty-state">
+								<span class="empty-msg">Đang tải danh mục từ ERPNext...</span>
+							</div>
+							<div v-else-if="itemSearchQuery" class="cockpit-empty-state">
+								<span class="empty-msg">Không tìm thấy mặt hàng khớp với "{{ itemSearchQuery }}" trong tab {{ currentTabLabel }}</span>
+								<button type="button" class="btn-empty-action" @click="itemSearchQuery = ''">
+									✕ Xóa tìm kiếm
 								</button>
 							</div>
-							<div v-else class="text-secondary text-sm">Không có mặt hàng nào trong tab này</div>
+							<div v-else class="cockpit-empty-state">
+								<span class="empty-msg">Chưa có dữ liệu trong mục {{ currentTabLabel }}</span>
+								<button type="button" class="btn-empty-action btn-empty-primary" @click="handleAddNew">
+									{{ currentAddButtonLabel }}
+								</button>
+							</div>
 						</td>
 					</tr>
 				</tbody>
@@ -226,9 +227,22 @@
 						</td>
 					</tr>
 					<tr v-if="filteredCustomers.length === 0">
-						<td colspan="4" class="empty-cell" style="padding: 2.5rem 1rem; text-align: center;">
-							<div v-if="loadingCustomers" class="text-secondary">Đang tải khách hàng...</div>
-							<div v-else class="text-secondary text-sm">Không tìm thấy khách hàng nào phù hợp</div>
+						<td colspan="4" class="empty-cell">
+							<div v-if="loadingCustomers" class="cockpit-empty-state">
+								<span class="empty-msg">Đang tải khách hàng từ ERPNext...</span>
+							</div>
+							<div v-else-if="customerSearchQuery" class="cockpit-empty-state">
+								<span class="empty-msg">Không tìm thấy khách hàng khớp với "{{ customerSearchQuery }}"</span>
+								<button type="button" class="btn-empty-action" @click="customerSearchQuery = ''">
+									✕ Xóa tìm kiếm
+								</button>
+							</div>
+							<div v-else class="cockpit-empty-state">
+								<span class="empty-msg">Chưa có khách hàng nào trên hệ thống</span>
+								<button type="button" class="btn-empty-action btn-empty-primary" @click="handleAddNew">
+									+ Thêm khách hàng
+								</button>
+							</div>
 						</td>
 					</tr>
 				</tbody>
@@ -285,9 +299,22 @@
 						</td>
 					</tr>
 					<tr v-if="filteredSuppliers.length === 0">
-						<td colspan="4" class="empty-cell" style="padding: 2.5rem 1rem; text-align: center;">
-							<div v-if="loadingSuppliers" class="text-secondary">Đang tải nhà cung cấp...</div>
-							<div v-else class="text-secondary text-sm">Không tìm thấy nhà cung cấp nào phù hợp</div>
+						<td colspan="4" class="empty-cell">
+							<div v-if="loadingSuppliers" class="cockpit-empty-state">
+								<span class="empty-msg">Đang tải nhà cung cấp từ ERPNext...</span>
+							</div>
+							<div v-else-if="supplierSearchQuery" class="cockpit-empty-state">
+								<span class="empty-msg">Không tìm thấy nhà cung cấp khớp với "{{ supplierSearchQuery }}"</span>
+								<button type="button" class="btn-empty-action" @click="supplierSearchQuery = ''">
+									✕ Xóa tìm kiếm
+								</button>
+							</div>
+							<div v-else class="cockpit-empty-state">
+								<span class="empty-msg">Chưa có nhà cung cấp nào trên hệ thống</span>
+								<button type="button" class="btn-empty-action btn-empty-primary" @click="handleAddNew">
+									+ Thêm NCC
+								</button>
+							</div>
 						</td>
 					</tr>
 				</tbody>
@@ -346,9 +373,22 @@
 						</td>
 					</tr>
 					<tr v-if="filteredUsers.length === 0">
-						<td colspan="5" class="empty-cell" style="padding: 2.5rem 1rem; text-align: center;">
-							<div v-if="loadingUsers" class="text-secondary">Đang tải người dùng...</div>
-							<div v-else class="text-secondary text-sm">Không tìm thấy người dùng nào phù hợp</div>
+						<td colspan="5" class="empty-cell">
+							<div v-if="loadingUsers" class="cockpit-empty-state">
+								<span class="empty-msg">Đang tải người dùng từ ERPNext...</span>
+							</div>
+							<div v-else-if="userSearchQuery" class="cockpit-empty-state">
+								<span class="empty-msg">Không tìm thấy người dùng khớp với "{{ userSearchQuery }}"</span>
+								<button type="button" class="btn-empty-action" @click="userSearchQuery = ''">
+									✕ Xóa tìm kiếm
+								</button>
+							</div>
+							<div v-else class="cockpit-empty-state">
+								<span class="empty-msg">Chưa có người dùng nào trên hệ thống</span>
+								<button type="button" class="btn-empty-action btn-empty-primary" @click="handleAddNew">
+									+ Thêm người dùng
+								</button>
+							</div>
 						</td>
 					</tr>
 				</tbody>

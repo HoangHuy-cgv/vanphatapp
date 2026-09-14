@@ -60,12 +60,25 @@
 				<tbody>
 					<tr v-if="loading">
 						<td colspan="5" class="empty-cell">
-							Đang tải danh sách báo giá...
+							<div class="cockpit-empty-state">
+								<span class="empty-msg">Đang tải danh sách báo giá từ ERPNext...</span>
+							</div>
 						</td>
 					</tr>
 					<tr v-else-if="!filteredQuotations.length">
 						<td colspan="5" class="empty-cell">
-							Không tìm thấy báo giá nào
+							<div v-if="quoteSearchQuery" class="cockpit-empty-state">
+								<span class="empty-msg">Không tìm thấy báo giá khớp với từ khóa "{{ quoteSearchQuery }}"</span>
+								<button type="button" class="btn-empty-action" @click="quoteSearchQuery = ''">
+									✕ Xóa tìm kiếm
+								</button>
+							</div>
+							<div v-else class="cockpit-empty-state">
+								<span class="empty-msg">Chưa có phiếu báo giá nào trên hệ thống</span>
+								<button type="button" class="btn-empty-action btn-empty-primary" @click="openStep1Modal">
+									+ Tạo báo giá R&D
+								</button>
+							</div>
 						</td>
 					</tr>
 					<tr

@@ -165,9 +165,22 @@
 						</td>
 					</tr>
 					<tr v-if="filteredTabOrders.length === 0">
-						<td colspan="7" class="empty-cell" style="padding: 2.5rem 1rem; text-align: center;">
-							<div v-if="loadingOrders" class="text-secondary">Đang tải đơn hàng...</div>
-							<div v-else class="text-secondary text-sm">Không tìm thấy đơn hàng nào</div>
+						<td colspan="7" class="empty-cell">
+							<div v-if="loadingOrders" class="cockpit-empty-state">
+								<span class="empty-msg">Đang tải đơn hàng từ ERPNext...</span>
+							</div>
+							<div v-else-if="orderSearchQuery" class="cockpit-empty-state">
+								<span class="empty-msg">Không tìm thấy đơn hàng khớp với từ khóa "{{ orderSearchQuery }}"</span>
+								<button type="button" class="btn-empty-action" @click="orderSearchQuery = ''">
+									✕ Xóa tìm kiếm
+								</button>
+							</div>
+							<div v-else class="cockpit-empty-state">
+								<span class="empty-msg">Chưa có đơn hàng nào trong phân loại này</span>
+								<button type="button" class="btn-empty-action btn-empty-primary" @click="openCreateOrderModal">
+									+ Tạo đơn hàng mới
+								</button>
+							</div>
 						</td>
 					</tr>
 				</tbody>
