@@ -83,7 +83,12 @@
 		</header>
 
 		<!-- Bảng Mặt hàng: Sản phẩm, NVL, Trục in -->
-		<div v-if="activeCatalogTab === 'sp' || activeCatalogTab === 'nvl' || activeCatalogTab === 'truc'" class="table-container">
+		<div
+			v-if="activeCatalogTab === 'sp' || activeCatalogTab === 'nvl' || activeCatalogTab === 'truc'"
+			:key="activeCatalogTab"
+			ref="tableContainerRef"
+			class="table-container"
+		>
 			<table class="data-table">
 				<thead>
 					<tr>
@@ -162,7 +167,12 @@
 		</div>
 
 		<!-- Bảng Khách hàng -->
-		<div v-else-if="activeCatalogTab === 'kh'" class="table-container">
+		<div
+			v-else-if="activeCatalogTab === 'kh'"
+			:key="activeCatalogTab"
+			ref="tableContainerRef"
+			class="table-container"
+		>
 			<table class="data-table">
 				<thead>
 					<tr>
@@ -216,7 +226,12 @@
 		</div>
 
 		<!-- Bảng Nhà cung cấp -->
-		<div v-else-if="activeCatalogTab === 'ncc'" class="table-container">
+		<div
+			v-else-if="activeCatalogTab === 'ncc'"
+			:key="activeCatalogTab"
+			ref="tableContainerRef"
+			class="table-container"
+		>
 			<table class="data-table">
 				<thead>
 					<tr>
@@ -270,7 +285,12 @@
 		</div>
 
 		<!-- Bảng Người dùng -->
-		<div v-else-if="activeCatalogTab === 'user'" class="table-container">
+		<div
+			v-else-if="activeCatalogTab === 'user'"
+			:key="activeCatalogTab"
+			ref="tableContainerRef"
+			class="table-container"
+		>
 			<table class="data-table">
 				<thead>
 					<tr>
@@ -363,7 +383,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, watch, nextTick, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import DrawerItemDetail from '../components/DrawerItemDetail.vue';
 import DrawerCustomerDetail from '../components/DrawerCustomerDetail.vue';
@@ -375,6 +395,23 @@ import { api } from '../composables/useSession';
 
 const route = useRoute();
 const { catalogCount } = usePortalCounts();
+
+// --- Table Container Ref & Scroll Reset ---
+const tableContainerRef = ref(null);
+
+function resetTableScroll() {
+	nextTick(() => {
+		if (tableContainerRef.value) {
+			tableContainerRef.value.scrollTop = 0;
+			tableContainerRef.value.scrollLeft = 0;
+		}
+		const containers = document.querySelectorAll('.table-container');
+		containers.forEach((el) => {
+			el.scrollTop = 0;
+			el.scrollLeft = 0;
+		});
+	});
+}
 
 // --- Master Catalog (Items) States ---
 const masterItems = ref([]);
@@ -452,7 +489,12 @@ const catalogSearchInput = computed({
 
 function switchCatalogTab(tabKey) {
 	activeCatalogTab.value = tabKey;
+	resetTableScroll();
 }
+
+watch(activeCatalogTab, () => {
+	resetTableScroll();
+});
 
 function switchItemTab(tabKey) {
 	switchCatalogTab(tabKey);

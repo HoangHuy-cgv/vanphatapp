@@ -66,7 +66,7 @@
 			</button>
 		</header>
 
-		<div class="table-container">
+		<div :key="activeOrderTab" class="table-container">
 			<table class="data-table">
 				<!-- TAB 1: XƯỞNG SẢN XUẤT -->
 				<thead v-if="activeOrderTab === 'xuong_sx'">
@@ -196,7 +196,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, watch, nextTick, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import DrawerOrderDetail from '../components/DrawerOrderDetail.vue';
 import ModalCreateOrder from '../components/ModalCreateOrder.vue';
@@ -211,6 +211,16 @@ const orders = ref([]);
 const loadingOrders = ref(false);
 const activeOrderTab = ref('xuong_sx');
 const orderSearchQuery = ref('');
+
+watch(activeOrderTab, () => {
+	nextTick(() => {
+		const containers = document.querySelectorAll('.table-container');
+		containers.forEach((el) => {
+			el.scrollTop = 0;
+			el.scrollLeft = 0;
+		});
+	});
+});
 
 const masterItems = ref([]);
 const selectedOrderId = ref('');

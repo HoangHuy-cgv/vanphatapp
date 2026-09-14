@@ -323,7 +323,9 @@ const cockpitChecks = [
 	{ name: 'Supplier Master CSV 100% compliant with NCC- naming series (zero SUPP-)', test: suppRows.length > 0 && suppRows.every(r => r.name.startsWith('NCC-')) && !suppRaw.includes('SUPP-') },
 	{ name: 'Property Setter fixtures define native ERPNext naming series for Quotation & Sales Order', test: propSetterJson.includes('Quotation-naming_series-options') && propSetterJson.includes('Sales Order-naming_series-options') },
 	{ name: 'Property Setter fixtures define native ERPNext naming series for Customer & Supplier', test: propSetterJson.includes('Customer-naming_series-options') && propSetterJson.includes('Supplier-naming_series-options') },
-	{ name: 'Customer API prevents MariaDB schema crash by not querying unjoined credit_limit on Customer doctype', test: !customerApiSource.includes('"credit_limit"') && !customerApiSource.includes("'credit_limit'") }
+	{ name: 'Customer API prevents MariaDB schema crash by not querying unjoined credit_limit on Customer doctype', test: !customerApiSource.includes('"credit_limit"') && !customerApiSource.includes("'credit_limit'") },
+	{ name: 'CatalogView table containers bound with :key and resetTableScroll on tab switch', test: catalogVue.includes(':key="activeCatalogTab"') && catalogVue.includes('resetTableScroll') && catalogVue.includes('tableContainerRef') },
+	{ name: 'OrdersView table container bound with :key and scroll reset on order tab change', test: ordersVue.includes(':key="activeOrderTab"') && ordersVue.includes('watch(activeOrderTab') }
 ];
 
 let allCockpitPassed = true;
