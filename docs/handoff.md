@@ -1,6 +1,6 @@
 # Handoff: Con Trỏ Vận Hành & Chuyển Giao Session
 
-- **Mã Commit Hiện Tại**: Đang chuẩn bị commit fix scroll sticking on tab switch.
+- **Mã Commit Hiện Tại**: `aa5342a` (`fix(catalog): reset table scroll to top when switching catalog and order tabs`)
 - **Trạng Thái CI/CD & Test**:
   - Test Suite `scripts/verify-catalog-page.mjs`: **100/100 checks PASSED 100%**.
   - Production Build: Vite build thành công sạch sẽ (bundle 72.60 kB gzip).
