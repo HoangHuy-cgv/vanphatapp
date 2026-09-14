@@ -8,7 +8,7 @@ import frappe
 
 
 @frappe.whitelist()
-def get_list(query=None):
+def get_list(query=None, page=1, page_length=100):
 	"""Return customers filtered by query string (code, name, alias, territory)."""
 	q = (query or "").strip().lower()
 	like = f"%{q}%" if q else None
@@ -28,7 +28,9 @@ def get_list(query=None):
 		["Customer", "customer_group", "like", like],
 	] if like else None
 	# S5: get_list tôn trọng permission (không get_all bypass)
-	return frappe.db.get_list("Customer", filters=filters, or_filters=or_filters, fields=fields, order_by="name asc")
+	return frappe.db.get_list("Customer", filters=filters, or_filters=or_filters, fields=fields, order_by="name asc",
+		start=(max(1, int(page or 1)) - 1) * min(100, max(1, int(page_length or 100))),
+		page_length=min(100, max(1, int(page_length or 100))))
 
 
 @frappe.whitelist()

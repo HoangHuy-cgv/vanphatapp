@@ -8,7 +8,7 @@ import frappe
 
 
 @frappe.whitelist()
-def get_list(query=None, supplier_group=None):
+def get_list(query=None, supplier_group=None, page=1, page_length=100):
 	"""Return suppliers filtered by query string and supplier group."""
 	q = (query or "").strip().lower()
 	grp = (supplier_group or "").strip()
@@ -31,7 +31,9 @@ def get_list(query=None, supplier_group=None):
 		["Supplier", "tax_id", "like", like],
 	] if like else None
 	# S5: get_list tôn trọng permission (không get_all bypass)
-	return frappe.db.get_list("Supplier", filters=filters, or_filters=or_filters, fields=fields, order_by="name asc")
+	return frappe.db.get_list("Supplier", filters=filters, or_filters=or_filters, fields=fields, order_by="name asc",
+		start=(max(1, int(page or 1)) - 1) * min(100, max(1, int(page_length or 100))),
+		page_length=min(100, max(1, int(page_length or 100))))
 
 
 @frappe.whitelist()

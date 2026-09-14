@@ -25,9 +25,14 @@ def clear_catalog_cache(*args, **kwargs):
 
 @frappe.whitelist()
 def get_list(query=None, item_group=None, supply_type=None, category=None, page=1, page_length=15):
-	"""Return master items filtered by query string, item group, supply type, or cockpit category with Redis cache and pagination."""
+	"""P3 full-server: filters + or_filters like + start/page_length + db.count.
+
+	Docs: frappe.db.get_list(doctype, filters, or_filters, fields, order_by, start,
+	page_length) tự áp permission (https://docs.frappe.io/framework/user/en/api/database).
+	DB lọc, vỏ chỉ hiển thị — không limit=500 + filter Python.
+	"""
 	import math
-	q = (query or "").strip().lower()
+	q = (query or "").strip()
 	grp = (item_group or "").strip()
 	supply = (supply_type or "").strip()
 	cat = (category or "").strip().lower()
@@ -35,7 +40,7 @@ def get_list(query=None, item_group=None, supply_type=None, category=None, page=
 	pl = min(100, max(1, int(page_length or 15)))
 
 	# S3: key chứa MỌI params (tab/cat/grp/supply/q/page/pl) — key cũ thiếu q gây stale cross-filter
-	cache_key = f"vp:items:list|tab={cat}|grp={grp}|supply={supply}|q={q}|page={p}|pl={pl}"
+	cache_key = f"vp:items:list|tab={cat}|grp={grp}|supply={supply}|q={q.lower()}|page={p}|pl={pl}"
 	try:
 		cached = frappe.cache().get_value(cache_key)
 		if cached:
@@ -43,87 +48,80 @@ def get_list(query=None, item_group=None, supply_type=None, category=None, page=
 	except Exception:
 		pass
 
-	def matches_category(it):
-		if not cat or cat == "all":
-			return True
-		code = (it.get("item_code") or "").upper()
-		group = (it.get("item_group") or "").strip()
-		if cat == "sp":
-			return code.startswith("TP-") or group in ("Túi Màng Ghép Đặt Riêng", "Sản phẩm", "Thành phẩm", "Màng ghép")
-		elif cat == "btp":
-			return code.startswith("BTP-") or group in ("Cuộn Màng Ghép BTP", "Bán thành phẩm")
-		elif cat == "nvl":
-			return code.startswith("NVL-") or group in ("Nguyên vật liệu", "Hạt nhựa", "Màng đơn", "Mực in", "Dung môi", "Keo")
-		elif cat == "truc":
-			return code.startswith("TRUC-") or group in ("Trục in", "Khuôn in")
-		return True
-
-	raw_items = []
+	fields = [
+		"item_code",
+		"item_name",
+		"custom_alias",
+		"item_group",
+		"stock_uom",
+		"brand",
+		"default_material_request_type",
+		"standard_rate",
+		"min_order_qty",
+		"safety_stock",
+		"disabled",
+		"is_stock_item",
+		"is_sales_item",
+		"is_purchase_item",
+		"customer",
+		"custom_structure_layers",
+		"custom_thickness_mic",
+		"custom_film_width_mm",
+		"custom_pouch_width_mm",
+		"custom_pouch_length_mm",
+		"custom_gusset_mm",
+		"custom_cut_length_mm",
+		"custom_print_tech",
+		"custom_accessory_spec",
+		"custom_cylinder_item",
+		"custom_cylinder_qty",
+		"custom_cylinder_location",
+		"description",
+	]
 	filters = {}
 	if grp:
 		filters["item_group"] = grp
 	if supply:
 		filters["default_material_request_type"] = supply
+	# category cockpit → điều kiện native (prefix mã + item_group), S9 chuyển Item Group filter khi có data
+	if cat == "sp":
+		filters["item_code"] = ["like", "TP-%"]
+	elif cat == "btp":
+		filters["item_code"] = ["like", "BTP-%"]
+	elif cat == "nvl":
+		filters["item_code"] = ["like", "NVL-%"]
+	elif cat == "truc":
+		filters["item_code"] = ["like", "TRUC-%"]
+	or_filters = None
+	if q:
+		like = f"%{q}%"
+		or_filters = [
+			["Item", "item_code", "like", like],
+			["Item", "item_name", "like", like],
+			["Item", "custom_alias", "like", like],
+			["Item", "customer", "like", like],
+			["Item", "custom_structure_layers", "like", like],
+			["Item", "description", "like", like],
+		]
 
 	# S5: db.get_list tôn trọng permission (không get_all bypass); lỗi DB → [] truthful
-	raw_items = frappe.db.get_list(
+	items = frappe.db.get_list(
 		"Item",
-			fields=[
-				"item_code",
-				"item_name",
-				"custom_alias",
-				"item_group",
-				"stock_uom",
-				"brand",
-				"default_material_request_type",
-				"standard_rate",
-				"min_order_qty",
-				"safety_stock",
-				"disabled",
-				"is_stock_item",
-				"is_sales_item",
-				"is_purchase_item",
-				"customer",
-				"custom_structure_layers",
-				"custom_thickness_mic",
-				"custom_film_width_mm",
-				"custom_pouch_width_mm",
-				"custom_pouch_length_mm",
-				"custom_gusset_mm",
-				"custom_cut_length_mm",
-				"custom_print_tech",
-				"custom_accessory_spec",
-				"custom_cylinder_item",
-				"custom_cylinder_qty",
-				"custom_cylinder_location",
-				"description"
-			],
-			filters=filters,
-			order_by="modified desc",
-			limit_start=(p - 1) * pl,
-			page_length=500,
-		)
-		# NOTE: S5/S6 chỉ gỡ guest + get_all→get_list + xóa CSV fallback.
-		# limit=500 + filter Python (cat/q) + paginate tay giữ nguyên → S-vá-catalog riêng.
-
-	filtered_items = []
-	for it in raw_items:
-		if cat and cat != "all" and not matches_category(it):
-			continue
-		if q:
-			search_space = f"{it.get('item_code', '')} {it.get('item_name', '')} {it.get('custom_alias', '')} {it.get('customer', '')} {it.get('custom_structure_layers', '')} {it.get('description', '')}".lower()
-			if q not in search_space:
-				continue
-		filtered_items.append(it)
-
-	total_count = len(filtered_items)
-	total_pages = max(1, math.ceil(total_count / pl))
-	start = (p - 1) * pl
-	end = start + pl
-	paginated_items = filtered_items[start:end]
+		fields=fields,
+		filters=filters or None,
+		or_filters=or_filters,
+		order_by="modified desc",
+		start=(p - 1) * pl,
+		page_length=pl,
+	)
+	total_count = frappe.db.count("Item", filters) if not or_filters else None
+	if total_count is None:
+		# có q: count cùng điều kiện bằng qb (get_list không trả total)
+		total_count = _count_items(filters, like if q else None)
+	total_pages = max(1, math.ceil(total_count / pl)) if total_count else 1
 
 	res = {
-		"items": paginated_items,
+		"items": items,
 		"page": p,
 		"page_length": pl,
 		"total_count": total_count,
@@ -136,6 +134,28 @@ def get_list(query=None, item_group=None, supply_type=None, category=None, page=
 		pass
 
 	return res
+
+
+def _count_items(filters, like=None):
+	"""Đếm Item cùng điều kiện get_list (dùng khi có or_filters)."""
+	IT = frappe.qb.DocType("Item")
+	qb = frappe.qb.from_(IT).select(frappe.query_builder.functions.Count("*").as_("c"))
+	for k, v in (filters or {}).items():
+		if isinstance(v, (list, tuple)) and len(v) == 2 and str(v[0]).lower() == "like":
+			qb = qb.where(getattr(IT, k).like(v[1]))
+		else:
+			qb = qb.where(getattr(IT, k) == v)
+	if like:
+		cond = None
+		for col in ["item_code", "item_name", "custom_alias", "customer", "custom_structure_layers", "description"]:
+			c = getattr(IT, col).like(like)
+			cond = c if cond is None else (cond | c)
+		qb = qb.where(cond)
+	try:
+		rows = qb.run(as_dict=True)
+		return int(rows[0].get("c") or 0) if rows else 0
+	except Exception:
+		return 0
 
 
 @frappe.whitelist()

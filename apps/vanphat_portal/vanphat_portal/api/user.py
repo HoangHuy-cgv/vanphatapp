@@ -8,7 +8,7 @@ import frappe
 
 
 @frappe.whitelist()
-def get_list(query=None, department=None):
+def get_list(query=None, department=None, page=1, page_length=100):
 	"""Return internal system users filtered by query string and department."""
 	q = (query or "").strip().lower()
 	dept = (department or "").strip()
@@ -32,4 +32,6 @@ def get_list(query=None, department=None):
 		["User", "role_profile_name", "like", like],
 	] if like else None
 	# S5: get_list tôn trọng permission (không get_all bypass)
-	return frappe.db.get_list("User", filters=filters, or_filters=or_filters, fields=fields, order_by="name asc")
+	return frappe.db.get_list("User", filters=filters, or_filters=or_filters, fields=fields, order_by="name asc",
+		start=(max(1, int(page or 1)) - 1) * min(100, max(1, int(page_length or 100))),
+		page_length=min(100, max(1, int(page_length or 100))))
