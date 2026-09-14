@@ -10,7 +10,7 @@
 					@click="switchCatalogTab('sp')"
 				>
 					<span>Sản phẩm</span>
-					<span class="tab-badge">{{ productItems.length }}</span>
+					<span v-if="activeCatalogTab === 'sp'" class="tab-badge">{{ currentTotalRecords }}</span>
 				</button>
 				<button
 					type="button"
@@ -19,7 +19,7 @@
 					@click="switchCatalogTab('nvl')"
 				>
 					<span>Nguyên vật liệu</span>
-					<span class="tab-badge">{{ nvlItems.length }}</span>
+					<span v-if="activeCatalogTab === 'nvl'" class="tab-badge">{{ currentTotalRecords }}</span>
 				</button>
 				<button
 					type="button"
@@ -28,7 +28,7 @@
 					@click="switchCatalogTab('truc')"
 				>
 					<span>Trục in</span>
-					<span class="tab-badge">{{ trucItems.length }}</span>
+					<span v-if="activeCatalogTab === 'truc'" class="tab-badge">{{ currentTotalRecords }}</span>
 				</button>
 				<button
 					type="button"
@@ -554,6 +554,35 @@ const {
 
 function onAddNew() {
 	emit('add-new', catalog.handleAddNew());
+}
+
+// Khôi phục từ bản pre-S7d (commit 1356141^): 2 helpers này bị rơi khi tách
+// composable, khiến template vỡ render (TypeError ... is not a function).
+function getItemDimensionsText(it) {
+	if (!it) return '—';
+	const w = Number(it.custom_pouch_width_mm) || 0;
+	const l = Number(it.custom_pouch_length_mm) || 0;
+	const thick = Number(it.custom_thickness_mic) || 0;
+	if (w > 0 && l > 0) {
+		if (thick > 0) return `${w} x ${l} mm x ${thick} mic`;
+		return `${w} x ${l} mm`;
+	}
+	const rollW = Number(it.custom_film_width_mm) || 0;
+	if (rollW > 0) {
+		if (thick > 0) return `Khổ ${rollW} mm x ${thick} mic`;
+		return `Khổ ${rollW} mm`;
+	}
+	const cylL = Number(it.custom_cylinder_length_mm) || 0;
+	const cylC = Number(it.custom_cylinder_circ_mm) || 0;
+	if (cylL > 0 || cylC > 0) return `Dài ${cylL} x CV ${cylC} mm`;
+	return it.description || '—';
+}
+
+function getItemGussetText(it) {
+	if (!it) return null;
+	const g = Number(it.custom_gusset_mm) || 0;
+	if (g > 0) return `${g} mm`;
+	return null;
 }
 
 // --- Table Container Ref (scroll reset nằm trong useCatalogData) ---

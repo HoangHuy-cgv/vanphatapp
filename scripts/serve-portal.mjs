@@ -237,12 +237,19 @@ const server = http.createServer((req, res) => {
 				return;
 			}
 
-			// 1.1 Item APIs: List Items
+			// 1.1 Item APIs: List Items (shape khớp item.py: {items,page,total_count,total_pages};
+			// category sp/nvl/truc lọc prefix như backend Python)
 			if (pathname === '/api/method/vanphat_portal.api.item.get_list') {
 				const q = (parsed.query || '').trim().toLowerCase();
 				const grp = (parsed.item_group || '').trim();
 				const supply = (parsed.supply_type || '').trim();
+				const cat = (parsed.category || '').trim().toLowerCase();
+				const p = Math.max(1, Number(parsed.page) || 1);
+				const pl = Math.min(100, Math.max(1, Number(parsed.page_length) || 15));
 				let items = safeReadCSV('item_master.csv');
+				if (cat === 'sp') items = items.filter(it => it.item_code.startsWith('TP-'));
+				else if (cat === 'nvl') items = items.filter(it => it.item_code.startsWith('NVL-'));
+				else if (cat === 'truc') items = items.filter(it => it.item_code.startsWith('TRUC-'));
 				if (grp) {
 					items = items.filter(it => it.item_group === grp);
 				}
@@ -258,7 +265,13 @@ const server = http.createServer((req, res) => {
 						(it.custom_structure_layers && it.custom_structure_layers.toLowerCase().includes(q))
 					);
 				}
-				res.end(JSON.stringify({ message: items }));
+				const total = items.length;
+				res.end(JSON.stringify({ message: {
+					items: items.slice((p - 1) * pl, p * pl),
+					page: p, page_length: pl,
+					total_count: total,
+					total_pages: Math.max(1, Math.ceil(total / pl)),
+				} }));
 				return;
 			}
 
@@ -513,10 +526,33 @@ const server = http.createServer((req, res) => {
 				return;
 			}
 
-			// 8. List Orders
-			if (pathname === '/api/method/vanphat_portal.api.bao_gia.list_orders') {
-				const orders = getOrders();
-				res.end(JSON.stringify({ message: orders }));
+			// 8. List Orders (mock local; shape khớp order.list_orders cho OrdersView)
+			// Frontend gọi vanphat_portal.api.order.list_orders (Order doc-driven);
+			// mock alias cũ bao_gia.list_orders giữ tương thích.
+			if (pathname === '/api/method/vanphat_portal.api.order.list_orders'
+				|| pathname === '/api/method/vanphat_portal.api.bao_gia.list_orders') {
+				const all = getOrders();
+				const q = (parsed.query || '').trim().toLowerCase();
+				const p = Math.max(1, Number(parsed.page) || 1);
+				const pl = Math.min(100, Math.max(1, Number(parsed.page_length) || 15));
+				let filtered = all;
+				if (q) {
+					filtered = all.filter(o =>
+						(o.name && o.name.toLowerCase().includes(q)) ||
+						(o.customer_name && o.customer_name.toLowerCase().includes(q))
+					);
+				}
+				const total = filtered.length;
+				const slice = filtered.slice((p - 1) * pl, p * pl);
+				res.end(JSON.stringify({
+					message: {
+						orders: slice,
+						total_count: total,
+						total_pages: Math.max(1, Math.ceil(total / pl)),
+						page: p,
+						tab_counts: { all: all.length },
+					}
+				}));
 				return;
 			}
 
@@ -1413,7 +1449,7 @@ function renderMasterDataReviewerHtml() {
 					'</tr>';
 				}).join('');
 
-				bomSectionHtml = 
+				bomSectionHtml =
 					'<div style="background: #161b22; border-radius: 6px; padding: 10px 12px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center;">' +
 						'<div>' +
 							'<div style="font-size: 11px; color: #8b949e;">Mã BOM Định Mức:</div>' +
@@ -1441,7 +1477,7 @@ function renderMasterDataReviewerHtml() {
 				'</div>';
 			}
 
-			const html = 
+			const html =
 				'<div class="drawer-section">' +
 					'<div class="drawer-section-title">📋 1. Định Danh & Cung Ứng ERPNext</div>' +
 					'<div class="spec-grid">' +
