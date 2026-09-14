@@ -302,19 +302,11 @@ const props = defineProps({
 			grand_total: '0 đ',
 		}),
 	},
-	figures: {
-		type: Object,
-		default: null,
-	},
 	savedData: {
 		type: Object,
 		default: () => ({}),
 	},
 	calculationResult: {
-		type: Object,
-		default: null,
-	},
-	calcResult: {
 		type: Object,
 		default: null,
 	},
@@ -324,12 +316,8 @@ const emit = defineEmits(['close', 'back', 'submit', 'itemsChanged']);
 
 const formData = computed(() => {
 	if (props.formData && Object.keys(props.formData).length) return props.formData;
-	if (props.step1Data && Object.keys(props.step1Data).length) return props.step1Data;
-	return {};
+	return props.step1Data || {};
 });
-
-const figuresData = computed(() => props.figures || props.previewFigures);
-const calcData = computed(() => props.calcResult || props.calculationResult);
 
 function formatCurrency(val) {
 	if (val == null || val === '') return '0 đ';

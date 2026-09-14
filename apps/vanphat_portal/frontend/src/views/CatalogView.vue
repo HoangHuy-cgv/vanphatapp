@@ -401,15 +401,11 @@ const tableContainerRef = ref(null);
 
 function resetTableScroll() {
 	nextTick(() => {
-		if (tableContainerRef.value) {
-			tableContainerRef.value.scrollTop = 0;
-			tableContainerRef.value.scrollLeft = 0;
+		const container = tableContainerRef.value || document.querySelector('.table-container');
+		if (container) {
+			container.scrollTop = 0;
+			container.scrollLeft = 0;
 		}
-		const containers = document.querySelectorAll('.table-container');
-		containers.forEach((el) => {
-			el.scrollTop = 0;
-			el.scrollLeft = 0;
-		});
 	});
 }
 
@@ -489,7 +485,6 @@ const catalogSearchInput = computed({
 
 function switchCatalogTab(tabKey) {
 	activeCatalogTab.value = tabKey;
-	resetTableScroll();
 }
 
 watch(activeCatalogTab, () => {

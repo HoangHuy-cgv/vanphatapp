@@ -1,12 +1,12 @@
 # Handoff: Con Trỏ Vận Hành & Chuyển Giao Session
 
-- **Mã Commit Hiện Tại**: `aa5342a` (`fix(catalog): reset table scroll to top when switching catalog and order tabs`)
+- **Mã Commit Hiện Tại**: Đang chuẩn bị commit simplify code.
 - **Trạng Thái CI/CD & Test**:
   - Test Suite `scripts/verify-catalog-page.mjs`: **100/100 checks PASSED 100%**.
-  - Production Build: Vite build thành công sạch sẽ (bundle 72.60 kB gzip).
-  - Browser Verification: Đã kiểm chứng trực tiếp bằng Chrome DevTools khi cuộn và đổi tab, `scrollTop` lập tức về 0.
+  - Production Build: Vite build thành công sạch sẽ (bundle 72.55 kB gzip).
+  - Browser Verification: 100% xác minh hiển thị và cơ chế cuộn mượt mà.
 - **Hạng Mục Đã Hoàn Thành**:
-  - Sửa bug giữ điểm cuộn (scroll sticking): Thêm `:key="activeCatalogTab"`, `tableContainerRef`, và `resetTableScroll()` trong `CatalogView.vue` và `OrdersView.vue`.
-  - Đảm bảo 100% khi chuyển giữa Sản phẩm, NVL, Trục in, Khách hàng, NCC, Người dùng đều lập tức cuộn về đầu trang.
+  - Khắc phục triệt để bug scroll sticking: Thêm `:key="activeCatalogTab"`, `tableContainerRef`, `resetTableScroll()`.
+  - Simplify & Tối ưu: Dọn dẹp watcher/hàm reset scroll, loại bỏ alias thừa giữa `QuotesView` và `DrawerStep2Director`, giảm kích thước bundle.
 - **Nhiệm Vụ Trọng Tâm Tiếp Theo**:
   - Sẵn sàng nhận chỉ đạo tiếp theo từ Sếp.
