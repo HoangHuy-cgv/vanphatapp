@@ -7,7 +7,7 @@
 
 ---
 
-## BẢN ĐỒ 4 MODULE ĐẶC TẢ CHUYÊN BIỆT (LOAD ON-DEMAND)
+## BẢN ĐỒ 6 MODULE ĐẶC TẢ CHUYÊN BIỆT (LOAD ON-DEMAND)
 
 ```
 ┌────────────────────────────────────────────────────────────────────────────────────────────────┐
@@ -25,7 +25,13 @@
 │                               │                                  │ Hao hụt, Báo giá 2 nấc      │
 ├───────────────────────────────┼──────────────────────────────────┼─────────────────────────────┤
 │ 4. Chuẩn Buồng Lái UI/UX      │ ui-cockpit-baseline-spec.md      │ 5 Trụ cột buồng lái, Dark   │
-│                               │                                  │ Palette, Thin-Client Rule   │
+│                               │                                  │ Palette, WCAG 1.4.1, DoD      │
+├───────────────────────────────┼──────────────────────────────────┼─────────────────────────────┤
+│ 5. Kiến Trúc Frontend         │ frontend-architecture-spec.md    │ Vue thin client, router,    │
+│                               │                                  │ budget, ngưỡng tách 500L    │
+├───────────────────────────────┼──────────────────────────────────┼─────────────────────────────┤
+│ 6. Ranh Giới Backend Native   │ backend-native-api-spec.md       │ Thin wrapper, get_list/qb,  │
+│                               │                                  │ cache key, native hóa rates │
 └───────────────────────────────┴──────────────────────────────────┴─────────────────────────────┘
 ```
 
@@ -67,3 +73,16 @@
   - Bảng màu Industrial Dark Palette và Typography font `Inter` native.
   - Nguyên tắc Thin-Client: Cấm tính toán tiền và logic trạng thái ở Vue.
 - **Khi nào tải:** Khi thiết kế hoặc chỉnh sửa bất kỳ giao diện nào (Page, Drawer, Modal, Table).
+
+### [Module 5: Kiến Trúc Frontend Thin Client](file:///var/home/huy/vanphatapp/docs/specs/frontend-architecture-spec.md)
+- **Tệp SSOT:** `docs/specs/frontend-architecture-spec.md`
+- **Nội dung:**
+  - Stack lock Vue 3 + `<script setup>` + hash router + Frappe UI + Vite Zero-Node.
+  - Ngưỡng tách component (> 500 bắt buộc), data fetching chỉ qua `api()` + debounce/Abort, route lazy + `keep-alive` có kiểm soát, build target + budget.
+- **Khi nào tải:** Khi viết/sửa bất kỳ file nào trong `apps/vanphat_portal/frontend/src/`.
+
+### [Module 6: Ranh Giới Backend Native API](file:///var/home/huy/vanphatapp/docs/specs/backend-native-api-spec.md)
+- **Tệp SSOT:** `docs/specs/backend-native-api-spec.md`
+- **Nội dung:**
+  - Module map 6 API, lookup native-first 4 tầng, query `get_list`/`frappe.qb` chữa N+1, chuẩn GET/POST + commit, cache key đủ params + invalidate `doc_events`, checklist bảo mật, lộ trình native hóa hằng số VAT/cọc/trục.
+- **Khi nào tải:** Khi viết/sửa bất kỳ file nào trong `apps/vanphat_portal/vanphat_portal/api/`.

@@ -23,7 +23,7 @@ Hệ thống ERP & Portal Van Phat là công cụ điều hành tốc độ cao 
 ├────────────────────────────────────────────────────────────────────────────────────────┤
 │ TRỤ CỘT 2: BẢNG DỮ LIỆU KHÓA CỨNG 1 DÒNG (Single-line, 5–7 Cột, Zero Subtitle)         │
 ├────────────────────────────────────────────────────────────────────────────────────────┤
-│ TRỤ CỘT 3: TRẠNG THÁI THUẦN MÀU 14PX IN ĐẬM (Zero Khung Viền, Zero Hộp Nền, Zero Chấm)│
+│ TRỤ CỘT 3: TRẠNG THÁI CHỮ + MÀU 14PX IN ĐẬM (Text Bắt Buộc, Zero Khung, Zero Chấm)  │
 ├────────────────────────────────────────────────────────────────────────────────────────┤
 │ TRỤ CỘT 4: CHUẨN SỐ LIỆU CÔNG NGHIỆP (Tiêu đề ngắn 1-3 từ, Số Căn Phải Tabular-nums)  │
 ├────────────────────────────────────────────────────────────────────────────────────────┤
@@ -58,20 +58,23 @@ Mọi hàng và ô trong bảng dữ liệu bắt buộc tuân thủ quy tắc *
 
 ---
 
-### Trụ Cột 3: Trạng Thái & Phân Loại Thuần Màu Sắc 14px (Pure Colored Text Baseline)
+### Trụ Cột 3: Trạng Thái Chữ + Màu 14px (Text-Plus-Color Baseline — xem ADR-001)
 
-Triệt tiêu hoàn toàn phong cách badge dạng viên thuốc (pill badge) có khung viền và nền hộp mờ truyền thống. Thay thế bằng phong cách **Chữ to 14px thuần màu sắc**:
+Triệt tiêu phong cách badge dạng viên thuốc (pill badge) có khung viền và nền hộp mờ truyền thống. Thay thế bằng **chữ to 14px in đậm có text label tiếng Việt + màu**:
 
-1. **Triệt tiêu đóng hộp:** Không dùng `border`, không dùng `background`, không dùng `padding` bao quanh. Chữ nằm phẳng, tự nhiên cùng hàng với dữ liệu bảng.
-2. **Bỏ dấu chấm và icon thừa:** Không thêm dấu chấm tròn (`●`), dấu tích (`✓`) hay icon phía trước chữ. Bản thân màu sắc đã đủ để mắt người nhận diện phân loại trong 0.1 giây.
-3. **Cỡ chữ & Kiểu dáng:** Chữ to rõ **14px**, in đậm `font-weight: 600`, phông chữ `Inter`, định dạng số `tabular-nums`.
-4. **Bảng màu phân loại chuẩn mực:**
+1. **Text label bắt buộc (WCAG 1.4.1):** Màu KHÔNG BAO GIỜ là kênh duy nhất. Mọi trạng thái PHẢI có chữ phân biệt (VD "Chờ cọc" vs "Đã duyệt" vs "Quá hạn", "Gối đầu" vs "Thanh toán ngay"). Frontend hiện tại đã render text sẵn — giữ và chuẩn hóa, không phát minh thêm kênh.
+2. **Triệt tiêu đóng hộp:** Không dùng `border`, không dùng `background`, không dùng `padding` bao quanh. Chữ nằm phẳng cùng hàng dữ liệu bảng.
+3. **Bỏ dấu chấm và icon thừa:** Không thêm `●`, `✓` hay icon trước chữ. Text + màu đã đủ nhận diện trong 0.1 giây mà không vỡ layout 1 dòng.
+4. **Cỡ chữ & kiểu dáng:** 14px, `font-weight: 600`, phông `Inter`, số `tabular-nums`.
+5. **Bảng màu phân loại chuẩn mực + contrast ≥ 4.5:1 trên nền `#161b22`:**
    - 🟡 **Vàng Hổ Phách (`#fbbf24`)**: Điều khoản gối đầu, Chờ duyệt (Pending), Tạm dừng (On-hold), Cảnh báo mức an toàn.
    - 🔵 **Xanh Da Trời (`#7dd3fc` / `#4ea1e0`)**: Đặt cọc, Đang xử lý, Đang sản xuất (In-production), Lớp màng in ngoài (Print layer).
    - 🟣 **Tím Thạch Anh (`#c084fc`)**: Màng trung gian đặc biệt (PA/Nylon), Đang kiểm tra chất lượng (QC).
    - 🟢 **Xanh Ngọc Emerald (`#6ee7b7`)**: Nghiệm thu, Thanh toán ngay, Hoàn thành (Completed), Đang hoạt động (Active).
    - 🔴 **Đỏ Carmine (`#f87171`)**: Đã hủy (Cancelled), Quá hạn công nợ (Overdue), Ngừng hoạt động (Inactive).
-5. **Phạm vi áp dụng:** Áp dụng cho 100% các trạng thái, loại điều khoản thanh toán, và nhãn phân loại trên toàn hệ thống (kể cả trên Table và trong Drawer).
+   - 🔘 **Text thứ cấp (`#9ca3af`, KHÔNG dùng `#64748b`)**: tiêu đề cột, ĐVT, nhãn phụ — `#64748b` trên nền surface chỉ đạt 3.63:1, RỚT AA. Thay toàn bộ text-muted cũ bằng `#9ca3af`.
+6. **Badge số lượng:** kèm `aria-label` tiếng Việt (VD `aria-label="8 đơn quá hạn"`).
+7. **Phạm vi:** 100% trạng thái, điều khoản, nhãn phân loại trên toàn hệ thống (Table + Drawer).
 
 ---
 
@@ -94,8 +97,8 @@ Triệt tiêu hoàn toàn phong cách badge dạng viên thuốc (pill badge) c�
 Khi người dùng click vào bất kỳ hàng nào trên bảng chính, hệ thống sẽ kích hoạt một thanh trượt (Slide-over Drawer) từ cạnh phải màn hình:
 
 1. **Header định danh cô đọng:** Hiển thị Mã đối tượng to rõ bên trái, giá trị tổng quát (Đơn giá chuẩn, Doanh thu năm, hoặc Trạng thái chính) bên phải. Tuyệt đối không lặp lại tên pháp lý dài ngoằng ở subtitle dưới mã.
-2. **Phân khu chức năng bằng thẻ phẳng:** Các khối dữ liệu kỹ thuật (Thông số túi, Cấu trúc màng, Bộ trục in, Định mức BOM, Liên hệ) được trình bày bằng các ô thẻ phẳng tối giản, nhãn nhạt màu kích thước nhỏ (11.5px), giá trị đậm to rõ (14px – 15px).
-3. **Phím tắt vận hành nhanh:** Luôn hỗ trợ phím `Escape` để đóng Drawer ngay lập tức, click backdrop để thoát, giữ trạng thái cuộn của bảng chính bên dưới không bị nhảy vị trí.
+2. **Phân khu chức năng bằng thẻ phẳng:** Các khối dữ liệu kỹ thuật (Thông số túi, Cấu trúc màng, Bộ trục in, Định mức BOM, Liên hệ) trình bày bằng ô thẻ phẳng tối giản, nhãn nhạt màu 11.5px, giá trị đậm 14px – 15px.
+3. **Chuẩn dialog vận hành (APG):** Drawer có `role="dialog" aria-modal="true"` + `aria-label` tên đối tượng; focus trap bên trong khi mở; `Escape`/backdrop đóng; **restore focus về đúng nút/hàng đã trigger**; giữ scroll bảng chính; cấm keyboard trap (WCAG 2.1.2). Skeleton/spinner khi tải drawer truthful (`aria-busy`), cấm skeleton trang trí giả tiến độ.
 
 ---
 
@@ -148,13 +151,16 @@ Trước khi commit bất kỳ giao diện nào (Page, Drawer, Modal), kỹ sư/
 
 1. [ ] **Single-Line Check:** 100% ô trong bảng không bị rớt dòng trên màn hình tiêu chuẩn (1366x768 trở lên).
 2. [ ] **Zero Redundant Subtitle:** Không có ô nào kẹp mã nhỏ bên dưới tên.
-3. [ ] **Pure Color Badges:** 100% trạng thái và điều khoản hiển thị bằng chữ to 14px in đậm thuần màu sắc (không viền, không nền hộp, không chấm).
+3. [ ] **Trạng Thái Text + Màu (ADR-001):** 100% trạng thái có text label tiếng Việt phân biệt + màu chuẩn 14px bold (không viền, không nền hộp, không chấm). Không còn trạng thái color-alone.
 4. [ ] **Header 1 Row:** Thanh header chỉ có 1 dòng duy nhất, không có thanh filter chip phụ thứ cấp.
 5. [ ] **Right-Aligned Numbers:** 100% cột số lượng, định mức, kích thước, tiền tệ được căn lề phải với `tabular-nums`.
 6. [ ] **Clean Columns:** Không có cột rác hiển thị dấu `—` hoặc rỗng số liệu.
-7. [ ] **Drawer Integration:** Click vào hàng kích hoạt Drawer chi tiết; phím `Escape` đóng Drawer mượt mà.
+7. [ ] **Drawer Integration:** Click vào hàng kích hoạt Drawer chi tiết; `Escape`/backdrop đóng; focus trap + restore về trigger; `role=dialog aria-modal`.
 8. [ ] **Inter Font Consistency:** Kiểm tra bằng Chrome DevTools MCP đạt 100% node sử dụng font `Inter`.
 9. [ ] **Zero Client Logic:** Không có phép tính toán tiền, logic đặt cọc, hoặc phân tab nghiệp vụ nào được viết bằng JavaScript ở client.
+10. [ ] **A11y Floor:** Contrast text ≥ 4.5:1 (cấm `#64748b` trên nền tối); mọi input có `<label>`; badge số có `aria-label`; touch target ≥ 24px; không keyboard trap.
+11. [ ] **Responsive Breakpoints:** 1024 sidebar icon-only; 768 drawer full-screen; 320 card thay table (không cuộn ngang ép).
+12. [ ] **Feedback Truthful:** Skeleton có `aria-busy`; empty state nêu bước tiếp theo; error toast có nút retry.
 
 ---
 
