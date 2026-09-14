@@ -10,8 +10,87 @@ Handles ERPNext Native Sales Order lifecycle:
 import frappe
 
 
-CYLINDER_STANDARD_RATE = 3100000.0
-STANDARD_VAT_RATE = 8.0  # 8% VAT standard for packaging manufacturing
+# S9: fallback khi native chưa cấu hình (chi tiết xem docs/decisions/ADR-002-native-pricing-fallback.md).
+# Thứ tự lookup: Sales Taxes and Charges Template → Item Price TRUC- → Payment Terms Template → fallback.
+FALLBACK_VAT_RATE = 8.0
+FALLBACK_CYLINDER_RATE = 3100000.0
+FALLBACK_DEPOSIT_PCT = 0.5
+
+
+def _get_vat_rate(company=None):
+	"""S9: VAT từ Sales Taxes and Charges Template theo Company; thiếu → fallback 8%."""
+	try:
+		template = None
+		if company and frappe.db.exists("Company", company):
+			template = frappe.db.get_value(
+				"Sales Taxes and Charges Template",
+				{"company": company, "is_default": 1},
+				"name",
+			) or frappe.db.get_value(
+				"Sales Taxes and Charges Template", {"company": company}, "name"
+			)
+		if not template:
+			template = frappe.db.get_value(
+				"Sales Taxes and Charges Template", {"is_default": 1}, "name"
+			)
+		if template:
+			rows = frappe.db.get_list(
+				"Sales Taxes and Charges",
+				filters={"parent": template},
+				fields=["rate"],
+				page_length=10,
+			)
+			for r in rows:
+				rate = frappe.utils.flt(r.get("rate"))
+				if rate > 0:
+					return rate
+	except Exception:
+		pass
+	return FALLBACK_VAT_RATE
+
+
+def _get_cylinder_rate():
+	"""S9: giá trục từ Item Price của mã TRUC- đầu tiên; thiếu → fallback 3.1M."""
+	try:
+		price = frappe.db.get_list(
+			"Item Price",
+			filters={"item_code": ["like", "TRUC-%"], "selling": 1},
+			fields=["price_list_rate"],
+			order_by="modified desc",
+			page_length=1,
+		)
+		if price and frappe.utils.flt(price[0].get("price_list_rate")) > 0:
+			return frappe.utils.flt(price[0].get("price_list_rate"))
+	except Exception:
+		pass
+	return FALLBACK_CYLINDER_RATE
+
+
+def _get_deposit_pct(customer=None):
+	"""S9: % cọc từ Payment Terms Template của Customer; thiếu → fallback 50%.
+
+	Credit Limit > 0 (Trả sau) do caller quyết cọc 0đ — hàm này chỉ trả % cho trả trước.
+	"""
+	try:
+		if customer:
+			name = customer if frappe.db.exists("Customer", customer) else frappe.db.get_value(
+				"Customer", {"alias": customer}, "name"
+			) or frappe.db.get_value("Customer", {"customer_name": customer}, "name")
+			if name:
+				template = frappe.db.get_value("Customer", name, "payment_terms")
+				if template:
+					terms = frappe.db.get_list(
+						"Payment Terms Template Detail",
+						filters={"parent": template},
+						fields=["invoice_portion"],
+						order_by="idx asc",
+						page_length=1,
+					)
+					if terms and frappe.utils.flt(terms[0].get("invoice_portion")) > 0:
+						return frappe.utils.flt(terms[0].get("invoice_portion")) / 100.0
+	except Exception:
+		pass
+	return FALLBACK_DEPOSIT_PCT
 
 
 @frappe.whitelist()
@@ -35,6 +114,12 @@ def get_price_preview(payload=None, items=None, customer=None, has_new_cylinders
 	if isinstance(items_list, str):
 		items_list = frappe.parse_json(items_list)
 
+	# S9: lookup native trước, fallback ADR-002 khi chưa cấu hình
+	company = (data.get("company") if isinstance(data, dict) else None) or frappe.defaults.get_user_default("Company")
+	vat_rate = _get_vat_rate(company)
+	cylinder_rate = _get_cylinder_rate()
+	deposit_pct = _get_deposit_pct(customer or (data.get("customer") if isinstance(data, dict) else None))
+
 	# 1. Tính tổng tiền hàng trước thuế (Net Total)
 	net_total = 0.0
 	for it in items_list:
@@ -43,13 +128,13 @@ def get_price_preview(payload=None, items=None, customer=None, has_new_cylinders
 		net_total += qty * rate
 
 	# 2. Tính thuế GTGT (VAT)
-	vat_amount = round(net_total * (STANDARD_VAT_RATE / 100.0))
+	vat_amount = round(net_total * (vat_rate / 100.0))
 	product_total = net_total + vat_amount
 
 	# 3. Tính tiền trục in (Cylinder tooling)
 	cyl_count = int(cylinder_count or 0)
 	is_new_cyl = bool(has_new_cylinders) and cyl_count > 0
-	cylinder_total = (cyl_count * CYLINDER_STANDARD_RATE) if is_new_cyl else 0.0
+	cylinder_total = (cyl_count * cylinder_rate) if is_new_cyl else 0.0
 
 	# 4. Tổng giá trị đơn hàng (Grand Total)
 	grand_total = product_total + cylinder_total
@@ -69,24 +154,25 @@ def get_price_preview(payload=None, items=None, customer=None, has_new_cylinders
 		except Exception:
 			credit_limit = 0.0
 
-	# 6. Quy tắc Vàng: Khách trả sau cọc 0đ; Khách trả trước cọc 50% tiền hàng sau thuế + 100% tiền trục
+	# 6. Quy tắc Vàng: Khách trả sau cọc 0đ; Khách trả trước cọc theo Payment Terms + 100% tiền trục
 	if payment_type == "Trả sau":
 		required_deposit = 0.0
 	else:
-		required_deposit = round((product_total * 0.5) + cylinder_total)
+		required_deposit = round((product_total * deposit_pct) + cylinder_total)
 
 	return {
 		"net_total": net_total,
-		"vat_rate": STANDARD_VAT_RATE,
+		"vat_rate": vat_rate,
 		"vat_amount": vat_amount,
 		"product_total": product_total,
 		"cylinder_count": cyl_count,
-		"cylinder_rate": CYLINDER_STANDARD_RATE,
+		"cylinder_rate": cylinder_rate,
 		"cylinder_total": cylinder_total,
 		"grand_total": grand_total,
 		"payment_type": payment_type,
 		"credit_limit": credit_limit,
 		"required_deposit": required_deposit,
+		"deposit_pct": round(deposit_pct * 100.0, 1),
 	}
 
 
@@ -214,6 +300,12 @@ def list_orders(tab=None, query=None, page=1, page_length=15):
 	except Exception:
 		pass
 
+	# S9: lookup native 1 lần cho cả trang (VAT theo Company) + cache % cọc theo KH
+	_page_company = frappe.defaults.get_user_default("Company")
+	vat_rate = _get_vat_rate(_page_company)
+	vat_factor = 1 + vat_rate / 100.0
+	_deposit_pct_cache = {}
+
 	processed_orders = []
 	for r in page_rows:
 		o = dict(r)
@@ -232,6 +324,7 @@ def list_orders(tab=None, query=None, page=1, page_length=15):
 			agg_rows = agg_q.run(as_dict=True)
 		except Exception:
 			agg_rows = []
+		# S9: VAT/cọc native (lookup 1 lần/ngoài vòng lặp, fallback ADR-002)
 		cyl_total = 0.0
 		total_qty = 0.0
 		for _it in agg_rows:
@@ -239,13 +332,17 @@ def list_orders(tab=None, query=None, page=1, page_length=15):
 			_code = (_it.get("item_code") or "").upper()
 			_iname = (_it.get("item_name") or "").lower()
 			if "TRUC-" in _code or "trục" in _iname:
-				cyl_total += frappe.utils.flt(_it.get("amount")) * 1.08
+				cyl_total += frappe.utils.flt(_it.get("amount")) * vat_factor
 		if not total_qty:
 			total_qty = frappe.utils.flt(o.get("qty")) or 0
 		product_total = max(0.0, gt - cyl_total)
 		o["cylinder_total"] = cyl_total
 		o["product_total"] = product_total
-		o["required_deposit"] = round((product_total * 0.5) + cyl_total)
+		o["vat_rate"] = vat_rate
+		_cust = o.get("customer")
+		if _cust not in _deposit_pct_cache:
+			_deposit_pct_cache[_cust] = _get_deposit_pct(_cust)
+		o["required_deposit"] = round((product_total * _deposit_pct_cache[_cust]) + cyl_total)
 
 		# Alias + mặt hàng đầu từ JOIN (không get_value từng dòng)
 		o["customer_alias"] = o.get("customer_alias") or o.get("customer_name") or o.get("customer")
@@ -309,7 +406,9 @@ def get_order_details(name):
 	grand_total = frappe.utils.flt(doc.grand_total)
 	outstanding_amount = max(0.0, grand_total - advance_paid)
 
-	# Bóc tách tiền trục in (TRUC-) và tiền hàng (túi/cuộn màng)
+	# Bóc tách tiền trục in (TRUC-) và tiền hàng (túi/cuộn màng) — S9: hệ số VAT native
+	vat_rate = _get_vat_rate(doc.company)
+	vat_factor = 1 + vat_rate / 100.0
 	cylinder_total = 0.0
 	product_total = 0.0
 	items = []
@@ -322,9 +421,9 @@ def get_order_details(name):
 		is_cyl = "TRUC-" in code or "trục" in it_name.lower() or "truc" in it_name.lower()
 
 		if is_cyl:
-			cylinder_total += amt * 1.08  # Giá sau VAT 8%
+			cylinder_total += amt * vat_factor
 		else:
-			product_total += amt * 1.08
+			product_total += amt * vat_factor
 			if "NGCS" in code or "in sẵn" in it_name.lower() or "ngcs" in it_name.lower():
 				product_group = "Túi NGCS"
 			elif "cuộn" in it_name.lower() or "màng ghép" in it_name.lower():
@@ -344,10 +443,11 @@ def get_order_details(name):
 			"is_cylinder": is_cyl,
 		})
 
-	# Quy tắc Vàng: Cọc 50% tiền hàng + 100% TIỀN TRỤC (S1; S9 native hóa template, hằng số chỉ fallback)
+	# Quy tắc Vàng: cọc theo Payment Terms + 100% TIỀN TRỤC (S9 native, fallback ADR-002)
+	deposit_pct_cfg = _get_deposit_pct(doc.customer)
 	net_total = frappe.utils.flt(doc.net_total) or max(0.0, grand_total - frappe.utils.flt(doc.total_taxes_and_charges))
-	vat_amount = frappe.utils.flt(doc.total_taxes_and_charges) or round(net_total * (8.0 / 100.0))
-	required_deposit = round((product_total * 0.5) + cylinder_total)
+	vat_amount = frappe.utils.flt(doc.total_taxes_and_charges) or round(net_total * (vat_rate / 100.0))
+	required_deposit = round((product_total * deposit_pct_cfg) + cylinder_total)
 	deposit_pct = round((advance_paid / grand_total * 100), 1) if grand_total > 0 else 0
 
 	# Trạng thái nghiệp vụ
@@ -407,7 +507,7 @@ def get_order_details(name):
 		"qty": sum(frappe.utils.flt(it.qty) for it in doc.items if not getattr(it, "is_cylinder", False)),
 		"grand_total": grand_total,
 		"net_total": net_total,
-		"vat_rate": 8.0,
+		"vat_rate": vat_rate,
 		"vat_amount": vat_amount,
 		"product_total": product_total,
 		"cylinder_total": cylinder_total,
@@ -540,7 +640,7 @@ def create_sales_order(payload):
 
 		so_items.append(so_item)
 
-	# Bổ sung dòng trục in nếu có
+	# Bổ sung dòng trục in nếu có (S9: rate từ Item Price TRUC-, fallback ADR-002)
 	if payload.get("has_new_cylinders") and payload.get("cylinder_count"):
 		cyl_qty = int(payload.get("cylinder_count") or 0)
 		if cyl_qty > 0:
@@ -549,7 +649,7 @@ def create_sales_order(payload):
 				"item_name": f"Trục in đồng ({cyl_qty} màu/trục)",
 				"description": f"Trục in theo thiết kế mới ({cyl_qty} màu)",
 				"qty": cyl_qty,
-				"rate": CYLINDER_STANDARD_RATE,
+				"rate": _get_cylinder_rate(),
 				"uom": "Bộ",
 				"conversion_factor": 1,
 				"delivery_date": delivery_date,

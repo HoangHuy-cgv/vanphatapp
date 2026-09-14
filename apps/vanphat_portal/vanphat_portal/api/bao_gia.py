@@ -90,10 +90,15 @@ def get_quotation_price_preview(quotation=None, lines=None):
 	"""Preview figures computed server-side from unsaved rows or a saved doc.
 
 	S4 SSOT: tên riêng cho Quotation preview (tránh shadow với order.get_price_preview).
+	S9: VAT từ Sales Taxes and Charges Template (dùng chung order._get_vat_rate), fallback ADR-002.
 	Frontend sends current M2 `lines`; server sums here so the shell never
 	computes. Packaging formula (GSM/keo/hao hụt/VAT) replaces the
 	zero placeholders per packaging-calculation-spec.md.
 	"""
+	from vanphat_portal.api.order import _get_vat_rate
+
+	company = frappe.defaults.get_user_default("Company")
+	vat_rate = _get_vat_rate(company)
 	if isinstance(lines, str):
 		lines = frappe.parse_json(lines) or []
 	rows = lines or []
@@ -102,11 +107,11 @@ def get_quotation_price_preview(quotation=None, lines=None):
 		sub = frappe.utils.flt(doc.total)
 		tax = frappe.utils.flt(doc.total_taxes_and_charges)
 		if not tax and sub:
-			tax = round(sub * (8.0 / 100.0))
+			tax = round(sub * (vat_rate / 100.0))
 		return {
 			"total_qty": doc.total_qty or 0,
 			"subtotal": sub,
-			"vat_rate": 8.0,
+			"vat_rate": vat_rate,
 			"cylinder_total": 0,
 			"tax_amount": tax,
 			"grand_total": frappe.utils.flt(doc.grand_total) or (sub + tax),
@@ -124,8 +129,7 @@ def get_quotation_price_preview(quotation=None, lines=None):
 			rate = 0.0
 		total_qty += qty
 		subtotal += qty * rate
-	# SSOT server: VAT 8% tính tại backend, client chỉ hiển thị (S1; S9 native hóa template)
-	vat_rate = 8.0
+	# SSOT server: VAT tính tại backend, client chỉ hiển thị (S1; S9 native hóa template)
 	tax_amount = round(subtotal * (vat_rate / 100.0))
 	return {
 		"total_qty": total_qty,
