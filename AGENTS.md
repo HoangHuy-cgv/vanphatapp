@@ -35,6 +35,12 @@
   - Typography: Unified font `Inter` with `tabular-nums` for all financial and dimensional figures.
 - **Minimalist Content & Elon Musk Philosophy**: When designing pages/views, write ultra-minimalist content. Use short, high-density labels. STRICTLY PROHIBIT tutorial notes, explanatory prose, subheadings that "explain for humans", or verbose helper text unless explicitly requested by User. The UI is an industrial operational cockpit, not a manual.
 - **Mandatory UI Display Rule (Short Alias Enforcement SSOT)**: Across 100% of UI/UX views, components, tables, slide-over drawers, BOM child lists, modals, and order lines, ALWAYS prioritize and render `custom_alias` (short commercial name). STRICTLY PROHIBIT rendering full legal `item_name` as static text (only allowed inside tooltip `:title="item_name"`). Child materials in BOM tables MUST also resolve and display `custom_alias` (e.g. `PET in 888 Phấn Thơm`, `PE sữa K750 190mic`, `Keo D-9700`, `Dung Môi EA`), never verbose legal names like `Cuộn màng PET in...` or `Dung môi công nghiệp...`. Subtitles duplicating full legal `item_name` in headers or drawers are strictly prohibited.
+- **Van Phat Industrial Cockpit Baseline (5 Mandatory Pillars)**:
+  1. *Header 1 dòng*: Tabs + Ô tìm kiếm tức thì flex-1 + Nút thao tác chính. Triệt tiêu 100% sub-filter chips và dropdown phụ dàn trải.
+  2. *Khóa cứng 1 dòng (Single-line)*: Bảng chỉ giữ 5–7 cột cốt lõi to rõ, mỗi ô 1 thông tin duy nhất, cấm kẹp mã nhỏ bên dưới tên. Ưu tiên ẩn cột thứ yếu (như hạn mức) để tên dài hiển thị trọn vẹn 1 dòng.
+  3. *Trạng thái thuần màu sắc 14px in đậm*: Triệt tiêu 100% khung viền, nền hộp mờ, dấu chấm `●` và icon trên toàn hệ thống (kể cả trong Drawer). Phân loại trực quan bằng màu sắc (`#fbbf24` gối đầu/chờ duyệt, `#7dd3fc` cọc/đang xử lý, `#6ee7b7` nghiệm thu/hoàn thành, `#f87171` hủy/quá hạn).
+  4. *Chuẩn số liệu & Căn lề*: Tiêu đề cột ngắn (1–3 từ); mọi cột số bắt buộc căn phải (`text-right`) in đậm `tabular-nums`; ẩn hoàn toàn cột rác không có dữ liệu (như đơn giá BOM).
+  5. *Drawer đảm nhiệm 100% chiều sâu*: Bảng chính chỉ để lướt nhanh; toàn bộ chi tiết kỹ thuật/công nợ phụ đóng gói trong slide-over drawer khi click hàng.
 
 ## 4. Strict Exclusions & Operational Constraints
 - **Forbidden Stacks**: React, Next.js, Svelte, HTMX, Alpine.js, ad-hoc Jinja web applications.
@@ -60,5 +66,6 @@
   - MUST optimize 2-lane wide-web layout for pouches with width $W \le 360\text{mm}$.
   - MUST calculate 2-tier quotations: Tier 1 (Optimal whole-roll $1.500\text{m}$) vs Tier 2 (Requested quantity with surplus risk buffer).
 - **Domain Specifications**:
+  - UI Cockpit Baseline Specification: [docs/specs/ui-cockpit-baseline-spec.md](file:///var/home/huy/vanphatapp/docs/specs/ui-cockpit-baseline-spec.md)
   - Packaging calculation engine & quotation: [docs/specs/packaging-calculation-spec.md](file:///var/home/huy/vanphatapp/docs/specs/packaging-calculation-spec.md)
   - Master data & Item taxonomy: [docs/specs/erpnext-packaging-masterdata-spec.md](file:///var/home/huy/vanphatapp/docs/specs/erpnext-packaging-masterdata-spec.md)
