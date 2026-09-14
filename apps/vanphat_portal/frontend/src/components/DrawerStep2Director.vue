@@ -1,7 +1,7 @@
 <template>
 	<Teleport to="body">
 		<div class="drawer-overlay" @click.self="$emit('close')">
-		<aside class="drawer-panel" aria-label="Soạn báo giá">
+		<aside ref="drawerPanel" class="drawer-panel" role="dialog" aria-modal="true" aria-label="Soạn báo giá">
 			<!-- Header -->
 			<div class="drawer-head">
 				<h3 class="drawer-title">Soạn báo giá</h3>
@@ -315,7 +315,9 @@ const props = defineProps({
 const emit = defineEmits(['close', 'back', 'submit', 'itemsChanged']);
 
 // S7c: M2 form state tách composable — view chỉ còn template + props/emit
+// S10: drawerPanel cho ref dialog (role/focus dùng chung)
 const {
+	drawerPanel,
 	formatCurrency,
 	formData,
 	isRoll,
@@ -642,7 +644,7 @@ const {
 }
 
 .form-input::placeholder {
-	color: #64748b;
+	color: #9ca3af;
 	font-size: 13.5px;
 }
 

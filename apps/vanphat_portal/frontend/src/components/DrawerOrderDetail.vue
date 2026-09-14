@@ -1,7 +1,7 @@
 <template>
 	<Teleport to="body">
 		<div v-if="isOpen" class="drawer-overlay" @click.self="$emit('close')">
-		<aside class="drawer-panel" aria-label="Chi tiết đơn hàng">
+		<aside ref="drawerPanel" class="drawer-panel" role="dialog" aria-modal="true" aria-label="Chi tiết đơn hàng">
 			<!-- Header -->
 			<div class="drawer-head">
 				<div class="head-title-wrap">
@@ -168,7 +168,6 @@
 					<!-- Đơn Xưởng sản xuất -->
 					<div v-if="order.order_tab === 'xuong_sx'" class="ops-value-box">
 						<div class="ops-main-line">
-							<span class="ops-bullet">●</span>
 							<span class="ops-text">
 								{{ order.materials_status || 'Đủ màng' }} • {{ order.factory_stage || 'Đang xử lý' }} • {{ formatNumber(order.completed_qty || 0) }} / {{ formatNumber(order.qty) }} {{ order.uom || 'Túi' }}
 								<span class="ops-pct">({{ Math.round(((order.completed_qty || 0) / (order.qty || 1)) * 100) }}%)</span>
@@ -185,7 +184,6 @@
 					<!-- Đơn Túi NGCS hoặc Mua Ngoài (SLA NCC) -->
 					<div v-else class="ops-value-box">
 						<div class="ops-main-line">
-							<span class="ops-bullet">●</span>
 							<span class="ops-text">
 								NCC {{ order.supplier_name || 'Gia công' }} • {{ order.procurement_stage || 'Đang thực hiện' }}
 							</span>
@@ -270,6 +268,7 @@
 import { ref, computed, toRef } from 'vue';
 import { useCockpitFormat } from '../composables/useCockpitFormat';
 import { useOrderDeposit } from '../composables/useOrderDeposit';
+import { useDrawerDialog } from '../composables/useDrawerDialog';
 
 const props = defineProps({
 	isOpen: { type: Boolean, default: false },
@@ -288,6 +287,9 @@ const {
 	handleReportProgress,
 	handleCreateDelivery,
 } = useOrderDeposit(toRef(props, 'order'), emit);
+
+// S10: Esc + focus trap/restore dùng chung (role=dialog đã ở template)
+const { panelRef: drawerPanel } = useDrawerDialog(toRef(props, 'isOpen'), emit);
 
 // Lightbox state
 const activeLightboxUrl = ref(null);

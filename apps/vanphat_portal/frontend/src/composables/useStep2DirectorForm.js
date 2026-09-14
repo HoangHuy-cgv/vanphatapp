@@ -1,5 +1,6 @@
-import { ref, computed, watch, onMounted, onUnmounted } from 'vue';
+import { ref, computed, watch } from 'vue';
 import { useCockpitFormat } from './useCockpitFormat';
+import { useDrawerDialog } from './useDrawerDialog';
 
 /**
  * S7c: M2 director form state (vật liệu, artwork, trục, dòng hàng).
@@ -117,21 +118,11 @@ export function useStep2DirectorForm(props, emit) {
 		});
 	}
 
-	function handleKeydown(e) {
-		if (e.key === 'Escape') {
-			emit('close');
-		}
-	}
-
-	onMounted(() => {
-		window.addEventListener('keydown', handleKeydown);
-	});
-
-	onUnmounted(() => {
-		window.removeEventListener('keydown', handleKeydown);
-	});
+	// S10: Esc + focus trap/restore dùng chung (thay handleKeydown riêng)
+	const { panelRef: drawerPanel } = useDrawerDialog(null, emit);
 
 	return {
+		drawerPanel,
 		formatCurrency,
 		formData,
 		isRoll,

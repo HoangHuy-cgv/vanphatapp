@@ -1,7 +1,7 @@
 <template>
 	<Teleport to="body">
 		<div v-if="isOpen" class="drawer-overlay" @click.self="$emit('close')">
-		<aside class="drawer-panel" aria-label="Chi tiết khách hàng">
+		<aside ref="drawerPanel" class="drawer-panel" role="dialog" aria-modal="true" aria-label="Chi tiết khách hàng">
 			<!-- Header -->
 			<div class="drawer-head">
 				<div class="head-left">
@@ -121,7 +121,8 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onUnmounted } from 'vue';
+import { computed } from 'vue';
+import { useDrawerDialog } from '../composables/useDrawerDialog';
 import { useCockpitFormat } from '../composables/useCockpitFormat';
 
 const props = defineProps({
@@ -154,19 +155,8 @@ const dedicatedItems = computed(() => {
 	});
 });
 
-function handleKeydown(e) {
-	if (e.key === 'Escape' && props.isOpen) {
-		emit('close');
-	}
-}
-
-onMounted(() => {
-	window.addEventListener('keydown', handleKeydown);
-});
-
-onUnmounted(() => {
-	window.removeEventListener('keydown', handleKeydown);
-});
+// S10: Esc + focus trap/restore dùng chung
+const { panelRef: drawerPanel } = useDrawerDialog(null, emit);
 </script>
 
 <style scoped>
@@ -307,7 +297,7 @@ onUnmounted(() => {
 .cell-label {
 	font-size: 11.5px;
 	text-transform: uppercase;
-	color: #64748b;
+	color: #9ca3af;
 	letter-spacing: 0.04em;
 	font-weight: 600;
 }
@@ -336,7 +326,7 @@ onUnmounted(() => {
 
 .contact-label {
 	font-size: 11.5px;
-	color: #64748b;
+	color: #9ca3af;
 	text-transform: uppercase;
 	letter-spacing: 0.04em;
 	font-weight: 600;
@@ -351,7 +341,7 @@ onUnmounted(() => {
 .card-head-simple {
 	font-size: 12px;
 	font-weight: 700;
-	color: #64748b;
+	color: #9ca3af;
 	letter-spacing: 0.05em;
 	margin-bottom: 10px;
 	display: flex;

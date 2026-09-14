@@ -78,7 +78,7 @@ const { toasts, dismiss } = useToast();
 .toast-btn-close {
 	background: transparent;
 	border: none;
-	color: #64748b;
+	color: #9ca3af;
 	cursor: pointer;
 	font-size: 12px;
 	padding: 2px 4px;

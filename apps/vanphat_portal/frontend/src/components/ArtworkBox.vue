@@ -174,7 +174,7 @@ async function uploadArtwork(file) {
 	flex-direction: column;
 	align-items: center;
 	gap: 4px;
-	color: #64748b;
+	color: #9ca3af;
 	text-align: center;
 	padding: 8px;
 }
@@ -187,7 +187,7 @@ async function uploadArtwork(file) {
 
 .artwork-sub-text {
 	font-size: 10px;
-	color: #64748b;
+	color: #9ca3af;
 }
 
 .artwork-change-btn {

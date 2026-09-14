@@ -1,7 +1,7 @@
 <template>
 	<Teleport to="body">
 		<div v-if="isOpen" class="drawer-overlay" @click.self="$emit('close')">
-		<aside class="drawer-panel" aria-label="Chi tiết mặt hàng">
+		<aside ref="drawerPanel" class="drawer-panel" role="dialog" aria-modal="true" aria-label="Chi tiết mặt hàng">
 			<!-- Minimalist Cockpit Header -->
 			<div class="drawer-head">
 				<div class="head-left">
@@ -168,7 +168,8 @@
 </template>
 
 <script setup>
-import { computed, onMounted, onUnmounted } from 'vue';
+import { computed } from 'vue';
+import { useDrawerDialog } from '../composables/useDrawerDialog';
 import { useCockpitFormat } from '../composables/useCockpitFormat';
 
 const props = defineProps({
@@ -243,20 +244,8 @@ const getLayerBadgeClass = (layer) => {
 	return 'badge-layer-sealant'; // Emerald (PE, CPP, LDPE, HDPE)
 };
 
-// Keyboard listener for Escape
-const onKeyDown = (e) => {
-	if (e.key === 'Escape' && props.isOpen) {
-		emit('close');
-	}
-};
-
-onMounted(() => {
-	window.addEventListener('keydown', onKeyDown);
-});
-
-onUnmounted(() => {
-	window.removeEventListener('keydown', onKeyDown);
-});
+// S10: Esc + focus trap/restore dùng chung
+const { panelRef: drawerPanel } = useDrawerDialog(null, emit);
 </script>
 
 <style scoped>

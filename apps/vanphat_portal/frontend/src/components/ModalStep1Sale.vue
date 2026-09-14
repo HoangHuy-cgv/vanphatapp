@@ -534,7 +534,7 @@ onUnmounted(() => {
 }
 
 .form-input::placeholder {
-	color: #64748b;
+	color: #9ca3af;
 	font-size: 13.5px;
 }
 
