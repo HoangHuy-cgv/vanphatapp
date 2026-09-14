@@ -407,10 +407,27 @@ const server = http.createServer((req, res) => {
 				return;
 			}
 
-			// 3. List Quotations
+			// 3. List Quotations (shape khớp bao_gia.list_quotations: server paging + search)
 			if (pathname === '/api/method/vanphat_portal.api.bao_gia.list_quotations') {
-				const quotes = getQuotations();
-				res.end(JSON.stringify({ message: quotes }));
+				const all = getQuotations();
+				const q = (parsed.query || '').trim().toLowerCase();
+				const p = Math.max(1, Number(parsed.page) || 1);
+				const pl = Math.min(100, Math.max(1, Number(parsed.page_length) || 15));
+				let filtered = all;
+				if (q) {
+					filtered = all.filter(o =>
+						(o.name && o.name.toLowerCase().includes(q)) ||
+						(o.customer_name && o.customer_name.toLowerCase().includes(q)) ||
+						(o.party_name && o.party_name.toLowerCase().includes(q))
+					);
+				}
+				const total = filtered.length;
+				res.end(JSON.stringify({ message: {
+					quotations: filtered.slice((p - 1) * pl, p * pl),
+					page: p, page_length: pl,
+					total_count: total,
+					total_pages: Math.max(1, Math.ceil(total / pl)),
+				} }));
 				return;
 			}
 

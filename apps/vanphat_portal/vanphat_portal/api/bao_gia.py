@@ -9,14 +9,35 @@ import frappe
 
 
 @frappe.whitelist()
-def list_quotations():
-	names = frappe.get_list(
+def list_quotations(query=None, page=1, page_length=15):
+	"""Báo giá full-server: or_filters like + start/page_length + count (khớp item.py/order.py).
+
+	Trước đây limit=50 cứng + filter client — sai chuẩn spec §3 (page_length
+	mặc định 15, trần 100). Frontend QuotesView paginate như OrdersView.
+	"""
+	import math
+	q = (query or "").strip()
+	p = max(1, int(page or 1))
+	pl = min(100, max(1, int(page_length or 15)))
+	or_filters = None
+	if q:
+		like = f"%{q}%"
+		or_filters = [
+			["Quotation", "name", "like", like],
+			["Quotation", "customer_name", "like", like],
+			["Quotation", "party_name", "like", like],
+		]
+	names = frappe.db.get_list(
 		"Quotation",
-		fields=["name", "transaction_date", "customer_name", "grand_total", "status"],
+		fields=["name", "transaction_date", "customer_name", "party_name", "grand_total", "status"],
+		or_filters=or_filters,
 		order_by="creation desc",
-		limit=50,
+		start=(p - 1) * pl,
+		page_length=pl,
 	)
-	return names
+	total_count = frappe.db.count("Quotation", or_filters and {"name": ["like", f"%{q}%"]} or None)
+	total_pages = max(1, math.ceil(total_count / pl)) if total_count else 1
+	return {"quotations": names, "page": p, "page_length": pl, "total_count": total_count, "total_pages": total_pages}
 @frappe.whitelist()
 def search_customers(query=""):
 	"""Link-search Customer có sẵn cho ô Khách màn 1. Chỉ chọn, không tạo mới."""

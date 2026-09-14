@@ -103,6 +103,40 @@
 			</table>
 		</div>
 
+		<!-- Thanh Phân Trang Sát Đáy Chuẩn Buồng Lái (đồng bộ OrdersView/CatalogView) -->
+		<div class="cockpit-pagination-bar">
+			<div class="cockpit-pagination-left">
+				<span>Hiển thị</span>
+				<span class="text-white font-bold">{{ startRecord }}–{{ endRecord }}</span>
+				<span>trên tổng số</span>
+				<span class="text-white font-bold">{{ totalQuotations }}</span>
+				<span>báo giá</span>
+			</div>
+			<div class="cockpit-pagination-right">
+				<button
+					type="button"
+					class="btn-page-nav"
+					:disabled="currentPage <= 1 || loading"
+					title="Trang trước (Phím [)"
+					@click="prevPage"
+				>
+					‹
+				</button>
+				<span class="page-indicator">
+					Trang {{ currentPage }} / {{ totalPages }}
+				</span>
+				<button
+					type="button"
+					class="btn-page-nav"
+					:disabled="currentPage >= totalPages || loading"
+					title="Trang sau (Phím ])"
+					@click="nextPage"
+				>
+					›
+				</button>
+			</div>
+		</div>
+
 		<!-- Step 1 & Step 2 Dialogs (S8: Suspense cho async chunk) -->
 		<Suspense v-if="showStep1">
 			<ModalStep1Sale
@@ -130,7 +164,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, defineAsyncComponent } from 'vue';
+import { ref, computed, watch, onMounted, onUnmounted, defineAsyncComponent } from 'vue';
 import { useRouter } from 'vue-router';
 import { dialog } from 'frappe-ui';
 // S8: drawers/modals nặng async — chunk riêng, render khi mở
@@ -148,6 +182,53 @@ const { formatCurrency } = useCockpitFormat();
 const quotations = ref([]);
 const loading = ref(false);
 const quoteSearchQuery = ref('');
+
+// Phân trang server (đồng bộ OrdersView: page 15 dòng, trần backend 100)
+const currentPage = ref(1);
+const pageSize = ref(15);
+const totalQuotations = ref(0);
+const totalPages = ref(1);
+
+const startRecord = computed(() => {
+	if (totalQuotations.value === 0) return 0;
+	return (currentPage.value - 1) * pageSize.value + 1;
+});
+
+const endRecord = computed(() => {
+	return Math.min(currentPage.value * pageSize.value, totalQuotations.value);
+});
+
+function prevPage() {
+	if (currentPage.value > 1 && !loading.value) {
+		currentPage.value--;
+		loadQuotations();
+	}
+}
+
+function nextPage() {
+	if (currentPage.value < totalPages.value && !loading.value) {
+		currentPage.value++;
+		loadQuotations();
+	}
+}
+
+function handleKeyDown(e) {
+	if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target?.tagName)) return;
+	if (e.key === '[') {
+		prevPage();
+	} else if (e.key === ']') {
+		nextPage();
+	}
+}
+
+let searchTimer = null;
+watch(quoteSearchQuery, () => {
+	clearTimeout(searchTimer);
+	searchTimer = setTimeout(() => {
+		currentPage.value = 1;
+		loadQuotations();
+	}, 250);
+});
 
 const showStep1 = ref(false);
 const showStep2 = ref(false);
@@ -258,13 +339,26 @@ function onRowClick(q) {
 
 async function loadQuotations() {
 	loading.value = true;
-	const data = await api('list_quotations');
-	if (Array.isArray(data)) {
+	const data = await api('list_quotations', {
+		query: quoteSearchQuery.value.trim() || undefined,
+		page: currentPage.value,
+		page_length: pageSize.value,
+	}, { get: true });
+	if (data && Array.isArray(data.quotations)) {
+		quotations.value = data.quotations;
+		totalQuotations.value = data.total_count ?? data.quotations.length;
+		totalPages.value = data.total_pages || 1;
+	} else if (Array.isArray(data)) {
+		// Tương thích mock/backend cũ trả mảng trần
 		quotations.value = data;
+		totalQuotations.value = data.length;
+		totalPages.value = Math.ceil(data.length / pageSize.value) || 1;
 	} else {
 		quotations.value = [];
+		totalQuotations.value = 0;
+		totalPages.value = 1;
 	}
-	quotesCount.value = quotations.value.length;
+	quotesCount.value = totalQuotations.value;
 	loading.value = false;
 }
 
@@ -392,7 +486,12 @@ async function onMakeOrder(q) {
 }
 
 onMounted(async () => {
+	window.addEventListener('keydown', handleKeyDown);
 	await loadQuotations();
+});
+
+onUnmounted(() => {
+	window.removeEventListener('keydown', handleKeyDown);
 });
 
 defineExpose({
