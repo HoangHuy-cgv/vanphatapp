@@ -1,13 +1,13 @@
 # Handoff: Con Trỏ Vận Hành & Chuyển Giao Session
 
-- **Mã Commit Hiện Tại**: `645f1de` (`feat(drawer): hide unused BOM rate column and expand material name column to 56%`)
+- **Mã Commit Hiện Tại**: `2694b03` (`feat(catalog): style payment terms as pure 14px colored text without border or background`)
 - **Trạng Thái CI/CD & Test**:
   - Test Suite `scripts/verify-catalog-page.mjs`: **86/86 checks PASSED 100%**.
   - Production Build: Vite build thành công sạch sẽ (bundle 72.28 kB gzip).
-  - Chrome DevTools MCP: Đã kiểm chứng live browser xác nhận bảng BOM 3 cột thoáng đạt, không còn cột đơn giá rác.
+  - Chrome DevTools MCP: Đã kiểm chứng live browser xác nhận cột thanh toán chữ to 14px rõ nét, không viền, không nền hộp, màu sắc phân loại trực quan.
 - **Hạng Mục Đã Hoàn Thành**:
-  - Ẩn triệt để cột Đơn giá trong bảng BOM của Drawer chi tiết sản phẩm.
-  - Tái phân bổ kích thước cột: Vật tư 22% | Tên nguyên liệu mở rộng 56% | Định mức 22% căn phải in đậm `tabular-nums`.
-  - Giữ vững 100% typography font `Inter` native ERPNext v16.
+  - Áp dụng Phương án 2: Bỏ khung viền và nền hộp cho điều khoản thanh toán, bỏ dấu chấm thừa, dùng màu sắc thuần túy (vàng gối đầu, xanh cọc, xanh ngọc nghiệm thu) trên nền font 14px in đậm.
+  - Nhất quán 1 font `Inter` native ERPNext v16 toàn bộ hệ thống.
+  - Gỡ bỏ 4 filter chip phụ và ẩn cột đơn giá BOM theo chỉ đạo của Sếp.
 - **Nhiệm Vụ Trọng Tâm Tiếp Theo**:
   - Sẵn sàng nhận chỉ đạo kinh doanh hoặc tính năng tiếp theo từ Sếp.
