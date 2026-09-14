@@ -442,9 +442,13 @@ btp_items = [
     ("BTP-00016", "Cuộn màng ghép TopGia 1L Đắm Say khổ 750mm", "Cuộn TopGia 1L Đắm Say", "PET/PA/PE trong", 750, 190, "m", 11000.0),
 ]
 for code, legal_name, alias, layer, w, thick, uom, rate in btp_items:
+    # Sếp chốt: BTP chỉ BTP-00015 (Cuộn Năm Tàu) được bán cuộn (+ cuộn màng tiêu
+    # khi có mã — Sếp báo sau); 14 BTP còn lại là input máy cắt, KHÔNG bán
+    # (is_sales_item=0 native — không cho vào Báo giá/Đơn bán).
     add_item(
         code=code, legal_name=legal_name, alias=alias, group="Cuộn Màng Ghép BTP", uom=uom, brand="Cuộn ghép",
-        req_type="Manufacture", standard_rate=rate, is_sales=1, is_purchase=0,
+        req_type="Manufacture", standard_rate=rate,
+        is_sales=1 if code == "BTP-00015" else 0, is_purchase=0,
         layers=layer, thick=thick, film_w=w, print_tech="In trục ống đồng"
     )
 

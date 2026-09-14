@@ -14,6 +14,10 @@ All Item Groups
 ├── 1. MÀNG (Film)
 │   ├── 1.1. Màng đơn nguyên vật liệu (NVL: PET, PA, PE sữa, PE trong, MPET, CPP, AL, Keo, Dung môi EA)
 │   └── 1.2. Cuộn màng ghép (BTP: Màng đã ghép nhiều lớp, đầu vào máy cắt túi hoặc bán cho khách chạy máy đóng gói tự động)
+│       └── NGUYÊN TẮC CỜ BÁN (Sếp chốt, đúng docs ERPNext Item §3.13 `Is Sales Item`):
+│           Chỉ BTP bán cuộn (hiện tại: BTP-00015 Cuộn Năm Tàu + cuộn màng tiêu khi có mã)
+│           được `is_sales_item=1`. Mọi BTP còn lại là input máy cắt → `is_sales_item=0`
+│           (native chặn ở Quotation/Sales Order, KHÔNG ẩn khỏi danh mục để tra tồn kho/BOM).
 ├── 2. TÚI (Pouch)
 │   ├── 2.1. Túi màng đơn (Bán đại trà — In lụa: HD, PE, PP)
 │   └── 2.2. Túi màng ghép
