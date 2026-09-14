@@ -1,6 +1,6 @@
 # Handoff: Con Trỏ Vận Hành & Chuyển Giao Session
 
-- **Mã Commit Gần Nhất**: `7c21643`
+- **Mã Commit Gần Nhất**: `2e07d29`
 - **Trạng Thái CI/CD & Production Build**:
   - Vite build: Thành công 100% (`npm run build`, bundle 69.29 kB gzip).
   - Backend: `bao_gia.py` compiled cleanly, đã bổ sung native API `create_sales_order`.

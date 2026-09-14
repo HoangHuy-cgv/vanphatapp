@@ -22,6 +22,8 @@
 - **Forbidden Stacks**: React, Next.js, Svelte, HTMX, Alpine.js, ad-hoc Jinja web apps.
 - **Forbidden Libraries**: `openpyxl` is STRICTLY PROHIBITED (memory stalls). Use `fastexcel` or `python-calamine` for spreadsheets.
 - **Forbidden Client-side Logic**: NEVER perform film math, pricing tiers, scrap rates, or BOM derivations in `.vue`, `.js`, or `.ts`. 100% computations resolve via backend Python APIs (`vanphat_portal.api`).
+- **Zero Mock Data & Zero In-Memory Simulation**: STRICTLY PROHIBITED to create, import, or fallback to mock data files (`mockData.js`, `dummy.json`, hardcoded array fixtures) in frontend. STRICTLY PROHIBITED to generate random document IDs via client-side Javascript (e.g. `Math.random()`). STRICTLY PROHIBITED to perform fake in-memory state mutations (e.g. calculating deposits or mutating order states locally without Frappe backend persistence). When database is empty, UI MUST display truthful empty states.
+- **API-First & Backend-Persistence Boundary**: 100% of CRUD operations and document workflow transitions (create, deposit, approve, submit, cancel) MUST resolve via whitelisted Python backend APIs (`vanphat_portal.api.*`) and persist directly to MariaDB before updating the UI.
 - **Production Runtime**: Zero-Node. Vite static assets served directly by Frappe Nginx / Gunicorn.
 - **Git Boundaries**: Commit atomically with conventional commit prefixes. NEVER execute `git push` unless explicitly ordered by User.
 - **Database Safety**: Autonomous schema sync via standard Frappe bench commands. Raw SQL mutations against production MariaDB must be used with caution.
