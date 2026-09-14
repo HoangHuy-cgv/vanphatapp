@@ -1,7 +1,9 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
-import OrdersView from '../views/OrdersView.vue';
-import QuotesView from '../views/QuotesView.vue';
-import CatalogView from '../views/CatalogView.vue';
+
+// S8: routes động 100% — mỗi view 1 chunk riêng (orders/quotes/catalog tách khỏi initial)
+const OrdersView = () => import('../views/OrdersView.vue');
+const QuotesView = () => import('../views/QuotesView.vue');
+const CatalogView = () => import('../views/CatalogView.vue');
 
 const routes = [
 	{

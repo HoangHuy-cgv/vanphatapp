@@ -429,50 +429,56 @@
 			</div>
 		</div>
 
-		<!-- Slide-over Drawer Chi Tiết Mặt Hàng Master Data -->
-		<DrawerItemDetail
-			:is-open="showItemDrawer"
-			:open="showItemDrawer"
-			:item="selectedMasterItem"
-			:bom="selectedMasterBom"
-			:loading="loadingItemDetail"
-			@close="showItemDrawer = false"
-		/>
+		<!-- Slide-over Drawers (S8: async chunk + Suspense, chỉ mount khi mở) -->
+		<Suspense v-if="showItemDrawer">
+			<DrawerItemDetail
+				:is-open="showItemDrawer"
+				:open="showItemDrawer"
+				:item="selectedMasterItem"
+				:bom="selectedMasterBom"
+				:loading="loadingItemDetail"
+				@close="showItemDrawer = false"
+			/>
+		</Suspense>
 
-		<!-- Slide-over Drawer Chi Tiết Khách Hàng -->
-		<DrawerCustomerDetail
-			:is-open="showCustomerDrawer"
-			:open="showCustomerDrawer"
-			:customer="selectedCustomer"
-			:master-items="masterItems"
-			@close="showCustomerDrawer = false"
-		/>
+		<Suspense v-if="showCustomerDrawer">
+			<DrawerCustomerDetail
+				:is-open="showCustomerDrawer"
+				:open="showCustomerDrawer"
+				:customer="selectedCustomer"
+				:master-items="masterItems"
+				@close="showCustomerDrawer = false"
+			/>
+		</Suspense>
 
-		<!-- Slide-over Drawer Chi Tiết Nhà Cung Cấp -->
-		<DrawerSupplierDetail
-			:is-open="showSupplierDrawer"
-			:open="showSupplierDrawer"
-			:supplier="selectedSupplier"
-			@close="showSupplierDrawer = false"
-		/>
+		<Suspense v-if="showSupplierDrawer">
+			<DrawerSupplierDetail
+				:is-open="showSupplierDrawer"
+				:open="showSupplierDrawer"
+				:supplier="selectedSupplier"
+				@close="showSupplierDrawer = false"
+			/>
+		</Suspense>
 
-		<!-- Slide-over Drawer Chi Tiết Người Dùng -->
-		<DrawerUserDetail
-			:is-open="showUserDrawer"
-			:open="showUserDrawer"
-			:user="selectedUser"
-			@close="showUserDrawer = false"
-		/>
+		<Suspense v-if="showUserDrawer">
+			<DrawerUserDetail
+				:is-open="showUserDrawer"
+				:open="showUserDrawer"
+				:user="selectedUser"
+				@close="showUserDrawer = false"
+			/>
+		</Suspense>
 	</div>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, defineAsyncComponent } from 'vue';
 import { useRoute } from 'vue-router';
-import DrawerItemDetail from '../components/DrawerItemDetail.vue';
-import DrawerCustomerDetail from '../components/DrawerCustomerDetail.vue';
-import DrawerSupplierDetail from '../components/DrawerSupplierDetail.vue';
-import DrawerUserDetail from '../components/DrawerUserDetail.vue';
+// S8: 4 drawers chi tiết async — chunk riêng, chỉ mount khi mở
+const DrawerItemDetail = defineAsyncComponent(() => import('../components/DrawerItemDetail.vue'));
+const DrawerCustomerDetail = defineAsyncComponent(() => import('../components/DrawerCustomerDetail.vue'));
+const DrawerSupplierDetail = defineAsyncComponent(() => import('../components/DrawerSupplierDetail.vue'));
+const DrawerUserDetail = defineAsyncComponent(() => import('../components/DrawerUserDetail.vue'));
 import { useCockpitFormat } from '../composables/useCockpitFormat';
 import { useCatalogData } from '../composables/useCatalogData';
 

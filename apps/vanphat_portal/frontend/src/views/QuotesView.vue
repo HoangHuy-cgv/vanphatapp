@@ -103,35 +103,38 @@
 			</table>
 		</div>
 
-		<!-- Step 1 & Step 2 Dialogs -->
-		<ModalStep1Sale
-			v-if="showStep1"
-			:open="showStep1"
-			:initial-data="step1Data"
-			@close="showStep1 = false"
-			@submit="onStep1Complete"
-		/>
+		<!-- Step 1 & Step 2 Dialogs (S8: Suspense cho async chunk) -->
+		<Suspense v-if="showStep1">
+			<ModalStep1Sale
+				:open="showStep1"
+				:initial-data="step1Data"
+				@close="showStep1 = false"
+				@submit="onStep1Complete"
+			/>
+		</Suspense>
 
-		<DrawerStep2Director
-			v-if="showStep2"
-			:open="showStep2"
-			:form-data="step1Data"
-			:saved-data="step2Data"
-			:preview-figures="figures"
-			:calculation-result="calcResult"
-			@close="showStep2 = false"
-			@back="onStep2Back"
-			@items-changed="onItemsChanged"
-			@submit="onQuotationSubmit"
-		/>
+		<Suspense v-if="showStep2">
+			<DrawerStep2Director
+				:open="showStep2"
+				:form-data="step1Data"
+				:saved-data="step2Data"
+				:preview-figures="figures"
+				:calculation-result="calcResult"
+				@close="showStep2 = false"
+				@back="onStep2Back"
+				@items-changed="onItemsChanged"
+				@submit="onQuotationSubmit"
+			/>
+		</Suspense>
 	</div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, defineAsyncComponent } from 'vue';
 import { useRouter } from 'vue-router';
-import ModalStep1Sale from '../components/ModalStep1Sale.vue';
-import DrawerStep2Director from '../components/DrawerStep2Director.vue';
+// S8: drawers/modals nặng async — chunk riêng, render khi mở
+const ModalStep1Sale = defineAsyncComponent(() => import('../components/ModalStep1Sale.vue'));
+const DrawerStep2Director = defineAsyncComponent(() => import('../components/DrawerStep2Director.vue'));
 import { api } from '../composables/useSession';
 import { usePortalCounts } from '../composables/usePortalCounts';
 import { useCockpitFormat } from '../composables/useCockpitFormat';

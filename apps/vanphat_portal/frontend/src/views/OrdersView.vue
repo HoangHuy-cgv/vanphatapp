@@ -221,32 +221,37 @@
 			</div>
 		</div>
 
-		<!-- Drawer Chi Tiết Đơn Hàng -->
-		<DrawerOrderDetail
-			:is-open="showOrderDetail"
-			:open="showOrderDetail"
-			:order="selectedOrder"
-			@close="showOrderDetail = false"
-			@update-order="onOrderUpdated"
-			@delivery-order="onOrderDelivery"
-		/>
+		<!-- Drawer Chi Tiết Đơn Hàng (S8: Suspense cho async chunk) -->
+		<Suspense v-if="showOrderDetail">
+			<DrawerOrderDetail
+				:is-open="showOrderDetail"
+				:open="showOrderDetail"
+				:order="selectedOrder"
+				@close="showOrderDetail = false"
+				@update-order="onOrderUpdated"
+				@delivery-order="onOrderDelivery"
+			/>
+		</Suspense>
 
-		<!-- Modal Tạo Đơn Hàng Mới -->
-		<ModalCreateOrder
-			:is-open="showCreateOrderModal"
-			:open="showCreateOrderModal"
-			:master-items="masterItems"
-			@close="showCreateOrderModal = false"
-			@order-created="handleNewOrderCreated"
-		/>
+		<!-- Modal Tạo Đơn Hàng Mới (S8: Suspense cho async chunk) -->
+		<Suspense v-if="showCreateOrderModal">
+			<ModalCreateOrder
+				:is-open="showCreateOrderModal"
+				:open="showCreateOrderModal"
+				:master-items="masterItems"
+				@close="showCreateOrderModal = false"
+				@order-created="handleNewOrderCreated"
+			/>
+		</Suspense>
 	</div>
 </template>
 
 <script setup>
-import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue';
+import { ref, computed, watch, nextTick, onMounted, onUnmounted, defineAsyncComponent } from 'vue';
 import { useRoute } from 'vue-router';
-import DrawerOrderDetail from '../components/DrawerOrderDetail.vue';
-import ModalCreateOrder from '../components/ModalCreateOrder.vue';
+// S8: drawers/modals nặng async — chunk riêng, render khi mở
+const DrawerOrderDetail = defineAsyncComponent(() => import('../components/DrawerOrderDetail.vue'));
+const ModalCreateOrder = defineAsyncComponent(() => import('../components/ModalCreateOrder.vue'));
 import { api } from '../composables/useSession';
 import { usePortalCounts } from '../composables/usePortalCounts';
 import { useCockpitFormat } from '../composables/useCockpitFormat';

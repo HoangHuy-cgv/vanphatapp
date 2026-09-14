@@ -98,12 +98,21 @@
 			</div>
 		</aside>
 
-		<!-- Main Routed View -->
+		<!-- Main Routed View (S8: keep-alive CHỈ list đọc nhiều, include+max, refresh onActivated) -->
 		<main class="main-content">
 			<router-view v-slot="{ Component }">
-				<keep-alive>
-					<component :is="Component" />
-				</keep-alive>
+				<Suspense>
+					<template #default>
+						<keep-alive include="OrdersView,CatalogView,QuotesView" :max="5">
+							<component :is="Component" />
+						</keep-alive>
+					</template>
+					<template #fallback>
+						<div class="cockpit-empty-state" aria-busy="true">
+							<span class="empty-msg">Đang tải màn hình...</span>
+						</div>
+					</template>
+				</Suspense>
 			</router-view>
 		</main>
 
