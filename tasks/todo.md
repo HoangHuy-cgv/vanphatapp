@@ -1,11 +1,11 @@
-# Ephemeral Todo: Chuẩn Hóa Bộ Dữ Liệu Giao Dịch (Transactions)
+# Ephemeral Todo: Tinh Chỉnh Cột Bảng Danh Mục & Chuẩn Hóa Dữ Liệu
 
 > **Policy**: File này là bảng nháp tạm thời (Ephemeral Scratchpad). Khi hoàn thành và commit Git, dọn sạch task cũ.
 
-## Active Milestone: Transactions Dataset (ERPNext Native v16)
+## Active Milestone: Tinh Chỉnh Bảng Danh Mục (Single-Line Headers & Cột Thiết Yếu)
 
-- [ ] Task 1: Trích xuất & chuẩn hóa Đơn bán hàng (`Sales Order` & `Sales Order Item`) từ `TỔNG HỢP ĐƠN HÀNG ĐÃ CỌC CHƯA GIAO.xlsx` thành `sales_order_master.csv` và `sales_order_items.csv`.
-- [ ] Task 2: Trích xuất & chuẩn hóa Đơn mua hàng NCC (`Purchase Order` & `Purchase Order Item`) từ `tien do dat hang ncc.xlsx` và `TIEN DO MUA HÀNG NCC T8.xlsx` thành `purchase_order_master.csv` và `purchase_order_items.csv`.
-- [ ] Task 3: Trích xuất & chuẩn hóa Lệnh sản xuất xưởng (`Work Order`) từ `TIẾN ĐỘ SẢN XUẤT.xlsx` thành `work_order_master.csv`.
-- [ ] Task 4: Trích xuất & chuẩn hóa Bút toán thu chi cọc (`Payment Entry`) từ `THU CHI - 2026 vanphat.xlsx` thành `payment_entry_master.csv`.
-- [ ] Task 5: Viết bộ test kiểm thử đối soát toàn vẹn (Integrity Verification) cho dữ liệu giao dịch và cập nhật CI Gate.
+- [ ] Task 1: Khóa 100% tiêu đề cột `thead th` trên 1 line duy nhất (`white-space: nowrap !important;`), chuẩn hóa font & casing đồng nhất giữa các bảng.
+- [ ] Task 2: Rà soát & tái cấu trúc bảng Khách hàng: Bổ sung trực diện cột **Mã số thuế (MST)** và **Phương thức thanh toán** / Hạn mức nợ.
+- [ ] Task 3: Rà soát & tái cấu trúc bảng Nhà cung cấp: Bổ sung trực diện cột **Phương thức thanh toán** / Điều khoản công nợ bên cạnh **Mã số thuế**.
+- [ ] Task 4: Kiểm tra và ẩn các cột phụ sang Slide-Over Drawer để bảng thông thoáng, mật độ cao.
+- [ ] Task 5: Cập nhật kiểm thử tự động `verify-catalog-page.mjs`, build Vite và kiểm chứng trực quan bằng Chrome DevTools MCP.
