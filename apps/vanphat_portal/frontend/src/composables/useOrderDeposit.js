@@ -42,6 +42,7 @@ export function useOrderDeposit(orderRef, emit) {
 		}
 	};
 
+	// ADR-006: kết quả mutate chỉ lấy từ response server — cọc lỗi thì toast + giữ nguyên.
 	const handleOverrideHold = async () => {
 		const order = orderRef?.value;
 		if (!order) return;
@@ -52,14 +53,16 @@ export function useOrderDeposit(orderRef, emit) {
 			});
 			if (res && res.success) {
 				toast.success(`Kế toán đã duyệt ngoại lệ cho đơn ${order.name}!`);
+				// Đọc lại trạng thái từ server thay vì tự set local (CONSTRAINTS §4.4).
+				emit('update-order', {
+					...order,
+					docstatus: res.docstatus ?? order.docstatus,
+					order_state: res.status || order.order_state,
+					is_hold: false,
+				});
 			} else {
-				toast.success(`Đã chuyển đơn ${order.name} sang Đang xử lý`);
+				toast.error('Lỗi duyệt ngoại lệ: máy chủ ERP không phản hồi.');
 			}
-			emit('update-order', {
-				...order,
-				is_hold: false,
-				order_state: 'Đang xử lý',
-			});
 		} catch (err) {
 			console.error('Lỗi khi duyệt ngoại lệ:', err);
 			toast.error('Lỗi khi duyệt ngoại lệ đơn hàng.');
@@ -84,17 +87,17 @@ export function useOrderDeposit(orderRef, emit) {
 					});
 					return;
 				}
+				toast.error('Lỗi kích hoạt đơn: máy chủ ERP không phản hồi.');
+				return;
 			}
 		} catch (err) {
 			console.error('Lỗi khi submit đơn hàng:', err);
+			toast.error('Lỗi khi kích hoạt đơn hàng.');
+			return;
 		}
-		toast.success(`Đơn ${order.name} đã hoàn thành, sẵn sàng giao!`);
-		emit('update-order', {
-			...order,
-			completed_qty: order.qty,
-			order_state: 'Sẵn sàng giao',
-			factory_stage: 'Xong hàng',
-		});
+		// Đơn đã duyệt: báo cáo tiến độ xưởng qua server ở slice sau; hiện tại chỉ toast
+		// nhắc — KHÔNG tự set completed_qty/order_state local (CONSTRAINTS §4.4).
+		toast.warning(`Đơn ${order.name} đã duyệt — báo cáo tiến độ xưởng làm ở màn Sản xuất.`);
 	};
 
 	const handleCreateDelivery = () => {

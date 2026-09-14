@@ -9,13 +9,14 @@
 - Ask everything through `ask_user_question` (clarifications, choices, confirmations). Never ask in plain text.
 - Finish what you start. Keep going until the task's success criteria hold (runs, verified, failures fixed). Do not stop after a first draft.
 
-## Architecture (native-first)
+## Architecture (native-first + meta-driven config)
 Prefer the highest layer that satisfies the need:
 1. ERPNext native DocType / field / method.
 2. Frappe API (`get_list` + `filters/start/page_length/order_by`, `frappe.qb` for joins, `frappe.cache`, `has_permission`, `tabSeries`).
 3. Thin `vanphat_portal.api.*` wrapper around native. No duplicated business logic.
 4. Custom `custom_*` field or DocType only when native is proven absent and unconfigurable, plus an ADR in `docs/decisions/` and a mapping entry.
-- Money, tax, deposit, BOM, and status come from native-computed values. The client only formats (`Intl.NumberFormat('vi-VN')`). VAT is doc-driven (ADR-002); cylinder pricing passes through `cylinder_spec {qty, unit_price, supplier}` with no numeric fallback; deposits derive from Payment Terms + Credit Limit.
+- Money, tax, deposit, BOM, and status come from native-computed values. The client only formats (`Intl.NumberFormat('vi-VN')`). Single money semantics everywhere (ADR-002/ADR-006): `net_total`/`vat_amount`/`grand_total` are native doc numbers; `cylinder_total` is NCC pass-through price **before VAT**; `product_total = net_total − cylinder_total` (goods before VAT, no cylinder); `qty` sums **bag/roll lines only** (no cylinder lines); invariant `product_total + cylinder_total + vat_amount = grand_total`. Deposits derive from Payment Terms + Credit Limit (`required_deposit = product_total × deposit_pct + cylinder_total`, `0` when Trả sau; pending truthful `null` when NCC price missing).
+- UI config is native (ADR-005/ADR-006). Option lists, defaults, labels, order, visibility come from Custom Field / Property Setter / DocType Layout / Item Group tree / `min_order_qty` — never hardcoded in Vue. A Desk change must reach the UI **without a rebuild**.
 
 ## Spec router (load on touch, never bulk-read)
 | When touching | Load |
@@ -41,13 +42,14 @@ Prefer the highest layer that satisfies the need:
 
 ## Frontend essentials (details in the frontend spec)
 - Vue 3 `<script setup>`, hash router, `frappe-ui`, Vite, Zero-Node static at `/portal`. Split components past 500 lines (warn past 300).
-- Fetch only through `api()` in `composables/useSession.js`. Debounce search 250–300ms with `AbortController`; render the latest response only.
-- Lazy routes everywhere; heavy drawers/modals async with `<Suspense>`; `keep-alive` for read-heavy lists only. JS gzip budget 170KB warn / 300KB fail.
+- Fetch only through `api()` in `composables/useSession.js` (including `FormData` uploads — never raw `fetch`). Debounce search 250–300ms with `AbortController`; render the latest response only.
+- Read list envelopes (`page_result`), never bare arrays. No client money/qty math, no local state mutation after POST (re-read server), no hardcoded identity/config/defaults.
+- Click-to-choose (`role=radiogroup`/`radio`, keyboard) for ≤8 options; search-select for dynamic lists. Lazy routes everywhere; heavy drawers/modals async with `<Suspense>`; `keep-alive` for read-heavy lists only. JS gzip budget 170KB warn / 300KB fail.
 
 ## Backend essentials (details in the backend spec)
 - Modules: `order.py`, `bao_gia.py`, `item.py`, `customer.py` / `supplier.py` / `user.py`. No silent re-export overrides.
-- Server-side pagination (`start`/`page_length`, default 15, max 100). Multi-DocType joins go through one `frappe.qb` query. Cache keys include every param (TTL 300s), invalidated via `doc_events`.
-- GET reads; POST mutates with its own `db.commit`. Detail reads use `get_doc` + `has_permission` at the action site.
+- Every list returns the `page_result` envelope (`{<key>, page, page_length, total_count, total_pages}`). Transaction lists (orders/quotations/items): default 15, max 100. Reference pickers (customer/supplier/user): default 100, max 100 + server filter. Multi-DocType joins go through one `frappe.qb` query. Cache keys include every param (TTL 300s), invalidated via `doc_events`.
+- One money semantics + one HOLD rule everywhere (ADR-006). GET reads; POST mutates with its own `db.commit`. Detail reads use `get_doc` + `has_permission` at the action site.
 
 ## Never
 - `openpyxl`, mock data, `Math.random()` document IDs, or local-only state mutation. Empty DB renders a truthful empty state.

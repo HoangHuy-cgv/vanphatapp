@@ -1,7 +1,8 @@
 import { ref } from 'vue';
 import { toast } from './useToast';
 
-const currentUser = ref('giamdoc@vanphat.com');
+// ADR-006: không identity cứng — sidebar hiện trạng thái đăng nhập thật từ get_boot.
+const currentUser = ref('');
 
 export function csrfToken() {
 	return window.vp_csrf_token || window.frappe_csrf_token || '';
@@ -10,6 +11,8 @@ export function csrfToken() {
 /**
  * SSOT API Client for Frappe Framework & Van Phat Portal
  * Auto-prefixes method, binds CSRF token, handles GET/POST and unwraps json.message.
+ * ADR-006: đường fetch DUY NHẤT trong src/ — kể cả upload FormData (không set
+ * Content-Type tay để browser gắn boundary, vẫn gắn CSRF + toast + signal).
  */
 export async function api(method, args = {}, options = {}) {
 	try {
@@ -33,7 +36,8 @@ export async function api(method, args = {}, options = {}) {
 			}
 		}
 
-		const httpMethod = options.method || (options.get ? 'GET' : 'POST');
+		const isFormData = typeof FormData !== 'undefined' && args instanceof FormData;
+		const httpMethod = options.method || (options.get && !isFormData ? 'GET' : 'POST');
 		const headers = {
 			'X-Frappe-CSRF-Token': csrfToken(),
 			...(options.headers || {}),
@@ -45,7 +49,10 @@ export async function api(method, args = {}, options = {}) {
 			...(options.signal ? { signal: options.signal } : {}),
 		};
 
-		if (httpMethod === 'POST' || httpMethod === 'PUT') {
+		if (isFormData) {
+			// Upload native: FormData đi body trần, browser tự gắn multipart boundary.
+			fetchOptions.body = args;
+		} else if (httpMethod === 'POST' || httpMethod === 'PUT') {
 			headers['Content-Type'] = 'application/json';
 			fetchOptions.body = JSON.stringify(args);
 		} else if (httpMethod === 'GET' && Object.keys(args).length > 0) {

@@ -130,8 +130,16 @@ class TestOrderPricePreview(unittest.TestCase):
 		self.assertEqual(res["payment_type"], "Trả trước")
 		self.assertEqual(res["credit_limit"], 0.0)
 		self.assertEqual(res["deposit_pct"], 50.0)
-		# 50% tiền hàng (đã VAT theo doc native) + 100% tiền trục
-		self.assertEqual(res["required_deposit"], 1188000 * 0.5 + 1000000)
+		# ADR-006: MỘT ngữ nghĩa tiền mọi màn — tiền hàng = net native − tiền trục
+		# (chưa VAT, không trục): 1.100.000 − 1.000.000 = 100.000.
+		# Bất biến: 100.000 + 1.000.000 + 88.000 = 1.188.000 = grand_total.
+		self.assertEqual(res["product_total"], 100000.0)
+		self.assertEqual(
+			res["product_total"] + res["cylinder_total"] + res["vat_amount"],
+			res["grand_total"],
+		)
+		# 50% tiền hàng (chưa VAT, không trục) + 100% tiền trục
+		self.assertEqual(res["required_deposit"], 100000 * 0.5 + 1000000)
 
 	def test_preview_thieu_gia_ncc_thi_pending_truthful(self):
 		base_state()
@@ -271,6 +279,8 @@ class TestCreateSalesOrder(unittest.TestCase):
 				"items": [{"item_code": "TP-001", "item_name": "Túi BABA", "qty": 10, "rate": 1000}],
 				"has_new_cylinders": True,
 				"cylinder_count": 2,
+				# ADR-006: không mã trục cứng — caller nêu đúng mã TRUC- native.
+				"cylinder_item_code": "TRUC-00001",
 				"cylinder_spec": {"qty": 2, "unit_price": 500000, "supplier": "Kiến Tâm"},
 			}
 		)
@@ -282,12 +292,28 @@ class TestCreateSalesOrder(unittest.TestCase):
 		self.assertEqual(created["customer"], "CUST-1")
 		self.assertEqual(created["company"], "VP")
 		self.assertEqual(created["naming_series"], "DH-.YY..MM.-.###")
-		self.assertEqual([row.item_code for row in created["items"]], ["TP-001", "TRUC-IN"])
+		self.assertEqual([row.item_code for row in created["items"]], ["TP-001", "TRUC-00001"])
 		cylinder = created["items"][1]
 		self.assertEqual(cylinder.qty, 2)
 		self.assertEqual(cylinder.rate, 500000.0)
 		self.assertEqual(cylinder.uom, "Cây")
 		self.assertIn("Kiến Tâm", cylinder.item_name)
+
+	def test_tao_don_truc_thieu_ma_that_thi_khong_them_dong_truc(self):
+		"""ADR-006: có giá NCC nhưng không nêu mã TRUC- thật → không tự bịa dòng."""
+		state = base_state()
+		order.create_sales_order(
+			{
+				"customer": "CUST-1",
+				"company": "VP",
+				"items": [{"item_code": "TP-001", "qty": 10, "rate": 1000}],
+				"has_new_cylinders": True,
+				"cylinder_count": 2,
+				"cylinder_spec": {"qty": 2, "unit_price": 500000, "supplier": "Kiến Tâm"},
+			}
+		)
+		created = state.inserted[0]
+		self.assertEqual([row.item_code for row in created["items"]], ["TP-001"])
 
 	def test_tao_don_thieu_gia_truc_thi_khong_them_dong_truc(self):
 		state = base_state()

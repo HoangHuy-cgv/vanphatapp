@@ -72,7 +72,7 @@
 				<div class="items-card">
 					<div class="card-head">
 						<span class="card-title">MẪU IN / SẢN PHẨM ĐẶT HÀNG ({{ orderItems.length }})</span>
-						<span class="total-qty-badge font-mono">Tổng: {{ formatNumber(totalItemQty) }} {{ order.uom || 'Túi' }}</span>
+						<span class="total-qty-badge font-mono">Tổng: {{ formatNumber(order.qty) }} {{ order.uom || 'Túi' }}</span>
 					</div>
 
 					<div class="items-list">
@@ -301,7 +301,7 @@ const orderItems = computed(() => {
 	if (props.order.items && props.order.items.length) {
 		return props.order.items;
 	}
-	// Fallback single item
+	// Fallback single item — chỉ hiển thị, không tự tính rate/amount (ADR-006).
 	return [
 		{
 			item_code: props.order.name,
@@ -310,17 +310,11 @@ const orderItems = computed(() => {
 			artwork_url: props.order.artwork_url,
 			qty: props.order.qty,
 			uom: props.order.uom || 'Túi',
-			rate: props.order.product_total ? Math.round(props.order.product_total / props.order.qty) : 0,
+			rate: 0,
 			amount: props.order.product_total || props.order.grand_total,
 			is_cylinder: false,
 		},
 	];
-});
-
-const totalItemQty = computed(() => {
-	return orderItems.value
-		.filter((i) => !i.is_cylinder)
-		.reduce((sum, i) => sum + (Number(i.qty) || 0), 0);
 });
 
 const tabBadgeLabel = (tab) => {

@@ -1,8 +1,8 @@
-"""Quotation shell API stubs (visual wiring proof only).
+"""Báo giá Quotation cho Van Phat Portal (native-first, truthful).
 
-Every number below is a fixed literal for wiring proof. No arithmetic here:
-all pricing math lives server-side per docs/specs/packaging-calculation-spec.md
-and will replace these stubs.
+List/preview đọc số ERPNext đã tính; engine `calculate_packaging_quotation` giữ hằng số
+kỹ thuật xưởng (định mức R&D, không có DocType native tương ứng — ADR-002).
+Ngữ nghĩa tiền/HOLD/envelope duy nhất: xem ADR-006.
 """
 
 import frappe

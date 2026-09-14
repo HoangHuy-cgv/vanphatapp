@@ -1,14 +1,15 @@
 # Ranh Giới Backend Native API (Frappe/ERPNext Thin Wrappers)
 
 > **SSOT:** Mọi quy tắc backend tập trung tại file này. `AGENTS.md` §5 chỉ tóm tắt. Code thực tế: `apps/vanphat_portal/vanphat_portal/api/`.
+> Chuẩn tiền/HOLD/envelope duy nhất: xem ADR-006 (thay mọi định nghĩa preview cũ rải rác trước đây).
 
-## 1. Module Map & Trách Nhiệm (đo lại 2026-09-15: P1–P3 xong)
+## 1. Module Map & Trách Nhiệm (đo lại 2026-09-15: P1–P3 xong, ADR-006 chốt 2026-09-15)
 | Module | Native chính | Trách nhiệm |
 |---|---|---|
-| `order.py` | Sales Order, Quotation (nháp tính thuế), Payment Entry, Customer Credit Limit | Lifecycle đơn, preview doc-driven (`_price_via_doc`), trục pass-through (`cylinder_spec`), tab counts |
-| `bao_gia.py` | Quotation, Item, File | Báo giá, `calculate_packaging`, link-search Customer, preview đọc số native |
+| `order.py` | Sales Order, Quotation (nháp tính thuế), Payment Entry, Customer Credit Limit | Lifecycle đơn: `list_orders` (+ tab counts), `get_order_details` (+ `_order_lifecycle`), `get_price_preview` (doc-driven + pass-through), `create/record/submit/approve/make_order` |
+| `bao_gia.py` | Quotation, Item, File | Báo giá: `list_quotations`, `search_customers`, `create/submit/lost`, `get_quotation_price_preview`, `calculate_packaging_quotation` (engine R&D — hằng số kỹ thuật xưởng, KHÔNG native hóa, ADR-002), `get_boot` |
 | `item.py` | Item, BOM | Catalog full-server (filters/or_filters/count), BOM 2-tier, cache Redis |
-| `customer.py`/`supplier.py`/`user.py` | Customer/Supplier/User | Master login-only + `or_filters` + paginate, truthful empty |
+| `customer.py`/`supplier.py`/`user.py` | Customer/Supplier/User | Danh mục **envelope** `page_result` + `or_filters` + paginate picker, truthful empty |
 | `_common.py` | — | Helper dùng chung, KHÔNG whitelist: `paginate`/`page_result`/`text`/`as_json`/`resolve_customer`. Không chứa nghiệp vụ/không toán tiền |
 
 - Wrapper mỏng: bọc native, không chứa nghiệp vụ trùng native. Không re-export ghi đè câm (bug S4 đã chốt SSOT).
@@ -19,9 +20,13 @@
 3. Vẫn thiếu → thin wrapper trong `vanphat_portal.api.*`.
 4. Hết cách → Custom field (`custom_` prefix) + ADR + ánh xạ mapping. Cấm custom trùng native.
 
-## 3. Query Chuẩn (Chữa N+1 + limit=500)
+## 3. Query Chuẩn (Chữa N+1 + hai lớp page_length — ADR-006)
 - List: `frappe.db.get_list(doctype, fields=[...], filters=..., or_filters=..., order_by=..., start=..., page_length=...)`.
-- `page_length` mặc định 15, trần 100 (helper `_common.paginate`). Cấm `limit=500` rồi filter/lọc bằng Python.
+- **Hai lớp pagination (ADR-006, không giả vờ một số):** giao dịch (orders/quotations/items)
+  `default 15, max 100` (helper `_common.paginate`); picker tham chiếu (customer/supplier/user
+  cho ô chọn) `default 100, max 100` + filter server, vì picker hiện tải một lần cho ô chọn.
+  Slice sau paginate picker + search server. Cấm `page_length=500` vượt trần và cấm
+  `limit=500` rồi filter/lọc bằng Python.
 - Join nhiều DocType (Customer alias, SO Item đầu, Item `custom_alias`): **1 query `frappe.qb`** thay vì vòng lặp `get_value`/`get_all` từng dòng (N+1).
 - **Sổ đo query/trang (đếm tĩnh theo code, 2026-09-14):**
 
@@ -42,12 +47,19 @@
 - POST tự `frappe.db.commit()` sau khi persist (đã áp: `create_sales_order`, `record_order_deposit`,
   `accountant_approve_procurement`, `submit_sales_order`, `create_quotation`, `submit_quotation`,
   `mark_quotation_lost`, `make_order_from_quotation`). Không commit nửa chừng rồi tiếp tục tính toán phụ thuộc.
-- Response: `{message: ...}` (Frappe tự bọc). Lỗi: `frappe.throw(msg)` → `{exc, exc_type}` cho client toast.
-- Trạng thái buồng lái tính server từ native: `order_status_label/class` từ `status`/`docstatus`/`advance_paid`; `outstanding_amount = grand_total - advance_paid`; `deposit_pct`; `required_deposit` từ `Payment Terms Template` + `Customer Credit Limit` (xóa hằng số Python tiến tới native — slice S9).
+- Response: envelope `page_result` thống nhất cho MỌI list
+  (`{<key>, page, page_length, total_count, total_pages}` — ADR-006); detail/mutate trả
+  object (Frappe tự bọc `{message: ...}`). Lỗi: `frappe.throw(msg)` → `{exc, exc_type}` cho client toast.
+- Trạng thái buồng lái: một công thức duy nhất list + drawer (ADR-006):
+  HOLD ⟺ Trả trước AND `0 < advance_paid < required_deposit`; Trả sau không bao giờ HOLD.
+  `order_status_label/class` từ `status`/`docstatus`/`advance_paid`/`required_deposit`;
+  `outstanding_amount = grand_total - advance_paid`; `deposit_pct`;
+  `required_deposit = product_total × deposit_pct + cylinder_total` (`0` khi Trả sau).
 - Thiếu `Default Company`: báo lỗi rõ ràng, KHÔNG hardcode tên công ty (Sếp chốt 2026-09-14 — cấu hình Default Company = Bao Bì Vạn Phát ở site).
 
 ## 5. Cache Redis
-- Key PHẢI chứa mọi params: `vp:items:list|tab=<t>&q=<q>&page=<p>` (hiện tại key thiếu params → stale cross-filter — slice S3).
+- Key PHẢI chứa mọi params: `vp:items:list|tab=<t>|grp=<g>|supply=<s>|q=<q>|page=<p>|pl=<pl>`
+  (`item.py:138` — đã đủ params từ trước; backend spec cũ mô tả thiếu là sai, sửa theo code).
 - TTL 300s. Invalidate chủ động qua `doc_events` (`Item`, `Quotation`, `Customer`, `Sales Order` `on_update`) thay vì endpoint guest xả cache (`clear_catalog_cache allow_guest` — slice S3 đóng).
 - Không cache dữ liệu per-user/permission-sensitive chung key.
 
@@ -63,14 +75,19 @@
   lên Quotation nháp trong memory, `calculate_taxes_and_totals`, đọc
   `total/total_taxes_and_charges/grand_total`. Cấm `round(net*rate)` tay trong flow preview/báo giá/đơn.
 - Trục pass-through NCC: `cylinder_spec {qty, unit_price, supplier}` — giá NCC quyết, Vạn Phát
-  mua đi bán lại. Thiếu giá → `cylinder_pending: true`, totals `null` truthful. Cấm mọi hằng số/fallback số trục.
+  mua đi bán lại. Thiếu giá → `cylinder_pending: true`, cặp `*_final: null` truthful.
+  Cấm mọi hằng số/fallback số trục. Dòng trục tạo đơn KHÔNG dùng `item_code` cứng
+  (`"TRUC-IN"` đã xóa — ADR-006); ghi đúng mã `TRUC-` native khi có mã thật.
 - Cọc: `Payment Terms Template` (`invoice_portion`) + `Customer Credit Limit` (Trả sau = 0đ).
-- **Ngữ nghĩa số tiền thống nhất mọi màn (Sếp chốt 2026-09-14):** `net_total`/`vat_amount`/`grand_total`
-  là số native; `cylinder_total` = tiền trục **chưa VAT** (giá NCC thuần); `product_total` =
-  `net_total − cylinder_total` (tiền hàng chưa VAT, không gồm trục); `qty` = tổng số lượng
-  **chỉ dòng túi/cuộn** (bỏ dòng trục để không trộn đơn vị Túi với Cây).
+- **Ngữ nghĩa số tiền duy nhất mọi màn (ADR-006, thay mọi định nghĩa preview cũ):**
+  `net_total`/`vat_amount`/`grand_total` là số native trên chứng từ;
+  `cylinder_total` = tiền trục **chưa VAT** (giá NCC thuần);
+  `product_total = net_total − cylinder_total` (tiền hàng chưa VAT, không gồm trục);
+  `qty` = tổng số lượng **chỉ dòng túi/cuộn** (bỏ dòng trục để không trộn đơn vị Túi với Cây).
   Tổng kiểm chứng: `product_total + cylinder_total + vat_amount = grand_total`.
-  `_get_vat_rate`/`FALLBACK_VAT_RATE` (nhân VAT tay) đã xóa; chỉ còn `FALLBACK_DEPOSIT_PCT = 0.5` + ghi log.
+  `required_deposit = product_total × deposit_pct + cylinder_total` (`0` khi Trả sau).
+  HOLD duy nhất: Trả trước AND `0 < advance_paid < required_deposit` (Trả sau không HOLD).
+  Chỉ còn 1 fallback được phép: `FALLBACK_DEPOSIT_PCT = 0.5` khi KH thiếu template + ghi log.
 - Tab phân loại chuỗi `NGCS/TMD` → `Item Group` filter server khi có data (giữ tạm, S9-phạm-vi sau).
   Nợ: `_item_product_group` (drawer) chưa nhận diện TMD vì tên thật "Túi nilon HD..." không khớp nhánh nào —
   cần Sếp chốt phân loại theo `item_group`/prefix thay vì chuỗi tên.

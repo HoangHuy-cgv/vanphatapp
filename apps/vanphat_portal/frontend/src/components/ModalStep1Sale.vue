@@ -266,6 +266,7 @@
 <script setup>
 import { reactive, computed, ref, onMounted, onUnmounted } from 'vue';
 import { Dialog } from 'frappe-ui';
+import { api } from '../composables/useSession';
 
 const props = defineProps({
 	initialData: {
@@ -328,16 +329,9 @@ let customerSearchTimer = null;
 
 async function searchCustomers(q) {
 	try {
-		const res = await fetch('/api/method/vanphat_portal.api.bao_gia.search_customers', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-				'X-Frappe-CSRF-Token': window.frappe_csrf_token || '',
-			},
-			body: JSON.stringify({ query: q }),
-		});
-		const json = await res.json();
-		customerResults.value = Array.isArray(json.message) ? json.message : [];
+		// ADR-006: tìm KH đi qua api() — debounce + CSRF + toast thống nhất, không fetch lẻ.
+		const data = await api('bao_gia.search_customers', { query: q }, { silent: true });
+		customerResults.value = Array.isArray(data) ? data : [];
 	} catch (err) {
 		customerResults.value = [];
 	}

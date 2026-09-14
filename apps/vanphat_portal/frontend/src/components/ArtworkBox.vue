@@ -64,6 +64,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import { api } from '../composables/useSession';
 
 const props = defineProps({
 	modelValue: {
@@ -110,17 +111,11 @@ async function uploadArtwork(file) {
 		const form = new FormData();
 		form.append('file', file, file.name);
 		form.append('is_private', '0');
-		const res = await fetch('/api/method/upload_file', {
-			method: 'POST',
-			headers: {
-				'X-Frappe-CSRF-Token': window.vp_csrf_token || window.frappe_csrf_token || '',
-			},
-			body: form,
-		});
-		const json = await res.json();
-		if (json && json.message && json.message.file_url) {
-			imageUrl.value = json.message.file_url;
-			emit('update:modelValue', json.message.file_url);
+		// ADR-006: upload đi qua api() — CSRF + toast + signal thống nhất, không fetch lẻ.
+		const json = await api('/api/method/upload_file', form, { method: 'POST' });
+		if (json && json.file_url) {
+			imageUrl.value = json.file_url;
+			emit('update:modelValue', json.file_url);
 			return;
 		}
 	} catch (err) {

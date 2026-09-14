@@ -328,8 +328,11 @@ export function useCatalogData() {
 	async function loadCustomers() {
 		loadingCustomers.value = true;
 		try {
+			// ADR-006: master lists trả envelope page_result — đọc đúng hợp đồng.
 			const data = await api('vanphat_portal.api.customer.get_list', {}, { get: true });
-			if (Array.isArray(data)) {
+			if (data && Array.isArray(data.customers)) {
+				customers.value = data.customers;
+			} else if (Array.isArray(data)) {
 				customers.value = data;
 			}
 		} catch (e) {
@@ -347,8 +350,11 @@ export function useCatalogData() {
 	async function loadSuppliers() {
 		loadingSuppliers.value = true;
 		try {
+			// ADR-006: master lists trả envelope page_result — đọc đúng hợp đồng.
 			const data = await api('vanphat_portal.api.supplier.get_list', {}, { get: true });
-			if (Array.isArray(data)) {
+			if (data && Array.isArray(data.suppliers)) {
+				suppliers.value = data.suppliers;
+			} else if (Array.isArray(data)) {
 				suppliers.value = data;
 			}
 		} catch (e) {
@@ -366,8 +372,11 @@ export function useCatalogData() {
 	async function loadUsers() {
 		loadingUsers.value = true;
 		try {
+			// ADR-006: master lists trả envelope page_result — đọc đúng hợp đồng.
 			const data = await api('vanphat_portal.api.user.get_list', {}, { get: true });
-			if (Array.isArray(data)) {
+			if (data && Array.isArray(data.users)) {
+				users.value = data.users;
+			} else if (Array.isArray(data)) {
 				users.value = data;
 			}
 		} catch (e) {

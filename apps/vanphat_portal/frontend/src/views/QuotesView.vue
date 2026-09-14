@@ -250,7 +250,9 @@ const step1Data = ref({
 
 const step2Data = ref({
 	lines: [{ item_name: '', qty: '', rate: '' }],
-	materials: ['OPP', 'PE sữa'],
+	// ADR-006: vật liệu mặc định là nợ config-native (plan item 13). Tạm để trống —
+	// người dùng click-chọn ở Drawer, không mặc định cứng thay ý GĐ.
+	materials: [],
 	cylinder_qty: 1,
 	artwork_url: '',
 });
@@ -320,8 +322,8 @@ function onRowClick(q) {
 			bottom: '',
 		};
 		step2Data.value = {
-			lines: q.lines || [{ item_name: q.customer_name || 'Mẫu in', qty: 5000, rate: '' }],
-			materials: q.materials || ['OPP', 'PE sữa'],
+			lines: q.lines || [{ item_name: q.customer_name || 'Mẫu in', qty: '', rate: '' }],
+			materials: q.materials || [],
 			cylinder_qty: q.cylinder_qty || 0,
 			artwork_url: '',
 		};
@@ -367,8 +369,25 @@ function openStep1Modal() {
 }
 
 async function calculatePackaging() {
-	const totalDesiredQty =
-		step2Data.value.lines.reduce((s, r) => s + (Number(r.qty) || 0), 0) || 5000;
+	// ADR-006: số lượng/tiền do backend tính từ lines thô. Client chỉ gom lines gửi
+	// lên — có dòng qty > 0 mới gọi, không tự cộng/fallback số thương mại ở đây.
+	const lines = (step2Data.value.lines || [])
+		.map((r) => ({
+			qty: Number(r.qty) || 0,
+			rate: Number(r.rate) || 0,
+			item_name: r.item_name || '',
+		}))
+		.filter((r) => r.qty > 0);
+	if (!lines.length) return null;
+	// 1 dòng: dùng luôn qty đó. Nhiều dòng: hỏi backend tổng trước (không tự cộng).
+	let totalDesiredQty = 0;
+	if (lines.length === 1) {
+		totalDesiredQty = lines[0].qty;
+	} else {
+		const preview = await api('bao_gia.get_quotation_price_preview', { lines }, { silent: true });
+		totalDesiredQty = Number(preview?.total_qty) || 0;
+		if (!totalDesiredQty) return null;
+	}
 	const isPrintCylinder =
 		step1Data.value.print_type === 'In trục' &&
 		step1Data.value.cylinder_status === 'Chưa có trục';
@@ -401,7 +420,7 @@ async function onStep1Complete(payload) {
 		step2Data.value.lines = [
 			{
 				item_name: step1Data.value.description || 'Mẫu in chính',
-				qty: 5000,
+				qty: '',
 				rate: '',
 			},
 		];

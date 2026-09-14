@@ -89,7 +89,7 @@ export function useCreateOrderForm(masterItemsRef) {
 	// MTO state (Màng ghép / Cuộn)
 	const selectedCustomItemCode = ref('');
 	const variantRows = ref([
-		{ variant_name: '', qty: 10000, rate: 0 },
+		{ variant_name: '', qty: '', rate: 0 },
 	]);
 	const hasNewCylinders = ref(false);
 	const cylinderCount = ref(0);
@@ -97,7 +97,9 @@ export function useCreateOrderForm(masterItemsRef) {
 	// MTS state (NGCS / Màng đơn)
 	const screenPrintBrand = ref('');
 	const genericRows = ref([
-		{ item_code: '', item_name: '', variant_name: '', qty: 5000, rate: 0, uom: 'Túi' },
+		// ADR-006: qty mặc định là nợ config-native (plan item 13) — để trống để
+		// người dùng nhập thật, không fallback số thương mại thay ý họ.
+		{ item_code: '', item_name: '', variant_name: '', qty: '', rate: 0, uom: 'Túi' },
 	]);
 
 	// Computed logic
@@ -223,7 +225,8 @@ export function useCreateOrderForm(masterItemsRef) {
 						item_code: availableGenericItems.value[0].item_code,
 						item_name: availableGenericItems.value[0].item_name,
 						variant_name: availableGenericItems.value[0].item_name,
-						qty: productGroup.value === 'Túi màng đơn' ? 100 : 5000,
+						// ADR-006: qty để trống chờ nhập thật (nợ config-native plan item 13).
+						qty: '',
 						rate: availableGenericItems.value[0].base_rate,
 						uom: availableGenericItems.value[0].uom,
 					},
@@ -234,11 +237,11 @@ export function useCreateOrderForm(masterItemsRef) {
 
 	const onCustomItemChange = () => {
 		if (!currentCustomItem.value) return;
-		// Initialize default variants
+		// Initialize default variants — qty để trống chờ nhập thật (ADR-006).
 		const defaults = currentCustomItem.value.default_variants || ['Quy cách chuẩn'];
 		variantRows.value = defaults.map((name) => ({
 			variant_name: name,
-			qty: 10000,
+			qty: '',
 			rate: currentCustomItem.value.base_rate || 0,
 		}));
 		cylinderCount.value = currentCustomItem.value.cylinder_count || 0;
@@ -258,7 +261,7 @@ export function useCreateOrderForm(masterItemsRef) {
 		const rate = currentCustomItem.value ? currentCustomItem.value.base_rate : 0;
 		variantRows.value.push({
 			variant_name: '',
-			qty: 10000,
+			qty: '',
 			rate: rate,
 		});
 	};
@@ -275,7 +278,8 @@ export function useCreateOrderForm(masterItemsRef) {
 			item_code: firstItem.item_code || '',
 			item_name: firstItem.item_name || '',
 			variant_name: firstItem.item_name || '',
-			qty: productGroup.value === 'Túi màng đơn' ? 100 : 5000,
+			// ADR-006: qty để trống chờ nhập thật (nợ config-native plan item 13).
+			qty: '',
 			rate: firstItem.base_rate || 0,
 			uom: firstItem.uom || 'Túi',
 		});

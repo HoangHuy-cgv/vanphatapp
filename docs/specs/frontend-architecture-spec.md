@@ -18,21 +18,25 @@
 - Thực trạng sau S7+P4 (đo lại 2026-09-15): `ModalCreateOrder.vue` ~954, `DrawerOrderDetail.vue` ~970, `DrawerStep2Director.vue` ~827, `CatalogView.vue` ~631 + 6 composables (~1.1k dòng có tổ chức). Drawers cuốn chiếu sang `BaseDrawer` native `<dialog>`.
 - Mỗi component mới: 1 câu mô tả trách nhiệm duy nhất trong PR/commit message.
 
-## 3. Data Fetching — Chỉ Qua `api()` (migrate dần sang `useCall`/`useList`/`useDoc`)
-- SSOT client hiện tại: `composables/useSession.js::api()` — tự prefix `/api/method/vanphat_portal.api.*`, gắn `X-Frappe-CSRF-Token`, unwrap `message`, toast lỗi thống nhất, hỗ trợ `signal` (AbortController) + `silent`.
-- Đích frappe-ui v2 (không deprecated trong 1.x — v1-release plan): code mới dùng `useCall` (whitelisted method/REST), `useList` (list phân trang/filter), `useDoc` (1 doc reactive), `useDoctype`/`useNewDoc` (ghi/draft). Code `api()` cũ giữ nguyên, migrate khi chạm file.
+## 3. Data Fetching — Chỉ Qua `api()` (kể cả upload FormData — ADR-006)
+- SSOT client: `composables/useSession.js::api()` — tự prefix `/api/method/vanphat_portal.api.*`, gắn `X-Frappe-CSRF-Token`, unwrap `message`, toast lỗi thống nhất, hỗ trợ `signal` (AbortController) + `silent` + `FormData` (upload `upload_file`: không set `Content-Type` tay để browser gắn boundary, vẫn gắn CSRF + toast + signal). Cấm mọi `fetch()` trực tiếp trong `src/`.
 - Luật:
   - Search/tab/pagination: debounce 250–300ms + abort request cũ, chỉ render response mới nhất (chống race).
   - GET cho read/preview, POST cho create/submit. Không GET gây mutation.
-  - Cấm: `fetch` trực tiếp rải rác, `.filter()`/`startsWith('TP-')` phân tab trên dataset monolithic, fallback CSV/mock, sinh ID client (`Math.random`), mutate trạng thái local không qua backend.
+  - Đọc đúng envelope `page_result`; không đỡ mảng trần (sau migrate customer/supplier/user — ADR-006).
+  - Picker tham chiếu (customer/supplier/user) tải một lần qua envelope (`default 100, max 100` + filter server ở backend); không xin `page_length` vượt trần 100. Slice sau paginate picker + search server.
+  - Cấm: `fetch` trực tiếp rải rác, `.filter()`/`startsWith('TP-')` phân tab trên dataset monolithic, fallback CSV/mock, sinh ID client (`Math.random`), mutate trạng thái local không qua backend, **tự tính lại `rate`/`amount`/`qty` từ field tiền ở client** (ADR-006: `DrawerOrderDetail` fallback `rate = product_total/qty`, `totalItemQty .reduce`, `QuotesView calculatePackaging .reduce` + `|| 5000` — đã xóa), **tự set `order_state`/`completed_qty`/`is_hold` sau mutate** (đọc lại từ response/server).
+  - Không identity/user/email cứng trong client (`giamdoc@vanphat.com` đã xóa — ADR-006; sidebar hiện trạng thái đăng nhập thật từ `get_boot`).
   - Format-only ở client: `Intl.NumberFormat('vi-VN')`. Mọi tiền/thuế/cọc/BOM/tồn kho/status do backend trả sẵn.
   - VAT doc-driven + trục pass-through NCC (`cylinder_spec {qty, unit_price, supplier}` — ADR-002): cấm math tay và mọi fallback số trục.
 
 ## 4. Router & Code-Splitting
-- Hiện trạng: 3 route import tĩnh (`OrdersView`, `QuotesView`, `CatalogView`) + 4 redirect, bọc `keep-alive` trần.
-- Chuẩn mục tiêu:
-  - Route `() => import()` động 100% (Orders/Quotes/Catalog + Drawer/Modal nặng qua `defineAsyncComponent` + `<Suspense>`).
-  - `keep-alive`: CHỈ list đọc nhiều, có `include` + `max` 5–10, refresh `onActivated`, cleanup `onDeactivated`. Không keep-alive form tạo đơn (tránh state cũ).
+- Hiện trạng (đã làm, sửa mô tả cũ "import tĩnh" cho đúng code): 3 route lazy động 100%
+  (`OrdersView`/`QuotesView`/`CatalogView` qua `() => import()` — `router/index.js:4-6`) + 4 redirect,
+  bọc `Suspense` + `keep-alive include="OrdersView,CatalogView,QuotesView" :max="5"` (`App.vue:104-117`).
+  Form tạo đơn/báo giá KHÔNG keep-alive (tránh state cũ).
+- Chuẩn mục tiêu còn lại: drawers/modals nặng qua `defineAsyncComponent` +
+  `loadingComponent delay:200 + errorComponent/timeout:3000`.
   - Hash history giữ nguyên (khớp Frappe serve static, không cần server rewrite).
 
 ## 5. Build & Performance Budget (phương án R Sếp duyệt 2026-09-15)
@@ -48,7 +52,13 @@
 - Breakpoints: 1024 sidebar icon-only, 768 drawer full-screen, 320 card thay table.
 - Modals giữa màn hình → `Dialog` chính chủ frappe-ui (`v-model:open`, đối chiếu API trong `node_modules` bản beta đang dùng); confirm/nhập liệu đơn giản → `dialog.confirm/danger/prompt`; `after-leave` reset form.
 
-## 7. Cấm Tuyệt Đối (Nhắc Lại Từ AGENTS.md)
-- Client math tài chính + toán tiền/thuế tay trong Python — preview/báo giá/đơn đọc số native đã tính (VAT doc-driven, trục pass-through NCC — ADR-002).
+## 7. Cấm Tuyệt Đối (Nhắc Lại Từ AGENTS.md + ADR-006)
+- Client math tài chính + toán tiền/thuế tay trong Python — preview/báo giá/đơn đọc số native đã tính
+  (một ngữ nghĩa tiền duy nhất: `product_total = net_total − cylinder_total`, chưa VAT, không trục — ADR-006).
+- `fetch()` trực tiếp trong `src/` (kể cả upload — đi qua `api()` hỗ trợ FormData).
+- `<select>` cho ≤ 8 phương án (chuẩn là nút click-chọn `role=radiogroup`/`radio`; `<select>` còn lại
+  trong ModalCreateOrder là nợ plan item 3, không phải chuẩn).
+- Hardcode config UI mới trong Vue (options/defaults/labels/thứ tự từ native — ADR-005/ADR-006);
+  cái đã lỡ hardcode rút dần theo plan item 3, không thêm mới.
 - `keep-alive` trần không `include/max`, static import toàn bộ route.
 - Tailwind v4 (preset frappe-ui chỉ hỗ trợ v3); CSS entry trùng Tailwind directives; 2 `FrappeUIProvider` (toast double).

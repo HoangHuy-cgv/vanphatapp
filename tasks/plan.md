@@ -18,6 +18,11 @@
   visual; giữ Modal 1 + Drawer 2, cấm portal list native cho Sales Order (frappe#42640 còn mở);
   hoãn Frappe Studio tới khi đủ 3 điều kiện mở lại. UI spec §7 (§7.1 flow raw-data, §7.2 config native)
   + DoD 13–15 đã chốt theo yêu cầu Sếp: không đào tạo, click-chọn thay dropdown, visual theo flow raw-data.
+- **ADR-006 (2026-09-15, em quyết định theo ủy quyền):** một ngữ nghĩa tiền + một công thức
+  HOLD + một envelope list + `api()` là đường fetch duy nhất (kể cả upload). Đối chiếu
+  docs ↔ code phát hiện preview tính `product_total` gồm VAT (lệch list/drawer), list HOLD
+  mốc `grand_total*0.5` (lệch drawer), master lists trả mảng trần, 2 `fetch()` trực tiếp,
+  `page_length: 500`, client math/set-state sau mutate, user cứng. Slice nhất-quán này sửa hết.
 
 ## Còn lại (chờ Sếp ra việc)
 1. **Quyền — rủi ro cao nhất**: 19/24 endpoint chưa có cổng quyền; `order.list_orders` và
@@ -41,7 +46,11 @@
 9. **Cuộn màng tiêu**: chưa có mã — Sếp báo sau (BTP bán được hiện chỉ 00015).
 10. **Phân loại TMD ở drawer**: `_item_product_group` chưa bắt được tên thật "Túi nilon HD..."
     → Sếp chốt phân loại theo `item_group`/prefix thay vì chuỗi tên.
-11. **Mốc HOLD ở danh sách đơn** đang dùng `grand_total*0.5` (gồm VAT + trục) trong khi drawer
-    dùng `required_deposit` — cần thống nhất một công thức.
+11. ~~**Mốc HOLD ở danh sách đơn** đang dùng `grand_total*0.5`~~ → **xong trong slice ADR-006**:
+    list + drawer chung một công thức (Trả trước AND `0 < advance_paid < required_deposit`).
 12. **Golden test engine báo giá** (`calculate_packaging_quotation`) trước khi chạm vào
     (ADR-002: slice engine riêng, chờ Sếp duyệt).
+13. **Rút config cứng còn lại trong Vue ra native (ADR-005/ADR-006, không thuộc slice nhất-quán):**
+    `<select>` nhóm SP/KH/thanh toán trong `ModalCreateOrder.vue` → nút click-chọn +
+    search-select đọc native; defaults `qty`/vật liệu/nhóm SP → `min_order_qty`/Item Group tree;
+    plan item 3 cũ gộp vào đây.

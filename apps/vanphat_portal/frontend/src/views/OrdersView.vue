@@ -428,7 +428,8 @@ async function loadOrders() {
 
 async function loadMasterItems() {
 	try {
-		const data = await api('item.get_list', { page_length: 500 }, { get: true });
+		// ADR-006: picker tham chiếu trong trần 100 + filter server, không xin vượt trần.
+		const data = await api('item.get_list', { page_length: 100 }, { get: true });
 		if (data && Array.isArray(data.items)) {
 			masterItems.value = data.items;
 		} else if (Array.isArray(data)) {
@@ -467,12 +468,7 @@ async function onOrderUpdated(updatedOrder) {
 }
 
 function onOrderDelivery(order) {
-	const idx = orders.value.findIndex((o) => o.name === order.name);
-	if (idx !== -1) {
-		// SSOT server S1: trạng thái/số cọc do backend trả qua loadOrders; ở đây chỉ refresh
-		orders.value[idx].order_state = 'Đã giao hàng';
-		orders.value[idx].outstanding_amount = 0;
-	}
+	// ADR-006: trạng thái/số cọc do backend trả qua loadOrders; ở đây chỉ đóng drawer + refresh.
 	showOrderDetail.value = false;
 	loadOrders();
 }

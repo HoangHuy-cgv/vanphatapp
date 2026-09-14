@@ -1,14 +1,14 @@
 {
   "api_endpoints": 24,
   "api_ungated": 19,
-  "client_hardcoded_qty": 6,
-  "client_identity": 1,
-  "client_magic_fallback": 1,
-  "client_money_math": 1,
-  "client_qty_reduce": 2,
+  "client_hardcoded_qty": 0,
+  "client_identity": 0,
+  "client_magic_fallback": 0,
+  "client_money_math": 0,
+  "client_qty_reduce": 0,
   "entry_gzip_kb": 142,
   "fe_guard_ok": 1,
   "fe_test_files": 0,
-  "py_tests": 41,
+  "py_tests": 42,
   "swallowed_catch": 1
 }

@@ -6,10 +6,12 @@ Handles ERPNext Native Sales Order lifecycle:
 - Server-side price & deposit preview (Zero client-side financial math)
 - Order creation, deposit recording, accountant approval, and submission
 
-Nguyên tắc tiền (ADR-002 + AGENTS.md):
+Nguyên tắc tiền (ADR-002 + ADR-006 + AGENTS.md) — MỘT ngữ nghĩa duy nhất mọi màn:
 - VAT/net/grand đọc số ERPNext đã tính (`net_total`/`total_taxes_and_charges`/`grand_total`).
   Không nhân hệ số VAT tay ở bất kỳ màn nào.
-- Tiền trục = giá NCC pass-through (CHƯA VAT); tiền hàng = `net_total` native − tiền trục.
+- Tiền trục = giá NCC pass-through (CHƯA VAT); tiền hàng = `net_total` native − tiền trục
+  (chưa VAT, không trục); `qty` chỉ cộng dòng túi/cuộn (bỏ dòng trục).
+- Bất biến: `product_total + cylinder_total + vat_amount = grand_total`.
 - Chỉ còn 1 fallback được phép: % cọc 50% khi KH chưa có Payment Terms Template (có ghi log).
 """
 
@@ -200,6 +202,29 @@ def _credit_limit(customer):
 		return 0.0
 
 
+def _credit_limit_map(customers):
+	"""{customer: credit_limit} cho nhiều KH bằng 1 query (chữa N+1 khi list đơn)."""
+	names = [name for name in dict.fromkeys(customers) if name]
+	limits = dict.fromkeys(names, 0.0)
+	if not names:
+		return limits
+	try:
+		rows = frappe.db.get_list(
+			"Customer Credit Limit",
+			filters={"parent": ["in", names]},
+			fields=["parent", "credit_limit"],
+			page_length=len(names),
+		)
+		for row in rows or []:
+			limits[row.get("parent")] = max(
+				limits.get(row.get("parent"), 0.0),
+				frappe.utils.flt(row.get("credit_limit")),
+			)
+	except Exception:
+		pass
+	return limits
+
+
 # --------------------------------------------------------------------------
 # Tính giá doc-driven (preview) — ERPNext tính, vỏ chỉ đọc
 # --------------------------------------------------------------------------
@@ -313,7 +338,6 @@ def get_price_preview(
 	)
 	net_total = priced["net_total"]
 	vat_amount = priced["vat_amount"]
-	product_total = net_total + vat_amount
 	grand_total = priced["grand_total"]
 
 	# Điều khoản thanh toán & hạn mức tín dụng (native)
@@ -325,6 +349,9 @@ def get_price_preview(
 	# Tiền trục pass-through (chưa VAT); pending thì chưa chốt tổng
 	cyl = _cylinder_spec_state(spec)
 	cylinder_total = cyl["qty"] * cyl["unit_price"] if not cyl["pending"] else 0.0
+	# ADR-006: MỘT ngữ nghĩa tiền mọi màn — tiền hàng = net native − tiền trục
+	# (chưa VAT, không trục), khớp list_orders/get_order_details.
+	product_total = max(0.0, net_total - cylinder_total)
 	# Trả sau cọc 0đ; Trả trước = % Payment Terms trên tiền hàng + 100% tiền trục
 	required_deposit = (
 		0.0 if payment_type == "Trả sau" else round((product_total * deposit_pct) + cylinder_total)
@@ -495,9 +522,10 @@ def list_orders(tab=None, query=None, page=1, page_length=15):
 	except Exception:
 		pass
 
-	# Tiền/trạng thái: 1 query dòng hàng cả trang + 2 query cọc/KH (thay N+1 cũ)
+	# Tiền/trạng thái: 1 query dòng hàng cả trang + 1 query cọc + 1 query hạn mức (thay N+1 cũ)
 	lines = _order_lines_for([row.get("name") for row in page_rows])
 	deposit_pcts = _deposit_pct_map([row.get("customer") for row in page_rows])
+	credit_limits = _credit_limit_map([row.get("customer") for row in page_rows])
 
 	orders = []
 	for row in page_rows:
@@ -509,6 +537,11 @@ def list_orders(tab=None, query=None, page=1, page_length=15):
 		cylinder_total, product_qty = lines.get(order.get("name"), (0.0, 0.0))
 		product_total = max(0.0, net_total - cylinder_total)
 		cfg_pct = deposit_pcts.get(order.get("customer"), FALLBACK_DEPOSIT_PCT)
+		credit_limit = credit_limits.get(order.get("customer"), 0.0)
+		payment_type = "Trả sau" if credit_limit > 0 else "Trả trước"
+		required_deposit = (
+			0.0 if payment_type == "Trả sau" else round((product_total * cfg_pct) + cylinder_total)
+		)
 
 		order["advance_paid"] = advance_paid
 		order["outstanding_amount"] = max(0.0, grand_total - advance_paid)
@@ -517,7 +550,9 @@ def list_orders(tab=None, query=None, page=1, page_length=15):
 		order["product_total"] = product_total
 		order["vat_amount"] = vat_amount
 		order["vat_rate"] = round(vat_amount / net_total * 100.0, 1) if net_total else 0.0
-		order["required_deposit"] = round((product_total * cfg_pct) + cylinder_total)
+		order["required_deposit"] = required_deposit
+		order["payment_type"] = payment_type
+		order["credit_limit"] = credit_limit
 		order["qty"] = product_qty
 
 		# Alias + mặt hàng đầu từ JOIN (không get_value từng dòng)
@@ -532,14 +567,17 @@ def list_orders(tab=None, query=None, page=1, page_length=15):
 		order["order_tab"] = tab
 		order["product_group"] = _order_product_group(tab)
 
-		# Trạng thái buồng lái (giữ nguyên công thức cũ: mốc 50% trên grand_total)
+		# ADR-006: MỘT công thức HOLD cho list + drawer — Trả trước AND thiếu cọc.
+		# Trả sau không bao giờ HOLD. Đơn đã duyệt giữ nguyên "Đã duyệt".
+		is_hold = payment_type == "Trả trước" and 0 < advance_paid < required_deposit
+		order["is_hold"] = is_hold
 		if order.get("docstatus") == 1:
 			order["order_status_label"] = "Đã duyệt"
 			order["order_status_class"] = "status-ordered"
-		elif advance_paid > 0 and advance_paid < (grand_total * 0.5):
+		elif is_hold:
 			order["order_status_label"] = "HOLD"
 			order["order_status_class"] = "status-hold"
-		elif advance_paid >= (grand_total * 0.5):
+		elif payment_type == "Trả sau" or advance_paid >= required_deposit:
 			order["order_status_label"] = "Đã duyệt"
 			order["order_status_class"] = "status-ordered"
 		else:
@@ -831,13 +869,16 @@ def create_sales_order(payload):
 			so_item["item_code"] = code
 		so_items.append(so_item)
 
-	# P2 pass-through: thiếu giá NCC → KHÔNG tự thêm dòng, KHÔNG fallback số.
+	# P2 pass-through (ADR-006): thiếu giá NCC → KHÔNG tự thêm dòng, KHÔNG fallback số.
+	# Dòng trục không dùng item_code cứng: caller gửi đúng mã TRUC- native trong items;
+	# ở đây chỉ nhận thêm khi payload nêu rõ mã trục thật.
 	cyl = _cylinder_spec_state(as_json(payload.get("cylinder_spec")))
-	if payload.get("has_new_cylinders") and payload.get("cylinder_count"):
+	cyl_item_code = text(payload.get("cylinder_item_code") or cyl.get("item_code"))
+	if payload.get("has_new_cylinders") and (payload.get("cylinder_count") or cyl["qty"]):
 		cyl_qty = int(payload.get("cylinder_count") or cyl["qty"] or 0)
-		if cyl_qty > 0 and cyl["unit_price"] > 0:
+		if cyl_qty > 0 and cyl["unit_price"] > 0 and cyl_item_code:
 			so_items.append({
-				"item_code": "TRUC-IN",
+				"item_code": cyl_item_code,
 				"item_name": _cylinder_item_name(cyl_qty, cyl["supplier"]),
 				"description": f"Trục in theo báo giá NCC ({cyl_qty} cây)",
 				"qty": cyl_qty,

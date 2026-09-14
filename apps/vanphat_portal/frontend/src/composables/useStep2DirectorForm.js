@@ -17,15 +17,17 @@ export function useStep2DirectorForm(props, emit) {
 	const isRoll = computed(() => formData.value.product_type === 'Cuộn màng ghép');
 	const needCylinder = computed(() => formData.value.print_type === 'In trục' && formData.value.cylinder_status === 'Chưa có trục');
 
-	// M2 state — restored from App-held savedData so Quay lại không mất dữ liệu
-	const selectedMaterials = ref([...(props.savedData.materials || ['OPP', 'PE sữa'])]);
+	// M2 state — restored from App-held savedData so Quay lại không mất dữ liệu.
+	// ADR-006: không default vật liệu/giá cứng — người dùng click-chọn ở Drawer;
+	// giá trục hiển thị "Chờ giá NCC" khi backend chưa trả (pending truthful).
+	const selectedMaterials = ref([...(props.savedData.materials || [])]);
 	const artworkUrl = ref(props.savedData.artwork_url || '');
 	const cylinderQty = ref(props.savedData.cylinder_qty ?? 1);
 	const cylinderRateDisplay = computed(() => {
 		if (props.calculationResult?.cylinder_quote?.unit_price) {
 			return formatCurrency(props.calculationResult.cylinder_quote.unit_price) + '/cây';
 		}
-		return '3.500.000 đ/cây';
+		return 'Chờ giá NCC';
 	});
 
 	// Print item rows

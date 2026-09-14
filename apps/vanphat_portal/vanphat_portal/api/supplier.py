@@ -6,16 +6,20 @@ Portal bắt buộc login — không guest. DB trống → [] (truthful, không 
 
 import frappe
 
-from vanphat_portal.api._common import paginate, text
+from vanphat_portal.api._common import page_result, paginate, text
 
 
 @frappe.whitelist()
 def get_list(query=None, supplier_group=None, page=1, page_length=100):
-	"""Return suppliers filtered by query string and supplier group."""
+	"""Return suppliers filtered by query string and supplier group.
+
+	ADR-006: envelope `page_result` thống nhất mọi list; picker tham chiếu
+	default 100/max 100 + filter server (không tải vượt trần).
+	"""
 	q = text(query).lower()
 	grp = text(supplier_group)
 	like = f"%{q}%" if q else None
-	_, pl, start = paginate(page, page_length, default=100)
+	p, pl, start = paginate(page, page_length, default=100)
 
 	filters = {"disabled": 0}
 	if grp:
@@ -34,8 +38,10 @@ def get_list(query=None, supplier_group=None, page=1, page_length=100):
 		["Supplier", "tax_id", "like", like],
 	] if like else None
 	# S5: get_list tôn trọng permission (không get_all bypass)
-	return frappe.db.get_list("Supplier", filters=filters, or_filters=or_filters, fields=fields, order_by="name asc",
+	rows = frappe.db.get_list("Supplier", filters=filters, or_filters=or_filters, fields=fields, order_by="name asc",
 		start=start, page_length=pl)
+	total_count = frappe.db.count("Supplier", filters)
+	return page_result("suppliers", rows, p, pl, total_count)
 
 
 @frappe.whitelist()
