@@ -267,9 +267,9 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-import { api } from '../composables/useSession';
-import { toast } from '../composables/useToast';
+import { ref, computed, toRef } from 'vue';
+import { useCockpitFormat } from '../composables/useCockpitFormat';
+import { useOrderDeposit } from '../composables/useOrderDeposit';
 
 const props = defineProps({
 	isOpen: { type: Boolean, default: false },
@@ -279,6 +279,16 @@ const props = defineProps({
 
 const emit = defineEmits(['close', 'update-order', 'create-delivery']);
 
+// S7b: formatters dùng chung + deposit/lifecycle handlers
+const { formatCurrency, formatNumber } = useCockpitFormat();
+const {
+	depositInputAmount,
+	handleSaveDeposit,
+	handleOverrideHold,
+	handleReportProgress,
+	handleCreateDelivery,
+} = useOrderDeposit(toRef(props, 'order'), emit);
+
 // Lightbox state
 const activeLightboxUrl = ref(null);
 const activeLightboxTitle = ref('');
@@ -287,9 +297,6 @@ const openLightbox = (url, title) => {
 	activeLightboxUrl.value = url;
 	activeLightboxTitle.value = title;
 };
-
-// Deposit input for HOLD state
-const depositInputAmount = ref(null);
 
 const orderItems = computed(() => {
 	if (!props.order) return [];
@@ -317,17 +324,6 @@ const totalItemQty = computed(() => {
 		.filter((i) => !i.is_cylinder)
 		.reduce((sum, i) => sum + (Number(i.qty) || 0), 0);
 });
-
-// Formatters
-const formatCurrency = (val) => {
-	if (!val && val !== 0) return '0 đ';
-	return new Intl.NumberFormat('vi-VN').format(Math.round(val)) + ' đ';
-};
-
-const formatNumber = (val) => {
-	if (!val && val !== 0) return '0';
-	return new Intl.NumberFormat('vi-VN').format(val);
-};
 
 const tabBadgeLabel = (tab) => {
 	if (tab === 'xuong_sx') return 'Xưởng sản xuất';
@@ -361,99 +357,6 @@ const formatSlaText = (days) => {
 	if (days < 0) return `Trễ ${Math.abs(days)} ngày`;
 	if (days === 0) return 'Hôm nay giao';
 	return `Còn ${days} ngày`;
-};
-
-// Handlers
-const handleSaveDeposit = async () => {
-	if (!depositInputAmount.value || depositInputAmount.value <= 0 || !props.order) return;
-	const amt = depositInputAmount.value;
-	try {
-		const res = await api('order.record_order_deposit', {
-			name: props.order.name,
-			amount: amt,
-			note: 'Ghi nhận cọc qua cổng buồng lái ERP',
-		});
-		if (res && res.success) {
-			toast.success(`Đã ghi nhận cọc ${formatCurrency(amt)} cho đơn ${props.order.name}!`);
-			depositInputAmount.value = null;
-			emit('update-order', {
-				...props.order,
-				advance_paid: res.advance_paid,
-				outstanding_amount: res.outstanding_amount,
-				order_state: res.order_state,
-				is_hold: res.is_hold,
-			});
-		} else {
-			// SSOT server S1: cọc lỗi thì báo lỗi + giữ nguyên, không fallback local sai số
-			toast.error('Lỗi ghi nhận cọc: máy chủ ERP không phản hồi.');
-			depositInputAmount.value = null;
-		}
-	} catch (err) {
-		console.error('Lỗi khi ghi nhận cọc:', err);
-		toast.error('Lỗi ghi nhận cọc đơn hàng.');
-	}
-};
-
-const handleOverrideHold = async () => {
-	if (!props.order) return;
-	try {
-		const res = await api('order.accountant_approve_procurement', {
-			name: props.order.name,
-			note: 'Kế toán xác nhận duyệt ngoại lệ chuyển mua hàng NCC',
-		});
-		if (res && res.success) {
-			toast.success(`Kế toán đã duyệt ngoại lệ cho đơn ${props.order.name}!`);
-			emit('update-order', {
-				...props.order,
-				is_hold: false,
-				order_state: 'Đang xử lý',
-			});
-		} else {
-			toast.success(`Đã chuyển đơn ${props.order.name} sang Đang xử lý`);
-			emit('update-order', {
-				...props.order,
-				is_hold: false,
-				order_state: 'Đang xử lý',
-			});
-		}
-	} catch (err) {
-		console.error('Lỗi khi duyệt ngoại lệ:', err);
-		toast.error('Lỗi khi duyệt ngoại lệ đơn hàng.');
-	}
-};
-
-const handleReportProgress = async () => {
-	if (!props.order) return;
-	try {
-		if (props.order.docstatus === 0) {
-			const res = await api('order.submit_sales_order', {
-				name: props.order.name,
-			});
-			if (res && res.name) {
-				toast.success(`Đã kích hoạt chính thức đơn hàng ${res.name}!`);
-				emit('update-order', {
-					...props.order,
-					docstatus: res.docstatus,
-					status: res.status,
-					order_state: 'Đã duyệt',
-				});
-				return;
-			}
-		}
-	} catch (err) {
-		console.error('Lỗi khi submit đơn hàng:', err);
-	}
-	toast.success(`Đơn ${props.order.name} đã hoàn thành, sẵn sàng giao!`);
-	emit('update-order', {
-		...props.order,
-		completed_qty: props.order.qty,
-		order_state: 'Sẵn sàng giao',
-		factory_stage: 'Xong hàng',
-	});
-};
-
-const handleCreateDelivery = () => {
-	emit('create-delivery', props.order);
 };
 </script>
 
