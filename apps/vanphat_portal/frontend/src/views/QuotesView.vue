@@ -132,6 +132,7 @@
 <script setup>
 import { ref, computed, onMounted, defineAsyncComponent } from 'vue';
 import { useRouter } from 'vue-router';
+import { dialog } from 'frappe-ui';
 // S8: drawers/modals nặng async — chunk riêng, render khi mở
 const ModalStep1Sale = defineAsyncComponent(() => import('../components/ModalStep1Sale.vue'));
 const DrawerStep2Director = defineAsyncComponent(() => import('../components/DrawerStep2Director.vue'));
@@ -245,9 +246,13 @@ function onRowClick(q) {
 		};
 		showStep2.value = true;
 	} else if (q.status === 'Open') {
-		if (window.confirm(`Tạo đơn hàng từ báo giá ${q.name}?`)) {
-			onMakeOrder(q);
-		}
+		dialog.confirm({
+			title: 'Tạo đơn hàng',
+			message: `Tạo đơn hàng từ báo giá ${q.name}?`,
+			confirmLabel: 'Tạo đơn',
+			cancelLabel: 'Để sau',
+			onConfirm: () => onMakeOrder(q),
+		});
 	}
 }
 
@@ -342,10 +347,17 @@ async function onSendQuotation(q) {
 }
 
 async function onMarkLost(q) {
-	const reason = window.prompt(`Lý do rớt báo giá ${q.name}?`, '');
-	if (reason === null) return;
-	const res = await api('mark_quotation_lost', { name: q.name, reason });
-	if (res) await loadQuotations();
+	dialog.prompt({
+		title: 'Rớt báo giá',
+		message: `Lý do rớt báo giá ${q.name}?`,
+		fields: [{ name: 'reason', label: 'Lý do', type: 'text', required: true }],
+		confirmLabel: 'Xác nhận rớt',
+		cancelLabel: 'Để sau',
+		async onConfirm(values) {
+			const res = await api('mark_quotation_lost', { name: q.name, reason: values.reason });
+			if (res) await loadQuotations();
+		},
+	});
 }
 
 async function onItemsChanged(payload = {}) {

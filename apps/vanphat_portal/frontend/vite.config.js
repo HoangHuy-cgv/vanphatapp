@@ -1,11 +1,13 @@
 import path from 'path';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
-import frameworkUI from '@framework/ui/vite';
+import frappeui from 'frappe-ui/vite';
 
 // Build target: ../vanphat_portal/public/frontend (+ entry copied to ../vanphat_portal/www/portal.html)
+// P5+R: plugin chính chủ frappe-ui/vite thay @framework/ui (symlink chết từ initial commit).
+// frappeProxy/jinjaBootData/buildConfig tắt — portal static Zero-Node, không có site bao quanh lúc build.
 export default defineConfig({
-	plugins: [vue(), frameworkUI()],
+	plugins: [vue(), frappeui({ frappeProxy: false, jinjaBootData: false, buildConfig: false })],
 	server: { port: 8090, host: '0.0.0.0', allowedHosts: true },
 	resolve: {
 		alias: {
