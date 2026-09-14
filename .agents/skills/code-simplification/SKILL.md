@@ -235,7 +235,7 @@ function isValid(input: string): boolean {
 }
 ```
 
-### Python
+### Python (Frappe / ERPNext / Scripts)
 
 ```python
 # SIMPLIFY: Verbose dictionary building
@@ -246,7 +246,7 @@ for item in items:
 # After
 result = {item.id: item.name for item in items}
 
-# SIMPLIFY: Nested conditionals with early return
+# SIMPLIFY: Nested conditionals with early return / guard clauses
 # Before
 def process(data):
     if data is not None:
@@ -268,30 +268,53 @@ def process(data):
     if not data.has_permission():
         raise PermissionError("No permission")
     return do_work(data)
+
+# SIMPLIFY: Idiomatic Frappe ORM over raw SQL
+# Before
+users = frappe.db.sql("SELECT name, email FROM `tabUser` WHERE enabled=1", as_dict=True)
+# After (Idiomatic ORM for clarity and standard permission/cache hooks)
+users = frappe.get_all("User", filters={"enabled": 1}, fields=["name", "email"])
+
+# SIMPLIFY: Safe dictionary lookups
+# Before
+status = data["status"] if "status" in data and data["status"] else "Draft"
+# After
+status = data.get("status") or "Draft"
 ```
 
-### React / JSX
+### Vue 3 / TypeScript (Van Phat Industrial Cockpit)
 
-```tsx
-// SIMPLIFY: Verbose conditional rendering
+```vue
+<!-- SIMPLIFY: Derived state via computed instead of redundant watchers -->
+<!-- Before -->
+<script setup>
+const props = defineProps<{ item: Item }>()
+const formattedRate = ref('')
+watch(() => props.item.rate, (newRate) => {
+  formattedRate.value = formatCurrency(newRate)
+}, { immediate: true })
+</script>
+
+<!-- After -->
+<script setup>
+const props = defineProps<{ item: Item }>()
+const formattedRate = computed(() => formatCurrency(props.item.rate))
+</script>
+```
+
+```typescript
+// SIMPLIFY: Flatten nested ternary chains in UI logic
 // Before
-function UserBadge({ user }: Props) {
-  if (user.isAdmin) {
-    return <Badge variant="admin">Admin</Badge>;
-  } else {
-    return <Badge variant="default">User</Badge>;
-  }
-}
-// After
-function UserBadge({ user }: Props) {
-  const variant = user.isAdmin ? 'admin' : 'default';
-  const label = user.isAdmin ? 'Admin' : 'User';
-  return <Badge variant={variant}>{label}</Badge>;
-}
+const statusClass = isOverdue ? 'text-red-600' : isPending ? 'text-amber-500' : isProcessing ? 'text-sky-500' : 'text-emerald-600';
 
-// SIMPLIFY: Prop drilling through intermediate components
-// Before — consider whether context or composition solves this better.
-// This is a judgment call — flag it, don't auto-refactor.
+// After: Clear lookup map adhering to Industrial Cockpit single-color status
+const STATUS_COLORS: Record<string, string> = {
+  overdue: 'text-red-600',
+  pending: 'text-amber-500',
+  processing: 'text-sky-500',
+  active: 'text-emerald-600',
+};
+const statusClass = STATUS_COLORS[item.status] || 'text-slate-500';
 ```
 
 ## Common Rationalizations

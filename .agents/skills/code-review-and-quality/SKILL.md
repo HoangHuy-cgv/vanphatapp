@@ -18,6 +18,7 @@ Multi-dimensional code review with quality gates. Every change gets reviewed bef
 - When another agent or model produced code you need to evaluate
 - When refactoring existing code
 - After any bug fix (review both the fix and the regression test)
+- **For Frappe / ERPNext codebases**: cross-examine against `quality-code-review` for Frappe-specific database traps, atomicity invariants, and permission checks.
 
 ## The Five-Axis Review
 
