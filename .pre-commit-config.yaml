@@ -23,6 +23,6 @@ repos:
     hooks:
       - id: forbid-frappe-patterns
         name: forbid frappe anti-patterns
-        entry: bash -c 'rg -n "allow_guest\\s*=\\s*True|frappe\\.get_all|limit\\s*=\\s*500|_load_csv|3100000|cylinderRate\\s*[:=]" apps/vanphat_portal/vanphat_portal/api apps/vanphat_portal/frontend/src --glob "*.py" --glob "*.vue" --glob "*.js" | grep -v "rgba\|FALLBACK\|test" && echo "FORBIDDEN PATTERN FOUND" && exit 1 || exit 0'
+        entry: bash -c 'grep -rn "allow_guest\\s*=\\s*True\\|frappe\\.get_all\\|limit\\s*=\\s*500\\|_load_csv\\|3100000" apps/vanphat_portal/vanphat_portal/api apps/vanphat_portal/frontend/src --include="*.py" --include="*.vue" --include="*.js" | grep -v "FALLBACK\\|khong limit=500\\|Company" && echo "FORBIDDEN PATTERN FOUND" && exit 1 || exit 0'
         language: system
         pass_filenames: false

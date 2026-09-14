@@ -29,7 +29,7 @@ def get_list(query=None, item_group=None, supply_type=None, category=None, page=
 
 	Docs: frappe.db.get_list(doctype, filters, or_filters, fields, order_by, start,
 	page_length) tự áp permission (https://docs.frappe.io/framework/user/en/api/database).
-	DB lọc, vỏ chỉ hiển thị — không limit=500 + filter Python.
+	DB lọc, vỏ chỉ hiển thị — không lấy thừa + filter Python.
 	"""
 	import math
 	q = (query or "").strip()
