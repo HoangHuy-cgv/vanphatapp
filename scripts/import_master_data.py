@@ -166,7 +166,7 @@ def import_to_frappe(data):
             c_group = c.get("customer_group", "Khách Hàng Thương Mại & Phân Phối")
             if c_group and not frappe.db.exists("Customer Group", c_group):
                 frappe.get_doc({"doctype": "Customer Group", "customer_group_name": c_group, "parent_customer_group": "All Customer Groups", "is_group": 0}).insert(ignore_permissions=True)
-            
+
             c_terr = c.get("territory", "Việt Nam")
             if c_terr and not frappe.db.exists("Territory", c_terr):
                 frappe.get_doc({"doctype": "Territory", "territory_name": c_terr, "parent_territory": "All Territories", "is_group": 0}).insert(ignore_permissions=True)
@@ -181,12 +181,8 @@ def import_to_frappe(data):
                 "default_currency": c.get("default_currency", "VND"),
                 "disabled": safe_int(c.get("disabled", 0))
             }
-            cl = safe_float(c.get("credit_limit", 0))
-            if cl > 0:
-                cust_doc["credit_limits"] = [{
-                    "company": company,
-                    "credit_limit": cl
-                }]
+            # Sếp chốt: BỎ hẳn hạn mức số — phân loại Trả trước/Trả sau từ
+            # payment_terms (Payment Terms Template khi có ERPNext thật).
             create_if_missing("Customer", cname, cust_doc)
         for s in data["suppliers"]:
             grp = s.get("supplier_group", "All Supplier Groups")
@@ -352,16 +348,15 @@ def run_dry_run(data):
     cust_list = data["customers"]
     cust_types = {}
     cust_groups = {}
-    debt_custs = []
+    postpay_custs = []
     with_addr = 0
     for c in cust_list:
         ct = c.get("customer_type", "Company")
         cust_types[ct] = cust_types.get(ct, 0) + 1
         cg = c.get("customer_group", "Khác")
         cust_groups[cg] = cust_groups.get(cg, 0) + 1
-        cl = safe_float(c.get("credit_limit", 0))
-        if cl > 0:
-            debt_custs.append((c["customer_name"], c.get("alias", ""), cl))
+        if "gối đầu" in (c.get("payment_terms") or "").lower():
+            postpay_custs.append((c["customer_name"], c.get("alias", "")))
         if c.get("primary_address", "").strip():
             with_addr += 1
 
@@ -371,9 +366,9 @@ def run_dry_run(data):
     for cg, cnt in sorted(cust_groups.items(), key=lambda x: x[1], reverse=True):
         print(f"         • {cg:<35}: {cnt:>3} đối tượng")
     print(f"      * Khách hàng có địa chỉ thực tế : {with_addr}/{len(cust_list)} đối tượng")
-    print(f"      * Khách hàng công nợ trả sau    :")
-    for cn, al, cl in debt_custs:
-        print(f"         • {cn} ({al}): Hạn mức nợ {cl:,.0f} đ")
+    print(f"      * Khách hàng trả sau (gối đầu)  :")
+    for cn, al in postpay_custs:
+        print(f"         • {cn} ({al})")
     supp_list = data["suppliers"]
     supp_types = {}
     supp_groups = {}
@@ -517,4 +512,3 @@ if __name__ == "__main__":
         execute()
     else:
         main()
-

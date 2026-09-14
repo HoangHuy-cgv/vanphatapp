@@ -13,7 +13,10 @@ MASTER_HEADERS = [
     "item_group", "stock_uom", "brand",
     "default_material_request_type", "standard_rate", "min_order_qty", "safety_stock",
     "disabled", "is_stock_item", "is_sales_item", "is_purchase_item",
-    "customer", "customer_ref_code",
+    # Sếp chốt 2026-09-15: customer_ref_code cũ ĐA NGHĨA (TP=mã biến thể KH,
+    # TRUC=mã laser NCC) + thiếu prefix custom_ → tách 2 custom field + ADR:
+    # custom_customer_variant_code (TP) / custom_cylinder_code đã có (TRUC).
+    "customer", "custom_customer_variant_code",
     "custom_structure_layers", "custom_thickness_mic", "custom_film_width_mm",
     "custom_pouch_width_mm", "custom_pouch_length_mm", "custom_gusset_mm", "custom_cut_length_mm",
     "custom_print_tech", "custom_accessory_spec", "custom_cylinder_item",
@@ -65,7 +68,7 @@ def add_item(code, legal_name, alias, group, uom, brand="", desc="", req_type="M
         "is_sales_item": is_sales,
         "is_purchase_item": is_purchase,
         "customer": customer,
-        "customer_ref_code": ref,
+        "custom_customer_variant_code": ref,
         "custom_structure_layers": normalize_layers(layers),
         "custom_thickness_mic": thick,
         "custom_film_width_mm": film_w,
@@ -307,9 +310,11 @@ for idx, r in enumerate(truc_rows[1:], 1):
         u = sp.upper()
         item_code = "TRUC-WAX500G" if "WAX" in u else ("TRUC-KEM-DUANON" if "DỪA" in u else ("TRUC-LUCKYSTAR" if "LUCKY" in u else f"TRUC-PENDING-{idx:03d}"))
     legal_name, alias = clean_cylinder_title(sp, ma_truc)
+    # TRUC: mã laser NCC chỉ nằm ở custom_cylinder_code (chính chủ);
+    # custom_customer_variant_code để trống (dành cho TP = mã biến thể KH).
     add_item(
         code=item_code, legal_name=legal_name, alias=alias, group="Trục In Ống Đồng", uom="Cây", brand="Trục in",
-        desc=note, req_type="Purchase", standard_rate=3000000.0, is_purchase=1, ref=ma_truc,
+        desc=note, req_type="Purchase", standard_rate=3000000.0, is_purchase=1, ref="",
         layers="Thép mạ đồng crom", print_tech="In trục ống đồng",
         cyl_code=ma_truc,
         cyl_len=cd if isinstance(cd, (int, float)) else 0,
@@ -327,7 +332,7 @@ additional_cylinders = [
 for c_code, c_legal, c_alias, c_laser, c_qty, c_len, c_circ, c_loc, c_rate in additional_cylinders:
     add_item(
         code=c_code, legal_name=c_legal, alias=c_alias, group="Trục In Ống Đồng", uom="Cây", brand="Trục in",
-        desc="", req_type="Purchase", standard_rate=c_rate, is_purchase=1, ref=c_laser,
+        desc="", req_type="Purchase", standard_rate=c_rate, is_purchase=1, ref="",
         layers="Thép mạ đồng crom", print_tech="In trục ống đồng",
         cyl_code=c_laser, cyl_len=c_len, cyl_circ=c_circ, cyl_qty=c_qty, cyl_loc=c_loc
     )
@@ -528,4 +533,3 @@ for old_f in ["item_spec.csv", "customer_brand_matrix.csv"]:
     if os.path.exists(old_p):
         os.remove(old_p)
         print(f" ĐÃ XÓA BỎ FILE THỪA: {old_p}")
-

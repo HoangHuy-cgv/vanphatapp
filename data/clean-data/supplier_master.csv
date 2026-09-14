@@ -1,4 +1,4 @@
-﻿name,supplier_name,alias,supplier_group,supplier_type,country,payment_terms,default_currency,tax_id,primary_address,supplier_primary_contact,supplier_primary_phone,disabled
+﻿name,supplier_name,alias,supplier_group,supplier_type,country,payment_terms,default_currency,tax_id,primary_address,supplier_primary_contact,mobile_no,disabled
 NCC-00001,CÔNG TY TNHH SẢN XUẤT BAO BÌ NHỰA TUỆ NHI,TUỆ NHI,Màng Thô NVL & Gia Công In,Company,Việt Nam,Công nợ gối đầu 30 ngày,VND,0316335198,"346/7/6 Mã Lò, Phường Bình Trị Đông, Quận Bình Tân, TP. Hồ Chí Minh",,,0
 NCC-00002,CÔNG TY TNHH BAO BÌ KIẾN TÂM,KIẾN TÂM,Gia Công In & Túi Màng Ghép,Company,Việt Nam,Công nợ gối đầu 30 ngày,VND,1101902875,"Thửa 452, Đường số 7, KCN Tân Đô, Xã Đức Hòa Hạ, Huyện Đức Hòa, Tỉnh Long An",,,0
 NCC-00003,CÔNG TY CỔ PHẦN SẢN XUẤT BAO BÌ TRANG TÍN,TRANG TÍN,Gia Công In & Túi Màng Ghép,Company,Việt Nam,Công nợ gối đầu 30 ngày,VND,1101217748,"Lô I9-I10, Đường số 4, KCN Hải Sơn, Xã Đức Hòa Đông, Huyện Đức Hòa, Tỉnh Long An",,,0

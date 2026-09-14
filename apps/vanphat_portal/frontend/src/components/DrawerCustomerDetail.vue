@@ -8,11 +8,11 @@
 					<span v-if="customer" class="cust-type-badge">
 						{{ customer.customer_type === 'Company' ? 'Doanh nghiệp' : 'Cá nhân' }}
 					</span>
-					<span v-if="customer && Number(customer.credit_limit) > 0" class="head-credit font-mono text-emerald font-bold">
-						Hạn mức: {{ formatCurrency(customer.credit_limit) }} đ
+					<span v-if="customer && customer.payment_terms && customer.payment_terms.toLowerCase().includes('gối đầu')" class="head-credit font-mono text-emerald font-bold">
+						Trả sau
 					</span>
 					<span v-else class="head-credit font-mono text-amber">
-						Cọc trước 50%
+						Trả trước
 					</span>
 				</div>
 				<button

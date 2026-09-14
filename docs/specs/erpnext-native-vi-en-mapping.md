@@ -73,6 +73,7 @@ Hệ thống sử dụng cơ chế Native Naming Series của Frappe Framework (
 | `safety_stock` | Mức tồn kho an toàn để cảnh báo sản xuất / mua thêm | **Tồn kho an toàn** |
 | `default_material_request_type` | Loại cung ứng mặc định (`Purchase`: Mua ngoài; `Manufacture`: Xưởng SX) | **Hình thức cung ứng** |
 | `customer` | Khách hàng sở hữu mẫu in độc quyền (MTO) | **Khách hàng sở hữu** |
+| `custom_customer_variant_code` *(Custom Field)* | Mã biến thể phía KH cho hàng TP (vd `888-3.2KG-HONG`); TRUC để trống, dùng `custom_cylinder_code` | **Mã biến thể KH** |
 | `custom_structure_layers` | Cấu trúc màng ghép phân cách bằng dấu `/` (vd: `PET/MPET/PA/PE sữa`) | **Cấu trúc màng ghép** |
 | `custom_thickness_mic` | Tổng độ dày màng ghép hoặc màng đơn ($\mu m$) | **Độ dày (mic)** |
 | `custom_film_width_mm` | Khổ cuộn màng đưa vào máy ghép hoặc chia cuộn (mm) | **Khổ màng (mm)** |
@@ -182,7 +183,7 @@ Hệ thống sử dụng cơ chế Native Naming Series của Frappe Framework (
 | `tax_id` | Mã số thuế doanh nghiệp / hộ kinh doanh | **Mã số thuế** |
 | `primary_address` | Địa chỉ nhà máy, xưởng gia công hoặc trụ sở | **Địa chỉ xưởng/trụ sở** |
 | `supplier_primary_contact` | Người liên hệ đại diện kinh doanh của NCC | **Người liên hệ** |
-| `supplier_primary_phone` | Số điện thoại liên hệ đặt hàng | **Điện thoại liên hệ** |
+| `mobile_no` | Số điện thoại liên hệ đặt hàng (fetch từ Contact) | **Điện thoại liên hệ** |
 | `disabled` | Cờ ngừng giao dịch (0: Đang giao dịch, 1: Ngừng) | **Ngừng hợp tác** |
 
 ---

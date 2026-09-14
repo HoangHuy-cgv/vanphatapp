@@ -28,7 +28,7 @@ RAW_SUPPLIERS_METADATA = [
         "tax_id": "0316335198",
         "primary_address": "346/7/6 Mã Lò, Phường Bình Trị Đông, Quận Bình Tân, TP. Hồ Chí Minh",
         "supplier_primary_contact": "",
-        "supplier_primary_phone": "",
+        "mobile_no": "",
         "disabled": 0,
         "note": "Cung cấp màng PET, cuộn màng PET 12mic, màng PA 15mic, VMPET 12mic, OPP K375. Gia công in ống đồng & lưu kho trục."
     },
@@ -43,7 +43,7 @@ RAW_SUPPLIERS_METADATA = [
         "tax_id": "1101902875",
         "primary_address": "Thửa 452, Đường số 7, KCN Tân Đô, Xã Đức Hòa Hạ, Huyện Đức Hòa, Tỉnh Long An",
         "supplier_primary_contact": "",
-        "supplier_primary_phone": "",
+        "mobile_no": "",
         "disabled": 0,
         "note": "Gia công in ghép túi màng bọc thực phẩm TOPGIA, màng in Minh Râu, màng in Passion, 888, phô mai. Lưu kho trục."
     },
@@ -58,7 +58,7 @@ RAW_SUPPLIERS_METADATA = [
         "tax_id": "1101217748",
         "primary_address": "Lô I9-I10, Đường số 4, KCN Hải Sơn, Xã Đức Hòa Đông, Huyện Đức Hòa, Tỉnh Long An",
         "supplier_primary_contact": "",
-        "supplier_primary_phone": "",
+        "mobile_no": "",
         "disabled": 0,
         "note": "Gia công in & ghép túi nước cốt Đỉnh Gia, túi Lamy, túi Phong Nguyên, túi Samran I4, màng hạt chia. Lưu kho trục."
     },
@@ -73,7 +73,7 @@ RAW_SUPPLIERS_METADATA = [
         "tax_id": "3603417741",
         "primary_address": "Lô 05F, Đường số 05, KCN Giang Điền, Xã Giang Điền, Huyện Trảng Bom, Tỉnh Đồng Nai",
         "supplier_primary_contact": "Mr. Luận",
-        "supplier_primary_phone": "0908345233",
+        "mobile_no": "0908345233",
         "disabled": 0,
         "note": "Cung cấp keo ghép màng D-9822K, Keo D-9700, Chất đóng rắn CL-3192K."
     },
@@ -88,7 +88,7 @@ RAW_SUPPLIERS_METADATA = [
         "tax_id": "3702581699",
         "primary_address": "Thửa đất số 767, Tờ bản đồ số 36, KP. Tân Phước, P. Tân Bình, TP. Dĩ An, Tỉnh Bình Dương",
         "supplier_primary_contact": "",
-        "supplier_primary_phone": "",
+        "mobile_no": "",
         "disabled": 0,
         "note": "Cung cấp dung môi công nghiệp Ethyl Acetate (EA) pha keo ghép màng và vệ sinh máy in."
     },
@@ -103,7 +103,7 @@ RAW_SUPPLIERS_METADATA = [
         "tax_id": "0314488825",
         "primary_address": "Tầng 5, Tòa nhà Songdo, 62A Phạm Ngọc Thạch, Phường Võ Thị Sáu, Quận 3, TP. Hồ Chí Minh",
         "supplier_primary_contact": "",
-        "supplier_primary_phone": "",
+        "mobile_no": "",
         "disabled": 0,
         "note": "Cung cấp phụ kiện vòi nhựa hàn túi đứng: Vòi 16mm, Nắp 16mm, Vòi + Nắp 10mm."
     },
@@ -118,7 +118,7 @@ RAW_SUPPLIERS_METADATA = [
         "tax_id": "0313495448",
         "primary_address": "Số 43/18 Đường số 4, Khu phố 3, Phường Bình Hưng Hòa A, Quận Bình Tân, TP. Hồ Chí Minh",
         "supplier_primary_contact": "",
-        "supplier_primary_phone": "",
+        "mobile_no": "",
         "disabled": 0,
         "note": "Cung cấp thùng carton 5 lớp 60x40x40 không in đóng gói bao bì thành phẩm xuất xưởng."
     },
@@ -133,7 +133,7 @@ RAW_SUPPLIERS_METADATA = [
         "tax_id": "0313271168",
         "primary_address": "373/1/171J Lý Thường Kiệt, Phường 9, Quận Tân Bình, TP. Hồ Chí Minh",
         "supplier_primary_contact": "",
-        "supplier_primary_phone": "",
+        "mobile_no": "",
         "disabled": 0,
         "note": "Cung cấp túi màng đơn HD sữa Vạn An: 30x20x30, 17x25, 26x40."
     },
@@ -148,7 +148,7 @@ RAW_SUPPLIERS_METADATA = [
         "tax_id": "1102017043",
         "primary_address": "Số 93, Ấp 3A, Đường 10A, Xã Đức Hòa Đông, Huyện Đức Hòa, Tỉnh Long An",
         "supplier_primary_contact": "",
-        "supplier_primary_phone": "0978981316",
+        "mobile_no": "0978981316",
         "disabled": 0,
         "note": "Cung cấp dao dán đáy túi 322x70, dao dán vòi 322x90, khuôn bế máy làm túi."
     },
@@ -163,7 +163,7 @@ RAW_SUPPLIERS_METADATA = [
         "tax_id": "0312683935",
         "primary_address": "Số 82, Đường số 1, KDC Cityland, Phường 7, Quận Gò Vấp, TP. Hồ Chí Minh",
         "supplier_primary_contact": "",
-        "supplier_primary_phone": "",
+        "mobile_no": "",
         "disabled": 0,
         "note": "Cung cấp máy đóng quai túi gạo, vỏ Silicon trục ghép, dung dịch rửa trục, bộ nguồn khử tĩnh điện."
     },
@@ -178,7 +178,7 @@ RAW_SUPPLIERS_METADATA = [
         "tax_id": "",
         "primary_address": "39A Ấp 2, Xã Long Sơn, Huyện Cần Đước, Tỉnh Long An",
         "supplier_primary_contact": "Nguyễn Thanh Tùng",
-        "supplier_primary_phone": "0903874782",
+        "mobile_no": "0903874782",
         "disabled": 0,
         "note": "Gia công in lụa bao bì phôi có sẵn (túi NGCS, túi HD sữa, MTBC An Hữu, Bình Phước, Huỳnh Minh Thu...)."
     },
@@ -193,7 +193,7 @@ RAW_SUPPLIERS_METADATA = [
         "tax_id": "84373288004",
         "primary_address": "50/77 Nguyễn Quý Yêm, Phường An Lạc, Quận Bình Tân, TP. Hồ Chí Minh",
         "supplier_primary_contact": "Đặng Diệu Tâm",
-        "supplier_primary_phone": "0909588015",
+        "mobile_no": "0909588015",
         "disabled": 0,
         "note": "Gia công thổi màng và in túi PP màng đơn (túi Lotus 32x45 dày 7zem)."
     },
@@ -208,7 +208,7 @@ RAW_SUPPLIERS_METADATA = [
         "tax_id": "0305339683",
         "primary_address": "336 Đoàn Nguyễn Tuấn, Ấp 3, Xã Hưng Long, Huyện Bình Chánh, TP. Hồ Chí Minh",
         "supplier_primary_contact": "",
-        "supplier_primary_phone": "0941201949",
+        "mobile_no": "0941201949",
         "disabled": 0,
         "note": "Kho lưu trữ bảo dưỡng trục in ống đồng tại trụ sở chính Bao Bì Vạn Phát."
     },
@@ -223,7 +223,7 @@ RAW_SUPPLIERS_METADATA = [
         "tax_id": "",
         "primary_address": "Xưởng thổi màng liên doanh Vạn Phát - Tuệ Nhi, Huyện Bình Chánh, TP. Hồ Chí Minh",
         "supplier_primary_contact": "Bộ phận vận hành máy thổi",
-        "supplier_primary_phone": "",
+        "mobile_no": "",
         "disabled": 0,
         "note": "Cung ứng cuộn màng PE sữa (khổ 700, 740, 750 các độ dày 160mic, 190mic, 50mic). Vạn Phát thu chi toàn bộ dòng tiền, chốt sổ phân chia lãi lỗ 50-50 hàng tháng với Tuệ Nhi."
     }
@@ -235,7 +235,7 @@ def main():
     fieldnames = [
         "name", "supplier_name", "alias", "supplier_group", "supplier_type",
         "country", "payment_terms", "default_currency", "tax_id",
-        "primary_address", "supplier_primary_contact", "supplier_primary_phone", "disabled"
+        "primary_address", "supplier_primary_contact", "mobile_no", "disabled"
     ]
     rows = []
     for idx, supp in enumerate(RAW_SUPPLIERS_METADATA, start=1):
@@ -252,7 +252,7 @@ def main():
             "tax_id": supp["tax_id"],
             "primary_address": supp["primary_address"],
             "supplier_primary_contact": supp["supplier_primary_contact"],
-            "supplier_primary_phone": supp["supplier_primary_phone"],
+            "mobile_no": supp["mobile_no"],
             "disabled": supp["disabled"]
         }
         rows.append(row)

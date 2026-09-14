@@ -64,6 +64,7 @@ def get_list(query=None, item_group=None, supply_type=None, category=None, page=
 		"is_sales_item",
 		"is_purchase_item",
 		"customer",
+		"custom_customer_variant_code",
 		"custom_structure_layers",
 		"custom_thickness_mic",
 		"custom_film_width_mm",
@@ -100,6 +101,7 @@ def get_list(query=None, item_group=None, supply_type=None, category=None, page=
 			["Item", "item_name", "like", like],
 			["Item", "custom_alias", "like", like],
 			["Item", "customer", "like", like],
+			["Item", "custom_customer_variant_code", "like", like],
 			["Item", "custom_structure_layers", "like", like],
 			["Item", "description", "like", like],
 		]
@@ -147,7 +149,7 @@ def _count_items(filters, like=None):
 			qb = qb.where(getattr(IT, k) == v)
 	if like:
 		cond = None
-		for col in ["item_code", "item_name", "custom_alias", "customer", "custom_structure_layers", "description"]:
+		for col in ["item_code", "item_name", "custom_alias", "customer", "custom_customer_variant_code", "custom_structure_layers", "description"]:
 			c = getattr(IT, col).like(like)
 			cond = c if cond is None else (cond | c)
 		qb = qb.where(cond)

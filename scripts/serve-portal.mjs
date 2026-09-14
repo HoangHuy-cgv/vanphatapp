@@ -73,6 +73,7 @@ const USERS = safeReadCSV('user_master.csv');
 const CUSTOMERS_RAW = safeReadCSV('customer_master.csv');
 
 // Build Unified Customers List from customer_master.csv (SSOT 100% ERPNext Native)
+// Sếp chốt: phân loại Trả trước/Trả sau từ payment_terms, KHÔNG dùng credit_limit.
 const UNIFIED_CUSTOMERS = CUSTOMERS_RAW.length > 0 ? CUSTOMERS_RAW.map(c => ({
 	name: c.name,
 	customer_name: c.customer_name,
@@ -81,7 +82,7 @@ const UNIFIED_CUSTOMERS = CUSTOMERS_RAW.length > 0 ? CUSTOMERS_RAW.map(c => ({
 	type: c.customer_group || '',
 	customer_type: c.customer_type || 'Company',
 	primary_address: c.primary_address || '',
-	credit_limit: c.credit_limit || 0
+	payment_terms: c.payment_terms || ''
 })) : [];
 
 
@@ -1311,7 +1312,7 @@ function renderMasterDataReviewerHtml() {
 							<td>${s.supplier_group || ''}</td>
 							<td style="font-family: monospace;">${s.tax_id || '-'}</td>
 							<td style="font-size: 11px; color: #8b949e;">${s.primary_address || '-'}</td>
-							<td style="font-size: 11px;">${s.supplier_primary_contact ? s.supplier_primary_contact + (s.supplier_primary_phone ? ' (' + s.supplier_primary_phone + ')' : '') : (s.supplier_primary_phone || '-')}</td>
+							<td style="font-size: 11px;">${s.supplier_primary_contact ? s.supplier_primary_contact + (s.mobile_no ? ' (' + s.mobile_no + ')' : '') : (s.mobile_no || '-')}</td>
 						</tr>
 					`).join('')}
 				</tbody>
@@ -1327,7 +1328,7 @@ function renderMasterDataReviewerHtml() {
 						<th>Tên Gọi Tắt (Alias)</th>
 						<th>Nhóm Khách Hàng</th>
 						<th>Loại Hình</th>
-						<th>Hạn Mức Nợ (VND)</th>
+						<th>Hình Thức</th>
 						<th>Địa Chỉ Thực Tế</th>
 					</tr>
 				</thead>
@@ -1339,8 +1340,8 @@ function renderMasterDataReviewerHtml() {
 							<td><span class="badge badge-info">${c.alias || '—'}</span></td>
 							<td>${c.type || '—'}</td>
 							<td>${c.customer_type || 'Company'}</td>
-							<td style="font-family: monospace; color: ${Number(c.credit_limit) > 0 ? '#f87171; font-weight: 700;' : '#8b949e;'}">
-								${Number(c.credit_limit) > 0 ? Number(c.credit_limit).toLocaleString() + ' đ' : 'Tiền mặt/Cọc'}
+							<td style="font-family: monospace; color: ${(c.payment_terms || '').toLowerCase().includes('gối đầu') ? '#3fb950; font-weight: 700;' : '#8b949e;'}">
+								${(c.payment_terms || '').toLowerCase().includes('gối đầu') ? 'Trả sau' : 'Trả trước'}
 							</td>
 							<td style="font-size: 11px; color: #8b949e;">${c.primary_address || '—'}</td>
 						</tr>

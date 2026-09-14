@@ -14,8 +14,9 @@ Tuân thủ nghiêm ngặt 100% ERPNext Native v16 Wording:
 - customer_group: Khách Hàng Bao Bì Màng Ghép | Khách Hàng Bao Bì In Sẵn (NGCS) | Khách Hàng Túi Màng Đơn | Khách Hàng Thương Mại & Phân Phối
 - territory: Phân vùng địa bàn giao hàng (TP. Hồ Chí Minh, Long An, Bình Dương, Hà Nội, v.v.)
 - payment_terms: Công nợ gối đầu 30 ngày | Cọc trước 50% - Giao hàng 50%
+  (Sếp chốt: phân loại Trả trước/Trả sau SUY RA từ payment_terms, KHÔNG dùng
+  credit_limit — Customer native không có field phẳng này)
 - default_currency: VND
-- credit_limit: Hạn mức công nợ (200tr cho DS COSMETIC, 50tr cho BV VẠN AN)
 - tax_id: Mã số thuế
 - primary_address: Địa chỉ giao hàng thực tế
 - customer_primary_contact: NVKD hoặc người liên hệ đại diện
@@ -143,7 +144,7 @@ def normalize_company_name(name):
 def derive_alias(legal_name):
     if legal_name in KNOWN_ALIASES:
         return KNOWN_ALIASES[legal_name][:25]
-    
+
     # Tự động rút gọn bằng cách loại bỏ các tiền tố pháp nhân
     name = legal_name
     prefixes = [
@@ -167,10 +168,10 @@ def derive_alias(legal_name):
     ]
     for p in prefixes:
         name = re.sub(p, "", name, flags=re.IGNORECASE)
-    
+
     name = re.sub(r"^(sản xuất|thương mại|dịch vụ|đầu tư|xuất nhập khẩu|sx|tm|dv|xnk)\s+", "", name, flags=re.IGNORECASE)
     name = re.sub(r"^(và\s+)?(thương mại|dịch vụ|sản xuất)\s+", "", name, flags=re.IGNORECASE)
-    
+
     name = name.strip()
     words = name.split()
     if len(words) > 4:
@@ -338,10 +339,14 @@ def extract_all():
     print(f"\n=> TỔNG CỘNG TRÍCH XUẤT ĐƯỢC: {len(sorted_customers)} KHÁCH HÀNG CHÍNH THỨC.")
 
     # Xuất ra customer_master.csv chuẩn ERPNext Native v16
+    # Sếp chốt 2026-09-15: BỎ credit_limit (không phải field Customer native —
+    # native là child table Customer Credit Limit theo Company). Phân loại
+    # Trả trước/Trả sau SUY RA từ payment_terms (Cọc 50% vs Gối đầu 30 ngày);
+    # import_master_data.py gán template + child limit khi có Company.
     out_rows = []
     HEADERS = [
         "name", "customer_name", "alias", "customer_type", "customer_group",
-        "territory", "payment_terms", "default_currency", "credit_limit",
+        "territory", "payment_terms", "default_currency",
         "tax_id", "primary_address", "customer_primary_contact", "disabled"
     ]
 
@@ -349,10 +354,10 @@ def extract_all():
         cust_id = f"KH-{idx:05d}"
         alias = derive_alias(legal_name)
         cust_type = detect_customer_type(legal_name)
-        
+
         primary_addr = select_best_address(data["addresses"])
         territory = detect_territory(primary_addr)
-        
+
         sp_list = list(data["salespersons"])
         sp = sp_list[0] if sp_list else ""
 
@@ -360,13 +365,10 @@ def extract_all():
 
         if legal_name == "CÔNG TY CỔ PHẦN DS COSMETIC":
             payment_terms = "Công nợ gối đầu 30 ngày"
-            credit_limit = 200000000.0
         elif legal_name == "CÔNG TY CỔ PHẦN BỆNH VIỆN VẠN AN":
             payment_terms = "Công nợ gối đầu 30 ngày"
-            credit_limit = 50000000.0
         else:
             payment_terms = "Cọc trước 50% - Giao hàng 50%"
-            credit_limit = 0.0
 
         out_rows.append({
             "name": cust_id,
@@ -377,7 +379,6 @@ def extract_all():
             "territory": territory,
             "payment_terms": payment_terms,
             "default_currency": "VND",
-            "credit_limit": f"{credit_limit:.1f}",
             "tax_id": "",
             "primary_address": primary_addr,
             "customer_primary_contact": sp,

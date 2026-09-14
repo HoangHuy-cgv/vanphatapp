@@ -201,7 +201,7 @@
 						@click="openCustomerDetail(c)"
 					>
 						<td class="whitespace-nowrap">
-							<div class="font-semibold text-white leading-tight text-[15px]" :title="'Mã KH: ' + c.name + (Number(c.credit_limit) > 0 ? ' • Hạn mức: ' + formatCurrency(c.credit_limit) : '')">
+							<div class="font-semibold text-white leading-tight text-[15px]" :title="'Mã KH: ' + c.name">
 								{{ c.alias || c.customer_name }}
 							</div>
 						</td>

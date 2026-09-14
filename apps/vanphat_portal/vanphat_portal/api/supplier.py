@@ -21,7 +21,7 @@ def get_list(query=None, supplier_group=None, page=1, page_length=100):
 		"name", "supplier_name", "alias", "supplier_group",
 		"supplier_type", "country", "payment_terms",
 		"default_currency", "tax_id", "primary_address",
-		"supplier_primary_contact", "supplier_primary_phone", "disabled"
+		"supplier_primary_contact", "mobile_no", "disabled"
 	]
 	or_filters = [
 		["Supplier", "name", "like", like],
