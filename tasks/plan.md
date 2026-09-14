@@ -1,14 +1,21 @@
-# Kế Hoạch Triển Khai: Tối Giản, Đúng & Đủ (Minimalist Architecture)
+# Kế Hoạch Triển Khai: Tinh Chỉnh Bảng Danh Mục (Single-Line Headers, Cột KH/NCC & User SĐT)
 
-## 1. Định Hướng Kỹ Thuật (Elon Musk & LoB Philosophy)
-Triệt tiêu over-engineering, chỉ giữ lại những gì thực sự mang lại giá trị vận hành và hiệu năng:
-1. **Single-Bundle (Không tách route)**: Giữ nguyên 1 bundle ~71 kB gzip cho toàn bộ 3 views. Đảm bảo chuyển tab 0ms, không phụ thuộc mạng, không lỗi chunk load.
-2. **Teleport ra `<body>`**: Bọc `<Teleport to="body">` cho 6 Drawers và 2 Modals để cô lập CSS stacking context, chống lỗi z-index và overflow clipping.
-3. **Nâng cấp `api()` trong `useSession.js`**: Một SSOT duy nhất cho Frappe network calls (tự động gắn CSRF token, auto prefix method, bóc tách message), không đẻ thêm file `useApiClient.js`. Thay thế toàn bộ `fetch` thô.
-4. **Dọn dẹp CSS dư thừa trong `CatalogView.vue`**: Chuyển 247 dòng CSS trùng lặp vào `portal.css`, giữ nguyên cấu trúc 4 bảng để đảm bảo Locality of Behavior và không gây prop drilling.
+## 1. Định Hướng Kỹ Thuật (Elon Musk & Cockpit Philosophy)
+1. **Khóa cứng tiêu đề 1 dòng**: Thiết lập `white-space: nowrap !important; overflow: hidden; text-overflow: ellipsis; user-select: none;` cho `.data-table th` trong `portal.css`.
+2. **Đồng nhất phong cách tiêu đề**: Thống nhất template HTML sang Title Case chuẩn mực, CSS tự động viết hoa với font chữ 13.5px, letter-spacing 0.04em, loại bỏ toàn bộ chú thích thô trong ngoặc như `(ALIAS)`.
+3. **Tái cấu trúc cột Khách hàng & Nhà cung cấp**:
+   - Khách hàng: `Tên gọi tắt (kèm mã mờ)` | `Tên pháp nhân` | `Mã số thuế` | `Thanh toán` | `Hạn mức nợ`.
+   - Nhà cung cấp: `Tên gọi tắt (kèm mã mờ)` | `Tên pháp nhân` | `Mã số thuế` | `Thanh toán` | `Nhóm cung ứng`.
+   - Bỏ cột mã riêng biệt để tối ưu diện tích cho MST và Phương thức thanh toán.
+4. **Tinh chỉnh bảng Người dùng (User)**:
+   - Cột 1: `SĐT đăng nhập` (`mobile_no` dạng số mono rõ nét, kèm email mờ). Hỗ trợ tìm kiếm theo SĐT trong `filteredUsers`.
+   - Cột 2: `Họ và tên` (`full_name`).
+   - Cột 3: `Phòng ban` (`department`).
+   - Cột 4: `Chức vụ & Vai trò` (`designation` kèm badge `role_profile_name` tinh gọn, khử hoàn toàn trùng lặp 2 cột).
+   - Cột 5: `Trạng thái` (Badge hoạt động `● Hoạt động`).
 
 ## 2. Phân Rã Tác Vụ Triển Khai
-- **Task 1**: Nâng cấp `api()` trong `src/composables/useSession.js` & thay thế toàn bộ `fetch` thô trong `CatalogView.vue` và `OrdersView.vue`.
-- **Task 2**: Bọc `<Teleport to="body">` cho toàn bộ 6 Drawers và 2 Modals (`DrawerItemDetail`, `DrawerCustomerDetail`, `DrawerSupplierDetail`, `DrawerUserDetail`, `DrawerOrderDetail`, `DrawerStep2Director`, `ModalStep1Sale`, `ModalCreateOrder`).
-- **Task 3**: Trích xuất CSS trùng lặp từ `CatalogView.vue` sang `src/assets/portal.css`.
-- **Task 4**: Chạy kiểm thử tự động `scripts/verify-catalog-page.mjs` (yêu cầu 77/77 PASS), build Vite production và kiểm chứng trực quan bằng Chrome DevTools MCP.
+- **Task 1**: Cập nhật CSS bảng trong `portal.css` (khóa cứng `th` 1 dòng không wrap, styling badge điều khoản thanh toán & trạng thái).
+- **Task 2**: Đồng nhất tiêu đề cột & tái cấu trúc cột Khách hàng, Nhà cung cấp và Người dùng trong `CatalogView.vue`.
+- **Task 3**: Chạy test tự động `node scripts/verify-catalog-page.mjs` & build Vite production.
+- **Task 4**: Kiểm chứng giao diện thực tế qua Chrome DevTools MCP (kiểm tra tab KH, NCC, User).

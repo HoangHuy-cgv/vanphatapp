@@ -2,7 +2,7 @@ import http from 'http';
 import fs from 'fs';
 import path from 'path';
 
-const PORT = 8080;
+const PORT = parseInt(process.env.PORT || '8080', 10);
 const ROOT_DIR = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
 const CLEAN_DATA_DIR = path.join(ROOT_DIR, 'data/clean-data');
 const DATA_DIR = path.join(ROOT_DIR, 'data');
@@ -370,6 +370,7 @@ const server = http.createServer((req, res) => {
 						(u.name && u.name.toLowerCase().includes(q)) ||
 						(u.full_name && u.full_name.toLowerCase().includes(q)) ||
 						(u.email && u.email.toLowerCase().includes(q)) ||
+						(u.mobile_no && u.mobile_no.includes(q)) ||
 						(u.department && u.department.toLowerCase().includes(q)) ||
 						(u.designation && u.designation.toLowerCase().includes(q)) ||
 						(u.role_profile_name && u.role_profile_name.toLowerCase().includes(q))

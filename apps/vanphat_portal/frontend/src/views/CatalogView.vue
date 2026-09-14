@@ -204,12 +204,11 @@
 			<table class="data-table">
 				<thead>
 					<tr>
-						<th style="width: 12%;">MÃ KHÁCH</th>
-						<th style="width: 22%;">TÊN GỌI TẮT (ALIAS)</th>
-						<th style="width: 32%;">TÊN PHÁP NHÂN</th>
-						<th style="width: 14%;">KHU VỰC</th>
-						<th class="text-right" style="width: 12%;">HẠN MỨC NỢ</th>
-						<th style="width: 8%;">THANH TOÁN</th>
+						<th style="width: 24%;">Tên gọi tắt</th>
+						<th style="width: 28%;">Tên pháp nhân</th>
+						<th style="width: 16%;">Mã số thuế</th>
+						<th style="width: 16%;">Thanh toán</th>
+						<th class="text-right" style="width: 16%;">Hạn mức nợ</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -219,12 +218,12 @@
 						class="table-row cursor-pointer"
 						@click="openCustomerDetail(c)"
 					>
-						<td class="font-mono font-bold text-primary text-[14.5px]">
-							{{ c.name }}
-						</td>
 						<td>
 							<div class="font-semibold text-white leading-tight text-[15px]">
 								{{ c.alias || c.customer_name }}
+							</div>
+							<div class="font-mono text-xs text-secondary/60 mt-0.5" :title="'Mã KH: ' + c.name">
+								{{ c.name }}
 							</div>
 						</td>
 						<td>
@@ -232,8 +231,20 @@
 								{{ c.customer_name }}
 							</div>
 						</td>
-						<td class="text-sm">
-							<span class="text-slate-300">{{ c.territory || 'Việt Nam' }}</span>
+						<td class="font-mono text-sm text-slate-300 tabular-nums">
+							{{ c.tax_id || '—' }}
+						</td>
+						<td>
+							<span v-if="c.payment_terms && (c.payment_terms.includes('30 ngày') || c.payment_terms.toLowerCase().includes('gối đầu'))" class="badge-payment-amber">
+								Gối đầu 30 ngày
+							</span>
+							<span v-else-if="c.payment_terms && c.payment_terms.includes('50%')" class="badge-payment-blue">
+								Cọc 50%
+							</span>
+							<span v-else-if="c.payment_terms" class="badge-payment-blue">
+								{{ c.payment_terms }}
+							</span>
+							<span v-else class="text-secondary/60 text-xs">—</span>
 						</td>
 						<td class="text-right font-mono text-sm">
 							<span v-if="Number(c.credit_limit) > 0" class="text-emerald font-bold">
@@ -241,13 +252,9 @@
 							</span>
 							<span v-else class="text-secondary/60">0 đ</span>
 						</td>
-						<td class="text-sm">
-							<span v-if="c.payment_terms && c.payment_terms.includes('30 ngày')" class="text-amber font-mono text-xs">Gối đầu</span>
-							<span v-else class="text-secondary text-xs">Cọc 50%</span>
-						</td>
 					</tr>
 					<tr v-if="filteredCustomers.length === 0">
-						<td colspan="6" class="empty-cell" style="padding: 2.5rem 1rem; text-align: center;">
+						<td colspan="5" class="empty-cell" style="padding: 2.5rem 1rem; text-align: center;">
 							<div v-if="loadingCustomers" class="text-secondary">Đang tải khách hàng...</div>
 							<div v-else class="text-secondary text-sm">Không tìm thấy khách hàng nào phù hợp</div>
 						</td>
@@ -261,11 +268,11 @@
 			<table class="data-table">
 				<thead>
 					<tr>
-						<th style="width: 12%;">MÃ NCC</th>
-						<th style="width: 20%;">TÊN GỌI TẮT</th>
-						<th style="width: 32%;">TÊN PHÁP NHÂN</th>
-						<th style="width: 22%;">NHÓM CUNG ỨNG</th>
-						<th style="width: 14%;">MÃ SỐ THUẾ</th>
+						<th style="width: 24%;">Tên gọi tắt</th>
+						<th style="width: 28%;">Tên pháp nhân</th>
+						<th style="width: 16%;">Mã số thuế</th>
+						<th style="width: 18%;">Thanh toán</th>
+						<th style="width: 14%;">Nhóm cung ứng</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -275,12 +282,12 @@
 						class="table-row cursor-pointer"
 						@click="openSupplierDetail(s)"
 					>
-						<td class="font-mono font-bold text-sky-400 text-[14.5px]">
-							{{ s.name }}
-						</td>
 						<td>
 							<div class="font-semibold text-white leading-tight text-[15px]">
 								{{ s.alias || s.supplier_name }}
+							</div>
+							<div class="font-mono text-xs text-sky-400/60 mt-0.5" :title="'Mã NCC: ' + s.name">
+								{{ s.name }}
 							</div>
 						</td>
 						<td>
@@ -288,11 +295,23 @@
 								{{ s.supplier_name }}
 							</div>
 						</td>
+						<td class="font-mono text-sm text-slate-300 tabular-nums">
+							{{ s.tax_id || '—' }}
+						</td>
+						<td>
+							<span v-if="s.payment_terms && (s.payment_terms.includes('30 ngày') || s.payment_terms.toLowerCase().includes('gối đầu'))" class="badge-payment-amber">
+								Gối đầu 30 ngày
+							</span>
+							<span v-else-if="s.payment_terms && (s.payment_terms.includes('nghiệm thu') || s.payment_terms.includes('giao hàng'))" class="badge-payment-emerald">
+								{{ s.payment_terms.replace('Thanh toán ', '') }}
+							</span>
+							<span v-else-if="s.payment_terms" class="badge-payment-blue">
+								{{ s.payment_terms }}
+							</span>
+							<span v-else class="text-secondary/60 text-xs">—</span>
+						</td>
 						<td>
 							<span class="badge-tag-group text-xs">{{ s.supplier_group || 'NCC' }}</span>
-						</td>
-						<td class="font-mono text-sm text-slate-300">
-							{{ s.tax_id || '—' }}
 						</td>
 					</tr>
 					<tr v-if="filteredSuppliers.length === 0">
@@ -310,11 +329,11 @@
 			<table class="data-table">
 				<thead>
 					<tr>
-						<th style="width: 26%;">EMAIL ĐĂNG NHẬP</th>
-						<th style="width: 22%;">HỌ VÀ TÊN</th>
-						<th style="width: 18%;">PHÒNG BAN</th>
-						<th style="width: 18%;">CHỨC DANH</th>
-						<th style="width: 16%;">VAI TRÒ ERPNEXT</th>
+						<th style="width: 22%;">SĐT đăng nhập</th>
+						<th style="width: 24%;">Họ và tên</th>
+						<th style="width: 18%;">Phòng ban</th>
+						<th style="width: 24%;">Chức vụ & Vai trò</th>
+						<th style="width: 12%; text-align: center;">Trạng thái</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -324,8 +343,13 @@
 						class="table-row cursor-pointer"
 						@click="openUserDetail(u)"
 					>
-						<td class="font-mono font-semibold text-purple-400 text-[14px]">
-							{{ u.email }}
+						<td>
+							<div class="font-mono font-bold text-purple-400 text-[14.5px] tabular-nums">
+								{{ u.mobile_no || u.email }}
+							</div>
+							<div v-if="u.mobile_no && u.email" class="font-mono text-xs text-secondary/60 mt-0.5 truncate max-w-[200px]" :title="u.email">
+								{{ u.email }}
+							</div>
 						</td>
 						<td>
 							<div class="font-semibold text-white leading-tight text-[15px]">
@@ -335,11 +359,21 @@
 						<td class="text-sm text-slate-300">
 							{{ u.department || 'Ban Giám Đốc' }}
 						</td>
-						<td class="text-sm text-primary">
-							{{ u.designation || 'Nhân viên' }}
-						</td>
 						<td>
-							<span class="badge-role-user font-mono text-xs">{{ u.role_profile_name || 'System User' }}</span>
+							<div class="text-sm text-primary font-medium">
+								{{ u.designation || u.role_profile_name || 'Nhân viên' }}
+							</div>
+							<span class="badge-role-user font-mono text-[11px] mt-1" :title="'Vai trò ERPNext: ' + (u.role_profile_name || 'System User')">
+								{{ u.role_profile_name || 'System User' }}
+							</span>
+						</td>
+						<td class="text-center">
+							<span v-if="u.enabled" class="badge-status-pill active">
+								● Hoạt động
+							</span>
+							<span v-else class="badge-status-pill inactive">
+								○ Đã khóa
+							</span>
 						</td>
 					</tr>
 					<tr v-if="filteredUsers.length === 0">
@@ -449,11 +483,11 @@ function syncTotalCount() {
 const currentCatalogSearchPlaceholder = computed(() => {
 	switch (activeCatalogTab.value) {
 		case 'kh':
-			return 'Tìm mã, tên gọi tắt, tên pháp nhân, khu vực...';
+			return 'Tìm tên gọi tắt, tên pháp nhân, MST, mã KH...';
 		case 'ncc':
-			return 'Tìm mã, tên tắt, nhóm NCC, MST...';
+			return 'Tìm tên tắt, pháp nhân, MST, nhóm NCC...';
 		case 'user':
-			return 'Tìm tên, email, chức danh, phòng ban...';
+			return 'Tìm SĐT đăng nhập, họ tên, phòng ban, vai trò...';
 		case 'nvl':
 			return 'Tìm mã NVL, tên màng, keo, hóa chất...';
 		case 'truc':
@@ -666,6 +700,7 @@ const filteredCustomers = computed(() => {
 		(c.alias && c.alias.toLowerCase().includes(q)) ||
 		(c.customer_group && c.customer_group.toLowerCase().includes(q)) ||
 		(c.territory && c.territory.toLowerCase().includes(q)) ||
+		(c.payment_terms && c.payment_terms.toLowerCase().includes(q)) ||
 		(c.tax_id && c.tax_id.toLowerCase().includes(q))
 	);
 });
@@ -698,6 +733,7 @@ const filteredSuppliers = computed(() => {
 		(s.supplier_name && s.supplier_name.toLowerCase().includes(q)) ||
 		(s.alias && s.alias.toLowerCase().includes(q)) ||
 		(s.supplier_group && s.supplier_group.toLowerCase().includes(q)) ||
+		(s.payment_terms && s.payment_terms.toLowerCase().includes(q)) ||
 		(s.tax_id && s.tax_id.toLowerCase().includes(q))
 	);
 });
@@ -729,6 +765,7 @@ const filteredUsers = computed(() => {
 		(u.name && u.name.toLowerCase().includes(q)) ||
 		(u.full_name && u.full_name.toLowerCase().includes(q)) ||
 		(u.email && u.email.toLowerCase().includes(q)) ||
+		(u.mobile_no && u.mobile_no.includes(q)) ||
 		(u.department && u.department.toLowerCase().includes(q)) ||
 		(u.designation && u.designation.toLowerCase().includes(q)) ||
 		(u.role_profile_name && u.role_profile_name.toLowerCase().includes(q))

@@ -278,12 +278,32 @@ for (const check of masterDataChecks) {
 	if (!check.test) allMasterDataPassed = false;
 }
 
-const totalChecksCount = appChecks.length + drawerChecks.length + dimChecks.length + backendChecks.length + materialChecks.length + stickyChecks.length + aliasChecks.length + alignmentChecks.length + cylinderPurityChecks.length + masterDataChecks.length;
-const finalStatus = allAppPassed && allDrawerPassed && allDimPassed && allBackendPassed && allMaterialPassed && allStickyPassed && allAliasPassed && allAlignmentPassed && allCylPurityPassed && allMasterDataPassed;
+console.log('\n--- 12. CATALOG TABLE REFINEMENT: SINGLE-LINE HEADERS, KH & NCC RESTRUCTURING, USER PHONE LOGIN ---');
+const refinementChecks = [
+	{ name: 'Single-line header locking (nowrap, overflow hidden, ellipsis, user-select none)', test: portalSource.includes('white-space: nowrap !important') && portalSource.includes('text-overflow: ellipsis') && portalSource.includes('user-select: none') },
+	{ name: 'Customer table has Tax ID column and c.tax_id rendering', test: catalogVue.includes('Mã số thuế') && catalogVue.includes('c.tax_id') },
+	{ name: 'Customer table has Payment Terms column and c.payment_terms rendering', test: catalogVue.includes('Thanh toán') && catalogVue.includes('c.payment_terms') },
+	{ name: 'Customer code merged as subtle subtext under alias (no separate Mã KH column)', test: !catalogVue.includes('MÃ KHÁCH') && catalogVue.includes('Mã KH: ') },
+	{ name: 'Supplier table has Tax ID and Payment Terms columns (s.tax_id, s.payment_terms)', test: catalogVue.includes('s.tax_id') && catalogVue.includes('s.payment_terms') },
+	{ name: 'Supplier code merged as subtle subtext under alias (no separate Mã NCC column)', test: !catalogVue.includes('MÃ NCC') && catalogVue.includes('Mã NCC: ') },
+	{ name: 'User table has SĐT đăng nhập column with mobile_no', test: catalogVue.includes('SĐT đăng nhập') && catalogVue.includes('u.mobile_no') },
+	{ name: 'User table de-duplicated designation and roles into unified column', test: catalogVue.includes('Chức vụ & Vai trò') && !catalogVue.includes('EMAIL ĐĂNG NHẬP') },
+	{ name: 'User table has Active/Inactive status column', test: catalogVue.includes('Trạng thái') && catalogVue.includes('badge-status-pill') }
+];
+
+let allRefinementPassed = true;
+for (const check of refinementChecks) {
+	console.log(`Refinement Check "${check.name}": ${check.test ? 'PASS' : 'FAIL'}`);
+	if (!check.test) allRefinementPassed = false;
+}
+
+const totalChecksCount = appChecks.length + drawerChecks.length + dimChecks.length + backendChecks.length + materialChecks.length + stickyChecks.length + aliasChecks.length + alignmentChecks.length + cylinderPurityChecks.length + masterDataChecks.length + refinementChecks.length;
+const finalStatus = allAppPassed && allDrawerPassed && allDimPassed && allBackendPassed && allMaterialPassed && allStickyPassed && allAliasPassed && allAlignmentPassed && allCylPurityPassed && allMasterDataPassed && allRefinementPassed;
 console.log(`\n======================================================`);
 console.log(`OVERALL STATUS: ${finalStatus ? `ALL ${totalChecksCount} CHECKS PASSED (100% READY)` : 'SOME CHECKS FAILED'}`);
 console.log(`======================================================`);
 
 if (!finalStatus) process.exit(1);
+
 
 
