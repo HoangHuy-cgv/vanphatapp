@@ -875,23 +875,6 @@ const catalogSearchInput = computed({
 	}
 });
 
-const currentCatalogCountText = computed(() => {
-	switch (activeCatalogTab.value) {
-		case 'kh':
-			return `${filteredCustomers.value.length} KH`;
-		case 'ncc':
-			return `${filteredSuppliers.value.length} NCC`;
-		case 'user':
-			return `${filteredUsers.value.length} User`;
-		case 'nvl':
-			return `${filteredMasterItems.value.length} NVL`;
-		case 'truc':
-			return `${filteredMasterItems.value.length} Trục`;
-		default:
-			return `${filteredMasterItems.value.length} SP`;
-	}
-});
-
 function switchCatalogTab(tabKey) {
 	activeCatalogTab.value = tabKey;
 	if (tabKey === 'sp') {
@@ -1698,16 +1681,6 @@ html, body {
 
 .btn-clear-search:hover {
 	color: #ffffff;
-}
-
-.catalog-count-pill {
-	font-size: 13.5px;
-	color: #8b949e;
-	padding: 7px 12px;
-	background: #161b22;
-	border: 1px solid rgba(255, 255, 255, 0.08);
-	border-radius: 6px;
-	white-space: nowrap;
 }
 
 .btn-clear-filter-inline {
