@@ -194,12 +194,17 @@
 								<input type="number" v-model.number="cylinderCount" class="text-input text-right text-num" min="1" />
 							</div>
 							<div class="cyl-col">
-								<label class="field-label-sm">Đơn giá trục (VNĐ/cây)</label>
-								<input type="text" :value="formatCurrency(serverPricing.cylinder_rate)" class="text-input text-right text-num" readonly />
+								<label class="field-label-sm">NCC trục</label>
+								<input type="text" v-model="cylinderSupplier" class="text-input" placeholder="VD: Kiến Tâm" />
+							</div>
+							<div class="cyl-col">
+								<label class="field-label-sm">Giá NCC (VNĐ/cây)</label>
+								<input type="number" v-model.number="cylinderUnitPrice" class="text-input text-right text-num" min="0" step="100000" placeholder="Giá NCC báo" />
 							</div>
 							<div class="cyl-col">
 								<label class="field-label-sm">Tiền trục</label>
-								<div class="cyl-total-val text-num">{{ formatCurrency(serverPricing.cylinder_total) }}</div>
+								<div v-if="serverPricing.cylinder_pending" class="cyl-total-val text-num text-amber">Chờ giá NCC</div>
+								<div v-else class="cyl-total-val text-num">{{ formatCurrency(serverPricing.cylinder_total) }}</div>
 							</div>
 						</div>
 					</div>
@@ -288,17 +293,23 @@
 							<span class="fin-label">Thuế VAT ({{ serverPricing.vat_rate }}%):</span>
 							<span class="fin-val text-num">{{ formatCurrency(serverPricing.vat_amount) }}</span>
 						</div>
-						<div v-if="serverPricing.cylinder_total > 0" class="fin-row">
+						<div v-if="serverPricing.cylinder_pending" class="fin-row">
+							<span class="fin-label">Tiền trục:</span>
+							<span class="fin-val text-num text-amber">Chờ giá NCC</span>
+						</div>
+						<div v-else-if="serverPricing.cylinder_total > 0" class="fin-row">
 							<span class="fin-label">Tiền trục:</span>
 							<span class="fin-val text-num">{{ formatCurrency(serverPricing.cylinder_total) }}</span>
 						</div>
 						<div class="fin-row total-row">
 							<span class="fin-label-lg">TỔNG THANH TOÁN:</span>
-							<span class="fin-val-lg text-num">{{ formatCurrency(serverPricing.grand_total) }}</span>
+							<span v-if="serverPricing.cylinder_pending" class="fin-val-lg text-num text-amber">Chưa chốt (chờ trục)</span>
+							<span v-else class="fin-val-lg text-num">{{ formatCurrency(serverPricing.grand_total) }}</span>
 						</div>
 						<div v-if="paymentType === 'Trả trước'" class="fin-row deposit-row">
-							<span class="fin-label">Cọc yêu cầu (50% hàng + 100% trục):</span>
-							<span class="fin-val-deposit text-num">{{ formatCurrency(serverPricing.required_deposit) }}</span>
+							<span class="fin-label">Cọc yêu cầu:</span>
+							<span v-if="serverPricing.cylinder_pending" class="fin-val-deposit text-num text-amber">Chờ giá NCC</span>
+							<span v-else class="fin-val-deposit text-num">{{ formatCurrency(serverPricing.required_deposit) }}</span>
 						</div>
 					</div>
 
@@ -357,6 +368,8 @@ const {
 	variantRows,
 	hasNewCylinders,
 	cylinderCount,
+	cylinderSupplier,
+	cylinderUnitPrice,
 	screenPrintBrand,
 	genericRows,
 	currentCustomer,
@@ -444,17 +457,9 @@ const handleSubmit = async () => {
 		});
 
 		if (hasNewCylinders.value && cylinderCount.value > 0) {
-			builtItems.push({
-				item_code: `TRUC-${currentCustomItem.value.item_code}`,
-				item_name: `Bộ trục ${currentCustomItem.value.item_name} (${cylinderCount.value} cây)`,
-				variant_name: 'Trục in ống đồng',
-				artwork_url: null,
-				qty: cylinderCount.value,
-				uom: 'Cây',
-				rate: serverPricing.value.cylinder_rate,
-				amount: serverPricing.value.cylinder_total,
-				is_cylinder: true,
-			});
+			// P2 pass-through: dòng trục do backend cộng từ cylinder_spec (giá NCC).
+			// Vỏ không tự build dòng trục nữa — chỉ gửi spec, backend quyết.
+			cylinderStatusText = `${cylinderCount.value} cây (NCC ${cylinderSupplier.value || 'chờ báo giá'})`;
 		}
 	} else {
 		// Generic MTS
@@ -499,6 +504,12 @@ const handleSubmit = async () => {
 		product_group: productGroup.value,
 		has_new_cylinders: hasNewCylinders.value,
 		cylinder_count: cylinderCount.value,
+		// P2: giá trục NCC quyết — Vạn Phát chỉ mua đi bán lại, không chốt số nào
+		cylinder_spec: hasNewCylinders.value ? {
+			qty: cylinderCount.value,
+			unit_price: cylinderUnitPrice.value,
+			supplier: cylinderSupplier.value,
+		} : null,
 		items: builtItems,
 	};
 

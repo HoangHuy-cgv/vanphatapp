@@ -27,16 +27,11 @@ export function useCreateOrderForm(masterItemsRef) {
 		}
 	}
 
-	const serverPricing = ref({
-		net_total: 0,
-		vat_rate: 0,
-		vat_amount: 0,
-		cylinder_count: 0,
-		cylinder_rate: 0,
-		cylinder_total: 0,
-		grand_total: 0,
-		required_deposit: 0,
-	});
+	const serverPricing = ref({ ...serverPricingInitial });
+
+	// P2 pass-through (Sếp duyệt): giá trục do NCC báo — vỏ chỉ nhập, không chốt số nào.
+	const cylinderSupplier = ref('');
+	const cylinderUnitPrice = ref(null);
 
 	const catalogItems = computed(() => {
 		const masterItems = masterItemsRef?.value ?? [];
@@ -57,7 +52,7 @@ export function useCreateOrderForm(masterItemsRef) {
 				accessory: item.accessory || item.custom_accessory_spec || 'Không vòi',
 				print_type: item.print_type || item.custom_print_tech || 'In trục',
 				cylinder_count: item.cylinder_count || item.custom_cylinder_qty || 0,
-				cylinder_rate: item.cylinder_rate || serverPricing.value.cylinder_rate || 0,
+				cylinder_rate: null,
 				uom: item.stock_uom || item.uom || 'Túi',
 				base_rate: item.standard_rate || item.base_rate || 0,
 				artwork_url: item.artwork_url || '',
@@ -149,6 +144,12 @@ export function useCreateOrderForm(masterItemsRef) {
 						items,
 						has_new_cylinders: hasNewCylinders.value,
 						cylinder_count: cylinderCount.value,
+						// P2: giá NCC nhập tay — trống = pending truthful, không fallback số nào
+						cylinder_spec: hasNewCylinders.value ? {
+							qty: cylinderCount.value,
+							unit_price: cylinderUnitPrice.value,
+							supplier: cylinderSupplier.value,
+						} : null,
 					},
 					{
 						silent: true,
@@ -170,7 +171,7 @@ export function useCreateOrderForm(masterItemsRef) {
 	};
 
 	watch(
-		[variantRows, genericRows, hasNewCylinders, cylinderCount, currentCustomer, isCustomMto, productGroup],
+		[variantRows, genericRows, hasNewCylinders, cylinderCount, cylinderSupplier, cylinderUnitPrice, currentCustomer, isCustomMto, productGroup],
 		() => {
 			fetchPricePreview();
 		},
@@ -302,6 +303,8 @@ export function useCreateOrderForm(masterItemsRef) {
 		variantRows,
 		hasNewCylinders,
 		cylinderCount,
+		cylinderSupplier,
+		cylinderUnitPrice,
 		screenPrintBrand,
 		genericRows,
 		currentCustomer,

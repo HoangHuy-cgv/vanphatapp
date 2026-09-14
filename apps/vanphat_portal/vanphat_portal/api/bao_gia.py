@@ -86,58 +86,37 @@ def create_quotation(payload):
 
 
 @frappe.whitelist()
-def get_quotation_price_preview(quotation=None, lines=None):
-	"""Preview figures computed server-side from unsaved rows or a saved doc.
+def get_quotation_price_preview(quotation=None, lines=None, customer=None, company=None):
+	"""P1 doc-driven (Sếp duyệt): đọc số ERPNext đã tính trên saved doc; unsaved thì dựng nháp chung order._price_via_doc.
 
 	S4 SSOT: tên riêng cho Quotation preview (tránh shadow với order.get_price_preview).
-	S9: VAT từ Sales Taxes and Charges Template (dùng chung order._get_vat_rate), fallback ADR-002.
-	Frontend sends current M2 `lines`; server sums here so the shell never
-	computes. Packaging formula (GSM/keo/hao hụt/VAT) replaces the
-	zero placeholders per packaging-calculation-spec.md.
+	Frontend gửi lines thô; server không math tay.
 	"""
-	from vanphat_portal.api.order import _get_vat_rate
+	from vanphat_portal.api.order import _price_via_doc, _resolve_tax_template
 
-	company = frappe.defaults.get_user_default("Company")
-	vat_rate = _get_vat_rate(company)
-	if isinstance(lines, str):
-		lines = frappe.parse_json(lines) or []
-	rows = lines or []
 	if quotation and frappe.db.exists("Quotation", quotation):
 		doc = frappe.get_doc("Quotation", quotation)
-		sub = frappe.utils.flt(doc.total)
 		tax = frappe.utils.flt(doc.total_taxes_and_charges)
-		if not tax and sub:
-			tax = round(sub * (vat_rate / 100.0))
+		sub = frappe.utils.flt(doc.total)
+		grand = frappe.utils.flt(doc.grand_total) or (sub + tax)
+		rate = round(tax / sub * 100.0, 1) if sub else 0.0
 		return {
 			"total_qty": doc.total_qty or 0,
 			"subtotal": sub,
-			"vat_rate": vat_rate,
+			"vat_rate": rate,
 			"cylinder_total": 0,
 			"tax_amount": tax,
-			"grand_total": frappe.utils.flt(doc.grand_total) or (sub + tax),
+			"grand_total": grand,
 		}
-	total_qty = 0.0
-	subtotal = 0.0
-	for row in rows:
-		try:
-			qty = float(row.get("qty") or 0)
-		except (TypeError, ValueError):
-			qty = 0.0
-		try:
-			rate = float(row.get("rate") or 0)
-		except (TypeError, ValueError):
-			rate = 0.0
-		total_qty += qty
-		subtotal += qty * rate
-	# SSOT server: VAT tính tại backend, client chỉ hiển thị (S1; S9 native hóa template)
-	tax_amount = round(subtotal * (vat_rate / 100.0))
+	priced = _price_via_doc(customer=customer, company=company, items=lines, cylinder_spec=None)
 	return {
-		"total_qty": total_qty,
-		"subtotal": subtotal,
-		"vat_rate": vat_rate,
+		"total_qty": sum(frappe.utils.flt((r or {}).get("qty") or 0) for r in (lines or [])),
+		"subtotal": priced["net_total"],
+		"vat_rate": priced["vat_rate"],
+		"tax_template": priced["tax_template"],
 		"cylinder_total": 0,
-		"tax_amount": tax_amount,
-		"grand_total": subtotal + tax_amount,
+		"tax_amount": priced["vat_amount"],
+		"grand_total": priced["grand_total"],
 	}
 
 
