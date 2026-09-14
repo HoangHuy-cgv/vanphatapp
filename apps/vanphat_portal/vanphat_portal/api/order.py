@@ -92,112 +92,173 @@ def get_price_preview(payload=None, items=None, customer=None, has_new_cylinders
 
 @frappe.whitelist()
 def list_orders(tab=None, query=None, page=1, page_length=15):
-	"""Return Sales Orders filtered by Cockpit Tab and search query with server pagination."""
+	"""Return Sales Orders filtered by Cockpit Tab and search query with server pagination.
+
+	S2: 1 query `frappe.qb` join SO + SO Item (idx=1) + Customer alias + Item custom_alias.
+	Server paginate bằng limit/offset (trần page_length 100); tab/search lọc trong SQL.
+	Tab phân loại từ item_code native (NGCS/TMD) — S9 chuyển Item Group filter server.
+	"""
 	import math
+	from pypika import Order
 	tab_filter = (tab or "").strip().lower()
 	q = (query or "").strip().lower()
 	p = max(1, int(page or 1))
-	pl = max(1, int(page_length or 15))
+	pl = min(100, max(1, int(page_length or 15)))
+
+	SO = frappe.qb.DocType("Sales Order")
+	SOI = frappe.qb.DocType("Sales Order Item")
+	CUST = frappe.qb.DocType("Customer")
+	ITEM = frappe.qb.DocType("Item")
+	# pypika Table.alias là None (trùng tên attr nội bộ) → dùng .field("alias")
+	CUST_ALIAS = CUST.field("alias")
+
+	def tab_of(code, iname):
+		c = (code or "").upper()
+		n = (iname or "").lower()
+		if "NGCS" in c or "ngcs" in n:
+			return "ngcs"
+		if "TMD" in c or "màng đơn" in n:
+			return "mua_ngoai"
+		return "xuong_sx"
+
+	base_cond = (SO.docstatus != 2)
+	if q:
+		like = f"%{q}%"
+		base_cond = base_cond & (
+			(SO.name.like(like)) | (SO.customer_name.like(like)) | (SO.customer.like(like))
+			| (CUST_ALIAS.like(like)) | (SOI.item_name.like(like)) | (ITEM.custom_alias.like(like))
+		)
+	if tab_filter == "ngcs":
+		base_cond = base_cond & ((SOI.item_code.like("NGCS%")) | (SOI.item_name.like("%ngcs%")))
+	elif tab_filter == "mua_ngoai":
+		base_cond = base_cond & ((SOI.item_code.like("TMD%")) | (SOI.item_name.like("%màng đơn%")))
+	elif tab_filter == "xuong_sx":
+		base_cond = base_cond & (
+			(SOI.item_code.not_like("NGCS%")) & (SOI.item_code.not_like("TMD%"))
+			& (SOI.item_name.not_like("%ngcs%")) & (SOI.item_name.not_like("%màng đơn%"))
+		)
+
+	def row_query():
+		return (
+			frappe.qb.from_(SO)
+			.left_join(SOI)
+			.on((SOI.parent == SO.name) & (SOI.idx == 1))
+			.left_join(CUST)
+			.on(CUST.name == SO.customer)
+			.left_join(ITEM)
+			.on(ITEM.name == SOI.item_code)
+			.select(
+				SO.name,
+				SO.transaction_date,
+				SO.customer,
+				SO.customer_name,
+				SO.grand_total,
+				SO.advance_paid,
+				SO.status,
+				SO.docstatus,
+				CUST_ALIAS.as_("customer_alias"),
+				SOI.item_code,
+				SOI.item_name,
+				SOI.qty,
+				SOI.uom,
+				ITEM.custom_alias,
+			)
+			.where(base_cond)
+		)
+
+	from frappe.query_builder.functions import Count, Sum
+
+	# Query đếm/tổng: build riêng từ cùng FROM/JOIN/WHERE (không reuse select list)
+	def count_query():
+		return (
+			frappe.qb.from_(SO)
+			.left_join(SOI)
+			.on((SOI.parent == SO.name) & (SOI.idx == 1))
+			.left_join(CUST)
+			.on(CUST.name == SO.customer)
+			.left_join(ITEM)
+			.on(ITEM.name == SOI.item_code)
+			.select(Count("*").as_("c"))
+			.where(base_cond)
+		)
 
 	try:
-		orders = frappe.get_list(
-			"Sales Order",
-			fields=[
-				"name",
-				"transaction_date",
-				"customer",
-				"customer_name",
-				"grand_total",
-				"advance_paid",
-				"status",
-				"docstatus",
-			],
-			order_by="creation desc",
-			limit=500,
-		)
+		total_count = count_query().run(as_dict=True)[0].get("c", 0) or 0
 	except Exception:
-		orders = []
+		total_count = 0
+
+	start = (p - 1) * pl
+	page_rows = []
+	try:
+		page_rows = (row_query().orderby(SO.creation, order=Order.desc).limit(pl).offset(start)).run(as_dict=True)
+	except Exception:
+		page_rows = []
+
+	# Tab counts: 1 query group theo item_code/item_name (không N+1)
+	count_q = (
+		frappe.qb.from_(SO)
+		.left_join(SOI)
+		.on((SOI.parent == SO.name) & (SOI.idx == 1))
+		.select(SOI.item_code, SOI.item_name, Count("*").as_("c"))
+		.where((SO.docstatus != 2) & ((SO.name.like(f"%{q}%")) if q else (SO.docstatus != 2)))
+		.groupby(SOI.item_code, SOI.item_name)
+	)
+	tab_counts = {"xuong_sx": 0, "ngcs": 0, "mua_ngoai": 0, "all": 0}
+	try:
+		for crow in count_q.run(as_dict=True):
+			t = tab_of(crow.get("item_code"), crow.get("item_name"))
+			n = int(crow.get("c") or 0)
+			tab_counts["all"] += n
+			if t in tab_counts:
+				tab_counts[t] += n
+	except Exception:
+		pass
 
 	processed_orders = []
-	tab_counts = {"xuong_sx": 0, "ngcs": 0, "mua_ngoai": 0, "all": 0}
-
-	for o in orders:
-		gt = frappe.utils.flt(o.grand_total)
-		adv = frappe.utils.flt(o.advance_paid)
+	for r in page_rows:
+		o = dict(r)
+		gt = frappe.utils.flt(o.get("grand_total"))
+		adv = frappe.utils.flt(o.get("advance_paid"))
 		o["advance_paid"] = adv
 		o["outstanding_amount"] = max(0.0, gt - adv)
 		o["deposit_pct"] = round((adv / gt * 100), 1) if gt > 0 else 0
-		# SSOT server S1: tách tiền trục TRUC- khỏi tiền hàng để tính cọc chuẩn vàng
+		# S1 giữ: cọc = 50% tiền hàng + 100% trục TRUC- (1 query qb/đơn: rows + SUM Python)
 		try:
-			so_items = frappe.get_all(
-				"Sales Order Item",
-				filters={"parent": o.name},
-				fields=["item_code", "item_name", "amount"],
+			agg_q = (
+				frappe.qb.from_(SOI)
+				.select(SOI.item_code, SOI.item_name, SOI.amount, SOI.qty)
+				.where(SOI.parent == o.get("name"))
 			)
+			agg_rows = agg_q.run(as_dict=True)
 		except Exception:
-			so_items = []
+			agg_rows = []
 		cyl_total = 0.0
-		for _it in so_items:
+		total_qty = 0.0
+		for _it in agg_rows:
+			total_qty += frappe.utils.flt(_it.get("qty") or 0)
 			_code = (_it.get("item_code") or "").upper()
 			_iname = (_it.get("item_name") or "").lower()
 			if "TRUC-" in _code or "trục" in _iname:
 				cyl_total += frappe.utils.flt(_it.get("amount")) * 1.08
+		if not total_qty:
+			total_qty = frappe.utils.flt(o.get("qty")) or 0
 		product_total = max(0.0, gt - cyl_total)
 		o["cylinder_total"] = cyl_total
 		o["product_total"] = product_total
 		o["required_deposit"] = round((product_total * 0.5) + cyl_total)
 
-		# Lấy alias khách hàng
-		try:
-			cust_alias = frappe.db.get_value("Customer", o.customer, "alias")
-		except Exception:
-			cust_alias = None
-		o["customer_alias"] = cust_alias or o.customer_name or o.customer
+		# Alias + mặt hàng đầu từ JOIN (không get_value từng dòng)
+		o["customer_alias"] = o.get("customer_alias") or o.get("customer_name") or o.get("customer")
+		o["item_code"] = o.get("item_code")
+		o["item_name"] = o.get("item_name") or "—"
+		o["qty"] = total_qty
+		o["uom"] = o.get("uom") or "Túi"
+		o["custom_alias"] = o.get("custom_alias") or o.get("item_name") or "—"
 
-		# Lấy tóm tắt mặt hàng đầu tiên & tổng số lượng
-		try:
-			items = frappe.get_all(
-				"Sales Order Item",
-				filters={"parent": o.name},
-				fields=["item_code", "item_name", "qty", "uom"],
-				order_by="idx asc",
-			)
-		except Exception:
-			items = []
-
-		if items:
-			first_it = items[0]
-			o["item_name"] = first_it.item_name
-			o["qty"] = sum(frappe.utils.flt(it.get("qty") or 0) for it in items)
-			o["uom"] = first_it.uom or "Túi"
-			try:
-				it_alias = frappe.db.get_value("Item", first_it.item_code, "custom_alias")
-			except Exception:
-				it_alias = None
-			o["custom_alias"] = it_alias or first_it.item_name
-		else:
-			o["item_name"] = "—"
-			o["custom_alias"] = "—"
-			o["qty"] = 0
-			o["uom"] = "Túi"
-
-		# Phân loại tab buồng lái
-		it_code = (items[0].get("item_code") or "").upper() if items else ""
-		it_name = (items[0].get("item_name") or "").lower() if items else ""
-		if "NGCS" in it_code or "ngcs" in it_name:
-			o["order_tab"] = "ngcs"
-			o["product_group"] = "Túi NGCS"
-		elif "TMD" in it_code or "đơn" in it_name or "màng đơn" in it_name:
-			o["order_tab"] = "mua_ngoai"
-			o["product_group"] = "Túi màng đơn"
-		else:
-			o["order_tab"] = "xuong_sx"
-			o["product_group"] = "Túi màng ghép"
-
-		# Đếm tổng theo tab
-		tab_counts["all"] += 1
-		if o["order_tab"] in tab_counts:
-			tab_counts[o["order_tab"]] += 1
+		# Phân loại tab buồng lái (cùng hàm tab_of với count SQL)
+		t = tab_of(o.get("item_code"), o.get("item_name"))
+		o["order_tab"] = t
+		o["product_group"] = "Túi NGCS" if t == "ngcs" else ("Túi màng đơn" if t == "mua_ngoai" else "Túi màng ghép")
 
 		# Trạng thái buồng lái tính toán chuẩn mực tại backend ERPNext
 		if o.get("is_hold") or "HOLD" in (o.get("order_state") or ""):
@@ -216,31 +277,13 @@ def list_orders(tab=None, query=None, page=1, page_length=15):
 			o["order_status_label"] = "Chờ cọc"
 			o["order_status_class"] = "status-draft"
 
-		# Lọc theo Tab trên Server nếu có yêu cầu
-		if tab_filter and tab_filter != "all":
-			if tab_filter == "ngcs" and o["order_tab"] != "ngcs":
-				continue
-			if tab_filter == "xuong_sx" and o["order_tab"] != "xuong_sx":
-				continue
-			if tab_filter == "mua_ngoai" and o["order_tab"] != "mua_ngoai":
-				continue
-
-		# Lọc theo Search Query nếu có
-		if q:
-			search_space = f"{o['name']} {o['customer_alias']} {o['item_name']} {o['custom_alias']}".lower()
-			if q not in search_space:
-				continue
-
+		# Lọc Python đã thay bằng WHERE SQL ở trên — giữ đoạn này làm guard hiếm (join null)
 		processed_orders.append(o)
 
-	total_count = len(processed_orders)
-	total_pages = max(1, math.ceil(total_count / pl))
-	start = (p - 1) * pl
-	end = start + pl
-	paginated_orders = processed_orders[start:end]
+	total_pages = max(1, math.ceil(total_count / pl)) if total_count else 1
 
 	return {
-		"orders": paginated_orders,
+		"orders": processed_orders,
 		"page": p,
 		"page_length": pl,
 		"total_count": total_count,
