@@ -1,58 +1,32 @@
-import { ref } from 'vue';
+import { toast as libToast } from 'frappe-ui';
 
 /**
- * Industrial Toast Notification Composable (Singleton)
- * Minimalist, high-density feedback without blocking operations.
+ * P4c: Toast qua lib frappe-ui (đã có FrappeUIProvider portals ở App root).
+ * Giữ nguyên contract success/error/warning/info/message để không sửa callers.
+ * Xóa CockpitToast.vue + singleton ref khi Sếp duyệt (hiện giữ song song 1 round để so sánh).
  */
-const toasts = ref([]);
-let nextId = 1;
+function show(message, type = 'info') {
+	if (type === 'success') return libToast.success(message);
+	if (type === 'error') return libToast.error(message);
+	if (type === 'warning') return libToast.warning(message);
+	return libToast(message);
+}
 
 export function useToast() {
-	function show(message, type = 'info', duration = 2800) {
-		const id = nextId++;
-		const toast = {
-			id,
-			message,
-			type, // 'success' | 'error' | 'warning' | 'info'
-		};
-
-		// Limit max 2 toasts on screen simultaneously to avoid clutter
-		if (toasts.value.length >= 2) {
-			toasts.value.shift();
-		}
-
-		toasts.value.push(toast);
-
-		if (duration > 0) {
-			setTimeout(() => {
-				dismiss(id);
-			}, duration);
-		}
-		return id;
-	}
-
-	function dismiss(id) {
-		const idx = toasts.value.findIndex((t) => t.id === id);
-		if (idx !== -1) {
-			toasts.value.splice(idx, 1);
-		}
-	}
-
 	return {
-		toasts,
 		show,
-		dismiss,
-		success: (msg, dur) => show(msg, 'success', dur),
-		error: (msg, dur) => show(msg, 'error', dur || 3500),
-		warning: (msg, dur) => show(msg, 'warning', dur),
-		info: (msg, dur) => show(msg, 'info', dur),
+		dismiss: (id) => { try { libToast.dismiss(id); } catch (e) { /* noop */ } },
+		success: (msg) => show(msg, 'success'),
+		error: (msg) => show(msg, 'error'),
+		warning: (msg) => show(msg, 'warning'),
+		info: (msg) => show(msg, 'info'),
 	};
 }
 
 export const toast = {
-	show: (msg, type, dur) => useToast().show(msg, type, dur),
-	success: (msg, dur) => useToast().success(msg, dur),
-	error: (msg, dur) => useToast().error(msg, dur),
-	warning: (msg, dur) => useToast().warning(msg, dur),
-	info: (msg, dur) => useToast().info(msg, dur),
+	show: (msg, type) => show(msg, type),
+	success: (msg) => show(msg, 'success'),
+	error: (msg) => show(msg, 'error'),
+	warning: (msg) => show(msg, 'warning'),
+	info: (msg) => show(msg, 'info'),
 };

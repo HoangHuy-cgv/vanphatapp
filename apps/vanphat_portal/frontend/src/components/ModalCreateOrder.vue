@@ -1,7 +1,6 @@
 <template>
-	<Teleport to="body">
-		<div v-if="isOpen" class="modal-backdrop" @click.self="$emit('close')">
-		<div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-order-title">
+	<Dialog v-model:open="dialogOpen" size="4xl" :dismissible="!isSubmitting" @close="$emit('close')">
+		<div class="modal-panel">
 			<!-- Header -->
 			<div class="modal-head">
 				<div class="head-left">
@@ -331,12 +330,12 @@
 				</div>
 			</form>
 		</div>
-		</div>
-	</Teleport>
+	</Dialog>
 </template>
 
 <script setup>
-import { watch, toRef } from 'vue';
+import { watch, toRef, computed } from 'vue';
+import { Dialog } from 'frappe-ui';
 import { api } from '../composables/useSession';
 import { toast } from '../composables/useToast';
 import { useCreateOrderForm } from '../composables/useCreateOrderForm';
@@ -349,7 +348,16 @@ const props = defineProps({
 });
 
 // S7: emit contract khớp caller OrdersView (@order-created) — sửa bug khai báo thiếu
-const emit = defineEmits(['close', 'order-created']);
+const emit = defineEmits(['close', 'order-created', 'update:isOpen']);
+
+// P4c: Dialog lib điều khiển mở/đóng (v-model:open), sync về isOpen + emit close
+const dialogOpen = computed({
+	get: () => props.isOpen,
+	set: (v) => {
+		emit('update:isOpen', v);
+		if (!v) emit('close');
+	},
+});
 
 const form = useCreateOrderForm(toRef(props, 'masterItems'));
 const {

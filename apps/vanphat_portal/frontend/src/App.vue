@@ -117,8 +117,7 @@
 			</router-view>
 		</main>
 
-		<!-- Global Industrial Cockpit Toast (giữ CockpitToast tự viết; lib Toast migrate sau) -->
-		<CockpitToast />
+		<!-- Toast qua lib frappe-ui (FrappeUIProvider portals) — P4c xóa CockpitToast tự viết -->
 	</div>
 	</FrappeUIProvider>
 </template>
@@ -128,7 +127,6 @@ import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { FrappeUIProvider } from 'frappe-ui';
 import logoUrl from './assets/logo-vanphat.png';
-import CockpitToast from './components/CockpitToast.vue';
 import { useSession } from './composables/useSession';
 import { usePortalCounts } from './composables/usePortalCounts';
 

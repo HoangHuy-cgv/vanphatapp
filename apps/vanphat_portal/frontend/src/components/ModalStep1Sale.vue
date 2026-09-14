@@ -1,7 +1,6 @@
 <template>
-	<Teleport to="body">
-		<div class="modal-overlay" @click.self="$emit('close')">
-		<div class="modal-card" role="dialog" aria-label="Tạo báo giá">
+	<Dialog v-model:open="dialogOpen" size="2xl" @close="$emit('close')">
+		<div class="modal-card">
 			<!-- Header with title & close button -->
 			<div class="modal-header">
 				<h3 class="modal-title">Tạo báo giá</h3>
@@ -261,21 +260,31 @@
 				</div>
 			</div>
 		</div>
-		</div>
-	</Teleport>
+	</Dialog>
 </template>
 
 <script setup>
 import { reactive, computed, ref, onMounted, onUnmounted } from 'vue';
+import { Dialog } from 'frappe-ui';
 
 const props = defineProps({
 	initialData: {
 		type: Object,
 		default: () => ({}),
 	},
+	open: { type: Boolean, default: true },
 });
 
-const emit = defineEmits(['close', 'next']);
+const emit = defineEmits(['close', 'next', 'update:open']);
+
+// P4c: Dialog lib điều khiển mở/đóng (v-model:open)
+const dialogOpen = computed({
+	get: () => props.open,
+	set: (v) => {
+		emit('update:open', v);
+		if (!v) emit('close');
+	},
+});
 
 const form = reactive({
 	product_type: props.initialData.product_type || 'Túi đáy đứng',
