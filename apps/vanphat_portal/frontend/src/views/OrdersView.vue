@@ -109,7 +109,7 @@
 
 				<tbody>
 					<tr
-						v-for="o in filteredTabOrders"
+						v-for="o in orders"
 						:key="o.name"
 						class="table-row cursor-pointer"
 						@click="openOrderDetail(o)"
@@ -164,7 +164,7 @@
 							</span>
 						</td>
 					</tr>
-					<tr v-if="filteredTabOrders.length === 0">
+					<tr v-if="orders.length === 0">
 						<td colspan="7" class="empty-cell">
 							<div v-if="loadingOrders" class="cockpit-empty-state">
 								<span class="empty-msg">Đang tải đơn hàng từ ERPNext...</span>
@@ -238,6 +238,7 @@ const currentOrderSearchPlaceholder = computed(() => {
 });
 
 watch(activeOrderTab, () => {
+	loadOrders();
 	nextTick(() => {
 		const containers = document.querySelectorAll('.table-container');
 		containers.forEach((el) => {
@@ -256,42 +257,12 @@ const selectedOrder = computed(() => {
 	return orders.value.find((o) => o.name === selectedOrderId.value) || null;
 });
 
-const ngcsOrders = computed(() =>
-	orders.value.filter((o) => o.order_tab === 'ngcs' || o.product_group === 'Túi NGCS')
-);
-const xuongSxOrders = computed(() =>
-	orders.value.filter(
-		(o) =>
-			o.order_tab === 'xuong_sx' ||
-			(!o.order_tab && (!o.product_group || o.product_group === 'Túi màng ghép') && o.payment_type !== 'Trả sau')
-	)
-);
-const muaNgoaiOrders = computed(() =>
-	orders.value.filter(
-		(o) =>
-			o.order_tab === 'mua_ngoai' ||
-			o.product_group === 'Túi màng đơn' ||
-			o.product_group === 'Cuộn màng ghép' ||
-			o.payment_type === 'Trả sau'
-	)
-);
-
-const currentTabOrders = computed(() => {
-	if (activeOrderTab.value === 'ngcs') return ngcsOrders.value;
-	if (activeOrderTab.value === 'xuong_sx') return xuongSxOrders.value;
-	return muaNgoaiOrders.value;
-});
-
-const filteredTabOrders = computed(() => {
-	let list = currentTabOrders.value;
-	const q = orderSearchQuery.value.trim().toLowerCase();
-	if (!q) return list;
-	return list.filter((o) => {
-		const name = (o.name || '').toLowerCase();
-		const cust = (o.customer_alias || o.alias || o.customer || o.customer_name || '').toLowerCase();
-		const item = (o.custom_alias || o.item_name || '').toLowerCase();
-		return name.includes(q) || cust.includes(q) || item.includes(q);
-	});
+let searchTimer = null;
+watch(orderSearchQuery, () => {
+	clearTimeout(searchTimer);
+	searchTimer = setTimeout(() => {
+		loadOrders();
+	}, 250);
 });
 
 function depositColorClass(o) {
@@ -357,14 +328,23 @@ function formatCurrency(val) {
 
 async function loadOrders() {
 	loadingOrders.value = true;
-	const data = await api('list_orders');
-	if (Array.isArray(data)) {
-		orders.value = data;
-	} else {
+	try {
+		const data = await api('order.list_orders', {
+			tab: activeOrderTab.value,
+			query: orderSearchQuery.value.trim() || undefined,
+		}, { get: true });
+		if (Array.isArray(data)) {
+			orders.value = data;
+		} else {
+			orders.value = [];
+		}
+		ordersCount.value = orders.value.length;
+	} catch (err) {
+		console.error('Error loading orders:', err);
 		orders.value = [];
+	} finally {
+		loadingOrders.value = false;
 	}
-	ordersCount.value = orders.value.length;
-	loadingOrders.value = false;
 }
 
 async function loadMasterItems() {

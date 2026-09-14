@@ -195,11 +195,11 @@
 							</div>
 							<div class="cyl-col">
 								<label class="field-label-sm">Đơn giá trục (VNĐ/cây)</label>
-								<input type="number" v-model.number="cylinderRate" class="text-input text-right text-num" min="0" step="1000" />
+								<input type="text" :value="formatCurrency(serverPricing.cylinder_rate)" class="text-input text-right text-num" readonly />
 							</div>
 							<div class="cyl-col">
 								<label class="field-label-sm">Tiền trục</label>
-								<div class="cyl-total-val text-num">{{ formatCurrency(cylinderCount * cylinderRate) }}</div>
+								<div class="cyl-total-val text-num">{{ formatCurrency(serverPricing.cylinder_total) }}</div>
 							</div>
 						</div>
 					</div>
@@ -216,75 +216,59 @@
 							type="text"
 							v-model="screenPrintBrand"
 							class="text-input"
-							placeholder="VD: FUSIMI - Nước giặt cao cấp"
-							required
+							placeholder="VD: CÀ PHÊ NGUYÊN CHẤT DAKLAK"
 						/>
 					</div>
 
-					<!-- Bảng Chọn Nhiều Mã Phôi Dùng Chung -->
-					<div class="table-block">
-						<div class="table-block-head">
-							<span class="block-title">DANH SÁCH MÃ PHÔI / TÚI ĐẶT HÀNG</span>
-							<button type="button" class="btn-add-row" @click="addGenericRow">
-								+ Thêm loại phôi
-							</button>
-						</div>
-
-						<table class="form-table">
+					<!-- Danh sách biến thể MTS -->
+					<div class="table-container">
+						<table class="data-table">
 							<thead>
 								<tr>
-									<th style="width: 40%;">Mã phôi & Quy cách</th>
-									<th style="width: 20%; text-align: right;">Số lượng</th>
-									<th style="width: 10%; text-align: center;">ĐVT</th>
-									<th style="width: 15%; text-align: right;">Đơn giá</th>
-									<th style="width: 15%; text-align: right;">Thành tiền</th>
-									<th style="width: 5%;"></th>
+									<th>Mặt hàng</th>
+									<th class="text-right">Số lượng (cái)</th>
+									<th class="text-right">Đơn giá (đ)</th>
+									<th class="text-right">Thành tiền</th>
+									<th style="width: 48px;"></th>
 								</tr>
 							</thead>
 							<tbody>
 								<tr v-for="(row, idx) in genericRows" :key="idx">
 									<td>
-										<select v-model="row.item_code" class="select-input" @change="onGenericItemChange(row)" required>
-											<option value="" disabled>-- Chọn mã phôi có sẵn --</option>
+										<select v-model="row.item_code" class="select-input select-table" @change="onGenericItemSelect(idx)">
 											<option v-for="item in availableGenericItems" :key="item.item_code" :value="item.item_code">
-												{{ item.custom_alias || item.item_name }}
+												{{ item.item_name }} ({{ item.item_code }})
 											</option>
 										</select>
 									</td>
-									<td>
+									<td class="text-right">
 										<input
 											type="number"
 											v-model.number="row.qty"
 											class="text-input text-right text-num"
 											min="1"
-											step="1"
-											required
 										/>
 									</td>
-									<td class="text-center font-medium text-secondary">
-										{{ row.uom || 'Túi' }}
-									</td>
-									<td>
+									<td class="text-right">
 										<input
 											type="number"
 											v-model.number="row.rate"
 											class="text-input text-right text-num"
 											min="0"
-											required
+											step="100"
 										/>
 									</td>
-									<td class="text-right text-num font-bold text-white">
-										{{ formatCurrency(row.qty * row.rate) }}
+									<td class="text-right text-num bold-num">
+										{{ formatCurrency((row.qty || 0) * (row.rate || 0)) }}
 									</td>
 									<td class="text-center">
 										<button
-											v-if="genericRows.length > 1"
 											type="button"
-											class="btn-remove-row"
-											title="Xóa dòng"
+											class="btn-icon-del"
 											@click="removeGenericRow(idx)"
+											:disabled="genericRows.length <= 1"
 										>
-											✕
+											×
 										</button>
 									</td>
 								</tr>
@@ -298,23 +282,23 @@
 					<div class="fin-summary-rows">
 						<div class="fin-row">
 							<span class="fin-label">Tiền hàng (chưa VAT):</span>
-							<span class="fin-val text-num">{{ formatCurrency(netTotal) }}</span>
+							<span class="fin-val text-num">{{ formatCurrency(serverPricing.net_total) }}</span>
 						</div>
 						<div class="fin-row">
-							<span class="fin-label">Thuế VAT (8%):</span>
-							<span class="fin-val text-num">{{ formatCurrency(vatAmount) }}</span>
+							<span class="fin-label">Thuế VAT ({{ serverPricing.vat_rate }}%):</span>
+							<span class="fin-val text-num">{{ formatCurrency(serverPricing.vat_amount) }}</span>
 						</div>
-						<div v-if="cylinderTotal > 0" class="fin-row">
+						<div v-if="serverPricing.cylinder_total > 0" class="fin-row">
 							<span class="fin-label">Tiền trục:</span>
-							<span class="fin-val text-num">{{ formatCurrency(cylinderTotal) }}</span>
+							<span class="fin-val text-num">{{ formatCurrency(serverPricing.cylinder_total) }}</span>
 						</div>
 						<div class="fin-row total-row">
 							<span class="fin-label-lg">TỔNG THANH TOÁN:</span>
-							<span class="fin-val-lg text-num">{{ formatCurrency(grandTotal) }}</span>
+							<span class="fin-val-lg text-num">{{ formatCurrency(serverPricing.grand_total) }}</span>
 						</div>
 						<div v-if="paymentType === 'Trả trước'" class="fin-row deposit-row">
 							<span class="fin-label">Cọc yêu cầu (50% hàng + 100% trục):</span>
-							<span class="fin-val-deposit text-num">{{ formatCurrency(requiredDeposit) }}</span>
+							<span class="fin-val-deposit text-num">{{ formatCurrency(serverPricing.required_deposit) }}</span>
 						</div>
 					</div>
 
@@ -410,7 +394,6 @@ const variantRows = ref([
 ]);
 const hasNewCylinders = ref(false);
 const cylinderCount = ref(0);
-const cylinderRate = ref(0);
 
 // MTS state (NGCS / Màng đơn)
 const screenPrintBrand = ref('');
@@ -453,30 +436,56 @@ const availableGenericItems = computed(() => {
 	);
 });
 
-// Financial Computations
-const netTotal = computed(() => {
-	if (isCustomMto.value) {
-		return variantRows.value.reduce((sum, r) => sum + (Number(r.qty) || 0) * (Number(r.rate) || 0), 0);
-	} else {
-		return genericRows.value.reduce((sum, r) => sum + (Number(r.qty) || 0) * (Number(r.rate) || 0), 0);
-	}
+// Server-Side Pricing & Commercial Math (SSOT: ERPNext Native)
+const serverPricing = ref({
+	net_total: 0,
+	vat_rate: 8,
+	vat_amount: 0,
+	cylinder_count: 0,
+	cylinder_rate: 3100000,
+	cylinder_total: 0,
+	grand_total: 0,
+	required_deposit: 0,
 });
 
-const vatRate = 8;
-const vatAmount = computed(() => Math.round(netTotal.value * (vatRate / 100)));
+let pricePreviewTimer = null;
+const fetchPricePreview = () => {
+	clearTimeout(pricePreviewTimer);
+	pricePreviewTimer = setTimeout(async () => {
+		const items = isCustomMto.value
+			? variantRows.value.map((v) => ({ qty: Number(v.qty) || 0, rate: Number(v.rate) || 0 }))
+			: genericRows.value.map((g) => ({ qty: Number(g.qty) || 0, rate: Number(g.rate) || 0 }));
 
-const cylinderTotal = computed(() => {
-	if (!isCustomMto.value || !hasNewCylinders.value) return 0;
-	return (Number(cylinderCount.value) || 0) * (Number(cylinderRate.value) || 0);
-});
+		try {
+			const res = await api(
+				'order.get_price_preview',
+				{
+					customer: currentCustomer.value?.id || '',
+					items,
+					has_new_cylinders: hasNewCylinders.value,
+					cylinder_count: cylinderCount.value,
+				},
+				{ silent: true }
+			);
+			if (res) {
+				serverPricing.value = res;
+				if (res.payment_type) {
+					paymentType.value = res.payment_type;
+				}
+			}
+		} catch (err) {
+			// silent fallback
+		}
+	}, 150);
+};
 
-const grandTotal = computed(() => netTotal.value + vatAmount.value + cylinderTotal.value);
-
-const requiredDeposit = computed(() => {
-	if (paymentType.value === 'Trả sau') return 0;
-	// 50% tiền hàng + 100% tiền trục
-	return Math.round((netTotal.value + vatAmount.value) * 0.5 + cylinderTotal.value);
-});
+watch(
+	[variantRows, genericRows, hasNewCylinders, cylinderCount, currentCustomer, isCustomMto, productGroup],
+	() => {
+		fetchPricePreview();
+	},
+	{ deep: true }
+);
 
 // Event Handlers
 const onCustomerChange = () => {
@@ -526,7 +535,6 @@ const onCustomItemChange = () => {
 		rate: currentCustomItem.value.base_rate || 0,
 	}));
 	cylinderCount.value = currentCustomItem.value.cylinder_count || 0;
-	cylinderRate.value = currentCustomItem.value.cylinder_rate || 3100000;
 };
 
 const onGenericItemChange = (row) => {
@@ -652,8 +660,8 @@ const handleSubmit = async () => {
 				artwork_url: null,
 				qty: cylinderCount.value,
 				uom: 'Cây',
-				rate: cylinderRate.value,
-				amount: cylinderTotal.value,
+				rate: serverPricing.value.cylinder_rate,
+				amount: serverPricing.value.cylinder_total,
 				is_cylinder: true,
 			});
 		}
@@ -698,12 +706,14 @@ const handleSubmit = async () => {
 		payment_type: paymentType.value,
 		order_tab: orderTab,
 		product_group: productGroup.value,
+		has_new_cylinders: hasNewCylinders.value,
+		cylinder_count: cylinderCount.value,
 		items: builtItems,
 	};
 
 	isSubmitting.value = true;
 	try {
-		const res = await api('vanphat_portal.api.bao_gia.create_sales_order', { payload: orderPayload });
+		const res = await api('order.create_sales_order', { payload: orderPayload });
 		if (res && res.name) {
 			toast.success(`Đã tạo đơn hàng ${res.name} thành công!`);
 			emit('order-created', {

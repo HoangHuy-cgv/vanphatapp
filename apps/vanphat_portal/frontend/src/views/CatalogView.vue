@@ -560,54 +560,34 @@ function switchCatalogTab(tabKey) {
 	activeCatalogTab.value = tabKey;
 }
 
-watch(activeCatalogTab, () => {
+let itemSearchTimer = null;
+watch(itemSearchQuery, () => {
+	clearTimeout(itemSearchTimer);
+	itemSearchTimer = setTimeout(() => {
+		if (['sp', 'nvl', 'truc'].includes(activeCatalogTab.value)) {
+			loadMasterItems();
+		}
+	}, 250);
+});
+
+watch(activeCatalogTab, (newTab) => {
 	resetTableScroll();
+	if (['sp', 'nvl', 'truc'].includes(newTab)) {
+		loadMasterItems();
+	} else if (newTab === 'kh') {
+		loadCustomers();
+	} else if (newTab === 'ncc') {
+		loadSuppliers();
+	} else if (newTab === 'user') {
+		loadUsers();
+	}
 });
 
 function switchItemTab(tabKey) {
 	switchCatalogTab(tabKey);
 }
 
-const tpItems = computed(() =>
-	masterItems.value.filter((i) => (i.item_code || '').startsWith('TP-') || i.item_group === 'Túi Màng Ghép Đặt Riêng')
-);
-const ngcsItems = computed(() =>
-	masterItems.value.filter((i) => (i.item_code || '').startsWith('NGCS-') || i.item_group === 'Túi Nước Giặt Có Sẵn (NGCS)')
-);
-const tmdItems = computed(() =>
-	masterItems.value.filter((i) => (i.item_code || '').startsWith('TMD-') || i.item_group === 'Túi Màng Đơn')
-);
-const btpItems = computed(() =>
-	masterItems.value.filter((i) => (i.item_code || '').startsWith('BTP-') || i.item_group === 'Cuộn Màng Ghép BTP')
-);
-
-// Gộp 4 nhóm thành Danh Mục Sản Phẩm (88 mã)
-const productItems = computed(() =>
-	masterItems.value.filter((i) =>
-		(i.item_code || '').startsWith('TP-') ||
-		(i.item_code || '').startsWith('NGCS-') ||
-		(i.item_code || '').startsWith('TMD-') ||
-		(i.item_code || '').startsWith('BTP-') ||
-		i.item_group === 'Túi Màng Ghép Đặt Riêng' ||
-		i.item_group === 'Túi Nước Giặt Có Sẵn (NGCS)' ||
-		i.item_group === 'Túi Màng Đơn' ||
-		i.item_group === 'Cuộn Màng Ghép BTP'
-	)
-);
-
-const nvlItems = computed(() =>
-	masterItems.value.filter((i) => (i.item_code || '').startsWith('NVL-') || i.item_group === 'Màng Thô NVL' || i.item_group === 'Màng In Ống Đồng' || i.item_group === 'Hóa Chất & Keo Ghép' || i.item_group === 'Phụ Kiện Bao Bì')
-);
-const trucItems = computed(() =>
-	masterItems.value.filter((i) => (i.item_code || '').startsWith('TRUC-') || i.item_group === 'Trục In Ống Đồng')
-);
-
-const currentTabMasterItems = computed(() => {
-	if (activeItemTab.value === 'sp') return productItems.value;
-	if (activeItemTab.value === 'nvl') return nvlItems.value;
-	if (activeItemTab.value === 'truc') return trucItems.value;
-	return productItems.value;
-});
+const currentTabMasterItems = computed(() => masterItems.value);
 
 const currentTabLabel = computed(() => {
 	const map = {
@@ -678,7 +658,10 @@ function getItemPouchDims(it) {
 async function loadMasterItems() {
 	loadingMasterItems.value = true;
 	try {
-		const data = await api('vanphat_portal.api.item.get_list', {}, { get: true });
+		const data = await api('item.get_list', {
+			category: activeItemTab.value,
+			query: itemSearchQuery.value.trim() || undefined,
+		}, { get: true });
 		if (Array.isArray(data)) {
 			masterItems.value = data;
 		}

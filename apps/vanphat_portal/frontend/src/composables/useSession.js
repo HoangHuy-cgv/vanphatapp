@@ -17,6 +17,15 @@ export async function api(method, args = {}, options = {}) {
 		if (!url.startsWith('http://') && !url.startsWith('https://')) {
 			if (url.startsWith('/')) {
 				// already an absolute path
+			} else if (
+				url.startsWith('order.') ||
+				url.startsWith('item.') ||
+				url.startsWith('customer.') ||
+				url.startsWith('supplier.') ||
+				url.startsWith('user.') ||
+				url.startsWith('bao_gia.')
+			) {
+				url = `/api/method/vanphat_portal.api.${url}`;
 			} else if (url.includes('.')) {
 				url = `/api/method/${url}`;
 			} else {

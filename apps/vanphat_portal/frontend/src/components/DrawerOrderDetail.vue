@@ -368,7 +368,7 @@ const handleSaveDeposit = async () => {
 	if (!depositInputAmount.value || depositInputAmount.value <= 0 || !props.order) return;
 	const amt = depositInputAmount.value;
 	try {
-		const res = await api('vanphat_portal.api.bao_gia.record_order_deposit', {
+		const res = await api('order.record_order_deposit', {
 			name: props.order.name,
 			amount: amt,
 			note: 'Ghi nhận cọc qua cổng buồng lái ERP',
@@ -409,7 +409,7 @@ const handleSaveDeposit = async () => {
 const handleOverrideHold = async () => {
 	if (!props.order) return;
 	try {
-		const res = await api('vanphat_portal.api.bao_gia.accountant_approve_procurement', {
+		const res = await api('order.accountant_approve_procurement', {
 			name: props.order.name,
 			note: 'Kế toán xác nhận duyệt ngoại lệ chuyển mua hàng NCC',
 		});
@@ -438,7 +438,7 @@ const handleReportProgress = async () => {
 	if (!props.order) return;
 	try {
 		if (props.order.docstatus === 0) {
-			const res = await api('vanphat_portal.api.bao_gia.submit_sales_order', {
+			const res = await api('order.submit_sales_order', {
 				name: props.order.name,
 			});
 			if (res && res.name) {

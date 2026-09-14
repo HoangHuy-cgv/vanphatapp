@@ -46,11 +46,27 @@ def _load_csv_boms():
 
 
 @frappe.whitelist(allow_guest=True)
-def get_list(query=None, item_group=None, supply_type=None):
-	"""Return master items filtered by query string, item group, and supply type."""
+def get_list(query=None, item_group=None, supply_type=None, category=None):
+	"""Return master items filtered by query string, item group, supply type, or cockpit category."""
 	q = (query or "").strip().lower()
 	grp = (item_group or "").strip()
 	supply = (supply_type or "").strip()
+	cat = (category or "").strip().lower()
+
+	def matches_category(it):
+		if not cat or cat == "all":
+			return True
+		code = (it.get("item_code") or "").upper()
+		group = (it.get("item_group") or "").strip()
+		if cat == "sp":
+			return code.startswith("TP-") or group in ("Túi Màng Ghép Đặt Riêng", "Sản phẩm", "Thành phẩm", "Màng ghép")
+		elif cat == "btp":
+			return code.startswith("BTP-") or group in ("Cuộn Màng Ghép BTP", "Bán thành phẩm")
+		elif cat == "nvl":
+			return code.startswith("NVL-") or group in ("Nguyên vật liệu", "Hạt nhựa", "Màng đơn", "Mực in", "Dung môi", "Keo")
+		elif cat == "truc":
+			return code.startswith("TRUC-") or group in ("Trục in", "Khuôn in")
+		return True
 
 	# Try fetching from Frappe DB first
 	try:
@@ -95,6 +111,8 @@ def get_list(query=None, item_group=None, supply_type=None):
 			filters=filters,
 			limit=500
 		)
+		if cat and cat != "all":
+			items = [it for it in items if matches_category(it)]
 		if q:
 			items = [
 				it for it in items
@@ -115,6 +133,8 @@ def get_list(query=None, item_group=None, supply_type=None):
 		items = [it for it in items if it.get("item_group") == grp]
 	if supply:
 		items = [it for it in items if it.get("default_material_request_type") == supply]
+	if cat and cat != "all":
+		items = [it for it in items if matches_category(it)]
 	if q:
 		items = [
 			it for it in items
