@@ -81,13 +81,13 @@ def main():
     op_csv = os.path.join(OUT_DIR, "operation_master.csv")
 
     with open(ws_csv, "w", encoding="utf-8-sig", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=["name", "workstation_name", "production_capacity", "hour_rate", "description"])
+        writer = csv.DictWriter(f, fieldnames=["name", "workstation_name", "production_capacity", "hour_rate", "description"], lineterminator="\n")
         writer.writeheader()
         writer.writerows(WORKSTATIONS)
     print(f"Xuất thành công {ws_csv} ({len(WORKSTATIONS)} Trạm máy)")
 
     with open(op_csv, "w", encoding="utf-8-sig", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=["name", "operation_name", "workstation", "description"])
+        writer = csv.DictWriter(f, fieldnames=["name", "operation_name", "workstation", "description"], lineterminator="\n")
         writer.writeheader()
         writer.writerows(OPERATIONS)
     print(f"Xuất thành công {op_csv} ({len(OPERATIONS)} Công đoạn)")

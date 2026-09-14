@@ -534,8 +534,10 @@ for row in customer_brand_matrix_raw:
 
 def write_csv(filename, rows, headers):
     path = os.path.join(OUT_DIR, filename)
+    # Hook check-only: csv chuẩn Python = open(newline="") + lineterminator="\n".
+    # DictWriter mặc định ghi \r\n nên file dính CRLF dù open newline="\n".
     with open(path, mode="w", encoding="utf-8-sig", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=headers)
+        w = csv.DictWriter(f, fieldnames=headers, lineterminator="\n")
         w.writeheader()
         w.writerows(rows)
     print(f" Xuất thành công {len(rows)} dòng vào: {path}")

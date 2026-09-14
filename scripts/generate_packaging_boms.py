@@ -355,7 +355,7 @@ def main():
         writer = csv.DictWriter(f, fieldnames=[
             "bom_no", "item", "item_name", "quantity", "uom", "is_active", "is_default",
             "process_loss_percentage", "operations", "description"
-        ])
+        ], lineterminator="\n")
         writer.writeheader()
         writer.writerows(bom_masters)
     print(f"\n[+] Xuất thành công: {out_master_csv} ({len(bom_masters)} BOM Master)")
@@ -363,7 +363,7 @@ def main():
     with open(out_items_csv, "w", encoding="utf-8-sig", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=[
             "bom_no", "item_code", "item_name", "custom_alias", "qty", "uom", "scrap_pct", "note"
-        ])
+        ], lineterminator="\n")
         writer.writeheader()
         writer.writerows(bom_items)
     print(f"[+] Xuất thành công: {out_items_csv} ({len(bom_items)} Dòng chi tiết vật tư BOM Items có custom_alias)")

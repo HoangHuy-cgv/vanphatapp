@@ -387,7 +387,7 @@ def extract_all():
 
     out_file = os.path.join(OUT_DIR, "customer_master.csv")
     with open(out_file, mode="w", encoding="utf-8-sig", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=HEADERS)
+        w = csv.DictWriter(f, fieldnames=HEADERS, lineterminator="\n")
         w.writeheader()
         w.writerows(out_rows)
 

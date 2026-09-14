@@ -10,14 +10,16 @@ repos:
       - id: check-json
         exclude: ^\.agents/
       - id: mixed-line-ending
-        args: ['--fix=lf']
+        # Check-only (KHÔNG --fix): script sinh CSV đã newline="\n" từ gốc.
+        # --fix tự sửa sau gây xung đột stash, tốn 2-3 vòng commit (noise agent).
+        args: ['--fix=no']
         exclude: ^\.agents/
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.9.0
     hooks:
-      # Chỉ check (không format) — repo Python dùng tabs, ruff-format đổi sang spaces sai chuẩn.
+      # Check-only (KHÔNG --fix, KHÔNG format): repo Python dùng tabs,
+      # auto-fix tự sửa gây xung đột stash. Muốn sửa thì chạy tay.
       - id: ruff
-        args: [--fix]
         files: ^apps/vanphat_portal/
   - repo: local
     hooks:

@@ -209,7 +209,7 @@ def main():
         "department", "designation", "alias", "enabled"
     ]
     with open(OUTPUT_FILE, mode="w", encoding="utf-8-sig", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer = csv.DictWriter(f, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
         for u in USERS_DATA:
             writer.writerow(u)

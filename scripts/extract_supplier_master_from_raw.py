@@ -258,7 +258,7 @@ def main():
         rows.append(row)
 
     with open(out_csv, "w", encoding="utf-8-sig", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer = csv.DictWriter(f, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
     print(f"Xuất thành công {out_csv} ({len(rows)} Nhà Cung Cấp)")

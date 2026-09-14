@@ -58,6 +58,8 @@ Thứ tự ưu tiên bắt buộc khi cần bất kỳ dữ liệu/logic nào �
 - **API-First & Backend-Persistence**: 100% CRUD/workflow (create, deposit, approve, submit, cancel) qua `vanphat_portal.api.*`, persist MariaDB trước khi update UI.
 - **Production Runtime**: Zero-Node. Vite static served by Frappe Nginx / Gunicorn.
 - **Git Boundaries**: Commit atomically with conventional commit prefixes. NEVER `git push` unless explicitly ordered.
+- **Pre-commit Gates (check-only, no auto-fix)**: Hooks chỉ kiểm tra, KHÔNG tự sửa file (tránh xung đột stash tốn vòng commit). Viết đúng từ gốc (CSV `newline="\n"`, Python tabs). Hook báo lỗi → sửa tay → `git add` → commit lại.
+- **Hook Bypass (ngoại lệ duy nhất)**: Chỉ bypass (`-c core.hooksPath=/dev/null`) khi hook xung đột stash sau khi đã sửa tay đúng mà hook vẫn restore vòng lặp — ghi rõ lý do vào message commit. Cấm bypass để lách ruff/forbid-patterns.
 - **Database Safety**: Schema sync via standard bench commands. Raw SQL mutations against production MariaDB only with caution + backup.
 
 ## 7. Quality Gates (Definition of Done)

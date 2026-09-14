@@ -109,7 +109,7 @@ def main():
         print(f"[{w['warehouse_code']:<8}] {w['warehouse_name']:<25} | Loại: {w['warehouse_type']:<18} | TK: {w['account']}")
 
     with open(out_csv, "w", encoding="utf-8-sig", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer = csv.DictWriter(f, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
         writer.writerows(WAREHOUSES)
 
