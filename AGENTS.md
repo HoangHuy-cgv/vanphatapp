@@ -12,6 +12,10 @@
   5. *Review*: `code-review-and-quality` (verify 5 axes against `definition-of-done.md`).
   **MANDATORY PRE-ACTION SKILL INSPECTION**: Before performing any task, the Agent MUST explicitly load and read the relevant `SKILL.md` via `view_file`. Strictly forbidden to apply skills implicitly or skip reading `SKILL.md`. Every action plan must declare active skills.
   NEVER implement code directly without an approved specification and task breakdown.
+- **Clean-on-Done & Anti-Append Policy (Code & Git As Pure SSOT)**:
+  - Code, automated test suites, and Git commit history are the ONLY Single Source of Truth (SSOT).
+  - `tasks/todo.md` and `tasks/plan.md` are strictly ephemeral working scratchpads for the active milestone ONLY. Once a milestone is completed and committed to Git, agents MUST clean/reset `tasks/todo.md` (remove completed tasks). Accumulating historical tasks across milestones (e.g. Task 1 to Task 20+) is STRICTLY FORBIDDEN.
+  - `docs/handoff.md` is an operational rolling pointer (< 25 lines) strictly for session-to-session handoff. Agents MUST ALWAYS OVERWRITE, NEVER APPEND. It MUST only contain: Current Commit hash, Health/CI verification status, and Immediate Next Action. All historical narratives belong in git commit messages and temporary artifacts (`walkthrough.md`), NEVER in repository handoff files.
 
 ## 2. System Architecture & Tech Stack (SSOT)
 - **Architecture**: Headless ERP with a thin presentation client.

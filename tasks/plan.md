@@ -1,21 +1,20 @@
-# Implementation Plan: Thống Nhất Toàn Bộ Master Data Vào Trang "Danh Mục" (Elon Musk Cockpit)
+# Implementation Plan: Chuẩn Hóa Dữ Liệu Giao Dịch Thực Tế (Transaction Datasets)
 
 ## Mục Tiêu
-1. Gỡ bỏ 3 nút riêng lẻ `Khách hàng`, `Nhà cung cấp`, `Người dùng` trên Sidebar. Sidebar chỉ giữ 1 nút duy nhất **`Danh mục`** (`view = 'catalog'` hoặc `view = 'items'`) với tổng badge 435 bản ghi.
-2. Tái cấu trúc trang Mặt hàng thành trang **`Danh mục`** chứa trọn vẹn 6 phân hệ Master Data:
-   - **`Sản phẩm`** (88) [kèm sub-filter chips: Tất cả (88), Túi ghép (45), Túi NGCS (15), Cuộn màng (16), Màng đơn (12)]
-   - **`Nguyên vật liệu`** (48)
-   - **`Trục in`** (157)
-   - **`Khách hàng`** (117)
-   - **`Nhà cung cấp`** (14)
-   - **`Người dùng`** (11)
-3. Tìm kiếm tức thì thích ứng theo từng tab trên cùng dòng buồng lái (Elon Musk single-row cockpit).
-4. Tích hợp trọn vẹn 4 slide-over drawers: `DrawerItemDetail`, `DrawerCustomerDetail`, `DrawerSupplierDetail`, `DrawerUserDetail`.
-5. Đảm bảo toàn bộ 78+ automated tests pass và kiểm chứng trực quan bằng Chrome DevTools MCP.
+Trích xuất và chuẩn hóa toàn bộ dữ liệu giao dịch thực tế từ các file Excel gốc sang các file CSV định dạng chuẩn ERPNext Native v16, đảm bảo tính toàn vẹn khóa ngoại (Foreign Keys) liên kết với Master Data đã có (`Item`, `Customer`, `Supplier`, `User`).
 
-## Task Breakdown
-- [ ] Task 1: Tái Cấu Trúc Sidebar & Navigation State trong `App.vue` (Nút "Danh mục", loại bỏ 3 nút thừa)
-- [ ] Task 2: Xây Dựng Thanh 6 Tab Buồng Lái & Ô Tìm Kiếm Thích Ứng Trong View `Danh mục`
-- [ ] Task 3: Kết Nối Bảng Dữ Liệu Tương Ứng & 4 Slide-Over Drawers Vào View `Danh mục`
-- [ ] Task 4: Cập Nhật & Mở Rộng Bộ Kiểm Thử Tự Động `scripts/verify-catalog-page.mjs`
-- [ ] Task 5: Build Vite Production & Chụp Ảnh Kiểm Chứng Trực Quan Bằng Chrome DevTools MCP
+## Các Phân Hệ Giao Dịch Cốt Lõi
+1. **Đơn Bán Hàng (`Sales Order`)**:
+   - `sales_order_master.csv`: `name`, `customer`, `transaction_date`, `delivery_date`, `grand_total`, `status`...
+   - `sales_order_items.csv`: `parent`, `item_code`, `qty`, `rate`, `amount`...
+2. **Đơn Mua Hàng Nhà Cung Cấp (`Purchase Order`)**:
+   - `purchase_order_master.csv` & `purchase_order_items.csv` (In gia công, Keo, Dung môi, Vòi, In lụa).
+3. **Lệnh Sản Xuất Xưởng (`Work Order`)**:
+   - `work_order_master.csv` (Tiến độ 24 đợt chạy máy xưởng: Ghép, Cắt, Đóng gói).
+4. **Bút Toán Thu Chi & Cọc (`Payment Entry`)**:
+   - `payment_entry_master.csv` (Thu tiền cọc đơn hàng, thanh toán tiền hàng NCC).
+
+## Tiêu Chí Nghiệm Thu (Acceptance Criteria)
+- 100% mã hàng `item_code`, mã khách `customer`, mã NCC `supplier` khớp chính xác với Master Data.
+- Script trích xuất tự động `scripts/generate_transaction_data_csv.py` sử dụng `fastexcel` / `python-calamine`.
+- Test suite kiểm tra tính toàn vẹn đạt 100% PASS.
