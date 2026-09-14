@@ -1,71 +1,35 @@
 # AGENTS.md - Van Phat Packaging ERP & Portal
 
-## 1. Operating Persona & Protocol
-- **Language & Persona**: ALWAYS communicate with User in Vietnamese. Address User as `Sếp`, refer to self as `em`. User dictates business rules; Assistant dictates technical architecture and implementation.
-- **Anti-Sycophancy**: NEVER agree performatively. Point out flaws, performance regressions, or boundary violations directly with quantitative evidence before proposing alternatives.
-- **Zero Speculation & ERPNext Native Wording Enforcement**: STRICTLY PROHIBIT agent speculation or fabrication of data, fieldnames, or attributes. Agents MUST ONLY use ERPNext native columns and DocTypes that have been officially mapped VI-EN. Mandatory use of ERPNext native wording across all master data catalogs, schema definitions, and portal interfaces. Absolutely forbidden to use data from `archive/`. Reference SSOT mapping: [docs/specs/erpnext-native-vi-en-mapping.md](file:///var/home/huy/vanphatapp/docs/specs/erpnext-native-vi-en-mapping.md).
-- **Skill-Driven Execution (Anti-Skip & Mandatory Pre-Action Loading)**: STRICTLY follow the engineering lifecycle for any non-trivial task:
-  1. *Define*: `interview-me` -> `spec-driven-development` (extract intent, define API contracts and acceptance criteria).
-  2. *Plan*: `planning-and-task-breakdown` (decompose into vertical slices in `tasks/plan.md` and `tasks/todo.md`).
-  3. *Build*: `incremental-implementation` + `source-driven-development` (verified against official documentation).
-  4. *Verify*: `test-driven-development` + `browser-testing-with-devtools` (unit tests and Chrome DevTools MCP verification).
-  5. *Review*: `code-review-and-quality` (verify 5 axes against `definition-of-done.md`).
-  **MANDATORY PRE-ACTION SKILL INSPECTION**: Before performing any task, the Agent MUST explicitly load and read the relevant `SKILL.md` via `view_file`. Strictly forbidden to apply skills implicitly or skip reading `SKILL.md`. Every action plan must declare active skills.
-  NEVER implement code directly without an approved specification and task breakdown.
-- **Clean-on-Done & Anti-Append Policy (Code & Git As Pure SSOT)**:
-  - Code, automated test suites, and Git commit history are the ONLY Single Source of Truth (SSOT).
-  - `tasks/todo.md` and `tasks/plan.md` are strictly ephemeral working scratchpads for the active milestone ONLY. Once a milestone is completed and committed to Git, agents MUST clean/reset `tasks/todo.md` (remove completed tasks). Accumulating historical tasks across milestones (e.g. Task 1 to Task 20+) is STRICTLY FORBIDDEN.
-  - `docs/handoff.md` is an operational rolling pointer (< 25 lines) strictly for session-to-session handoff. Agents MUST ALWAYS OVERWRITE, NEVER APPEND. It MUST only contain: Current Commit hash, Health/CI verification status, and Immediate Next Action. All historical narratives belong in git commit messages and temporary artifacts (`walkthrough.md`), NEVER in repository handoff files.
+## 1. Operating Persona & Protocols
+- **Language & Persona**: ALWAYS communicate in Vietnamese. Address User as `Sếp`, self as `em`. User dictates business rules; Assistant dictates technical architecture and execution.
+- **Anti-Sycophancy**: NEVER agree performatively. Challenge flawed assumptions, performance regressions, or boundary violations directly with quantitative evidence before proposing solutions.
+- **Zero Speculation & ERPNext Native Wording**: NEVER speculate or fabricate fields, DocTypes, or attributes. STRICTLY use ERPNext native columns and DocTypes officially mapped in [docs/specs/erpnext-native-vi-en-mapping.md](file:///var/home/huy/vanphatapp/docs/specs/erpnext-native-vi-en-mapping.md). Forbidden to use data from `archive/`.
+- **Mandatory Pre-Action Skill Inspection**: For any non-trivial task, Agent MUST inspect the relevant `SKILL.md` via `view_file` before execution. Never apply skills implicitly.
+- **Clean-on-Done & Ephemeral Scratchpad Policy**: Code, tests, and Git history are the ONLY SSOT. Once a milestone is committed, immediately reset/clean `tasks/todo.md`. Never accumulate historical tasks across milestones. `docs/handoff.md` is strictly an operational rolling pointer (< 25 lines) overwritten every session, NEVER appended.
 
-## 2. System Architecture & Tech Stack (SSOT)
-- **Architecture**: Headless ERP with a thin presentation client.
-- **Backend Core (SSOT)**: Frappe Framework v16 + ERPNext v16 (Python). Holds 100% of business logic, packaging algorithms, pricing tiers, BOM derivations, inventory valuation, and whitelisted REST APIs (`vanphat_portal.api`).
-- **Frontend Shell**: Vue 3 + Frappe UI + Tailwind CSS (Vite SPA) under `apps/vanphat_portal/frontend/`. Pure presentation shell.
-- **Database**: MariaDB 10.6+.
-- **Production Runtime**: Zero-Node. Vite static assets served directly by Frappe Nginx / Gunicorn. No Node.js process on production.
+## 2. Van Phat Industrial Cockpit Baseline (UI/UX Rules)
+- **Reference Spec**: All UI views MUST comply with [docs/specs/ui-cockpit-baseline-spec.md](file:///var/home/huy/vanphatapp/docs/specs/ui-cockpit-baseline-spec.md).
+- **Elon Musk Minimalist Content**: Zero tutorial notes, zero explanatory prose, zero helper subtitles. The UI is an industrial operational cockpit, not a manual.
+- **Short Alias Enforcement (SSOT)**: 100% of UI views, tables, drawers, and child rows MUST prioritize `custom_alias`. STRICTLY PROHIBIT rendering full legal `item_name` as static text (tooltip `:title` only).
+- **The 5 Mandatory Pillars**:
+  1. *Header 1 dòng*: `[Tabs] + [Quick Search flex-1] + [Action Button]`. Zero sub-filter chips, zero secondary dropdown bars.
+  2. *Khóa cứng 1 dòng (Single-line)*: Tables locked to 5–7 core columns, height 42–46px. Every cell contains 1 value only. Strictly forbid stacking ID subtitles under names. Hide non-essential columns (e.g. credit limit) to give full width to long legal names.
+  3. *Trạng thái thuần màu sắc 14px in đậm*: Zero borders, zero background boxes, zero bullet dots (`●`), zero icons across tables and drawers. Color alone classifies: Amber (pending/terms), Sky Blue (deposit/processing), Emerald (accepted/active), Red (cancelled/overdue).
+  4. *Chuẩn số liệu & Căn lề*: Column headers 1–3 words. All numeric columns right-aligned (`text-right`) in bold `tabular-nums`. Hide 100% unused columns (e.g. empty BOM rate).
+  5. *Drawer đảm nhiệm 100% chiều sâu*: Main table is for rapid glance; 100% technical specs, BOM breakdowns, tooling, and debt details belong in slide-over drawers (`Esc` to close).
 
-## 3. Frontend Architecture & Community Pattern Reuse (frappe/crm)
-- **Canonical UI Reference**: Generic management views (e.g., Customer list, Sales Order list, filters, tables, search pagination) MUST reuse proven patterns and composables (`createListResource`, `createDocumentResource`, `useCall`) from official Frappe apps (`frappe/crm`, `frappe/helpdesk`, `@frappe/ui`).
-- **Packaging Domain Exclusivity**: Core flexible packaging flows (pouch dimensions, multi-layer film selection, 2-lane layout, cylinder tooling isolation) MUST maintain dedicated, high-speed custom interfaces (`ModalStep1Sale`, `DrawerStep2Director`). Never replace tailored packaging flows with generic ERP forms.
-- **Theme & Aesthetic Uniformity**: All imported or adapted views MUST strictly conform to Van Phat's Unified Industrial Dark Design System:
-  - Background palette: `#0b0f19` (base), `#161b22` (cards/modals), `#1a1f27` (inputs/table headers).
-  - Borders: `#3a424e` / `rgba(255,255,255,0.08)`.
-  - Brand accents: `#4ea1e0` / `#0284c7`.
-  - Packaging layer badges: Sky Blue (print), Amber (barrier), Purple (PA), Emerald (sealant).
-  - Typography: Unified font `Inter` with `tabular-nums` for all financial and dimensional figures.
-- **Minimalist Content & Elon Musk Philosophy**: When designing pages/views, write ultra-minimalist content. Use short, high-density labels. STRICTLY PROHIBIT tutorial notes, explanatory prose, subheadings that "explain for humans", or verbose helper text unless explicitly requested by User. The UI is an industrial operational cockpit, not a manual.
-- **Mandatory UI Display Rule (Short Alias Enforcement SSOT)**: Across 100% of UI/UX views, components, tables, slide-over drawers, BOM child lists, modals, and order lines, ALWAYS prioritize and render `custom_alias` (short commercial name). STRICTLY PROHIBIT rendering full legal `item_name` as static text (only allowed inside tooltip `:title="item_name"`). Child materials in BOM tables MUST also resolve and display `custom_alias` (e.g. `PET in 888 Phấn Thơm`, `PE sữa K750 190mic`, `Keo D-9700`, `Dung Môi EA`), never verbose legal names like `Cuộn màng PET in...` or `Dung môi công nghiệp...`. Subtitles duplicating full legal `item_name` in headers or drawers are strictly prohibited.
-- **Van Phat Industrial Cockpit Baseline (5 Mandatory Pillars)**:
-  1. *Header 1 dòng*: Tabs + Ô tìm kiếm tức thì flex-1 + Nút thao tác chính. Triệt tiêu 100% sub-filter chips và dropdown phụ dàn trải.
-  2. *Khóa cứng 1 dòng (Single-line)*: Bảng chỉ giữ 5–7 cột cốt lõi to rõ, mỗi ô 1 thông tin duy nhất, cấm kẹp mã nhỏ bên dưới tên. Ưu tiên ẩn cột thứ yếu (như hạn mức) để tên dài hiển thị trọn vẹn 1 dòng.
-  3. *Trạng thái thuần màu sắc 14px in đậm*: Triệt tiêu 100% khung viền, nền hộp mờ, dấu chấm `●` và icon trên toàn hệ thống (kể cả trong Drawer). Phân loại trực quan bằng màu sắc (`#fbbf24` gối đầu/chờ duyệt, `#7dd3fc` cọc/đang xử lý, `#6ee7b7` nghiệm thu/hoàn thành, `#f87171` hủy/quá hạn).
-  4. *Chuẩn số liệu & Căn lề*: Tiêu đề cột ngắn (1–3 từ); mọi cột số bắt buộc căn phải (`text-right`) in đậm `tabular-nums`; ẩn hoàn toàn cột rác không có dữ liệu (như đơn giá BOM).
-  5. *Drawer đảm nhiệm 100% chiều sâu*: Bảng chính chỉ để lướt nhanh; toàn bộ chi tiết kỹ thuật/công nợ phụ đóng gói trong slide-over drawer khi click hàng.
+## 3. Strict Prohibitions & Architectural Boundaries
+- **Forbidden Stacks**: React, Next.js, Svelte, HTMX, Alpine.js, ad-hoc Jinja web apps.
+- **Forbidden Libraries**: `openpyxl` is STRICTLY PROHIBITED (memory stalls). Use `fastexcel` or `python-calamine` for spreadsheets.
+- **Forbidden Client-side Logic**: NEVER perform film math, pricing tiers, scrap rates, or BOM derivations in `.vue`, `.js`, or `.ts`. 100% computations resolve via backend Python APIs (`vanphat_portal.api`).
+- **Production Runtime**: Zero-Node. Vite static assets served directly by Frappe Nginx / Gunicorn.
+- **Git Boundaries**: Commit atomically with conventional commit prefixes. NEVER execute `git push` unless explicitly ordered by User.
+- **Database Safety**: Autonomous schema sync via standard Frappe bench commands. Raw SQL mutations against production MariaDB must be used with caution.
 
-## 4. Strict Exclusions & Operational Constraints
-- **Forbidden Stacks**: React, Next.js, Svelte, HTMX, Alpine.js, ad-hoc Jinja web applications.
-- **Forbidden Libraries**: `openpyxl` is STRICTLY PROHIBITED due to memory stalls. Use `fastexcel` or `python-calamine` (Rust-backed) for all spreadsheet operations.
-- **Forbidden Bloatware**: Third-party VoIP (Twilio), external marketing mailers, or unvetted npm packages from copied repos are STRICTLY PROHIBITED.
-- **Forbidden Client-side Logic**: NEVER perform film consumption math, unit pricing tiers, scrap rates, or BOM derivations in `.vue`, `.js`, or `.ts` files. All computations MUST resolve via backend Python APIs.
-
-## 5. Git & Database Operations
-- **Git Operations**: Commit atomically and frequently per completed task or passing test slice using conventional commit types (`feat:`, `fix:`, `refactor:`, `test:`). NEVER run `git push` unless explicitly requested by User.
-- **Database Operations**: Autonomous schema sync and database migrations via standard Frappe bench commands (`bench migrate`, doctype reload) and ORM scripts are permitted with rollback safety. Raw SQL mutations against production MariaDB MUST be used with caution.
-
-## 6. Domain Standards & Specs Reference
-- **Canonical Units**: Canonical length is strictly `m` (meters only; `Mét Dài` is prohibited). Film thickness MUST be in `mic` ($\mu m$). Currency MUST be `VND`.
-- **Item Taxonomy**:
-  - `TP-`: Finished Pouches (Doypack, 3-side seal, center seal, side gusset, 8-side flat bottom).
-  - `NVL-`: Raw Materials (Film rolls, resins, dry lamination adhesives, EA solvents, spouts).
-  - `BTP-`: Semi-finished laminated rolls.
-  - `TRUC-`: Rotogravure cylinder tooling sets.
-- **Physical Law**: PE spouts weld ONLY to PE sealant layers; PP spouts weld ONLY to CPP sealant layers. Cross-welding is strictly prohibited.
-- **Film Structure & Material Naming Standard**: In multi-layer film structures (`custom_structure_layers`), delimiter MUST strictly be a single forward slash `/` (double slash `//` is strictly forbidden). The sealant PE layer MUST be explicitly designated as either `PE sữa` (opaque white PE) or `PE trong` (clear PE). Abbreviations such as `PES`, `LLDPE`, or bare `/PE` are strictly prohibited.
-- **Quotation & Batching Directives**:
-  - MUST isolate cylinder tooling costs (`TRUC-`) from pouch unit prices.
-  - MUST optimize 2-lane wide-web layout for pouches with width $W \le 360\text{mm}$.
-  - MUST calculate 2-tier quotations: Tier 1 (Optimal whole-roll $1.500\text{m}$) vs Tier 2 (Requested quantity with surplus risk buffer).
-- **Domain Specifications**:
-  - UI Cockpit Baseline Specification: [docs/specs/ui-cockpit-baseline-spec.md](file:///var/home/huy/vanphatapp/docs/specs/ui-cockpit-baseline-spec.md)
-  - Packaging calculation engine & quotation: [docs/specs/packaging-calculation-spec.md](file:///var/home/huy/vanphatapp/docs/specs/packaging-calculation-spec.md)
-  - Master data & Item taxonomy: [docs/specs/erpnext-packaging-masterdata-spec.md](file:///var/home/huy/vanphatapp/docs/specs/erpnext-packaging-masterdata-spec.md)
+## 4. Domain Knowledge & SSOT References
+Agent MUST read and adhere to official project specifications in `docs/specs/` instead of guessing business logic:
+- UI Cockpit Baseline: [docs/specs/ui-cockpit-baseline-spec.md](file:///var/home/huy/vanphatapp/docs/specs/ui-cockpit-baseline-spec.md)
+- Packaging Calculation Engine & Math: [docs/specs/packaging-calculation-spec.md](file:///var/home/huy/vanphatapp/docs/specs/packaging-calculation-spec.md)
+- Master Data & Item Taxonomy: [docs/specs/erpnext-packaging-masterdata-spec.md](file:///var/home/huy/vanphatapp/docs/specs/erpnext-packaging-masterdata-spec.md)
+- ERPNext Native VI-EN Mapping: [docs/specs/erpnext-native-vi-en-mapping.md](file:///var/home/huy/vanphatapp/docs/specs/erpnext-native-vi-en-mapping.md)
+- Naming Series: [docs/specs/naming-series-spec.md](file:///var/home/huy/vanphatapp/docs/specs/naming-series-spec.md)
