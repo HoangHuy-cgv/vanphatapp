@@ -287,7 +287,7 @@ const refinementChecks = [
 	{ name: 'Supplier table has Tax ID and Payment Terms columns (s.tax_id, s.payment_terms)', test: catalogVue.includes('s.tax_id') && catalogVue.includes('s.payment_terms') },
 	{ name: 'Supplier code merged as subtle subtext under alias (no separate Mã NCC column)', test: !catalogVue.includes('MÃ NCC') && catalogVue.includes('Mã NCC: ') },
 	{ name: 'User table has SĐT đăng nhập column with mobile_no', test: catalogVue.includes('SĐT đăng nhập') && catalogVue.includes('u.mobile_no') },
-	{ name: 'User table de-duplicated designation and roles into unified column', test: catalogVue.includes('Chức vụ & Vai trò') && !catalogVue.includes('EMAIL ĐĂNG NHẬP') },
+	{ name: 'User table de-duplicated designation and roles into unified column', test: catalogVue.includes('Vai trò ERPNext') && !catalogVue.includes('EMAIL ĐĂNG NHẬP') },
 	{ name: 'User table has Active/Inactive status column', test: catalogVue.includes('Trạng thái') && catalogVue.includes('badge-status-pill') }
 ];
 

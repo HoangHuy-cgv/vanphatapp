@@ -204,11 +204,10 @@
 			<table class="data-table">
 				<thead>
 					<tr>
-						<th style="width: 24%;">Tên gọi tắt</th>
-						<th style="width: 28%;">Tên pháp nhân</th>
+						<th style="width: 20%;">Tên gọi tắt</th>
+						<th style="width: 46%;">Tên pháp nhân</th>
 						<th style="width: 16%;">Mã số thuế</th>
-						<th style="width: 16%;">Thanh toán</th>
-						<th class="text-right" style="width: 16%;">Hạn mức nợ</th>
+						<th style="width: 18%;">Thanh toán</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -218,23 +217,20 @@
 						class="table-row cursor-pointer"
 						@click="openCustomerDetail(c)"
 					>
-						<td>
-							<div class="font-semibold text-white leading-tight text-[15px]">
+						<td class="whitespace-nowrap">
+							<div class="font-semibold text-white leading-tight text-[15px]" :title="'Mã KH: ' + c.name + (Number(c.credit_limit) > 0 ? ' • Hạn mức: ' + formatCurrency(c.credit_limit) : '')">
 								{{ c.alias || c.customer_name }}
 							</div>
-							<div class="font-mono text-xs text-secondary/60 mt-0.5" :title="'Mã KH: ' + c.name">
-								{{ c.name }}
-							</div>
 						</td>
-						<td>
-							<div class="text-sm text-secondary truncate max-w-[340px]" :title="c.customer_name">
+						<td class="whitespace-nowrap">
+							<div class="text-sm text-secondary leading-tight truncate" :title="c.customer_name">
 								{{ c.customer_name }}
 							</div>
 						</td>
-						<td class="font-mono text-sm text-slate-300 tabular-nums">
+						<td class="font-mono text-sm text-slate-300 tabular-nums whitespace-nowrap">
 							{{ c.tax_id || '—' }}
 						</td>
-						<td>
+						<td class="whitespace-nowrap">
 							<span v-if="c.payment_terms && (c.payment_terms.includes('30 ngày') || c.payment_terms.toLowerCase().includes('gối đầu'))" class="badge-payment-amber">
 								Gối đầu 30 ngày
 							</span>
@@ -246,15 +242,9 @@
 							</span>
 							<span v-else class="text-secondary/60 text-xs">—</span>
 						</td>
-						<td class="text-right font-mono text-sm">
-							<span v-if="Number(c.credit_limit) > 0" class="text-emerald font-bold">
-								{{ formatCurrency(c.credit_limit) }}
-							</span>
-							<span v-else class="text-secondary/60">0 đ</span>
-						</td>
 					</tr>
 					<tr v-if="filteredCustomers.length === 0">
-						<td colspan="5" class="empty-cell" style="padding: 2.5rem 1rem; text-align: center;">
+						<td colspan="4" class="empty-cell" style="padding: 2.5rem 1rem; text-align: center;">
 							<div v-if="loadingCustomers" class="text-secondary">Đang tải khách hàng...</div>
 							<div v-else class="text-secondary text-sm">Không tìm thấy khách hàng nào phù hợp</div>
 						</td>
@@ -268,11 +258,10 @@
 			<table class="data-table">
 				<thead>
 					<tr>
-						<th style="width: 24%;">Tên gọi tắt</th>
-						<th style="width: 28%;">Tên pháp nhân</th>
+						<th style="width: 20%;">Tên gọi tắt</th>
+						<th style="width: 46%;">Tên pháp nhân</th>
 						<th style="width: 16%;">Mã số thuế</th>
 						<th style="width: 18%;">Thanh toán</th>
-						<th style="width: 14%;">Nhóm cung ứng</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -282,23 +271,20 @@
 						class="table-row cursor-pointer"
 						@click="openSupplierDetail(s)"
 					>
-						<td>
-							<div class="font-semibold text-white leading-tight text-[15px]">
+						<td class="whitespace-nowrap">
+							<div class="font-semibold text-white leading-tight text-[15px]" :title="'Mã NCC: ' + s.name + (s.supplier_group ? ' • Nhóm: ' + s.supplier_group : '')">
 								{{ s.alias || s.supplier_name }}
 							</div>
-							<div class="font-mono text-xs text-sky-400/60 mt-0.5" :title="'Mã NCC: ' + s.name">
-								{{ s.name }}
-							</div>
 						</td>
-						<td>
-							<div class="text-sm text-secondary truncate max-w-[340px]" :title="s.supplier_name">
+						<td class="whitespace-nowrap">
+							<div class="text-sm text-secondary leading-tight truncate" :title="s.supplier_name">
 								{{ s.supplier_name }}
 							</div>
 						</td>
-						<td class="font-mono text-sm text-slate-300 tabular-nums">
+						<td class="font-mono text-sm text-slate-300 tabular-nums whitespace-nowrap">
 							{{ s.tax_id || '—' }}
 						</td>
-						<td>
+						<td class="whitespace-nowrap">
 							<span v-if="s.payment_terms && (s.payment_terms.includes('30 ngày') || s.payment_terms.toLowerCase().includes('gối đầu'))" class="badge-payment-amber">
 								Gối đầu 30 ngày
 							</span>
@@ -310,12 +296,9 @@
 							</span>
 							<span v-else class="text-secondary/60 text-xs">—</span>
 						</td>
-						<td>
-							<span class="badge-tag-group text-xs">{{ s.supplier_group || 'NCC' }}</span>
-						</td>
 					</tr>
 					<tr v-if="filteredSuppliers.length === 0">
-						<td colspan="5" class="empty-cell" style="padding: 2.5rem 1rem; text-align: center;">
+						<td colspan="4" class="empty-cell" style="padding: 2.5rem 1rem; text-align: center;">
 							<div v-if="loadingSuppliers" class="text-secondary">Đang tải nhà cung cấp...</div>
 							<div v-else class="text-secondary text-sm">Không tìm thấy nhà cung cấp nào phù hợp</div>
 						</td>
@@ -331,8 +314,8 @@
 					<tr>
 						<th style="width: 22%;">SĐT đăng nhập</th>
 						<th style="width: 24%;">Họ và tên</th>
-						<th style="width: 18%;">Phòng ban</th>
-						<th style="width: 24%;">Chức vụ & Vai trò</th>
+						<th style="width: 22%;">Phòng ban</th>
+						<th style="width: 20%;">Vai trò ERPNext</th>
 						<th style="width: 12%; text-align: center;">Trạng thái</th>
 					</tr>
 				</thead>
@@ -343,31 +326,25 @@
 						class="table-row cursor-pointer"
 						@click="openUserDetail(u)"
 					>
-						<td>
-							<div class="font-mono font-bold text-purple-400 text-[14.5px] tabular-nums">
+						<td class="whitespace-nowrap">
+							<span class="font-mono font-bold text-purple-400 text-[14.5px] tabular-nums" :title="u.email || ''">
 								{{ u.mobile_no || u.email }}
-							</div>
-							<div v-if="u.mobile_no && u.email" class="font-mono text-xs text-secondary/60 mt-0.5 truncate max-w-[200px]" :title="u.email">
-								{{ u.email }}
-							</div>
+							</span>
 						</td>
-						<td>
+						<td class="whitespace-nowrap">
 							<div class="font-semibold text-white leading-tight text-[15px]">
 								{{ u.full_name }}
 							</div>
 						</td>
-						<td class="text-sm text-slate-300">
+						<td class="text-sm text-slate-300 whitespace-nowrap">
 							{{ u.department || 'Ban Giám Đốc' }}
 						</td>
-						<td>
-							<div class="text-sm text-primary font-medium">
-								{{ u.designation || u.role_profile_name || 'Nhân viên' }}
-							</div>
-							<span class="badge-role-user font-mono text-[11px] mt-1" :title="'Vai trò ERPNext: ' + (u.role_profile_name || 'System User')">
+						<td class="whitespace-nowrap">
+							<span class="badge-role-user font-mono text-xs" :title="u.designation || ''">
 								{{ u.role_profile_name || 'System User' }}
 							</span>
 						</td>
-						<td class="text-center">
+						<td class="text-center whitespace-nowrap">
 							<span v-if="u.enabled" class="badge-status-pill active">
 								● Hoạt động
 							</span>
