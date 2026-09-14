@@ -1,5 +1,6 @@
 <template>
-	<div class="drawer-overlay" @click.self="$emit('close')">
+	<Teleport to="body">
+		<div class="drawer-overlay" @click.self="$emit('close')">
 		<aside class="drawer-panel" aria-label="Soạn báo giá">
 			<!-- Header -->
 			<div class="drawer-head">
@@ -277,7 +278,8 @@
 				</button>
 			</div>
 		</aside>
-	</div>
+		</div>
+	</Teleport>
 </template>
 
 <script setup>

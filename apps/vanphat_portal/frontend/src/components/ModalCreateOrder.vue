@@ -1,5 +1,6 @@
 <template>
-	<div v-if="isOpen" class="modal-backdrop" @click.self="$emit('close')">
+	<Teleport to="body">
+		<div v-if="isOpen" class="modal-backdrop" @click.self="$emit('close')">
 		<div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-order-title">
 			<!-- Header -->
 			<div class="modal-head">
@@ -328,7 +329,8 @@
 				</div>
 			</form>
 		</div>
-	</div>
+		</div>
+	</Teleport>
 </template>
 
 <script setup>

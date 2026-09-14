@@ -1,5 +1,6 @@
 <template>
-	<div class="modal-overlay" @click.self="$emit('close')">
+	<Teleport to="body">
+		<div class="modal-overlay" @click.self="$emit('close')">
 		<div class="modal-card" role="dialog" aria-label="Tạo báo giá">
 			<!-- Header with title & close button -->
 			<div class="modal-header">
@@ -260,7 +261,8 @@
 				</div>
 			</div>
 		</div>
-	</div>
+		</div>
+	</Teleport>
 </template>
 
 <script setup>

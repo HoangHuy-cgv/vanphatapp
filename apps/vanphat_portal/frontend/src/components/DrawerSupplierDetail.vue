@@ -1,5 +1,6 @@
 <template>
-	<div v-if="isOpen" class="drawer-overlay" @click.self="$emit('close')">
+	<Teleport to="body">
+		<div v-if="isOpen" class="drawer-overlay" @click.self="$emit('close')">
 		<aside class="drawer-panel" aria-label="Chi tiết nhà cung cấp">
 			<!-- Header -->
 			<div class="drawer-head">
@@ -96,7 +97,8 @@
 				</div>
 			</div>
 		</aside>
-	</div>
+		</div>
+	</Teleport>
 </template>
 
 <script setup>

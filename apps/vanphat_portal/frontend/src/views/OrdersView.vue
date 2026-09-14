@@ -297,10 +297,9 @@ async function loadOrders() {
 
 async function loadMasterItems() {
 	try {
-		const res = await fetch('/api/method/vanphat_portal.api.item.get_list');
-		const json = await res.json();
-		if (json && Array.isArray(json.message) && json.message.length > 0) {
-			masterItems.value = json.message;
+		const data = await api('vanphat_portal.api.item.get_list', {}, { get: true });
+		if (Array.isArray(data) && data.length > 0) {
+			masterItems.value = data;
 		} else if (masterItems.value.length === 0) {
 			masterItems.value = [...(MASTER_CATALOG_ITEMS || [])];
 		}
