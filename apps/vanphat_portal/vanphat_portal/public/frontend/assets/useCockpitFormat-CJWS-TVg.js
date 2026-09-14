@@ -1,1 +1,0 @@
-function t(r){return r==null||r===""?"0 đ":typeof r=="string"&&isNaN(Number(r))?r:new Intl.NumberFormat("vi-VN").format(Math.round(Number(r)))+" đ"}function n(r){return r==null||r===""?"0":typeof r=="string"&&isNaN(Number(r))?r:new Intl.NumberFormat("vi-VN").format(Number(r))}function u(){return{formatCurrency:t,formatNumber:n}}export{t as f,u};

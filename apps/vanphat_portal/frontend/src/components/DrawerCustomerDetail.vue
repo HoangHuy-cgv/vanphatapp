@@ -145,11 +145,18 @@ const { formatCurrency } = useCockpitFormat();
 
 const dedicatedItems = computed(() => {
 	if (!props.customer || !props.masterItems) return [];
-	const cAlias = (props.customer.alias || '').trim().toLowerCase();
 	const cName = (props.customer.customer_name || '').trim().toLowerCase();
+	const cAlias = (props.customer.alias || '').trim().toLowerCase();
+	if (!cName && !cAlias) return [];
 	return props.masterItems.filter(it => {
-		const itCust = (it.customer || '').trim().toLowerCase();
-		return (cAlias && itCust === cAlias) || (cName && itCust === cName);
+		// Native: 1 TP = 1 KH qua bảng con customer_items (customer_name);
+		// fallback ref customer_code khi detail chưa kèm dòng con.
+		const rows = Array.isArray(it.customer_items) ? it.customer_items : [];
+		for (const r of rows) {
+			const n = (r.customer_name || '').trim().toLowerCase();
+			if (n && (n === cName || (cAlias && n === cAlias))) return true;
+		}
+		return false;
 	});
 });
 

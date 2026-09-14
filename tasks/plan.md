@@ -1,24 +1,16 @@
-# Plan: Variant KH về native `Item.customer_items`
+# Plan: Backlog sau cleanup (Sếp duyệt thứ tự)
 
-## Vùng legacy được chạm
-- `scripts/generate_master_data_csv.py` (sinh thêm customer_items.csv)
-- `scripts/import_master_data.py` (nạp bảng con + dry-run FK)
-- `apps/vanphat_portal/vanphat_portal/api/item.py` (bỏ `customer` + variant phẳng → `customer_code`)
-- `data/clean-data/item_master.csv` (bỏ 2 cột gộp), `data/clean-data/customer_items.csv` (mới)
-- `fixtures/custom_field.json` (xóa entry variant), `mapping.md`, `masterdata-spec` (xong), `ADR-004` (thêm mục), SPEC này
-- `scripts/serve-portal.mjs` (mock khớp API mới — nếu có đọc variant)
+## Đã xong (commit cleanup)
+- Ignore build hash-churn; entry `www/portal.html` + `public/frontend/index.html` tracked.
+- `DrawerCustomerDetail` đọc bảng con native (hết liệt rỗng).
+- Hook check-only + CSV LF gốc.
 
-## Vùng CẤM chạm
-- Mọi file Vue (variant_name trong ModalCreateOrder là tên dòng đơn tạm — giữ nguyên)
-- Pricing/BOM/cache/doc_events/`custom_cylinder_code`/credit/payment
-
-## Slice triển khai (mỏng, từng lát verify)
-1. **Slice 1 — CSV + sinh liệu**: script xuất customer_items.csv (45 dòng TP, TRUC/NGCS/TMD/NVL/BTP không dòng); item_master.csv bỏ 2 cột `customer`, `custom_customer_variant_code`. Verify: đếm dòng + dry-run FK.
-2. **Slice 2 — Import bench**: import_master_data.py nạp `customer_items` vào Item (1 TP = 1 dòng con), dry-run báo FK. Verify: `--dry-run` pass.
-3. **Slice 3 — API native**: item.py bỏ `customer` + variant phẳng, thêm `customer_code` vào fields/search/count; get_detail giữ nguyên (as_dict kèm customer_items). Verify: py_compile + browser-test mock.
-4. **Slice 4 — Tài liệu**: mapping.md + ADR-004 (thêm mục) + fixtures (xóa entry). Verify: grep = 0 reference cũ.
-5. **Checkpoint**: full dry-run + build + browser-test → commit (không push).
-
-## Rủi ro
-- Bench thật chưa có ở đây → import thật do Sếp chạy staging; ở đây chỉ dry-run logic.
-- `customer_code` do ERPNext tự join (fill_customer_code) — mock serve-portal phải tự join tay.
+## Còn lại (chờ Sếp ra việc)
+1. **Remote + push**: chưa có remote — Sếp cho URL + lệnh explicit.
+2. **Bench staging ERPNext thật**: import 293 items + 45 dòng con + BOM; verify
+   VAT doc-driven, Credit Limit, đo LCP/INP/CLS.
+3. **Enforce BTP ở Đơn bán**: `is_sales_item=0` mới ở data; luồng Báo giá/Đơn bán
+   portal chưa lọc cờ này.
+4. **MST KH 0/117**: không xuất được hóa đơn VAT thật.
+5. **0 test Python + 0 CI workflow**: mới có ruff/pre-commit.
+6. **Cuộn màng tiêu**: chưa có mã — Sếp báo sau (BTP bán được hiện chỉ 00015).

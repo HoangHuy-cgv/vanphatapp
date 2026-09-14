@@ -41,3 +41,6 @@ archive/
 # Vite unplugin auto-gen (không commit)
 auto-imports.d.ts
 components.d.ts
+
+# Vite build hash-churn (regenerable per build — entry HTML + www/portal.html tracked)
+apps/vanphat_portal/vanphat_portal/public/frontend/assets/

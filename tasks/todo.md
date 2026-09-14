@@ -1,7 +1,7 @@
-# Ephemeral Todo — Variant native xong
+# Ephemeral Todo — Cleanup xong
 
-## Done (commit `7bc7f79`)
-- Spec + plan + 4 slice variant native, verify xanh
+## Done
+- Ignore build rác + sửa drawer chết + gọn docs
 
-## Chờ Sếp
-- Bench staging ERPNext thật + `git push` (chờ lệnh explicit)
+## Chờ Sếp (thứ tự trong tasks/plan.md)
+- Remote + push; bench staging; enforce BTP; MST; CI/test

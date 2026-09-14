@@ -1202,7 +1202,7 @@ function renderMasterDataReviewerHtml() {
 							<td style="text-align: center;">
 								<span class="badge ${isMfg ? 'badge-mfg' : 'badge-buy'}">${isMfg ? 'Xưởng SX' : 'Mua ngoài'}</span>
 							</td>
-							<td style="font-size: 12px; color: #8b949e;">${it.customer || it.brand || 'Bán chung'}</td>
+							<td style="font-size: 12px; color: #8b949e;">${(it.customer_items && it.customer_items[0] && it.customer_items[0].customer_name) || it.brand || 'Bán chung'}</td>
 							<td style="text-align: center;">
 								${it.disabled == '1' ? '<span style="color: #f85149; font-weight: 600; font-size: 12px;">Ngừng bán</span>' : '<span style="color: #3fb950; font-weight: 600; font-size: 12px;">Hoạt động</span>'}
 							</td>
