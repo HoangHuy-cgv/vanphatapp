@@ -1,7 +1,6 @@
 <template>
-	<Teleport to="body">
-		<div class="drawer-overlay" @click.self="$emit('close')">
-		<aside ref="drawerPanel" class="drawer-panel" role="dialog" aria-modal="true" aria-label="Soạn báo giá">
+	<BaseDrawer :open="isOpen" label="Soạn báo giá" @close="$emit('close')">
+		<div class="drawer-panel">
 			<!-- Header -->
 			<div class="drawer-head">
 				<h3 class="drawer-title">Soạn báo giá</h3>
@@ -274,9 +273,8 @@
 					Yêu cầu tính giá
 				</button>
 			</div>
-		</aside>
 		</div>
-	</Teleport>
+	</BaseDrawer>
 </template>
 
 <script setup>
@@ -317,7 +315,6 @@ const emit = defineEmits(['close', 'back', 'submit', 'itemsChanged']);
 // S7c: M2 form state tách composable — view chỉ còn template + props/emit
 // S10: drawerPanel cho ref dialog (role/focus dùng chung)
 const {
-	drawerPanel,
 	formatCurrency,
 	formData,
 	isRoll,
@@ -338,15 +335,6 @@ const {
 </script>
 
 <style scoped>
-.drawer-overlay {
-	position: fixed;
-	inset: 0;
-	background: rgba(0, 0, 0, 0.6);
-	z-index: 90;
-	display: flex;
-	justify-content: flex-end;
-}
-
 .drawer-panel {
 	width: 580px;
 	max-width: 94vw;

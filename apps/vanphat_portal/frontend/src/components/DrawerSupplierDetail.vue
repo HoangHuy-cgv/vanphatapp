@@ -1,7 +1,6 @@
 <template>
-	<Teleport to="body">
-		<div v-if="isOpen" class="drawer-overlay" @click.self="$emit('close')">
-		<aside ref="drawerPanel" class="drawer-panel" role="dialog" aria-modal="true" aria-label="Chi tiết nhà cung cấp">
+	<BaseDrawer :open="isOpen" label="Chi tiết nhà cung cấp" @close="$emit('close')">
+		<div class="drawer-panel">
 			<!-- Header -->
 			<div class="drawer-head">
 				<div class="head-left">
@@ -96,13 +95,12 @@
 					<p class="note-text text-sm">{{ supplier.note }}</p>
 				</div>
 			</div>
-		</aside>
 		</div>
-	</Teleport>
+	</BaseDrawer>
 </template>
 
 <script setup>
-import { useDrawerDialog } from '../composables/useDrawerDialog';
+import BaseDrawer from './BaseDrawer.vue';
 
 const props = defineProps({
 	isOpen: {
@@ -117,21 +115,10 @@ const props = defineProps({
 
 const emit = defineEmits(['close']);
 
-// S10: Esc + focus trap/restore dùng chung
-const { panelRef: drawerPanel } = useDrawerDialog(null, emit);
+// P4b: BaseDrawer native <dialog> lo Esc/focus/inert
 </script>
 
 <style scoped>
-.drawer-overlay {
-	position: fixed;
-	inset: 0;
-	z-index: 999;
-	background: rgba(0, 0, 0, 0.65);
-	backdrop-filter: blur(2px);
-	display: flex;
-	justify-content: flex-end;
-}
-
 .drawer-panel {
 	width: 520px;
 	max-width: 100vw;
@@ -141,17 +128,7 @@ const { panelRef: drawerPanel } = useDrawerDialog(null, emit);
 	box-shadow: -8px 0 32px rgba(0, 0, 0, 0.6);
 	display: flex;
 	flex-direction: column;
-	animation: slideInRight 0.22s ease-out;
 	overflow-y: auto;
-}
-
-@keyframes slideInRight {
-	from {
-		transform: translateX(100%);
-	}
-	to {
-		transform: translateX(0);
-	}
 }
 
 .drawer-head {

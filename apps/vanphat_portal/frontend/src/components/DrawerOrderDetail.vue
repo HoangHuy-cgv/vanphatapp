@@ -1,7 +1,6 @@
 <template>
-	<Teleport to="body">
-		<div v-if="isOpen" class="drawer-overlay" @click.self="$emit('close')">
-		<aside ref="drawerPanel" class="drawer-panel" role="dialog" aria-modal="true" aria-label="Chi tiết đơn hàng">
+	<BaseDrawer :open="isOpen" label="Chi tiết đơn hàng" @close="$emit('close')">
+		<div class="drawer-panel">
 			<!-- Header -->
 			<div class="drawer-head">
 				<div class="head-title-wrap">
@@ -259,16 +258,15 @@
 					</button>
 				</div>
 			</div>
-		</aside>
 		</div>
-	</Teleport>
+	</BaseDrawer>
 </template>
 
 <script setup>
 import { ref, computed, toRef } from 'vue';
 import { useCockpitFormat } from '../composables/useCockpitFormat';
 import { useOrderDeposit } from '../composables/useOrderDeposit';
-import { useDrawerDialog } from '../composables/useDrawerDialog';
+import BaseDrawer from './BaseDrawer.vue';
 
 const props = defineProps({
 	isOpen: { type: Boolean, default: false },
@@ -288,8 +286,6 @@ const {
 	handleCreateDelivery,
 } = useOrderDeposit(toRef(props, 'order'), emit);
 
-// S10: Esc + focus trap/restore dùng chung (role=dialog đã ở template)
-const { panelRef: drawerPanel } = useDrawerDialog(toRef(props, 'isOpen'), emit);
 
 // Lightbox state
 const activeLightboxUrl = ref(null);
@@ -363,16 +359,6 @@ const formatSlaText = (days) => {
 </script>
 
 <style scoped>
-.drawer-overlay {
-	position: fixed;
-	inset: 0;
-	background: rgba(0, 0, 0, 0.75);
-	backdrop-filter: blur(4px);
-	z-index: 1000;
-	display: flex;
-	justify-content: flex-end;
-}
-
 .drawer-panel {
 	width: 100%;
 	max-width: 680px;

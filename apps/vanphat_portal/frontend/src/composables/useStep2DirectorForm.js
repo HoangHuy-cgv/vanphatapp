@@ -1,6 +1,5 @@
 import { ref, computed, watch } from 'vue';
 import { useCockpitFormat } from './useCockpitFormat';
-import { useDrawerDialog } from './useDrawerDialog';
 
 /**
  * S7c: M2 director form state (vật liệu, artwork, trục, dòng hàng).
@@ -118,11 +117,8 @@ export function useStep2DirectorForm(props, emit) {
 		});
 	}
 
-	// S10: Esc + focus trap/restore dùng chung (thay handleKeydown riêng)
-	const { panelRef: drawerPanel } = useDrawerDialog(null, emit);
 
 	return {
-		drawerPanel,
 		formatCurrency,
 		formData,
 		isRoll,

@@ -19,9 +19,10 @@ Thứ tự ưu tiên bắt buộc khi cần bất kỳ dữ liệu/logic nào �
 **Cấm tuyệt đối:**
 - Custom trùng chức năng native đã có (tự chế status/đặt cọc/thuế khi native `status`, `docstatus`, `advance_paid`, `Sales Taxes and Charges Template` đã có).
 - Raw SQL cho CRUD thông thường (`frappe.qb`/`get_list` là chuẩn; raw SQL chỉ cho báo cáo join phức tạp, cấm mutation trực tiếp production).
-- Hằng số thương mại hardcode ở frontend (`vatRate = 0.08`, `cylinderRate = 3100000`) — và tiến tới xóa cả hardcode trong Python, chuyển về native templates (`Sales Taxes and Charges Template` cho VAT, `Payment Terms Template` + `Customer Credit Limit` cho điều khoản cọc, `Item Price` của mã `TRUC-` cho giá trục).
+- Hằng số thương mại hardcode ở frontend (`vatRate = 0.08`, `cylinderRate = 3100000`) — và cấm hardcode trong Python: VAT doc-driven (gán Sales Taxes Template lên draft doc, đọc số ERPNext tính — ADR-002); giá trục pass-through NCC qua `cylinder_spec {qty, unit_price, supplier}`, cấm mọi fallback số trục; cọc từ `Payment Terms Template` + `Customer Credit Limit`.
 - `frappe.get_all` cho master data nhạy cảm (bypass permission) — bắt buộc `get_list`.
 - `@frappe.whitelist(allow_guest=True)` cho dữ liệu nội bộ — portal bắt buộc login + role check (`System Manager`, `Sales User`, `Accounts User`, `Manufacturing User`, `Stock User`).
+- Toán tiền/thuế tay trong Python (`round(net*rate)`, `qty*rate` build dòng trục ở client) — preview/báo giá/đơn đọc số native đã tính.
 
 ## 3. Van Phat Industrial Cockpit Baseline (UI/UX Rules)
 - **Reference Spec**: All UI views MUST comply with `docs/specs/ui-cockpit-baseline-spec.md`.

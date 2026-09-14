@@ -2,17 +2,15 @@
 
 > **SSOT:** Mọi quy tắc backend tập trung tại file này. `AGENTS.md` §5 chỉ tóm tắt. Code thực tế: `apps/vanphat_portal/vanphat_portal/api/`.
 
-## 1. Module Map & Trách Nhiệm
+## 1. Module Map & Trách Nhiệm (đo lại 2026-09-15: P1–P3 xong)
 | Module | Native chính | Trách nhiệm |
 |---|---|---|
-| `order.py` (527L) | Sales Order, Payment Entry, Customer Credit Limit | Lifecycle đơn, preview giá/cọc server-side, tab counts |
-| `bao_gia.py` (414L) | Quotation, Item, File | Báo giá, `calculate_packaging`, link-search Customer |
-| `item.py` (229L) | Item, BOM, Item Price | Catalog master, BOM 2-tier, cache Redis |
-| `customer.py` (77L) | Customer | Master KH + fallback CSV (xem §6 — cần thay bằng truthful empty) |
-| `supplier.py` (82L) | Supplier | Master NCC |
-| `user.py` (69L) | User | Người dùng portal |
+| `order.py` | Sales Order, Quotation (nháp tính thuế), Payment Entry, Customer Credit Limit | Lifecycle đơn, preview doc-driven (`_price_via_doc`), trục pass-through (`cylinder_spec`), tab counts |
+| `bao_gia.py` | Quotation, Item, File | Báo giá, `calculate_packaging`, link-search Customer, preview đọc số native |
+| `item.py` | Item, BOM | Catalog full-server (filters/or_filters/count), BOM 2-tier, cache Redis |
+| `customer.py`/`supplier.py`/`user.py` | Customer/Supplier/User | Master login-only + `or_filters` + paginate, truthful empty |
 
-- Wrapper mỏng: bọc native, không chứa nghiệp vụ trùng native. Không re-export ghi đè câm (bug `get_price_preview` bị `__init__` ghi đè — slice S4).
+- Wrapper mỏng: bọc native, không chứa nghiệp vụ trùng native. Không re-export ghi đè câm (bug S4 đã chốt SSOT).
 
 ## 2. Native-First Lookup (Khi Cần Dữ Liệu Mới)
 1. Tìm DocType/field/method native có sẵn (mapping SSOT: `erpnext-native-vi-en-mapping.md`).
@@ -45,13 +43,15 @@
 - CSRF: mọi POST qua `api()` đã gắn token; không whitelist POST không cần auth.
 - Fallback CSV (`customer.py`, `item.py` `_load_csv_*`): thay bằng truthful empty state + log server. DB trống → `[]`, không đọc file hệ thống thay thế.
 
-## 7. Đích Native Hóa Hằng Số (Lộ Trình Bỏ Hardcode Python)
-| Hằng số hiện tại | Native đích |
-|---|---|
-| `STANDARD_VAT_RATE = 8.0` | `Sales Taxes and Charges Template` theo Company |
-| Quy tắc cọc 50% + 100% trục | `Payment Terms Template` + `Customer Credit Limit` |
-| `CYLINDER_STANDARD_RATE = 3.1M` | `Item Price` của mã `TRUC-` |
-| Tab phân loại chuỗi `NGCS/TMD` | `Item Group` 4 nhánh (`MÀNG/TÚI/PHỤ KIỆN/TRỤC IN`) filter server |
+## 7. Giá & Thuế Native (P1+P2 Sếp duyệt 2026-09-15 — ADR-002)
+- VAT doc-driven: gán Sales Taxes and Charges Template (Default theo Company → Tax Rule theo KH)
+  lên Quotation nháp trong memory, `calculate_taxes_and_totals`, đọc
+  `total/total_taxes_and_charges/grand_total`. Cấm `round(net*rate)` tay trong flow preview/báo giá/đơn.
+- Trục pass-through NCC: `cylinder_spec {qty, unit_price, supplier}` — giá NCC quyết, Vạn Phát
+  mua đi bán lại. Thiếu giá → `cylinder_pending: true`, totals `null` truthful. Cấm mọi hằng số/fallback số trục.
+- Cọc: `Payment Terms Template` (`invoice_portion`) + `Customer Credit Limit` (Trả sau = 0đ).
+- Tab phân loại chuỗi `NGCS/TMD` → `Item Group` filter server khi có data (giữ tạm, S9-phạm-vi sau).
 
 ## 8. Cấm Tuyệt Đối (Nhắc Lại Từ AGENTS.md)
-- `get_all` cho master nhạy cảm, `allow_guest` dữ liệu nội bộ, raw SQL CRUD thường, hardcode thương mại ở cả 2 tầng, re-export ghi đè câm, cache key thiếu params.
+- `get_all` cho master nhạy cảm, `allow_guest` dữ liệu nội bộ, raw SQL CRUD thường, re-export ghi đè câm, cache key thiếu params, `limit=500` + filter Python.
+- Toán tiền/thuế tay trong Python, mọi hằng số/fallback giá trục (`3100000`, `CYLINDER_STANDARD_RATE`, `_get_cylinder_rate`).

@@ -1,34 +1,38 @@
-# ADR-002: Fallback hằng số thương mại khi native chưa cấu hình (S9)
+# ADR-002: VAT doc-driven + giá trục pass-through NCC (thay fallback số cố định)
 
 ## Status
-Accepted (2026-09-14)
+Superseded S9 → Accepted mới (2026-09-15, Sếp duyệt)
 
 ## Date
-2026-09-14
+2026-09-15
 
 ## Context
-S9 native-first yêu cầu VAT/cọc/trục lấy từ ERPNext native:
-- VAT 8% → `Sales Taxes and Charges Template` theo Company.
-- Giá trục 3.1M → `Item Price` của mã `TRUC-` (selling).
-- Cọc 50% → `Payment Terms Template` (`invoice_portion` dòng đầu) của Customer.
-- Trả sau/cọc 0đ → `Customer Credit Limit` (đã dùng từ S1).
-
-Thực tế staging/production hiện tại chưa chắc đã có đủ 3 native trên
-(template thuế mặc định, bảng giá trục, payment terms từng KH).
-Không được để API vỡ khi thiếu cấu hình — phải fallback có kiểm soát.
+- Sếp quyết: VAT theo flow doc-driven (ERPNext tính trên chứng từ, vỏ chỉ đọc).
+- Sếp quyết: giá trục KHÔNG cố định số nào (không 3.1M, không 3.5M) — trục do NCC quyết giá,
+  Vạn Phát chỉ mua đi bán lại. Mọi fallback số trục trong code đều sai định hướng.
+- P1+P2 đã triển khai: `_price_via_doc` dựng Quotation nháp trong memory + `cylinder_spec`
+  pass-through (`d30fdd6`).
 
 ## Decision
-- Lookup native trước (`order._get_vat_rate/_get_cylinder_rate/_get_deposit_pct`), `try/except` mọi lỗi → fallback:
-  - `FALLBACK_VAT_RATE = 8.0`, `FALLBACK_CYLINDER_RATE = 3.1M`, `FALLBACK_DEPOSIT_PCT = 0.5`.
-- Fallback giữ đúng số cũ S1–S8 (behavior không đổi khi native trống) — S9 chỉ thêm đường lookup, không đổi số mặc định.
-- `get_price_preview` trả thêm `deposit_pct` (%) để client hiển thị đúng khi template cọc khác 50%.
-- Hằng số engine công nghệ (`DENSITIES/PRICES/SETUP_FIXED/BOX_COST/GLUE_COST`, scrap 8%/6.5%/5.5%, surplus `*0.5`) KHÔNG native hóa — là định mức xưởng, không có DocType native tương ứng; giữ nguyên có ghi chú.
+- VAT: gán Sales Taxes and Charges Template (Default theo Company → Tax Rule theo KH) lên
+  draft doc, gọi `calculate_taxes_and_totals`, đọc `total/total_taxes_and_charges/grand_total`.
+  Không `round(net*rate)` tay trong flow preview/báo giá/đơn.
+- Trục: API nhận `cylinder_spec {qty, unit_price, supplier}` từ vỏ (giá NCC báo).
+  Thiếu giá → `cylinder_pending: true`, `grand_total_final/required_deposit_final: null`
+  (truthful, vỏ hiển thị "Chờ giá NCC"). Cấm mọi hằng số/fallback giá trục trong code.
+- Cọc: giữ Payment Terms Template (`invoice_portion`) + Credit Limit (Trả sau = 0đ);
+  fallback 50% chỉ khi KH chưa có template (ghi log, không im lặng).
+- Hằng số engine công nghệ R&D (`DENSITIES/PRICES/SETUP_FIXED/...`, scrap, surplus)
+  KHÔNG native hóa — là định mức xưởng, không có DocType native tương ứng.
 
 ## Alternatives Considered
-- **Bắt buộc cấu hình native, không fallback (throw khi thiếu)**: Pros — ép sạch data. Cons — vỡ portal trên site chưa setup, Sếp/Kế toán chưa kịp nhập template. Rejected.
-- **Giữ hardcode, không lookup**: Pros — đơn giản. Cons — đi ngược native-first, đổi thuế/cọc phải sửa code + deploy. Rejected.
+- **Fallback 3.1M khi thiếu giá NCC**: Pros — đơn luôn có số. Cons — sai sự thật
+  (bán giá mình tự đặt, không phải giá NCC), Sếp bác explicitly. Rejected.
+- **Lookup Item Price TRUC- duy nhất** (S9 cũ): Pros — 1 SSOT. Cons — trục nhiều giá
+  tùy tình huống, 1 giá duy nhất sai bản chất. Rejected, thay bằng pass-through.
 
 ## Consequences
-- Khi Kế toán cấu hình đủ template + Item Price, portal tự dùng số native, không cần deploy.
-- Cần 1 checklist setup native cho site mới (Sales Taxes Template mặc định, Price List trục, Payment Terms KH).
-- `calculate_packaging_quotation` (`cylinder_unit_price=3.5M` default) chưa đụng — engine R&D, S9-phạm-vi sau khi chốt Item Price trục chuẩn (3.1M vs 3.5M lệch, cần Sếp chốt).
+- Vỏ phải có ô nhập NCC + giá trục (đã có ở ModalCreateOrder P1P2).
+- Cần checklist setup native cho site mới: Sales Taxes Template mặc định + Tax Rule.
+- `calculate_packaging_quotation` (engine R&D, `cylinder_unit_price` default) là việc riêng,
+  xử lý khi Sếp duyệt slice engine.
