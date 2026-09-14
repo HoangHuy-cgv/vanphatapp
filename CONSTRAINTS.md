@@ -1,0 +1,83 @@
+# CONSTRAINTS — Chuẩn "tối ưu" của dự án Vạn Phát
+
+Rà soát lần cuối: **2026-09-14** — chốt bởi Sếp + em.
+Phạm vi: `apps/vanphat_portal` (ERPNext native backend + Vue cockpit shell).
+
+Áp dụng cho **mọi thay đổi** trong repo. Đây là file ràng buộc duy nhất; spec mô tả *xây cái gì*,
+file này định nghĩa *thế nào là đủ tốt để ship*. **Không được nới lỏng file này để một thay đổi đi qua.**
+
+## Cách chạy
+
+```bash
+python3 scripts/constraints-check.py          # floor + ratchet (đầy đủ, ~1s)
+python3 scripts/constraints-check.py floor    # chỉ luật cấm (~0.1s, chạy trong pre-commit)
+python3 scripts/constraints-check.py --init   # ghi lại baseline = số đo hiện tại
+bash scripts/budget-gate.sh                   # trần trọng lượng bundle (đã có từ trước)
+```
+
+Máy kiểm chạy **không cần bench, không cần mạng, không cần Node**. Đó là điều kiện để nó thực sự chạy.
+
+## 1. Floor — luật cấm, phải bằng 0 ngay hôm nay
+
+7 luật dưới đây đang bằng 0 trên code hiện tại. Vi phạm = `GATE: FAIL`, không có ngoại lệ:
+
+| id | Luật |
+|---|---|
+| `mock_random_id` | Không `Math.random()` làm ID tài liệu |
+| `guest_api` | Không `allow_guest=True` trên dữ liệu nội bộ |
+| `permissioned_get_all` | Không `frappe.get_all` trên master data có phân quyền (dùng `get_list`) |
+| `raw_html` | Không `v-html` |
+| `suppression` | Không thêm comment tắt máy kiểm: `@ts-ignore`, `eslint-disable`, `# noqa`, `type: ignore`, `istanbul ignore`, `Stryker disable`, `nosemgrep`, `gitleaks:allow` |
+| `secret` | Không khoá/bí mật trong source |
+| `stub` | Không `NotImplementedError`/`TODO`/`FIXME` đứng thay chỗ implementation trong API |
+
+Thêm luật cấm thì sửa `FLOOR_RULES` trong `scripts/constraints-check.py` — **siết thì im lặng, nới thì phải to tiếng** (ghi vào bảng Exceptions có người chịu trách nhiệm + ngày hết hạn).
+
+## 2. Năm trục "tối ưu" — có số và có lệnh
+
+Định nghĩa chốt 2026-09-14. Một trục chỉ được coi là ràng buộc khi cột "Máy kiểm" tồn tại và chạy được.
+
+| # | Trục | Định nghĩa đo được | Máy kiểm | Chạy ở |
+|---|---|---|---|---|
+| 1 | **Sự thật (SSOT)** | Mọi con số hiển thị là field do API trả; client chỉ `Intl.NumberFormat`. Nhân/chia tiền, thuế, cọc, qty phải nằm ở backend. | `constraints-check.py` → `client_money_math`, `client_qty_reduce`, `client_magic_fallback`, `client_hardcoded_qty` | mỗi lần sửa |
+| 2 | **Quyền** | Mỗi `@frappe.whitelist()` phải có cổng quyền (`has_permission`/role/`only_for`) hoặc nằm trong allowlist có lý do. Đường `frappe.qb` phải lọc theo quyền như `get_list`. | `constraints-check.py` → `api_ungated` (ledger parse AST) | mỗi lần commit |
+| 3 | **Kiểm chứng** | Backend: 41 test xanh, không giảm. Frontend: test cho mọi composable có logic; coverage dòng đã sửa ≥ 80% (khi có Vitest). | `unittest discover` (đã nối) + `vitest --coverage` (**chưa cài**) | task end / CI |
+| 4 | **Trọng lượng & tốc độ** | Entry JS ≤ 170KB gzip (warn) / 300KB (fail); async chunk ≤ 500KB. FCP < 0,8s; p95 API — **chưa đo được** (cần staging). | `scripts/budget-gate.sh` (đã có) + Lighthouse (**chưa cài**) | mỗi lần build |
+| 5 | **Tiếp cận & tin cậy** | 0 vi phạm axe mức critical/serious (WCAG AA). Trạng thái đọc được bằng chữ tiếng Việt + màu, không chỉ màu. | `axe` (**chưa cài**, cần URL) | preview deploy |
+
+Trục 3–5 chưa có máy kiểm đầy đủ. Ghi rõ ở đây để không ai nhầm khát vọng thành ràng buộc; mỗi lần cài thêm
+một tool thì bổ sung dòng tương ứng vào bảng này **cùng ngày**.
+
+## 3. Đang đo, chưa ép — ratchet (chỉ được tốt lên)
+
+Baseline trong `.constraints-baseline.json`. Xấu đi = `GATE: FAIL`. Không đặt đích viển vông làm build đỏ vĩnh viễn.
+
+| Số đo | Hôm nay | Hướng | Đích |
+|---|---|---|---|
+| Endpoint chưa có cổng quyền (trên 24 endpoint) | **19** | giảm | 0 |
+| Danh tính user hardcode trong client | **1** | giảm | 0 |
+| Client tự nhân/chia trên field tiền | **1** | giảm | 0 |
+| Client tự cộng qty (`.reduce`) | **2** | giảm | 0 |
+| Fallback số thương mại cứng (`\|\| 5000`) | **1** | giảm | 0 |
+| `qty` mặc định cứng trong client | **6** | giảm | 0 (đưa vào master data native) |
+| `catch` nuốt lỗi | **1** | giảm | 0 |
+| Entry JS gzip | **142 KB** | giảm/giữ | ≤ 170 warn / 300 fail |
+| File test frontend | **0** | tăng | ≥ 8 (các composable có logic) |
+| Test backend xanh | **41** | tăng | không giảm |
+
+## 4. Biên giới kiến trúc (Sếp chốt 2026-09-14)
+
+1. **ERPNext native là SSOT.** Tiền, thuế, cọc, BOM, tồn kho, trạng thái, sinh mã đều do DocType/controller native tính. API `vanphat_portal.api.*` chỉ là façade mỏng: nhận payload → gọi DocType native → trả JSON sạch.
+2. **Portal sở hữu ~6 luồng nghiệp vụ** (báo giá, tạo đơn, duyệt cọc, xưởng, giao hàng, tra cứu). **Desk giữ config + master data + mọi thứ chưa thiết kế.** Không cố thay Desk toàn bộ: UI tự làm mất khả năng custom form, còn Desk v16 vẫn đang được Frappe phát triển song song (nguồn: [frappe.io/framework/version-16](https://frappe.io/framework/version-16), [thảo luận với founder Frappe 11/2025](https://discuss.frappe.io/t/frappe-crm-ui-v-s-desk-ui/156477)).
+3. **Lớp vỏ không logic.** Client chỉ: thu thập input → gọi API → hiển thị. Validate client chỉ để UX tức thì; tính hợp lệ nghiệp vụ do server quyết.
+4. **Kết quả mutate chỉ lấy từ response server.** Không tự set `order_state`/`completed_qty`/`is_hold` ở client; không báo thành công khi API trả lỗi.
+5. **Frontend stack đang khoá tạm:** Vue 3.5 + Vite 7 + vue-router 4 + Tailwind **v3** + `frappe-ui` ghim exact. Tailwind v4 chưa được: preset của frappe-ui v1 là v3. Đổi framework/UI library phải có số đo POC và Sếp duyệt.
+
+## 5. Exceptions
+
+| ID | Luật | Đường dẫn | Lý do | Người | Hết hạn |
+|---|---|---|---|---|---|
+| W1 | `api_ungated` | `item.clear_catalog_cache` | Hook `doc_events` xoá cache, không phải endpoint người dùng | em | 2026-12-14 |
+| W2 | `api_ungated` | `bao_gia.get_boot` | Chỉ trả session user + CSRF token của chính người đang đăng nhập | em | 2026-12-14 |
+
+Ngoại lệ phải có người chịu trách nhiệm và ngày hết hạn. Không có ngoại lệ vô danh.

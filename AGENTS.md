@@ -1,6 +1,7 @@
 # AGENTS.md — Van Phat Packaging ERP & Portal
 
 ## How we work
+- Read `CONSTRAINTS.md` before writing code. It defines this project's quality bar with numbers, and the command that checks each one. Do not weaken it to make a change pass.
 - Respond in Vietnamese. Address the user as `Sếp`, yourself as `em`. The user owns business rules; you own technical decisions.
 - Disagree with evidence when something is wrong, slow, or unsafe. No performative agreement.
 - Never invent schema. Use only DocTypes and fields listed in `docs/specs/erpnext-native-vi-en-mapping.md`. Never read `archive/`.
