@@ -334,7 +334,8 @@ watch(orderSearchQuery, () => {
 });
 
 function depositColorClass(o) {
-	const req = o.required_deposit || (o.grand_total * 0.5);
+	const req = Number(o.required_deposit) || 0;
+	if (!req) return 'text-secondary';
 	if (o.advance_paid >= req) return 'text-emerald';
 	if (o.advance_paid > 0) return 'text-amber';
 	return 'text-secondary';
@@ -471,11 +472,12 @@ async function onOrderUpdated(updatedOrder) {
 function onOrderDelivery(order) {
 	const idx = orders.value.findIndex((o) => o.name === order.name);
 	if (idx !== -1) {
+		// SSOT server S1: trạng thái/số cọc do backend trả qua loadOrders; ở đây chỉ refresh
 		orders.value[idx].order_state = 'Đã giao hàng';
 		orders.value[idx].outstanding_amount = 0;
-		orders.value[idx].advance_paid = orders.value[idx].grand_total;
 	}
 	showOrderDetail.value = false;
+	loadOrders();
 }
 
 onMounted(async () => {

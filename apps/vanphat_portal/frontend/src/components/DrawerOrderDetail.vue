@@ -137,7 +137,7 @@
 						</div>
 						<div class="fin-item">
 							<span class="fin-label">Thuế VAT ({{ order.vat_rate || 8 }}%)</span>
-							<span class="fin-val text-num">{{ formatCurrency(order.vat_amount || Math.round((order.net_total || order.product_total) * 0.08)) }}</span>
+							<span class="fin-val text-num">{{ formatCurrency(order.vat_amount) }}</span>
 						</div>
 						<div v-if="order.cylinder_total > 0" class="fin-item">
 							<span class="fin-label">Tiền trục</span>
@@ -149,7 +149,7 @@
 						</div>
 						<div class="fin-item">
 							<span class="fin-label">Đã cọc</span>
-							<span class="fin-val text-num font-bold" :class="order.advance_paid >= (order.required_deposit || order.grand_total * 0.5) ? 'text-emerald' : 'text-amber'">
+							<span class="fin-val text-num font-bold" :class="Number(order.advance_paid) >= Number(order.required_deposit) ? 'text-emerald' : 'text-amber'">
 								{{ formatCurrency(order.advance_paid) }}
 								<span v-if="order.payment_type !== 'Trả sau'" class="text-xs">({{ order.deposit_pct }}%)</span>
 							</span>
@@ -384,20 +384,8 @@ const handleSaveDeposit = async () => {
 				is_hold: res.is_hold,
 			});
 		} else {
-			// Fallback local visual update
-			const newAdvance = (props.order.advance_paid || 0) + amt;
-			const newOutstanding = Math.max(0, (props.order.grand_total || 0) - newAdvance);
-			const reqDeposit = props.order.required_deposit || props.order.grand_total * 0.5;
-			const isResolved = newAdvance >= reqDeposit;
-			toast.success(`Đã ghi nhận cọc ${formatCurrency(amt)}!`);
-			emit('update-order', {
-				...props.order,
-				advance_paid: newAdvance,
-				outstanding_amount: newOutstanding,
-				deposit_pct: Math.round((newAdvance / props.order.grand_total) * 100),
-				is_hold: !isResolved,
-				order_state: isResolved ? 'Đang xử lý' : 'Tạm giữ (Chưa đủ cọc)',
-			});
+			// SSOT server S1: cọc lỗi thì báo lỗi + giữ nguyên, không fallback local sai số
+			toast.error('Lỗi ghi nhận cọc: máy chủ ERP không phản hồi.');
 			depositInputAmount.value = null;
 		}
 	} catch (err) {

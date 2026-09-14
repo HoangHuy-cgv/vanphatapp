@@ -127,6 +127,25 @@ def list_orders(tab=None, query=None, page=1, page_length=15):
 		o["advance_paid"] = adv
 		o["outstanding_amount"] = max(0.0, gt - adv)
 		o["deposit_pct"] = round((adv / gt * 100), 1) if gt > 0 else 0
+		# SSOT server S1: tách tiền trục TRUC- khỏi tiền hàng để tính cọc chuẩn vàng
+		try:
+			so_items = frappe.get_all(
+				"Sales Order Item",
+				filters={"parent": o.name},
+				fields=["item_code", "item_name", "amount"],
+			)
+		except Exception:
+			so_items = []
+		cyl_total = 0.0
+		for _it in so_items:
+			_code = (_it.get("item_code") or "").upper()
+			_iname = (_it.get("item_name") or "").lower()
+			if "TRUC-" in _code or "trục" in _iname:
+				cyl_total += frappe.utils.flt(_it.get("amount")) * 1.08
+		product_total = max(0.0, gt - cyl_total)
+		o["cylinder_total"] = cyl_total
+		o["product_total"] = product_total
+		o["required_deposit"] = round((product_total * 0.5) + cyl_total)
 
 		# Lấy alias khách hàng
 		try:
@@ -282,7 +301,9 @@ def get_order_details(name):
 			"is_cylinder": is_cyl,
 		})
 
-	# Quy tắc Vàng: Cọc 50% tiền hàng + 100% TIỀN TRỤC
+	# Quy tắc Vàng: Cọc 50% tiền hàng + 100% TIỀN TRỤC (S1; S9 native hóa template, hằng số chỉ fallback)
+	net_total = frappe.utils.flt(doc.net_total) or max(0.0, grand_total - frappe.utils.flt(doc.total_taxes_and_charges))
+	vat_amount = frappe.utils.flt(doc.total_taxes_and_charges) or round(net_total * (8.0 / 100.0))
 	required_deposit = round((product_total * 0.5) + cylinder_total)
 	deposit_pct = round((advance_paid / grand_total * 100), 1) if grand_total > 0 else 0
 
@@ -342,6 +363,9 @@ def get_order_details(name):
 		"uom": doc.items[0].uom if doc.items else "Túi",
 		"qty": sum(frappe.utils.flt(it.qty) for it in doc.items if not getattr(it, "is_cylinder", False)),
 		"grand_total": grand_total,
+		"net_total": net_total,
+		"vat_rate": 8.0,
+		"vat_amount": vat_amount,
 		"product_total": product_total,
 		"cylinder_total": cylinder_total,
 		"advance_paid": advance_paid,

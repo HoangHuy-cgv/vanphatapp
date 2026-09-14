@@ -98,12 +98,17 @@ def get_price_preview(quotation=None, lines=None):
 	rows = lines or []
 	if quotation and frappe.db.exists("Quotation", quotation):
 		doc = frappe.get_doc("Quotation", quotation)
+		sub = frappe.utils.flt(doc.total)
+		tax = frappe.utils.flt(doc.total_taxes_and_charges)
+		if not tax and sub:
+			tax = round(sub * (8.0 / 100.0))
 		return {
 			"total_qty": doc.total_qty or 0,
-			"subtotal": doc.total or 0,
+			"subtotal": sub,
+			"vat_rate": 8.0,
 			"cylinder_total": 0,
-			"tax_amount": 0,
-			"grand_total": doc.grand_total or 0,
+			"tax_amount": tax,
+			"grand_total": frappe.utils.flt(doc.grand_total) or (sub + tax),
 		}
 	total_qty = 0.0
 	subtotal = 0.0
@@ -118,12 +123,16 @@ def get_price_preview(quotation=None, lines=None):
 			rate = 0.0
 		total_qty += qty
 		subtotal += qty * rate
+	# SSOT server: VAT 8% tính tại backend, client chỉ hiển thị (S1; S9 native hóa template)
+	vat_rate = 8.0
+	tax_amount = round(subtotal * (vat_rate / 100.0))
 	return {
 		"total_qty": total_qty,
 		"subtotal": subtotal,
+		"vat_rate": vat_rate,
 		"cylinder_total": 0,
-		"tax_amount": 0,
-		"grand_total": subtotal,
+		"tax_amount": tax_amount,
+		"grand_total": subtotal + tax_amount,
 	}
 
 

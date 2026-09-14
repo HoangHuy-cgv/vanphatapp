@@ -324,8 +324,8 @@ async function fetchPricePreview() {
 
 	if (res) {
 		const sub = Number(res.subtotal) || 0;
-		const tax = Number(res.tax_amount) || Math.round(sub * 0.08);
-		const grand = Number(res.grand_total) || (sub + cylTotal + tax);
+		const tax = Number(res.tax_amount) || 0;
+		const grand = Number(res.grand_total) || sub;
 		figures.value = {
 			total_qty: String(res.total_qty ?? '0'),
 			subtotal: formatCurrency(sub),

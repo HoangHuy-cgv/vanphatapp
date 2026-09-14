@@ -376,7 +376,7 @@ const catalogItems = computed(() => {
 			accessory: item.accessory || item.custom_accessory_spec || 'Không vòi',
 			print_type: item.print_type || item.custom_print_tech || 'In trục',
 			cylinder_count: item.cylinder_count || item.custom_cylinder_qty || 0,
-			cylinder_rate: item.cylinder_rate || 3100000,
+			cylinder_rate: item.cylinder_rate || serverPricing.value.cylinder_rate || 0,
 			uom: item.stock_uom || item.uom || 'Túi',
 			base_rate: item.standard_rate || item.base_rate || 0,
 			artwork_url: item.artwork_url || '',
@@ -443,13 +443,13 @@ const availableGenericItems = computed(() => {
 	);
 });
 
-// Server-Side Pricing & Commercial Math (SSOT: ERPNext Native)
+// Server-Side Pricing & Commercial Math (SSOT: ERPNext Native, S1 bind backend)
 const serverPricing = ref({
 	net_total: 0,
-	vat_rate: 8,
+	vat_rate: 0,
 	vat_amount: 0,
 	cylinder_count: 0,
-	cylinder_rate: 3100000,
+	cylinder_rate: 0,
 	cylinder_total: 0,
 	grand_total: 0,
 	required_deposit: 0,
