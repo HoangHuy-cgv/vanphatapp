@@ -46,6 +46,14 @@ const boms = parseCSV(fs.readFileSync(path.join(CLEAN_DATA_DIR, 'bom_master.csv'
 const bomItems = parseCSV(fs.readFileSync(path.join(CLEAN_DATA_DIR, 'bom_items.csv'), 'utf8'));
 
 const appVue = fs.readFileSync(path.join(ROOT_DIR, 'apps/vanphat_portal/frontend/src/App.vue'), 'utf8');
+const catalogVuePath = path.join(ROOT_DIR, 'apps/vanphat_portal/frontend/src/views/CatalogView.vue');
+const catalogVue = fs.existsSync(catalogVuePath) ? fs.readFileSync(catalogVuePath, 'utf8') : '';
+const ordersVuePath = path.join(ROOT_DIR, 'apps/vanphat_portal/frontend/src/views/OrdersView.vue');
+const ordersVue = fs.existsSync(ordersVuePath) ? fs.readFileSync(ordersVuePath, 'utf8') : '';
+const portalCssPath = path.join(ROOT_DIR, 'apps/vanphat_portal/frontend/src/assets/portal.css');
+const portalCss = fs.existsSync(portalCssPath) ? fs.readFileSync(portalCssPath, 'utf8') : '';
+const portalSource = appVue + '\n' + catalogVue + '\n' + ordersVue + '\n' + portalCss;
+
 const drawerVue = fs.readFileSync(path.join(ROOT_DIR, 'apps/vanphat_portal/frontend/src/components/DrawerItemDetail.vue'), 'utf8');
 const pythonApi = fs.readFileSync(path.join(ROOT_DIR, 'apps/vanphat_portal/vanphat_portal/api/item.py'), 'utf8');
 const serveScript = fs.readFileSync(path.join(ROOT_DIR, 'scripts/serve-portal.mjs'), 'utf8');
@@ -60,25 +68,25 @@ const navMenu = navMenuMatch ? navMenuMatch[1] : '';
 
 console.log('\n--- 2. SPA FIRST-CLASS VIEW & ELON MUSK COCKPIT CHECK ---');
 const appChecks = [
-	{ name: 'Sidebar native SPA button (no external a-tag)', test: (navMenu.includes("view = 'catalog'") || navMenu.includes("view = 'items'")) && !appVue.includes('href="/master-data"') },
+	{ name: 'Sidebar native SPA button (no external a-tag)', test: (navMenu.includes("view = 'catalog'") || navMenu.includes("navigateTo('catalog')") || navMenu.includes("view = 'items'")) && !appVue.includes('href="/master-data"') },
 	{ name: 'Sidebar unified button label is Danh mục', test: navMenu.includes('>Danh mục</span>') && navMenu.includes('catalogTotalCount') },
 	{ name: 'Removed individual master data sidebar buttons', test: !navMenu.includes('>Mặt hàng</span>') && !navMenu.includes('>Khách hàng</span>') && !navMenu.includes('>Nhà cung cấp</span>') && !navMenu.includes('>Người dùng</span>') },
 	{ name: 'View switching for unified catalog', test: appVue.includes("isCatalogView") },
-	{ name: 'Single-line header with tabs and search', test: appVue.includes('catalog-header-cockpit') && appVue.includes('catalog-search-cockpit-wrap') },
-	{ name: 'Exact 6 Master Catalog tab labels', test: appVue.includes('<span>Sản phẩm</span>') && appVue.includes('<span>Nguyên vật liệu</span>') && appVue.includes('<span>Trục in</span>') && appVue.includes('<span>Khách hàng</span>') && appVue.includes('<span>Nhà cung cấp</span>') && appVue.includes('<span>Người dùng</span>') },
-	{ name: 'Instant search bar on same line with tabs', test: appVue.includes('catalog-search-cockpit-wrap') && appVue.includes('v-model="catalogSearchInput"') },
-	{ name: 'Removed supply filter buttons (Xưởng SX, Mua ngoài)', test: !appVue.includes('Tất cả cung ứng') && !appVue.includes('itemSupplyFilter') },
-	{ name: 'Table column: Mã sản phẩm', test: appVue.includes('Mã sản phẩm') },
-	{ name: 'Table column: Tên sản phẩm', test: appVue.includes('Tên sản phẩm') },
-	{ name: 'Table uses short name only', test: appVue.includes('it.custom_alias || it.item_name') },
-	{ name: 'Table column: Khách hàng hidden from table', test: !appVue.includes('<th style="width: 18%;">Khách hàng</th>') },
-	{ name: 'Table column: Chất liệu (Single-line)', test: appVue.includes('Chất liệu') && !appVue.includes('it.custom_thickness_mic }} mic') },
-	{ name: 'Table column: Kích thước (R x D x Dày)', test: appVue.includes('Kích thước') && appVue.includes('getItemDimensionsText') },
-	{ name: 'Table column: Đáy riêng biệt (Gusset)', test: appVue.includes('getItemGussetText') },
-	{ name: 'Table column: ĐVT', test: appVue.includes('ĐVT') },
-	{ name: 'Hidden columns removed from table', test: !appVue.includes('Nhóm hàng</th>') && !appVue.includes('Cung ứng</th>') && !appVue.includes('Giá niêm yết</th>') },
-	{ name: 'Row click triggers openItemDetail', test: appVue.includes('openItemDetail(it)') },
-	{ name: 'DrawerItemDetail integration', test: appVue.includes('<DrawerItemDetail') }
+	{ name: 'Single-line header with tabs and search', test: portalSource.includes('catalog-header-cockpit') && portalSource.includes('catalog-search-cockpit-wrap') },
+	{ name: 'Exact 6 Master Catalog tab labels', test: portalSource.includes('<span>Sản phẩm</span>') && portalSource.includes('<span>Nguyên vật liệu</span>') && portalSource.includes('<span>Trục in</span>') && portalSource.includes('<span>Khách hàng</span>') && portalSource.includes('<span>Nhà cung cấp</span>') && portalSource.includes('<span>Người dùng</span>') },
+	{ name: 'Instant search bar on same line with tabs', test: portalSource.includes('catalog-search-cockpit-wrap') && portalSource.includes('v-model="catalogSearchInput"') },
+	{ name: 'Removed supply filter buttons (Xưởng SX, Mua ngoài)', test: !portalSource.includes('Tất cả cung ứng') && !portalSource.includes('itemSupplyFilter') },
+	{ name: 'Table column: Mã sản phẩm', test: portalSource.includes('Mã sản phẩm') },
+	{ name: 'Table column: Tên sản phẩm', test: portalSource.includes('Tên sản phẩm') },
+	{ name: 'Table uses short name only', test: portalSource.includes('it.custom_alias || it.item_name') },
+	{ name: 'Table column: Khách hàng hidden from table', test: !portalSource.includes('<th style="width: 18%;">Khách hàng</th>') },
+	{ name: 'Table column: Chất liệu (Single-line)', test: portalSource.includes('Chất liệu') && !portalSource.includes('it.custom_thickness_mic }} mic') },
+	{ name: 'Table column: Kích thước (R x D x Dày)', test: portalSource.includes('Kích thước') && portalSource.includes('getItemDimensionsText') },
+	{ name: 'Table column: Đáy riêng biệt (Gusset)', test: portalSource.includes('getItemGussetText') },
+	{ name: 'Table column: ĐVT', test: portalSource.includes('ĐVT') },
+	{ name: 'Hidden columns removed from table', test: !portalSource.includes('Nhóm hàng</th>') && !portalSource.includes('Cung ứng</th>') && !portalSource.includes('Giá niêm yết</th>') },
+	{ name: 'Row click triggers openItemDetail', test: portalSource.includes('openItemDetail(it)') },
+	{ name: 'DrawerItemDetail integration', test: portalSource.includes('<DrawerItemDetail') }
 ];
 
 let allAppPassed = true;
@@ -168,10 +176,10 @@ for (const check of materialChecks) {
 
 console.log('\n--- 7. FIXED COCKPIT & STICKY HEADER CHECK ---');
 const stickyChecks = [
-	{ name: 'Fixed viewport layout (portal-layout height: 100vh)', test: appVue.includes('height: 100vh') && appVue.includes('.portal-layout') },
-	{ name: 'Fixed header with flex-shrink: 0 (catalog-header-cockpit)', test: appVue.includes('.catalog-header-cockpit') && appVue.includes('flex-shrink: 0') },
-	{ name: 'Scrollable table-container (overflow-y: auto)', test: appVue.includes('.table-container') && appVue.includes('overflow-y: auto') },
-	{ name: 'Sticky table header th (position: sticky; top: 0)', test: appVue.includes('.data-table th') && appVue.includes('position: sticky') && appVue.includes('top: 0') }
+	{ name: 'Fixed viewport layout (portal-layout height: 100vh)', test: portalSource.includes('height: 100vh') && portalSource.includes('.portal-layout') },
+	{ name: 'Fixed header with flex-shrink: 0 (catalog-header-cockpit)', test: portalSource.includes('.catalog-header-cockpit') && portalSource.includes('flex-shrink: 0') },
+	{ name: 'Scrollable table-container (overflow-y: auto)', test: portalSource.includes('.table-container') && portalSource.includes('overflow-y: auto') },
+	{ name: 'Sticky table header th (position: sticky; top: 0)', test: portalSource.includes('.data-table th') && portalSource.includes('position: sticky') && portalSource.includes('top: 0') }
 ];
 
 let allStickyPassed = true;
@@ -196,7 +204,7 @@ const aliasChecks = [
 	{ name: 'Zero legal name duplication in Drawer hero-sub', test: !drawerVue.includes('hero-sub') },
 	{ name: '100% BOM item rows in CSV have non-empty custom_alias', test: aliasEmptyBoms.length === 0 },
 	{ name: 'Zero verbose legal prefixes in BOM custom_alias (PET in, Keo D-9700, Dung Môi EA)', test: verboseAliasBoms.length === 0 },
-	{ name: 'Orders table prioritizes custom_alias', test: appVue.includes('o.custom_alias') },
+	{ name: 'Orders table prioritizes custom_alias', test: portalSource.includes('o.custom_alias') },
 	{ name: 'ModalCreateOrder prioritizes custom_alias in item dropdowns', test: fs.readFileSync(path.join(ROOT_DIR, 'apps/vanphat_portal/frontend/src/components/ModalCreateOrder.vue'), 'utf8').includes('item.custom_alias') }
 ];
 
@@ -251,14 +259,14 @@ const userApiExists = fs.existsSync(path.join(ROOT_DIR, 'apps/vanphat_portal/van
 
 const masterDataChecks = [
 	{ name: 'Sidebar has single unified Danh mục button', test: appVue.includes("isCatalogView") && appVue.includes('>Danh mục</span>') },
-	{ name: 'Unified 6-tab cockpit (SP, NVL, Trục, KH, NCC, User)', test: appVue.includes("activeCatalogTab === 'sp'") && appVue.includes("activeCatalogTab === 'kh'") && appVue.includes("activeCatalogTab === 'ncc'") && appVue.includes("activeCatalogTab === 'user'") },
-	{ name: 'Sub-filter chips for Sản phẩm (Tất cả, Túi ghép, NGCS, Cuộn màng, Màng đơn)', test: appVue.includes('sub-filter-chips') && appVue.includes("activeProductSubFilter === 'tp'") },
-	{ name: 'Customer table with credit limit and alias inside catalog', test: appVue.includes("activeCatalogTab === 'kh'") && appVue.includes('c.credit_limit') },
-	{ name: 'Supplier table with tax ID and group inside catalog', test: appVue.includes("activeCatalogTab === 'ncc'") && appVue.includes('s.tax_id') },
-	{ name: 'User table with ERPNext native roles inside catalog', test: appVue.includes("activeCatalogTab === 'user'") && appVue.includes('u.role_profile_name') },
-	{ name: 'DrawerCustomerDetail component created & integrated', test: customerVueExists && appVue.includes('<DrawerCustomerDetail') },
-	{ name: 'DrawerSupplierDetail component created & integrated', test: supplierVueExists && appVue.includes('<DrawerSupplierDetail') },
-	{ name: 'DrawerUserDetail component created & integrated', test: userVueExists && appVue.includes('<DrawerUserDetail') },
+	{ name: 'Unified 6-tab cockpit (SP, NVL, Trục, KH, NCC, User)', test: portalSource.includes("activeCatalogTab === 'sp'") && portalSource.includes("activeCatalogTab === 'kh'") && portalSource.includes("activeCatalogTab === 'ncc'") && portalSource.includes("activeCatalogTab === 'user'") },
+	{ name: 'Sub-filter chips for Sản phẩm (Tất cả, Túi ghép, NGCS, Cuộn màng, Màng đơn)', test: portalSource.includes('sub-filter-chips') && portalSource.includes("activeProductSubFilter === 'tp'") },
+	{ name: 'Customer table with credit limit and alias inside catalog', test: portalSource.includes("activeCatalogTab === 'kh'") && portalSource.includes('c.credit_limit') },
+	{ name: 'Supplier table with tax ID and group inside catalog', test: portalSource.includes("activeCatalogTab === 'ncc'") && portalSource.includes('s.tax_id') },
+	{ name: 'User table with ERPNext native roles inside catalog', test: portalSource.includes("activeCatalogTab === 'user'") && portalSource.includes('u.role_profile_name') },
+	{ name: 'DrawerCustomerDetail component created & integrated', test: customerVueExists && portalSource.includes('<DrawerCustomerDetail') },
+	{ name: 'DrawerSupplierDetail component created & integrated', test: supplierVueExists && portalSource.includes('<DrawerSupplierDetail') },
+	{ name: 'DrawerUserDetail component created & integrated', test: userVueExists && portalSource.includes('<DrawerUserDetail') },
 	{ name: 'Backend API customer.py created', test: customerApiExists },
 	{ name: 'Backend API supplier.py created', test: supplierApiExists },
 	{ name: 'Backend API user.py created', test: userApiExists }
