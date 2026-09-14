@@ -1,11 +1,11 @@
-# Handoff — Variant native xong, commit 7bc7f79 (SSOT rolling, <25 dòng)
+# Handoff — UI tên quen xong, commit f739883 (SSOT rolling, <25 dòng)
 
-> Commit: `7bc7f79` variant KH về native customer_items (tiếp `1f68ad5`).
+> Commit: `f739883` ẩn mã nội bộ, hiện tên quen + mã biến thể (tiếp `7bc7f79`).
 > Quy ước: Sếp/em, tiếng Việt. Không `git push` khi chưa lệnh.
 
-- Bỏ 2 cột gộp customer+variant khỏi item_master (293 dòng sạch).
-- Mới customer_items.csv (45 TP, 1 TP = 1 KH); API search customer_code.
-- Nguyên tắc ngành vào masterdata-spec: TP/BTP 1 KH; NGCS/TMD in lụa.
-- Verify: dry-run FK 0 lỗi, search 888-3.2KG-HONG → TP-00001, browser sạch.
+- Bảng Catalog: bỏ cột TP-, tên quen alias + customer_code (888-3.2KG-HONG).
+- Drawer: badge mã biến thể, hero tên quen + ref KH; mã nội bộ chỉ tooltip.
+- Search server-side gõ tên nào cũng ra; tên pháp lý chỉ tooltip/hóa đơn.
+- Verify: browser 404/errors 0, 15 dòng, first 888 3.2Kg Hồng + variant.
 - Mock: http://127.0.0.1:8080/portal (log /tmp/portal-server.log).
 - Còn: bench staging ERPNext thật + `git push` (chờ lệnh Sếp).
