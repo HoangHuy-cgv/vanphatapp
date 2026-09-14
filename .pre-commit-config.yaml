@@ -1,0 +1,23 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: mixed-line-ending
+        args: ['--fix=lf']
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.0
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+  - repo: local
+    hooks:
+      - id: forbid-frappe-patterns
+        name: forbid frappe anti-patterns
+        entry: bash -c 'rg -n "allow_guest\\s*=\\s*True|frappe\\.get_all|limit\\s*=\\s*500|_load_csv|3100000|cylinderRate\\s*[:=]" apps/vanphat_portal/vanphat_portal/api apps/vanphat_portal/frontend/src --glob "*.py" --glob "*.vue" --glob "*.js" | grep -v "rgba\|FALLBACK\|test" && echo "FORBIDDEN PATTERN FOUND" && exit 1 || exit 0'
+        language: system
+        pass_filenames: false

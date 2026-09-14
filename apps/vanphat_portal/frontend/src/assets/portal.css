@@ -1,10 +1,23 @@
+/* P5: Inter subset latin + vietnamese (114KB thay full 264KB, giảm 57%).
+   Nguồn: rsms.me/inter (full >2000 glyphs/147 ngôn ngữ, app VN chỉ cần 2 subset). */
 @font-face {
 	font-family: 'InterVariable';
 	font-weight: 100 900;
 	font-display: swap;
 	font-style: normal;
-	src: url('./fonts/inter/Inter.var.woff2') format('woff2-variations'),
-	     url('./fonts/inter/Inter.var.woff2') format('woff2');
+	src: url('./fonts/inter/Inter-latin.woff2') format('woff2-variations'),
+	     url('./fonts/inter/Inter-latin.woff2') format('woff2');
+	unicode-range: U+0000-00FF, U+0100-017F, U+0180-024F;
+}
+
+@font-face {
+	font-family: 'InterVariable';
+	font-weight: 100 900;
+	font-display: swap;
+	font-style: normal;
+	src: url('./fonts/inter/Inter-vietnamese.woff2') format('woff2-variations'),
+	     url('./fonts/inter/Inter-vietnamese.woff2') format('woff2');
+	unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01B0, U+1EA0-1EF9;
 }
 
 @font-face {
@@ -12,8 +25,17 @@
 	font-weight: 100 900;
 	font-display: swap;
 	font-style: normal;
-	src: url('./fonts/inter/Inter.var.woff2') format('woff2-variations'),
-	     url('./fonts/inter/Inter.var.woff2') format('woff2');
+	src: url('./fonts/inter/Inter-latin.woff2') format('woff2');
+	unicode-range: U+0000-00FF, U+0100-017F, U+0180-024F;
+}
+
+@font-face {
+	font-family: 'Inter';
+	font-weight: 100 900;
+	font-display: swap;
+	font-style: normal;
+	src: url('./fonts/inter/Inter-vietnamese.woff2') format('woff2');
+	unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01B0, U+1EA0-1EF9;
 }
 
 :root {

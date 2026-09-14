@@ -15,16 +15,11 @@ export default defineConfig({
 	build: {
 		outDir: '../vanphat_portal/public/frontend',
 		emptyOutDir: true,
-		// S8: es2022 thay es2015 (Vite 6 + esbuild 0.25; Chrome 92+/Safari 15.4+);
-		// baseline-widely-available là alias Vite mới, esbuild chưa hiểu → dùng es2022 tương đương
-		target: 'es2022',
-		chunkSizeWarningLimit: 170,
-		rollupOptions: {
-			output: {
-				manualChunks: {
-					'vendor-vue': ['vue', 'vue-router'],
-				},
-			},
-		},
+		// P5 (Sếp duyệt, Chrome mới nhất): về default baseline-widely-available
+		// (= chrome111/edge111/firefox114/safari16.4, mốc 2026-01-01, vite.dev/config/build-options).
+		// Xóa es2022 cứng + manualChunks vendor-vue (Vite/Rolldown tự split; issue #12209).
+		chunkSizeWarningLimit: 500,
+		reportCompressedSize: true,
+		modulePreload: { polyfill: false },
 	},
 });
