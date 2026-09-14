@@ -122,10 +122,15 @@
       4. `Khách hàng` (117) — Khách hàng & chính sách công nợ gối đầu / cọc 50%.
       5. `Nhà cung cấp` (14) — 14 NCC cung ứng hạt nhựa, màng, keo, gia công.
       6. `Người dùng` (11) — 11 tài khoản nhân sự với vai trò ERPNext Native.
-    - **Tìm kiếm tức thì thích ứng (Adaptive Search)**: Đặt cùng hàng bên phải thanh tabs, tự động đổi placeholder và count pill theo tab đang chọn (`... SP`, `... NVL`, `... Trục`, `... KH`, `... NCC`, `... User`).
+    - **Tìm kiếm tức thì thích ứng (Adaptive Search)**: Đặt cùng hàng bên phải thanh tabs, tự động đổi placeholder theo tab đang chọn.
+    - **Tối ưu buồng lái tab Sản phẩm & Khóa Tab Name 1 Line (Elon Musk Minimalist)**:
+      - Bỏ chip filter "Tất cả (88)", 4 chips nghiệp vụ (`Túi ghép (45)`, `Túi NGCS (15)`, `Cuộn màng (16)`, `Màng đơn (12)`) chuyển sang click-toggle (bỏ chọn để xem tất cả).
+      - Bỏ badge count sau ô search, thu gọn ô search xuống 250px.
+      - Đưa sub-filter chips xuống thanh sub-toolbar chuyên biệt ngay trên bảng sản phẩm, giải phóng hoàn toàn không gian hàng điều hướng.
+      - Khóa cứng `white-space: nowrap !important; flex-shrink: 0;` cho tất cả 6 tab và thẻ `span`, ẩn scrollbar ngang bằng `scrollbar-width: none`. Đảm bảo 100% các tab name (`Sản phẩm`, `Nguyên vật liệu`, `Trục in`, `Khách hàng`, `Nhà cung cấp`, `Người dùng`) nằm thẳng hàng trên 1 dòng duy nhất, không bao giờ bị ngắt chữ 2 hàng.
     - **Slide-Over Drawers liên kết đầy đủ**: Chuyển đổi và mở mượt mà cả 4 slide-over drawers (`DrawerItemDetail`, `DrawerCustomerDetail`, `DrawerSupplierDetail`, `DrawerUserDetail`).
     - **CI Gate**: Toàn bộ **77/77 checks PASSED 100%** trong `scripts/verify-catalog-page.mjs`.
-    - **Visual Proof**: Chụp và kiểm chứng 6 ảnh chụp thực tế bằng Chrome DevTools: `unified_catalog_products.png`, `unified_catalog_customers.png`, `unified_catalog_customer_drawer.png`, `unified_catalog_suppliers.png`, `unified_catalog_supplier_drawer.png`, `unified_catalog_users.png`, `unified_catalog_user_drawer.png`, `unified_catalog_search_enzy.png`.
+    - **Visual Proof**: Chụp và kiểm chứng qua Chrome DevTools MCP: `unified_catalog_singleline_tabs.png`, `unified_catalog_subfilter_active.png`, `unified_catalog_products.png`, `unified_catalog_customers.png`, `unified_catalog_customer_drawer.png`, `unified_catalog_suppliers.png`, `unified_catalog_supplier_drawer.png`, `unified_catalog_users.png`, `unified_catalog_user_drawer.png`, `unified_catalog_search_enzy.png`.
 
 ---
 

@@ -180,51 +180,7 @@
 					</button>
 				</div>
 
-				<!-- Sub-filter chips cho tab Sản Phẩm -->
-				<div v-if="activeCatalogTab === 'sp'" class="sub-filter-chips">
-					<button
-						type="button"
-						class="sub-chip-btn"
-						:class="{ active: activeProductSubFilter === 'all' }"
-						@click="activeProductSubFilter = 'all'"
-					>
-						Tất cả ({{ productItems.length }})
-					</button>
-					<button
-						type="button"
-						class="sub-chip-btn"
-						:class="{ active: activeProductSubFilter === 'tp' }"
-						@click="activeProductSubFilter = 'tp'"
-					>
-						Túi ghép ({{ tpItems.length }})
-					</button>
-					<button
-						type="button"
-						class="sub-chip-btn"
-						:class="{ active: activeProductSubFilter === 'ngcs' }"
-						@click="activeProductSubFilter = 'ngcs'"
-					>
-						Túi NGCS ({{ ngcsItems.length }})
-					</button>
-					<button
-						type="button"
-						class="sub-chip-btn"
-						:class="{ active: activeProductSubFilter === 'btp' }"
-						@click="activeProductSubFilter = 'btp'"
-					>
-						Cuộn màng ({{ btpItems.length }})
-					</button>
-					<button
-						type="button"
-						class="sub-chip-btn"
-						:class="{ active: activeProductSubFilter === 'tmd' }"
-						@click="activeProductSubFilter = 'tmd'"
-					>
-						Màng đơn ({{ tmdItems.length }})
-					</button>
-				</div>
-
-				<!-- Cockpit Search Input: Tự động thích ứng theo Tab đang chọn -->
+				<!-- Cockpit Search Input: Tinh gọn không kèm badge count -->
 				<div class="catalog-search-cockpit-wrap">
 					<div class="search-input-wrap">
 						<svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -246,7 +202,6 @@
 							@click="catalogSearchInput = ''"
 						>✕</button>
 					</div>
-					<span class="catalog-count-pill font-mono">{{ currentCatalogCountText }}</span>
 				</div>
 			</header>
 
@@ -481,6 +436,44 @@
 
 			<!-- Master Catalog View: Elon Musk Minimalist Cockpit (Tất Cả Danh Mục) -->
 			<div v-else-if="isCatalogView" class="catalog-view-wrapper">
+				<!-- Sub-filter chips cho tab Sản Phẩm (Bỏ filter Tất Cả) -->
+				<div v-if="activeCatalogTab === 'sp'" class="catalog-subfilter-bar">
+					<div class="sub-filter-chips">
+						<button
+							type="button"
+							class="sub-chip-btn"
+							:class="{ active: activeProductSubFilter === 'tp' }"
+							@click="activeProductSubFilter = activeProductSubFilter === 'tp' ? 'all' : 'tp'"
+						>
+							Túi ghép ({{ tpItems.length }})
+						</button>
+						<button
+							type="button"
+							class="sub-chip-btn"
+							:class="{ active: activeProductSubFilter === 'ngcs' }"
+							@click="activeProductSubFilter = activeProductSubFilter === 'ngcs' ? 'all' : 'ngcs'"
+						>
+							Túi NGCS ({{ ngcsItems.length }})
+						</button>
+						<button
+							type="button"
+							class="sub-chip-btn"
+							:class="{ active: activeProductSubFilter === 'btp' }"
+							@click="activeProductSubFilter = activeProductSubFilter === 'btp' ? 'all' : 'btp'"
+						>
+							Cuộn màng ({{ btpItems.length }})
+						</button>
+						<button
+							type="button"
+							class="sub-chip-btn"
+							:class="{ active: activeProductSubFilter === 'tmd' }"
+							@click="activeProductSubFilter = activeProductSubFilter === 'tmd' ? 'all' : 'tmd'"
+						>
+							Màng đơn ({{ tmdItems.length }})
+						</button>
+					</div>
+				</div>
+
 				<!-- Bảng Mặt hàng: Sản phẩm, NVL, Trục in -->
 				<div v-if="activeCatalogTab === 'sp' || activeCatalogTab === 'nvl' || activeCatalogTab === 'truc'" class="table-container">
 					<table class="data-table">
@@ -1636,6 +1629,19 @@ html, body {
 	flex: 1;
 	min-width: 0;
 	overflow-x: auto;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+}
+
+.catalog-header-cockpit .catalog-tabs-bar::-webkit-scrollbar {
+	display: none;
+}
+
+.catalog-subfilter-bar {
+	display: flex;
+	align-items: center;
+	margin-bottom: 14px;
+	flex-shrink: 0;
 }
 
 .catalog-search-cockpit-wrap {
@@ -1647,7 +1653,7 @@ html, body {
 
 .search-input-wrap {
 	position: relative;
-	width: 320px;
+	width: 250px;
 	display: flex;
 	align-items: center;
 }
@@ -1735,16 +1741,22 @@ html, body {
 .order-tab-btn {
 	display: inline-flex;
 	align-items: center;
-	gap: 8px;
-	padding: 7px 14px;
+	gap: 7px;
+	padding: 6px 13px;
 	border-radius: 8px;
 	border: 1px solid transparent;
 	background: transparent;
 	color: #94a3b8;
-	font-size: 14.5px;
+	font-size: 13.5px;
 	font-weight: 600;
 	cursor: pointer;
+	white-space: nowrap !important;
+	flex-shrink: 0;
 	transition: all 0.15s ease;
+}
+
+.order-tab-btn span {
+	white-space: nowrap !important;
 }
 
 .order-tab-btn:hover {
@@ -2370,60 +2382,6 @@ html, body {
 	flex-direction: column;
 }
 
-.order-tabs-bar {
-	display: flex;
-	gap: 6px;
-	margin-bottom: 12px;
-	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-	padding-bottom: 10px;
-}
-
-.order-tab-btn {
-	display: inline-flex;
-	align-items: center;
-	gap: 8px;
-	padding: 7px 14px;
-	border-radius: 8px;
-	border: 1px solid transparent;
-	background: transparent;
-	color: #94a3b8;
-	font-size: 13.5px;
-	font-weight: 600;
-	cursor: pointer;
-	transition: all 0.15s ease;
-}
-
-.order-tab-btn:hover {
-	background: rgba(255, 255, 255, 0.04);
-	color: #f1f5f9;
-}
-
-.order-tab-btn.active {
-	background: #161b22;
-	border-color: #3a424e;
-	color: #4ea1e0;
-	font-weight: 700;
-}
-
-.tab-badge {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	min-width: 20px;
-	height: 19px;
-	padding: 0 6px;
-	border-radius: 10px;
-	font-size: 11px;
-	font-weight: 700;
-	background: rgba(255, 255, 255, 0.08);
-	color: #94a3b8;
-	font-variant-numeric: tabular-nums;
-}
-
-.order-tab-btn.active .tab-badge {
-	background: rgba(78, 161, 224, 0.2);
-	color: #4ea1e0;
-}
 
 .sla-cell {
 	display: inline-flex;

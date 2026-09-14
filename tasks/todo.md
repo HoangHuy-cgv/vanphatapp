@@ -133,3 +133,13 @@
     - Tab Người dùng (11 User): `unified_catalog_users.png`
     - Drawer User Doãn Thị Tường Lam: `unified_catalog_user_drawer.png`
     - Tìm kiếm tức thì trong tab: `unified_catalog_search_enzy.png`
+
+- [x] Task 18: Tối Ưu Buồng Lái Tab Sản Phẩm (Bỏ "Tất Cả", Bỏ Badge Count, Khóa Tab Name Trên 1 Line Duy Nhất)
+  - [x] Gỡ bỏ chip filter "Tất cả (88)" tại tab Sản phẩm; 4 chips còn lại (`Túi ghép (45)`, `Túi NGCS (15)`, `Cuộn màng (16)`, `Màng đơn (12)`) chuyển sang cơ chế click-toggle thông minh (click lại để bỏ lọc về toàn bộ 88 sản phẩm).
+  - [x] Gỡ bỏ badge count (`... SP`, `... KH`,...) nằm sau ô search box, tinh gọn ô search (`width: 250px`).
+  - [x] Đưa sub-filter chips xuống thanh sub-toolbar chuyên biệt ngay trên bảng dữ liệu khi ở tab Sản phẩm, giúp giải phóng hoàn toàn không gian hàng 1.
+  - [x] Khóa cứng `white-space: nowrap !important; flex-shrink: 0;` cho toàn bộ 6 tab và thẻ `span` bên trong, ẩn hoàn toàn thanh cuộn ngang bằng `scrollbar-width: none`.
+  - [x] Đảm bảo 100% cả 6 tab name (`Sản phẩm`, `Nguyên vật liệu`, `Trục in`, `Khách hàng`, `Nhà cung cấp`, `Người dùng`) hiển thị thẳng tắp trên 1 hàng ngang duy nhất, tuyệt đối không bị ngắt dòng 2 hàng.
+  - [x] Kiểm thử tự động: `verify-catalog-page.mjs` đạt **77/77 checks PASS 100%**.
+  - [x] Build Vite production thành công trong 1.01s.
+  - [x] Chụp ảnh kiểm chứng visual proof Chrome DevTools MCP: `unified_catalog_singleline_tabs.png` và `unified_catalog_subfilter_active.png`.
