@@ -132,7 +132,7 @@
 					<div class="fin-grid">
 						<div class="fin-item">
 							<span class="fin-label">Tiền hàng (chưa VAT)</span>
-							<span class="fin-val text-num">{{ formatCurrency(order.net_total || order.product_total) }}</span>
+							<span class="fin-val text-num">{{ formatCurrency(order.product_total ?? order.net_total) }}</span>
 						</div>
 						<div class="fin-item">
 							<span class="fin-label">Thuế VAT ({{ order.vat_rate || 8 }}%)</span>

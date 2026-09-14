@@ -9,6 +9,7 @@
 | `bao_gia.py` | Quotation, Item, File | Báo giá, `calculate_packaging`, link-search Customer, preview đọc số native |
 | `item.py` | Item, BOM | Catalog full-server (filters/or_filters/count), BOM 2-tier, cache Redis |
 | `customer.py`/`supplier.py`/`user.py` | Customer/Supplier/User | Master login-only + `or_filters` + paginate, truthful empty |
+| `_common.py` | — | Helper dùng chung, KHÔNG whitelist: `paginate`/`page_result`/`text`/`as_json`/`resolve_customer`. Không chứa nghiệp vụ/không toán tiền |
 
 - Wrapper mỏng: bọc native, không chứa nghiệp vụ trùng native. Không re-export ghi đè câm (bug S4 đã chốt SSOT).
 
@@ -20,16 +21,30 @@
 
 ## 3. Query Chuẩn (Chữa N+1 + limit=500)
 - List: `frappe.db.get_list(doctype, fields=[...], filters=..., or_filters=..., order_by=..., start=..., page_length=...)`.
-- `page_length` mặc định 15, trần 100. Cấm `limit=500` rồi filter/lọc bằng Python (`order.py::list_orders` hiện tại — slice S2).
-- Join nhiều DocType (Customer alias, SO Item đầu, Item `custom_alias`): **1 query `frappe.qb`** thay vì vòng lặp `get_value`/`get_all` từng dòng (N+1 — slice S2).
+- `page_length` mặc định 15, trần 100 (helper `_common.paginate`). Cấm `limit=500` rồi filter/lọc bằng Python.
+- Join nhiều DocType (Customer alias, SO Item đầu, Item `custom_alias`): **1 query `frappe.qb`** thay vì vòng lặp `get_value`/`get_all` từng dòng (N+1).
+- **Sổ đo query/trang (đếm tĩnh theo code, 2026-02-17):**
+
+| Endpoint | Trước | Sau |
+|---|---|---|
+| `order.list_orders` (15 đơn/trang) | ~3 + 2N ≈ 33 query | **6 query cố định** (count + rows + tab counts + 1 dòng hàng cả trang + 2 cọc/KH) |
+| `item.get_detail` (BOM n dòng) | 1 + n query alias | **+1 query** (`["in", codes]`) |
+| `order.get_order_details` | 3 query `Item` rời + 3 cọc | **1 query `Item`** + cọc gộp |
+| `bao_gia.list_quotations` khi tìm | count chỉ lọc `name` (sai số) | count khớp đúng `or_filters` (1 Criterion) |
+
+  Chưa đo được p95 trên site thật (chưa có bench staging — plan item 2); số trên là đếm tĩnh + harness `apps/vanphat_portal/tests`.
 - Soi SQL bằng `debug=True` khi nghi ngờ. Raw SQL chỉ cho báo cáo join phức tạp, cấm mutation production.
 - Master data nhạy cảm: `get_list` (tôn trọng permission), cấm `get_all` bypass.
+- Nợ tồn: `order.list_orders`/`item.get_list` (nhánh qb) chưa áp permission như `get_list`; cần role check ở tầng endpoint (Sếp chốt sau).
 
 ## 4. Chuẩn Method (GET/POST, Commit, Response)
 - GET cho read/preview, POST cho create/submit/cancel. Không GET gây mutation.
-- POST tự `frappe.db.commit()` sau khi persist. Không commit nửa chừng rồi tiếp tục tính toán phụ thuộc.
+- POST tự `frappe.db.commit()` sau khi persist (đã áp: `create_sales_order`, `record_order_deposit`,
+  `accountant_approve_procurement`, `submit_sales_order`, `create_quotation`, `submit_quotation`,
+  `mark_quotation_lost`, `make_order_from_quotation`). Không commit nửa chừng rồi tiếp tục tính toán phụ thuộc.
 - Response: `{message: ...}` (Frappe tự bọc). Lỗi: `frappe.throw(msg)` → `{exc, exc_type}` cho client toast.
 - Trạng thái buồng lái tính server từ native: `order_status_label/class` từ `status`/`docstatus`/`advance_paid`; `outstanding_amount = grand_total - advance_paid`; `deposit_pct`; `required_deposit` từ `Payment Terms Template` + `Customer Credit Limit` (xóa hằng số Python tiến tới native — slice S9).
+- Thiếu `Default Company`: báo lỗi rõ ràng, KHÔNG hardcode tên công ty (Sếp chốt 2026-02-17 — cấu hình Default Company = Bao Bì Vạn Phát ở site).
 
 ## 5. Cache Redis
 - Key PHẢI chứa mọi params: `vp:items:list|tab=<t>&q=<q>&page=<p>` (hiện tại key thiếu params → stale cross-filter — slice S3).
@@ -50,7 +65,15 @@
 - Trục pass-through NCC: `cylinder_spec {qty, unit_price, supplier}` — giá NCC quyết, Vạn Phát
   mua đi bán lại. Thiếu giá → `cylinder_pending: true`, totals `null` truthful. Cấm mọi hằng số/fallback số trục.
 - Cọc: `Payment Terms Template` (`invoice_portion`) + `Customer Credit Limit` (Trả sau = 0đ).
+- **Ngữ nghĩa số tiền thống nhất mọi màn (Sếp chốt 2026-02-17):** `net_total`/`vat_amount`/`grand_total`
+  là số native; `cylinder_total` = tiền trục **chưa VAT** (giá NCC thuần); `product_total` =
+  `net_total − cylinder_total` (tiền hàng chưa VAT, không gồm trục); `qty` = tổng số lượng
+  **chỉ dòng túi/cuộn** (bỏ dòng trục để không trộn đơn vị Túi với Cây).
+  Tổng kiểm chứng: `product_total + cylinder_total + vat_amount = grand_total`.
+  `_get_vat_rate`/`FALLBACK_VAT_RATE` (nhân VAT tay) đã xóa; chỉ còn `FALLBACK_DEPOSIT_PCT = 0.5` + ghi log.
 - Tab phân loại chuỗi `NGCS/TMD` → `Item Group` filter server khi có data (giữ tạm, S9-phạm-vi sau).
+  Nợ: `_item_product_group` (drawer) chưa nhận diện TMD vì tên thật "Túi nilon HD..." không khớp nhánh nào —
+  cần Sếp chốt phân loại theo `item_group`/prefix thay vì chuỗi tên.
 
 ## 8. Cấm Tuyệt Đối (Nhắc Lại Từ AGENTS.md)
 - `get_all` cho master nhạy cảm, `allow_guest` dữ liệu nội bộ, raw SQL CRUD thường, re-export ghi đè câm, cache key thiếu params, `limit=500` + filter Python.
