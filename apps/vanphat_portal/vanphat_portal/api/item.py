@@ -45,10 +45,15 @@ def _load_csv_boms():
 	return bom_tree
 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist()
 def clear_catalog_cache(*args, **kwargs):
-	"""Clear Redis cache for Van Phat Master Catalog."""
+	"""Clear Redis cache for Van Phat Master Catalog (S3: login-only, doc_events gọi nội bộ).
+
+	S3 đóng guest xả cache: endpoint này chỉ cho user đã login (portal bắt buộc login);
+	doc_events Item/Customer/Sales Order/Quotation on_update/on_trash gọi trực tiếp.
+	"""
 	try:
+		frappe.cache().delete_keys("vp:items:list|*")
 		frappe.cache().delete_keys("vanphat:catalog:*")
 	except Exception:
 		pass
@@ -64,16 +69,16 @@ def get_list(query=None, item_group=None, supply_type=None, category=None, page=
 	supply = (supply_type or "").strip()
 	cat = (category or "").strip().lower()
 	p = max(1, int(page or 1))
-	pl = max(1, int(page_length or 15))
+	pl = min(100, max(1, int(page_length or 15)))
 
-	cache_key = f"vanphat:catalog:{cat}:{grp}:{supply}:{p}:{pl}" if not q else None
-	if cache_key:
-		try:
-			cached = frappe.cache().get_value(cache_key)
-			if cached:
-				return cached
-		except Exception:
-			pass
+	# S3: key chứa MỌI params (tab/cat/grp/supply/q/page/pl) — key cũ thiếu q gây stale cross-filter
+	cache_key = f"vp:items:list|tab={cat}|grp={grp}|supply={supply}|q={q}|page={p}|pl={pl}"
+	try:
+		cached = frappe.cache().get_value(cache_key)
+		if cached:
+			return cached
+	except Exception:
+		pass
 
 	def matches_category(it):
 		if not cat or cat == "all":
@@ -164,11 +169,10 @@ def get_list(query=None, item_group=None, supply_type=None, category=None, page=
 		"total_pages": total_pages,
 	}
 
-	if cache_key:
-		try:
-			frappe.cache().set_value(cache_key, res, expires_in_sec=300)
-		except Exception:
-			pass
+	try:
+		frappe.cache().set_value(cache_key, res, expires_in_sec=300)
+	except Exception:
+		pass
 
 	return res
 

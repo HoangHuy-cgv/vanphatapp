@@ -30,10 +30,22 @@ fixtures = [
 	}
 ]
 
-# Master Data Cache Invalidation Hooks
+# Master Data Cache Invalidation Hooks (S3: invalidate chủ động qua doc_events)
 doc_events = {
 	"Item": {
 		"on_update": "vanphat_portal.api.item.clear_catalog_cache",
 		"on_trash": "vanphat_portal.api.item.clear_catalog_cache",
-	}
+	},
+	"Customer": {
+		"on_update": "vanphat_portal.api.item.clear_catalog_cache",
+		"on_trash": "vanphat_portal.api.item.clear_catalog_cache",
+	},
+	"Sales Order": {
+		"on_update": "vanphat_portal.api.item.clear_catalog_cache",
+		"on_trash": "vanphat_portal.api.item.clear_catalog_cache",
+	},
+	"Quotation": {
+		"on_update": "vanphat_portal.api.item.clear_catalog_cache",
+		"on_trash": "vanphat_portal.api.item.clear_catalog_cache",
+	},
 }
