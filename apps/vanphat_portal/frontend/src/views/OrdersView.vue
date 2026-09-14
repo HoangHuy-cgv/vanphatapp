@@ -42,7 +42,7 @@
 					<input
 						type="text"
 						v-model="orderSearchQuery"
-						placeholder="Tìm nhanh đơn hàng, khách, mặt hàng..."
+						:placeholder="currentOrderSearchPlaceholder"
 						class="catalog-search-input"
 					/>
 					<button
@@ -59,7 +59,7 @@
 
 			<button
 				type="button"
-				class="btn-new-quote whitespace-nowrap"
+				class="btn-new-quote whitespace-nowrap flex-shrink-0"
 				@click="openCreateOrderModal"
 			>
 				+ Tạo đơn hàng
@@ -200,7 +200,6 @@ import { ref, computed, watch, nextTick, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import DrawerOrderDetail from '../components/DrawerOrderDetail.vue';
 import ModalCreateOrder from '../components/ModalCreateOrder.vue';
-import { INITIAL_ORDERS, MASTER_CATALOG_ITEMS } from '../data/mockData';
 import { api } from '../composables/useSession';
 import { usePortalCounts } from '../composables/usePortalCounts';
 
@@ -211,6 +210,19 @@ const orders = ref([]);
 const loadingOrders = ref(false);
 const activeOrderTab = ref('xuong_sx');
 const orderSearchQuery = ref('');
+
+const currentOrderSearchPlaceholder = computed(() => {
+	switch (activeOrderTab.value) {
+		case 'xuong_sx':
+			return 'Tìm nhanh đơn hàng, khách, màng ghép...';
+		case 'ngcs':
+			return 'Tìm nhanh đơn hàng, khách, túi có sẵn...';
+		case 'mua_ngoai':
+			return 'Tìm nhanh đơn hàng, khách, quy cách mua ngoài...';
+		default:
+			return 'Tìm nhanh đơn hàng, khách, mặt hàng...';
+	}
+});
 
 watch(activeOrderTab, () => {
 	nextTick(() => {
@@ -333,10 +345,10 @@ function formatCurrency(val) {
 async function loadOrders() {
 	loadingOrders.value = true;
 	const data = await api('list_orders');
-	if (Array.isArray(data) && data.length > 0) {
+	if (Array.isArray(data)) {
 		orders.value = data;
 	} else {
-		orders.value = [...INITIAL_ORDERS];
+		orders.value = [];
 	}
 	ordersCount.value = orders.value.length;
 	loadingOrders.value = false;
@@ -345,15 +357,11 @@ async function loadOrders() {
 async function loadMasterItems() {
 	try {
 		const data = await api('vanphat_portal.api.item.get_list', {}, { get: true });
-		if (Array.isArray(data) && data.length > 0) {
+		if (Array.isArray(data)) {
 			masterItems.value = data;
-		} else if (masterItems.value.length === 0) {
-			masterItems.value = [...(MASTER_CATALOG_ITEMS || [])];
 		}
 	} catch (err) {
-		if (masterItems.value.length === 0) {
-			masterItems.value = [...(MASTER_CATALOG_ITEMS || [])];
-		}
+		console.error('Error loading master items:', err);
 	}
 }
 
@@ -369,19 +377,19 @@ function openCreateOrderModal() {
 	}
 }
 
-function handleNewOrderCreated(newOrder) {
-	orders.value.unshift(newOrder);
+async function handleNewOrderCreated(newOrder) {
 	activeOrderTab.value = newOrder.order_tab || 'xuong_sx';
 	selectedOrderId.value = newOrder.name;
 	showOrderDetail.value = true;
-	ordersCount.value = orders.value.length;
+	await loadOrders();
 }
 
-function onOrderUpdated(updatedOrder) {
+async function onOrderUpdated(updatedOrder) {
 	const idx = orders.value.findIndex((o) => o.name === updatedOrder.name);
 	if (idx !== -1) {
 		orders.value[idx] = { ...updatedOrder };
 	}
+	await loadOrders();
 }
 
 function onOrderDelivery(order) {
@@ -431,89 +439,5 @@ defineExpose({
 	flex-direction: column;
 	flex: 1;
 	min-height: 0;
-}
-
-.order-tabs-bar {
-	display: flex;
-	gap: 6px;
-	margin-bottom: 12px;
-	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-	padding-bottom: 10px;
-	flex-shrink: 0;
-}
-
-.order-tab-btn {
-	display: inline-flex;
-	align-items: center;
-	gap: 7px;
-	padding: 6px 13px;
-	border-radius: 8px;
-	border: 1px solid transparent;
-	background: transparent;
-	color: #94a3b8;
-	font-size: 13.5px;
-	font-weight: 600;
-	cursor: pointer;
-	white-space: nowrap !important;
-	flex-shrink: 0;
-	transition: all 0.15s ease;
-}
-
-.order-tab-btn span {
-	white-space: nowrap !important;
-}
-
-.order-tab-btn:hover {
-	background: rgba(255, 255, 255, 0.04);
-	color: #f1f5f9;
-}
-
-.order-tab-btn.active {
-	background: #161b22;
-	border-color: #3a424e;
-	color: #4ea1e0;
-	font-weight: 700;
-}
-
-.tab-badge {
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	min-width: 20px;
-	height: 19px;
-	padding: 0 6px;
-	border-radius: 10px;
-	font-size: 12.5px;
-	font-weight: 700;
-	background: rgba(255, 255, 255, 0.08);
-	color: #94a3b8;
-	font-variant-numeric: tabular-nums;
-}
-
-.order-tab-btn.active .tab-badge {
-	background: rgba(78, 161, 224, 0.2);
-	color: #4ea1e0;
-}
-
-.text-emerald {
-	color: #34d399;
-}
-
-.text-amber {
-	color: #fbbf24;
-}
-
-.text-sky {
-	color: #7dd3fc;
-}
-
-.text-rose {
-	color: #f87171;
-}
-
-.empty-cell {
-	text-align: center;
-	padding: 40px 0;
-	color: #9da7b5;
 }
 </style>

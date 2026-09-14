@@ -438,6 +438,16 @@ html, body {
 }
 
 /* --- Industrial Cockpit Navigation & Tab Bars --- */
+.catalog-header-cockpit {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	margin-bottom: 14px;
+	flex-wrap: nowrap;
+	flex-shrink: 0;
+}
+
 .order-tabs-bar {
 	display: flex;
 	gap: 6px;
@@ -447,21 +457,37 @@ html, body {
 	flex-shrink: 0;
 }
 
+.catalog-header-cockpit .catalog-tabs-bar {
+	margin-bottom: 0 !important;
+	border-bottom: none !important;
+	padding-bottom: 0 !important;
+	flex: 1;
+	min-width: 0;
+	overflow-x: auto;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+}
+
+.catalog-header-cockpit .catalog-tabs-bar::-webkit-scrollbar {
+	display: none;
+}
+
 .order-tab-btn {
+	position: relative;
 	display: inline-flex;
 	align-items: center;
 	gap: 7px;
-	padding: 6px 13px;
-	border-radius: 8px;
+	padding: 8px 12px 10px;
+	border-radius: 6px;
 	border: 1px solid transparent;
 	background: transparent;
 	color: #94a3b8;
-	font-size: 13.5px;
+	font-size: 14px;
 	font-weight: 600;
 	cursor: pointer;
 	white-space: nowrap !important;
 	flex-shrink: 0;
-	transition: all 0.15s ease;
+	transition: color 0.15s ease, background 0.15s ease;
 }
 
 .order-tab-btn span {
@@ -474,10 +500,23 @@ html, body {
 }
 
 .order-tab-btn.active {
-	background: #161b22;
-	border-color: #3a424e;
-	color: #4ea1e0;
+	background: transparent;
+	border-color: transparent;
+	color: #ffffff;
 	font-weight: 700;
+}
+
+/* Dải màu gạch chân công nghệ 2.5px ở đáy */
+.order-tab-btn.active::after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 8px;
+	right: 8px;
+	height: 2.5px;
+	background: #4ea1e0;
+	border-radius: 2px 2px 0 0;
+	box-shadow: 0 -1px 8px rgba(78, 161, 224, 0.6);
 }
 
 .tab-badge {
@@ -488,15 +527,20 @@ html, body {
 	height: 19px;
 	padding: 0 6px;
 	border-radius: 10px;
-	font-size: 12.5px;
+	font-size: 12px;
 	font-weight: 700;
 	background: rgba(255, 255, 255, 0.08);
 	color: #94a3b8;
 	font-variant-numeric: tabular-nums;
+	transition: all 0.15s ease;
+}
+
+.order-tab-btn:hover .tab-badge {
+	color: #e2e8f0;
 }
 
 .order-tab-btn.active .tab-badge {
-	background: rgba(78, 161, 224, 0.2);
+	background: rgba(78, 161, 224, 0.18);
 	color: #4ea1e0;
 }
 

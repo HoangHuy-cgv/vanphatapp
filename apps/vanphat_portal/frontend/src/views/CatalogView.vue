@@ -76,10 +76,20 @@
 						v-if="catalogSearchInput"
 						type="button"
 						class="btn-clear-search"
+						title="Xóa tìm kiếm"
 						@click="catalogSearchInput = ''"
 					>✕</button>
 				</div>
 			</div>
+
+			<!-- Nút Hành Động Thêm Mới Chuẩn Cockpit -->
+			<button
+				type="button"
+				class="btn-new-quote whitespace-nowrap flex-shrink-0"
+				@click="handleAddNew"
+			>
+				{{ currentAddButtonLabel }}
+			</button>
 		</header>
 
 		<!-- Bảng Mặt hàng: Sản phẩm, NVL, Trục in -->
@@ -389,12 +399,12 @@ import DrawerItemDetail from '../components/DrawerItemDetail.vue';
 import DrawerCustomerDetail from '../components/DrawerCustomerDetail.vue';
 import DrawerSupplierDetail from '../components/DrawerSupplierDetail.vue';
 import DrawerUserDetail from '../components/DrawerUserDetail.vue';
-import { MASTER_CATALOG_ITEMS } from '../data/mockData';
 import { usePortalCounts } from '../composables/usePortalCounts';
 import { api } from '../composables/useSession';
 
 const route = useRoute();
 const { catalogCount } = usePortalCounts();
+const emit = defineEmits(['add-new']);
 
 // --- Table Container Ref & Scroll Reset ---
 const tableContainerRef = ref(null);
@@ -467,6 +477,29 @@ const currentCatalogSearchPlaceholder = computed(() => {
 			return 'Tìm mã, tên, khách hàng, màng...';
 	}
 });
+
+const currentAddButtonLabel = computed(() => {
+	switch (activeCatalogTab.value) {
+		case 'sp':
+			return '+ Thêm sản phẩm';
+		case 'nvl':
+			return '+ Thêm NVL';
+		case 'truc':
+			return '+ Thêm trục in';
+		case 'kh':
+			return '+ Thêm khách hàng';
+		case 'ncc':
+			return '+ Thêm NCC';
+		case 'user':
+			return '+ Thêm người dùng';
+		default:
+			return '+ Thêm mới';
+	}
+});
+
+function handleAddNew() {
+	emit('add-new', { tab: activeCatalogTab.value });
+}
 
 const catalogSearchInput = computed({
 	get() {
@@ -606,15 +639,11 @@ async function loadMasterItems() {
 	loadingMasterItems.value = true;
 	try {
 		const data = await api('vanphat_portal.api.item.get_list', {}, { get: true });
-		if (Array.isArray(data) && data.length > 0) {
+		if (Array.isArray(data)) {
 			masterItems.value = data;
-		} else if (masterItems.value.length === 0) {
-			masterItems.value = [...(MASTER_CATALOG_ITEMS || [])];
 		}
 	} catch (err) {
-		if (masterItems.value.length === 0) {
-			masterItems.value = [...(MASTER_CATALOG_ITEMS || [])];
-		}
+		console.error('Error loading master items:', err);
 	}
 	syncTotalCount();
 	loadingMasterItems.value = false;
@@ -806,6 +835,8 @@ defineExpose({
 	openCustomerDetail,
 	openSupplierDetail,
 	openUserDetail,
+	handleAddNew,
+	currentAddButtonLabel,
 });
 </script>
 
@@ -815,30 +846,5 @@ defineExpose({
 	flex-direction: column;
 	flex: 1;
 	min-height: 0;
-}
-
-.catalog-header-cockpit {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	gap: 16px;
-	margin-bottom: 14px;
-	flex-wrap: nowrap;
-	flex-shrink: 0;
-}
-
-.catalog-header-cockpit .catalog-tabs-bar {
-	margin-bottom: 0;
-	border-bottom: none;
-	padding-bottom: 0;
-	flex: 1;
-	min-width: 0;
-	overflow-x: auto;
-	scrollbar-width: none;
-	-ms-overflow-style: none;
-}
-
-.catalog-header-cockpit .catalog-tabs-bar::-webkit-scrollbar {
-	display: none;
 }
 </style>

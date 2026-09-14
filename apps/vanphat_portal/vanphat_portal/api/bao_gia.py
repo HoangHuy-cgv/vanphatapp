@@ -394,27 +394,78 @@ def mark_quotation_lost(name, reason=""):
 
 @frappe.whitelist()
 def list_orders():
-	orders = frappe.get_list(
-		"Sales Order",
-		fields=[
-			"name",
-			"transaction_date",
-			"customer",
-			"customer_name",
-			"grand_total",
-			"advance_paid",
-			"status",
-			"docstatus",
-		],
-		order_by="creation desc",
-		limit=50,
-	)
+	try:
+		orders = frappe.get_list(
+			"Sales Order",
+			fields=[
+				"name",
+				"transaction_date",
+				"customer",
+				"customer_name",
+				"grand_total",
+				"advance_paid",
+				"status",
+				"docstatus",
+			],
+			order_by="creation desc",
+			limit=100,
+		)
+	except Exception:
+		return []
+
 	for o in orders:
 		gt = frappe.utils.flt(o.grand_total)
 		adv = frappe.utils.flt(o.advance_paid)
 		o["advance_paid"] = adv
 		o["outstanding_amount"] = max(0.0, gt - adv)
 		o["deposit_pct"] = round((adv / gt * 100), 1) if gt > 0 else 0
+
+		# Lấy alias khách hàng
+		try:
+			cust_alias = frappe.db.get_value("Customer", o.customer, "alias")
+		except Exception:
+			cust_alias = None
+		o["customer_alias"] = cust_alias or o.customer_name or o.customer
+
+		# Lấy tóm tắt mặt hàng đầu tiên & tổng số lượng
+		try:
+			items = frappe.get_all(
+				"Sales Order Item",
+				filters={"parent": o.name},
+				fields=["item_code", "item_name", "qty", "uom"],
+				order_by="idx asc",
+			)
+		except Exception:
+			items = []
+
+		if items:
+			first_it = items[0]
+			o["item_name"] = first_it.item_name
+			o["qty"] = sum(frappe.utils.flt(it.get("qty") or 0) for it in items)
+			o["uom"] = first_it.uom or "Túi"
+			try:
+				it_alias = frappe.db.get_value("Item", first_it.item_code, "custom_alias")
+			except Exception:
+				it_alias = None
+			o["custom_alias"] = it_alias or first_it.item_name
+		else:
+			o["item_name"] = "—"
+			o["custom_alias"] = "—"
+			o["qty"] = 0
+			o["uom"] = "Túi"
+
+		# Phân loại tab buồng lái
+		it_code = (items[0].get("item_code") or "").upper() if items else ""
+		it_name = (items[0].get("item_name") or "").lower() if items else ""
+		if "NGCS" in it_code or "ngcs" in it_name:
+			o["order_tab"] = "ngcs"
+			o["product_group"] = "Túi NGCS"
+		elif "TMD" in it_code or "đơn" in it_name or "màng đơn" in it_name:
+			o["order_tab"] = "mua_ngoai"
+			o["product_group"] = "Túi màng đơn"
+		else:
+			o["order_tab"] = "xuong_sx"
+			o["product_group"] = "Túi màng ghép"
 
 		# Trạng thái buồng lái tính toán chuẩn mực tại backend ERPNext
 		if o.get("is_hold") or "HOLD" in (o.get("order_state") or ""):
@@ -433,22 +484,6 @@ def list_orders():
 			o["order_status_label"] = "Chờ cọc"
 			o["order_status_class"] = "status-draft"
 
-		# Lấy tóm tắt mặt hàng đầu tiên & tổng số lượng
-		items = frappe.get_all(
-			"Sales Order Item",
-			filters={"parent": o.name},
-			fields=["item_name", "qty", "uom"],
-			order_by="idx asc",
-			limit=1,
-		)
-		if items:
-			o["item_name"] = items[0].item_name
-			o["qty"] = items[0].qty
-			o["uom"] = items[0].uom
-		else:
-			o["item_name"] = "—"
-			o["qty"] = 0
-			o["uom"] = "Túi"
 	return orders
 
 
@@ -529,13 +564,42 @@ def get_order_details(name):
 			can_submit = False
 			order_state = "Chờ cọc"
 
+	cust_alias = ""
+	try:
+		cust_alias = frappe.db.get_value("Customer", doc.customer, "alias")
+	except Exception:
+		pass
+
+	first_code = doc.items[0].item_code if doc.items else ""
+	brand = ""
+	materials = []
+	dimensions_text = ""
+	if first_code:
+		try:
+			brand = frappe.db.get_value("Item", first_code, "brand") or ""
+			layers_raw = frappe.db.get_value("Item", first_code, "custom_structure_layers") or ""
+			if layers_raw:
+				materials = [l.strip() for l in layers_raw.split("/") if l.strip()]
+			dimensions_text = frappe.db.get_value("Item", first_code, "description") or ""
+		except Exception:
+			pass
+
+	order_tab = "ngcs" if product_group == "Túi NGCS" else ("mua_ngoai" if product_group == "Túi màng đơn" else "xuong_sx")
+
 	return {
 		"name": doc.name,
 		"transaction_date": str(doc.transaction_date),
 		"customer": doc.customer,
 		"customer_name": doc.customer_name,
+		"customer_alias": cust_alias or doc.customer_name,
+		"brand": brand or "VẠN PHÁT",
 		"payment_type": payment_type,
 		"product_group": product_group,
+		"order_tab": order_tab,
+		"materials": materials,
+		"dimensions_text": dimensions_text,
+		"uom": doc.items[0].uom if doc.items else "Túi",
+		"qty": sum(frappe.utils.flt(it.qty) for it in doc.items if not getattr(it, "is_cylinder", False)),
 		"grand_total": grand_total,
 		"product_total": product_total,
 		"cylinder_total": cylinder_total,
@@ -619,6 +683,77 @@ def submit_sales_order(name):
 
 	doc.submit()
 	return {"name": doc.name, "status": doc.status, "docstatus": doc.docstatus}
+
+
+@frappe.whitelist()
+def create_sales_order(payload):
+	"""Accept new order payload, create native ERPNext Sales Order with DH- series."""
+	payload = frappe.parse_json(payload) if isinstance(payload, str) else (payload or {})
+	company = payload.get("company") or frappe.defaults.get_user_default("Company")
+	if not company:
+		companies = frappe.get_all("Company", limit=1)
+		company = companies[0].name if companies else "Bao Bì Vạn Phát"
+
+	customer_id = (payload.get("customer") or payload.get("customer_id") or "").strip()
+	if not customer_id:
+		frappe.throw("Thiếu khách hàng — vui lòng chọn Customer.")
+
+	if not frappe.db.exists("Customer", customer_id):
+		cust = frappe.db.get_value("Customer", {"alias": customer_id}, "name") or frappe.db.get_value("Customer", {"customer_name": customer_id}, "name")
+		if cust:
+			customer_id = cust
+
+	delivery_date = payload.get("delivery_date") or frappe.utils.add_days(frappe.utils.today(), 7)
+
+	items_data = payload.get("items") or []
+	if not items_data and payload.get("lines"):
+		items_data = payload.get("lines")
+
+	so_items = []
+	for it in items_data:
+		code = (it.get("item_code") or "").strip()
+		it_name = (it.get("item_name") or it.get("variant_name") or code)[:140]
+		qty = frappe.utils.flt(it.get("qty") or 1)
+		rate = frappe.utils.flt(it.get("rate") or 0)
+		uom = it.get("uom") or "Túi"
+
+		so_item = {
+			"item_name": it_name,
+			"description": it_name,
+			"qty": qty,
+			"rate": rate,
+			"uom": uom,
+			"conversion_factor": 1,
+			"delivery_date": delivery_date,
+		}
+		if code and frappe.db.exists("Item", code):
+			so_item["item_code"] = code
+		elif code:
+			so_item["item_code"] = code
+
+		so_items.append(so_item)
+
+	doc = frappe.get_doc({
+		"doctype": "Sales Order",
+		"naming_series": payload.get("naming_series") or "DH-.YY..MM.-.###",
+		"customer": customer_id,
+		"delivery_date": delivery_date,
+		"transaction_date": payload.get("transaction_date") or frappe.utils.today(),
+		"company": company,
+		"order_type": "Sales",
+		"items": so_items,
+	})
+
+	doc.flags.ignore_mandatory = True
+	doc.flags.ignore_permissions = True
+	doc.insert()
+
+	return {
+		"name": doc.name,
+		"status": doc.status,
+		"grand_total": doc.grand_total,
+		"success": True,
+	}
 
 
 @frappe.whitelist()

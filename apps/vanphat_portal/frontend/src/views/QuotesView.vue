@@ -1,10 +1,15 @@
 <template>
 	<div class="quotes-view-wrapper">
-		<!-- Header 1 Dòng Chuẩn Cockpit: Tiêu đề + Quick Search + Action Button -->
+		<!-- Header 1 Dòng Chuẩn Cockpit: 1 Tab Chuẩn + Quick Search + Action Button -->
 		<header class="page-head catalog-header-cockpit">
-			<div class="cockpit-title-wrap">
-				<h2 class="page-title">Báo giá</h2>
-				<span class="tab-badge">{{ quotations.length }}</span>
+			<div class="order-tabs-bar catalog-tabs-bar">
+				<button
+					type="button"
+					class="order-tab-btn active"
+				>
+					<span>Báo giá</span>
+					<span class="tab-badge">{{ quotations.length }}</span>
+				</button>
 			</div>
 
 			<!-- Quick Search Tức Thời Cùng Hàng Header Cockpit -->
@@ -34,7 +39,7 @@
 
 			<button
 				type="button"
-				class="btn-new-quote whitespace-nowrap"
+				class="btn-new-quote whitespace-nowrap flex-shrink-0"
 				@click="openStep1Modal"
 			>
 				+ Báo giá
@@ -114,7 +119,6 @@ import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import ModalStep1Sale from '../components/ModalStep1Sale.vue';
 import DrawerStep2Director from '../components/DrawerStep2Director.vue';
-import { INITIAL_QUOTATIONS } from '../data/mockData';
 import { api } from '../composables/useSession';
 import { usePortalCounts } from '../composables/usePortalCounts';
 
@@ -237,10 +241,10 @@ function onRowClick(q) {
 async function loadQuotations() {
 	loading.value = true;
 	const data = await api('list_quotations');
-	if (Array.isArray(data) && data.length > 0) {
+	if (Array.isArray(data)) {
 		quotations.value = data;
-	} else if (quotations.value.length === 0) {
-		quotations.value = [...INITIAL_QUOTATIONS];
+	} else {
+		quotations.value = [];
 	}
 	quotesCount.value = quotations.value.length;
 	loading.value = false;

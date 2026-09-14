@@ -334,19 +334,66 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue';
-import { MASTER_CUSTOMERS, MASTER_CATALOG_ITEMS } from '../data/mockData.js';
+import { ref, computed, watch, onMounted } from 'vue';
+import { api } from '../composables/useSession';
 
 const props = defineProps({
 	isOpen: { type: Boolean, default: false },
 	initialTab: { type: String, default: 'xuong_sx' },
+	masterItems: { type: Array, default: () => [] },
 });
 
 const emit = defineEmits(['close', 'create-order']);
 
-// Master lists
-const customers = ref(MASTER_CUSTOMERS);
-const catalogItems = ref(MASTER_CATALOG_ITEMS);
+// Master lists loaded dynamically from ERPNext native APIs
+const customers = ref([]);
+const isSubmitting = ref(false);
+
+async function fetchCustomers() {
+	try {
+		const data = await api('vanphat_portal.api.customer.get_list', {}, { get: true });
+		if (Array.isArray(data) && data.length > 0) {
+			customers.value = data.map((c) => ({
+				id: c.name,
+				name: c.customer_name || c.name,
+				alias: c.alias || c.customer_name || c.name,
+				brand: c.brand || '',
+				payment_type: (c.payment_terms && c.payment_terms.toLowerCase().includes('sau')) ? 'Trả sau' : 'Trả trước',
+			}));
+		}
+	} catch (e) {
+		customers.value = [];
+	}
+}
+
+const catalogItems = computed(() => {
+	if (props.masterItems && props.masterItems.length) {
+		return props.masterItems.map((item) => ({
+			item_code: item.item_code,
+			item_name: item.item_name,
+			custom_alias: item.custom_alias || item.item_name,
+			customer_alias: item.customer_alias || item.customer,
+			product_group: item.product_group || (
+				(item.item_code || '').startsWith('NGCS-') ? 'Túi NGCS' :
+				(item.item_code || '').startsWith('TMD-') ? 'Túi màng đơn' :
+				(item.item_code || '').startsWith('BTP-') ? 'Cuộn màng ghép' : 'Túi màng ghép'
+			),
+			product_type: item.product_type || 'Túi đáy đứng',
+			dimensions_text: item.dimensions_text || `${item.custom_pouch_width_mm || 0} x ${item.custom_pouch_length_mm || 0} mm`,
+			materials: item.materials || (item.custom_structure_layers ? item.custom_structure_layers.split('/') : []),
+			accessory: item.accessory || item.custom_accessory_spec || 'Không vòi',
+			print_type: item.print_type || item.custom_print_tech || 'In trục',
+			cylinder_count: item.cylinder_count || item.custom_cylinder_qty || 0,
+			cylinder_rate: item.cylinder_rate || 3100000,
+			uom: item.stock_uom || item.uom || 'Túi',
+			base_rate: item.standard_rate || item.base_rate || 0,
+			artwork_url: item.artwork_url || '',
+			is_custom: item.is_custom !== undefined ? item.is_custom : ((item.item_code || '').startsWith('TP-') || !(item.item_code || '').startsWith('NGCS-')),
+			default_variants: item.default_variants || [item.custom_alias || item.item_name],
+		}));
+	}
+	return [];
+});
 
 // Form Fields
 const selectedCustomerId = ref('');
@@ -527,8 +574,10 @@ const removeGenericRow = (index) => {
 // Default setup when modal opens
 watch(
 	() => props.isOpen,
-	(val) => {
+	async (val) => {
 		if (val) {
+			await fetchCustomers();
+
 			// Set default delivery date (+7 days)
 			const d = new Date();
 			d.setDate(d.getDate() + 7);
@@ -537,31 +586,28 @@ watch(
 			// Set initial product group according to active tab
 			if (props.initialTab === 'ngcs') {
 				productGroup.value = 'Túi NGCS';
-				selectedCustomerId.value = 'KH-00005'; // FUSIMI
 			} else if (props.initialTab === 'mua_ngoai') {
 				productGroup.value = 'Túi màng đơn';
-				selectedCustomerId.value = 'KH-00007'; // VẠN AN
 			} else {
 				productGroup.value = 'Túi màng ghép';
-				selectedCustomerId.value = 'KH-00001'; // DS 888
 			}
 
-			onCustomerChange();
+			if (customers.value.length > 0) {
+				selectedCustomerId.value = customers.value[0].id;
+				onCustomerChange();
+			}
 		}
 	},
 	{ immediate: true }
 );
 
-// Submit order
-const handleSubmit = () => {
-	if (!currentCustomer.value) return;
+// Submit order to ERPNext native Sales Order
+const handleSubmit = async () => {
+	if (!currentCustomer.value || isSubmitting.value) return;
 
 	let orderTab = 'xuong_sx';
 	if (productGroup.value === 'Túi NGCS') orderTab = 'ngcs';
 	else if (productGroup.value === 'Túi màng đơn') orderTab = 'mua_ngoai';
-
-	const timestampSuffix = Math.floor(Math.random() * 900) + 100;
-	const orderName = `DH-2609-${timestampSuffix}`;
 
 	let builtItems = [];
 	let totalQty = 0;
@@ -643,51 +689,36 @@ const handleSubmit = () => {
 		});
 	}
 
-	const newOrder = {
-		name: orderName,
-		transaction_date: new Date().toISOString().split('T')[0],
-		customer: currentCustomer.value.name,
+	const orderPayload = {
+		customer: currentCustomer.value.id,
 		customer_name: currentCustomer.value.name,
-		customer_alias: currentCustomer.value.alias,
 		brand: brand.value,
+		delivery_date: deliveryDate.value,
 		payment_type: paymentType.value,
 		order_tab: orderTab,
 		product_group: productGroup.value,
-		product_type: isCustomMto.value ? currentCustomItem.value?.product_type : 'Túi có sẵn',
-		accessory: accessoryText,
-		print_type: printTypeText,
-		cylinder_status: cylinderStatusText,
-		description: orderDesc,
-		dimensions_text: dimsText,
-		materials: mats,
-		artwork_url: artworkUrl,
-		item_name: builtItems[0]?.item_name || orderDesc,
-		qty: totalQty,
-		uom: builtItems[0]?.uom || 'Túi',
-		net_total: netTotal.value,
-		vat_rate: vatRate,
-		vat_amount: vatAmount.value,
-		cylinder_total: cylinderTotal.value,
-		grand_total: grandTotal.value,
-		required_deposit: requiredDeposit.value,
-		advance_paid: 0,
-		outstanding_amount: grandTotal.value,
-		deposit_pct: 0,
-		order_state: paymentType.value === 'Trả sau' ? 'Đang xử lý' : 'Tạm giữ (Chưa đủ cọc)',
-		is_hold: paymentType.value !== 'Trả sau',
-		status: 'To Deliver and Bill',
-		docstatus: 1,
-		materials_status: isCustomMto.value ? 'Chờ cọc' : 'Có sẵn phôi',
-		factory_stage: isCustomMto.value ? 'Chờ cọc' : 'Chờ in lụa',
-		completed_qty: 0,
-		supplier_name: orderTab === 'ngcs' ? 'MỘC ẤN' : (orderTab === 'mua_ngoai' ? 'ANH TÙNG' : null),
-		supplier_eta_days: orderTab === 'xuong_sx' ? null : 3,
-		procurement_stage: orderTab === 'xuong_sx' ? null : 'Chờ giao việc NCC',
 		items: builtItems,
 	};
 
-	emit('create-order', newOrder);
-	emit('close');
+	isSubmitting.value = true;
+	try {
+		const res = await api('vanphat_portal.api.bao_gia.create_sales_order', { payload: orderPayload });
+		if (res && res.name) {
+			emit('order-created', {
+				name: res.name,
+				order_tab: orderTab,
+				...orderPayload,
+			});
+			emit('close');
+		} else {
+			alert('Không thể tạo đơn hàng trên hệ thống.');
+		}
+	} catch (err) {
+		console.error('Error creating sales order:', err);
+		alert('Lỗi kết nối khi tạo đơn hàng.');
+	} finally {
+		isSubmitting.value = false;
+	}
 };
 
 const formatCurrency = (val) => {

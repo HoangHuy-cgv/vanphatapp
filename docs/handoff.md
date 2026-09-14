@@ -1,11 +1,13 @@
 # Handoff: Con Trỏ Vận Hành & Chuyển Giao Session
 
-- **Mã Commit Hiện Tại**: `05d99a8` (`refactor(skills): remove global find-skills from project workspace`)
-- **Trạng Thái CI/CD & Test**:
-  - Test Suite `scripts/verify-catalog-page.mjs`: **100/100 checks PASSED 100%**.
-  - Production Build: Vite build thành công sạch sẽ (bundle 72.55 kB gzip).
-- **Hạng Mục Đã Hoàn Thành**:
-  - Hợp nhất skill code-simplification (Frappe ORM, Vue 3 Cockpit), loại bỏ React/JSX và xoá triệt để skill simplify thừa.
-  - Phân định rõ phạm vi skill: Chuyển `find-skills` thành Global SSOT (`~/.gemini/config/skills`), giữ 35 skill chuẩn riêng cho project.
+- **Mã Commit Gần Nhất**: `7c21643`
+- **Trạng Thái CI/CD & Production Build**:
+  - Vite build: Thành công 100% (`npm run build`, bundle 69.29 kB gzip).
+  - Backend: `bao_gia.py` compiled cleanly, đã bổ sung native API `create_sales_order`.
+- **Hạng Mục Vừa Hoàn Thành**:
+  - Xóa bỏ 100% `src/data/mockData.js` (~966 dòng mock data).
+  - Đấu nối `ModalCreateOrder.vue` trực tiếp vào API `create_sales_order` của ERPNext với Naming Series `DH-`.
+  - Đấu nối `DrawerOrderDetail.vue` vào `record_order_deposit`, `accountant_approve_procurement`, `submit_sales_order`.
+  - Đưa `OrdersView.vue`, `QuotesView.vue`, `CatalogView.vue` về chuẩn vỏ mỏng (thin client), nạp trực tiếp qua backend APIs.
 - **Nhiệm Vụ Trọng Tâm Tiếp Theo**:
-  - Sẵn sàng nhận chỉ đạo tiếp theo từ Sếp.
+  - Tiến hành test luồng tạo đơn và duyệt cọc trực tiếp trên giao diện thực tế.

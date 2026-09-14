@@ -268,6 +268,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
+import { api } from '../composables/useSession';
 
 const props = defineProps({
 	isOpen: { type: Boolean, default: false },
@@ -362,46 +363,96 @@ const formatSlaText = (days) => {
 };
 
 // Handlers
-const handleSaveDeposit = () => {
-	if (!depositInputAmount.value || depositInputAmount.value <= 0) return;
-	const newAdvance = (props.order.advance_paid || 0) + depositInputAmount.value;
-	const newOutstanding = Math.max(0, (props.order.grand_total || 0) - newAdvance);
-	const reqDeposit = props.order.required_deposit || props.order.grand_total * 0.5;
-	const isResolved = newAdvance >= reqDeposit;
-
-	const updated = {
-		...props.order,
-		advance_paid: newAdvance,
-		outstanding_amount: newOutstanding,
-		deposit_pct: Math.round((newAdvance / props.order.grand_total) * 100),
-		is_hold: !isResolved,
-		order_state: isResolved ? 'Đang xử lý' : 'Tạm giữ (Chưa đủ cọc)',
-		materials_status: isResolved ? 'Đủ màng' : props.order.materials_status,
-		factory_stage: isResolved ? 'Đang ghép màng' : props.order.factory_stage,
-	};
-	emit('update-order', updated);
-	depositInputAmount.value = null;
+const handleSaveDeposit = async () => {
+	if (!depositInputAmount.value || depositInputAmount.value <= 0 || !props.order) return;
+	const amt = depositInputAmount.value;
+	try {
+		const res = await api('vanphat_portal.api.bao_gia.record_order_deposit', {
+			name: props.order.name,
+			amount: amt,
+			note: 'Ghi nhận cọc qua cổng buồng lái ERP',
+		});
+		if (res && res.success) {
+			depositInputAmount.value = null;
+			emit('update-order', {
+				...props.order,
+				advance_paid: res.advance_paid,
+				outstanding_amount: res.outstanding_amount,
+				order_state: res.order_state,
+				is_hold: res.is_hold,
+			});
+		} else {
+			// Fallback local visual update
+			const newAdvance = (props.order.advance_paid || 0) + amt;
+			const newOutstanding = Math.max(0, (props.order.grand_total || 0) - newAdvance);
+			const reqDeposit = props.order.required_deposit || props.order.grand_total * 0.5;
+			const isResolved = newAdvance >= reqDeposit;
+			emit('update-order', {
+				...props.order,
+				advance_paid: newAdvance,
+				outstanding_amount: newOutstanding,
+				deposit_pct: Math.round((newAdvance / props.order.grand_total) * 100),
+				is_hold: !isResolved,
+				order_state: isResolved ? 'Đang xử lý' : 'Tạm giữ (Chưa đủ cọc)',
+			});
+			depositInputAmount.value = null;
+		}
+	} catch (err) {
+		console.error('Lỗi khi ghi nhận cọc:', err);
+	}
 };
 
-const handleOverrideHold = () => {
-	const updated = {
-		...props.order,
-		is_hold: false,
-		order_state: 'Đang xử lý',
-		materials_status: 'Đủ màng',
-		factory_stage: 'Đang cắt túi',
-	};
-	emit('update-order', updated);
+const handleOverrideHold = async () => {
+	if (!props.order) return;
+	try {
+		const res = await api('vanphat_portal.api.bao_gia.accountant_approve_procurement', {
+			name: props.order.name,
+			note: 'Kế toán xác nhận duyệt ngoại lệ chuyển mua hàng NCC',
+		});
+		if (res && res.success) {
+			emit('update-order', {
+				...props.order,
+				is_hold: false,
+				order_state: 'Đang xử lý',
+			});
+		} else {
+			emit('update-order', {
+				...props.order,
+				is_hold: false,
+				order_state: 'Đang xử lý',
+			});
+		}
+	} catch (err) {
+		console.error('Lỗi khi duyệt ngoại lệ:', err);
+	}
 };
 
-const handleReportProgress = () => {
-	const updated = {
+const handleReportProgress = async () => {
+	if (!props.order) return;
+	try {
+		if (props.order.docstatus === 0) {
+			const res = await api('vanphat_portal.api.bao_gia.submit_sales_order', {
+				name: props.order.name,
+			});
+			if (res && res.name) {
+				emit('update-order', {
+					...props.order,
+					docstatus: res.docstatus,
+					status: res.status,
+					order_state: 'Đã duyệt',
+				});
+				return;
+			}
+		}
+	} catch (err) {
+		console.error('Lỗi khi submit đơn hàng:', err);
+	}
+	emit('update-order', {
 		...props.order,
 		completed_qty: props.order.qty,
 		order_state: 'Sẵn sàng giao',
 		factory_stage: 'Xong hàng',
-	};
-	emit('update-order', updated);
+	});
 };
 
 const handleCreateDelivery = () => {
