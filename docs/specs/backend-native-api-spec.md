@@ -23,7 +23,7 @@
 - List: `frappe.db.get_list(doctype, fields=[...], filters=..., or_filters=..., order_by=..., start=..., page_length=...)`.
 - `page_length` mặc định 15, trần 100 (helper `_common.paginate`). Cấm `limit=500` rồi filter/lọc bằng Python.
 - Join nhiều DocType (Customer alias, SO Item đầu, Item `custom_alias`): **1 query `frappe.qb`** thay vì vòng lặp `get_value`/`get_all` từng dòng (N+1).
-- **Sổ đo query/trang (đếm tĩnh theo code, 2026-02-17):**
+- **Sổ đo query/trang (đếm tĩnh theo code, 2026-09-14):**
 
 | Endpoint | Trước | Sau |
 |---|---|---|
@@ -44,7 +44,7 @@
   `mark_quotation_lost`, `make_order_from_quotation`). Không commit nửa chừng rồi tiếp tục tính toán phụ thuộc.
 - Response: `{message: ...}` (Frappe tự bọc). Lỗi: `frappe.throw(msg)` → `{exc, exc_type}` cho client toast.
 - Trạng thái buồng lái tính server từ native: `order_status_label/class` từ `status`/`docstatus`/`advance_paid`; `outstanding_amount = grand_total - advance_paid`; `deposit_pct`; `required_deposit` từ `Payment Terms Template` + `Customer Credit Limit` (xóa hằng số Python tiến tới native — slice S9).
-- Thiếu `Default Company`: báo lỗi rõ ràng, KHÔNG hardcode tên công ty (Sếp chốt 2026-02-17 — cấu hình Default Company = Bao Bì Vạn Phát ở site).
+- Thiếu `Default Company`: báo lỗi rõ ràng, KHÔNG hardcode tên công ty (Sếp chốt 2026-09-14 — cấu hình Default Company = Bao Bì Vạn Phát ở site).
 
 ## 5. Cache Redis
 - Key PHẢI chứa mọi params: `vp:items:list|tab=<t>&q=<q>&page=<p>` (hiện tại key thiếu params → stale cross-filter — slice S3).
@@ -65,7 +65,7 @@
 - Trục pass-through NCC: `cylinder_spec {qty, unit_price, supplier}` — giá NCC quyết, Vạn Phát
   mua đi bán lại. Thiếu giá → `cylinder_pending: true`, totals `null` truthful. Cấm mọi hằng số/fallback số trục.
 - Cọc: `Payment Terms Template` (`invoice_portion`) + `Customer Credit Limit` (Trả sau = 0đ).
-- **Ngữ nghĩa số tiền thống nhất mọi màn (Sếp chốt 2026-02-17):** `net_total`/`vat_amount`/`grand_total`
+- **Ngữ nghĩa số tiền thống nhất mọi màn (Sếp chốt 2026-09-14):** `net_total`/`vat_amount`/`grand_total`
   là số native; `cylinder_total` = tiền trục **chưa VAT** (giá NCC thuần); `product_total` =
   `net_total − cylinder_total` (tiền hàng chưa VAT, không gồm trục); `qty` = tổng số lượng
   **chỉ dòng túi/cuộn** (bỏ dòng trục để không trộn đơn vị Túi với Cây).

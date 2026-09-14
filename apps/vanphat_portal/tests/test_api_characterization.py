@@ -7,7 +7,7 @@ Bộ này khoá hành vi của các endpoint đọc/ghi một-doc (preview giá,
 ghi nhận cọc, submit, tạo đơn, chi tiết mặt hàng). Endpoint dùng `frappe.qb`
 (list_orders, item.get_list, list_quotations) phải verify trên site thật.
 
-Thay đổi đã được Sếp duyệt (2026-02-17):
+Thay đổi đã được Sếp duyệt (2026-09-14):
 - `qty` chỉ cộng dòng túi/cuộn (bỏ dòng trục) ở cả list + drawer.
 - `cylinder_total` = tiền trục CHƯA VAT (giá NCC thuần) ở mọi màn.
 - `product_total` = net_total native − cylinder_total (tiền hàng chưa VAT).
