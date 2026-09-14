@@ -142,9 +142,8 @@
 							<thead>
 								<tr>
 									<th style="width: 22%;">Vật tư</th>
-									<th style="width: 44%;">Tên nguyên liệu</th>
-									<th class="text-right" style="width: 17%;">Định mức</th>
-									<th class="text-right" style="width: 17%;">Đơn giá</th>
+									<th style="width: 56%;">Tên nguyên liệu</th>
+									<th class="text-right" style="width: 22%;">Định mức</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -156,9 +155,6 @@
 									<td class="text-right font-bold text-num text-sm">
 										{{ formatNumber(bi.qty) }}
 										<span class="text-sm text-secondary font-normal">{{ bi.uom }}</span>
-									</td>
-									<td class="text-right text-num text-secondary text-sm">
-										{{ formatCurrency(bi.rate) }}
 									</td>
 								</tr>
 							</tbody>

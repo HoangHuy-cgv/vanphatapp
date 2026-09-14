@@ -214,12 +214,12 @@ for (const check of aliasChecks) {
 	if (!check.test) allAliasPassed = false;
 }
 
-console.log('\n--- 9. BOM TABLE ALIGNMENT CHECK (MÉP PHẢI ĐỊNH MỨC & ĐƠN GIÁ) ---');
+console.log('\n--- 9. BOM TABLE PURITY & ALIGNMENT CHECK (ẨN ĐƠN GIÁ RÁC, CĂN PHẢI ĐỊNH MỨC) ---');
 const alignmentChecks = [
-	{ name: 'Drawer BOM table header Định mức has class text-right', test: drawerVue.includes('<th class="text-right" style="width: 17%;">Định mức</th>') },
-	{ name: 'Drawer BOM table header Đơn giá has class text-right', test: drawerVue.includes('<th class="text-right" style="width: 17%;">Đơn giá</th>') },
+	{ name: 'Drawer BOM table header Định mức has class text-right (22% width)', test: drawerVue.includes('<th class="text-right" style="width: 22%;">Định mức</th>') },
+	{ name: 'Drawer BOM table hides unused Đơn giá column for technical purity', test: !drawerVue.includes('<th>Đơn giá</th>') && !drawerVue.includes('style="width: 17%;">Đơn giá</th>') },
+	{ name: 'Drawer BOM table expands Tên nguyên liệu column to 56% width', test: drawerVue.includes('style="width: 56%;">Tên nguyên liệu</th>') },
 	{ name: 'Drawer BOM table body td Định mức has class text-right', test: drawerVue.includes('td class="text-right font-bold text-num text-sm"') },
-	{ name: 'Drawer BOM table body td Đơn giá has class text-right', test: drawerVue.includes('td class="text-right text-num text-secondary text-sm"') },
 	{ name: 'Drawer scoped styles define .text-right { text-align: right; }', test: drawerVue.includes('.text-right { text-align: right; }') },
 	{ name: 'Drawer scoped styles enforce .bom-table th.text-right, .bom-table td.text-right', test: drawerVue.includes('.bom-table th.text-right') && drawerVue.includes('.bom-table td.text-right') }
 ];
