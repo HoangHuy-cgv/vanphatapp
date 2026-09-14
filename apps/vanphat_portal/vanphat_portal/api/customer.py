@@ -1,77 +1,44 @@
-"""Whitelisted Customer APIs for Van Phat Portal.
+"""Whitelisted Customer APIs for Van Phat Portal (S5/S6: login-only, truthful).
 
 Provides strictly mapped ERPNext Native Customer master data.
+Portal bắt buộc login — không guest. DB trống → [] (truthful, không CSV fallback).
 """
 
-import os
-import csv
 import frappe
 
-CLEAN_DATA_DIR = os.path.abspath(
-	os.path.join(os.path.dirname(__file__), "../../../..", "data", "clean-data")
-)
 
-
-def _load_csv_customers():
-	csv_path = os.path.join(CLEAN_DATA_DIR, "customer_master.csv")
-	if not os.path.exists(csv_path):
-		return []
-	with open(csv_path, mode="r", encoding="utf-8-sig") as f:
-		reader = csv.DictReader(f)
-		return list(reader)
-
-
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist()
 def get_list(query=None):
 	"""Return customers filtered by query string (code, name, alias, territory)."""
 	q = (query or "").strip().lower()
+	like = f"%{q}%" if q else None
 
-	try:
-		filters = {"disabled": 0}
-		fields = [
-			"name", "customer_name", "alias", "customer_type",
-			"customer_group", "territory", "payment_terms",
-			"default_currency", "tax_id",
-			"primary_address", "customer_primary_contact", "disabled"
-		]
-		custs = frappe.get_all("Customer", filters=filters, fields=fields, order_by="name asc")
-		if q:
-			custs = [
-				c for c in custs
-				if q in (c.get("name") or "").lower()
-				or q in (c.get("customer_name") or "").lower()
-				or q in (c.get("alias") or "").lower()
-				or q in (c.get("territory") or "").lower()
-				or q in (c.get("customer_group") or "").lower()
-			]
-		return custs
-	except Exception:
-		# Fallback to CSV
-		items = _load_csv_customers()
-		if q:
-			items = [
-				c for c in items
-				if q in (c.get("name") or "").lower()
-				or q in (c.get("customer_name") or "").lower()
-				or q in (c.get("alias") or "").lower()
-				or q in (c.get("territory") or "").lower()
-				or q in (c.get("customer_group") or "").lower()
-			]
-		return items
+	filters = {"disabled": 0}
+	fields = [
+		"name", "customer_name", "alias", "customer_type",
+		"customer_group", "territory", "payment_terms",
+		"default_currency", "tax_id",
+		"primary_address", "customer_primary_contact", "disabled"
+	]
+	or_filters = [
+		["Customer", "name", "like", like],
+		["Customer", "customer_name", "like", like],
+		["Customer", "alias", "like", like],
+		["Customer", "territory", "like", like],
+		["Customer", "customer_group", "like", like],
+	] if like else None
+	# S5: get_list tôn trọng permission (không get_all bypass)
+	return frappe.db.get_list("Customer", filters=filters, or_filters=or_filters, fields=fields, order_by="name asc")
 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist()
 def get_detail(name=None):
-	"""Return detailed customer information."""
+	"""Return detailed customer information (login + permission check)."""
 	if not name:
 		return None
-
-	try:
-		doc = frappe.get_doc("Customer", name)
-		return doc.as_dict()
-	except Exception:
-		items = _load_csv_customers()
-		for c in items:
-			if c.get("name") == name or c.get("customer_name") == name or c.get("alias") == name:
-				return c
+	if not frappe.db.exists("Customer", name):
 		return None
+	doc = frappe.get_doc("Customer", name)
+	if not frappe.has_permission("Customer", "read", doc):
+		frappe.throw("Không có quyền xem khách hàng.", frappe.PermissionError)
+	return doc.as_dict()

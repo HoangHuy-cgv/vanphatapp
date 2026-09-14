@@ -1,48 +1,11 @@
-"""Whitelisted Item & Master Catalog APIs for Van Phat Portal.
+"""Whitelisted Item & Master Catalog APIs for Van Phat Portal (S5/S6: login-only, truthful).
 
 Provides high-performance, strictly mapped ERPNext Native item catalog data
 and associated 2-tier Bill of Materials (BOM) for the minimalist industrial cockpit.
+DB trống → [] (truthful, không CSV fallback).
 """
 
-import os
-import csv
 import frappe
-
-CLEAN_DATA_DIR = os.path.abspath(
-	os.path.join(os.path.dirname(__file__), "../../../..", "data", "clean-data")
-)
-
-
-def _load_csv_items():
-	csv_path = os.path.join(CLEAN_DATA_DIR, "item_master.csv")
-	if not os.path.exists(csv_path):
-		return []
-	with open(csv_path, mode="r", encoding="utf-8-sig") as f:
-		reader = csv.DictReader(f)
-		return list(reader)
-
-
-def _load_csv_boms():
-	boms_path = os.path.join(CLEAN_DATA_DIR, "bom_master.csv")
-	items_path = os.path.join(CLEAN_DATA_DIR, "bom_items.csv")
-	if not os.path.exists(boms_path) or not os.path.exists(items_path):
-		return {}
-
-	bom_tree = {}
-	with open(boms_path, mode="r", encoding="utf-8-sig") as f:
-		for row in csv.DictReader(f):
-			bom_tree[row.get("bom_no")] = {
-				"master": row,
-				"items": []
-			}
-
-	with open(items_path, mode="r", encoding="utf-8-sig") as f:
-		for row in csv.DictReader(f):
-			b_no = row.get("bom_no")
-			if b_no in bom_tree:
-				bom_tree[b_no]["items"].append(row)
-
-	return bom_tree
 
 
 @frappe.whitelist()
@@ -60,7 +23,7 @@ def clear_catalog_cache(*args, **kwargs):
 	return {"success": True}
 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist()
 def get_list(query=None, item_group=None, supply_type=None, category=None, page=1, page_length=15):
 	"""Return master items filtered by query string, item group, supply type, or cockpit category with Redis cache and pagination."""
 	import math
@@ -96,15 +59,15 @@ def get_list(query=None, item_group=None, supply_type=None, category=None, page=
 		return True
 
 	raw_items = []
-	try:
-		filters = {}
-		if grp:
-			filters["item_group"] = grp
-		if supply:
-			filters["default_material_request_type"] = supply
+	filters = {}
+	if grp:
+		filters["item_group"] = grp
+	if supply:
+		filters["default_material_request_type"] = supply
 
-		raw_items = frappe.get_list(
-			"Item",
+	# S5: db.get_list tôn trọng permission (không get_all bypass); lỗi DB → [] truthful
+	raw_items = frappe.db.get_list(
+		"Item",
 			fields=[
 				"item_code",
 				"item_name",
@@ -136,14 +99,12 @@ def get_list(query=None, item_group=None, supply_type=None, category=None, page=
 				"description"
 			],
 			filters=filters,
-			limit=500
+			order_by="modified desc",
+			limit_start=(p - 1) * pl,
+			page_length=500,
 		)
-	except Exception:
-		raw_items = _load_csv_items()
-		if grp:
-			raw_items = [it for it in raw_items if it.get("item_group") == grp]
-		if supply:
-			raw_items = [it for it in raw_items if it.get("default_material_request_type") == supply]
+		# NOTE: S5/S6 chỉ gỡ guest + get_all→get_list + xóa CSV fallback.
+		# limit=500 + filter Python (cat/q) + paginate tay giữ nguyên → S-vá-catalog riêng.
 
 	filtered_items = []
 	for it in raw_items:
@@ -177,57 +138,39 @@ def get_list(query=None, item_group=None, supply_type=None, category=None, page=
 	return res
 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist()
 def get_detail(item_code):
-	"""Return item specification and associated BOM details for the slide-over drawer."""
+	"""Return item specification and associated BOM details for the slide-over drawer.
+
+	S5/S6: login + permission check; không CSV fallback — DB trống → throw truthful.
+	"""
 	code = (item_code or "").strip()
 	if not code:
 		frappe.throw("Thiếu item_code")
-
-	# Try fetching from DB
-	item = None
-	bom = None
-
-	try:
-		if frappe.db.exists("Item", code):
-			item = frappe.get_doc("Item", code).as_dict()
-			default_bom = frappe.db.get_value("BOM", {"item": code, "is_default": 1, "is_active": 1}, "name")
-			if not default_bom:
-				default_bom = frappe.db.get_value("BOM", {"item": code, "is_active": 1}, "name")
-			if default_bom:
-				bom_doc = frappe.get_doc("BOM", default_bom)
-				bom_items = []
-				for bi in bom_doc.items:
-					bi_dict = bi.as_dict()
-					alias = frappe.db.get_value("Item", bi.item_code, "custom_alias")
-					bi_dict["custom_alias"] = alias or bi.item_name or bi.item_code
-					bom_items.append(bi_dict)
-				bom = {
-					"master": bom_doc.as_dict(),
-					"items": bom_items
-				}
-			return {"item": item, "bom": bom}
-	except Exception:
-		pass
-
-	# Fall back to clean-data CSV
-	csv_items = _load_csv_items()
-	items_map = {it.get("item_code"): it.get("custom_alias") for it in csv_items}
-	for it in csv_items:
-		if it.get("item_code") == code:
-			item = it
-			break
-
-	if not item:
+	if not frappe.db.exists("Item", code):
 		frappe.throw(f"Không tìm thấy mặt hàng {code}", frappe.DoesNotExistError)
 
-	bom_tree = _load_csv_boms()
-	for b_no, b in bom_tree.items():
-		if b["master"].get("item") == code:
-			for bi in b.get("items", []):
-				if not bi.get("custom_alias"):
-					bi["custom_alias"] = items_map.get(bi.get("item_code")) or bi.get("item_name")
-			bom = b
-			break
+	item = frappe.get_doc("Item", code)
+	if not frappe.has_permission("Item", "read", item):
+		frappe.throw("Không có quyền xem mặt hàng.", frappe.PermissionError)
+	item = item.as_dict()
+	bom = None
 
+	default_bom = frappe.db.get_value("BOM", {"item": code, "is_default": 1, "is_active": 1}, "name")
+	if not default_bom:
+		default_bom = frappe.db.get_value("BOM", {"item": code, "is_active": 1}, "name")
+	if default_bom:
+		bom_doc = frappe.get_doc("BOM", default_bom)
+		if not frappe.has_permission("BOM", "read", bom_doc):
+			frappe.throw("Không có quyền xem định mức.", frappe.PermissionError)
+		bom_items = []
+		for bi in bom_doc.items:
+			bi_dict = bi.as_dict()
+			alias = frappe.db.get_value("Item", bi.item_code, "custom_alias")
+			bi_dict["custom_alias"] = alias or bi.item_name or bi.item_code
+			bom_items.append(bi_dict)
+		bom = {
+			"master": bom_doc.as_dict(),
+			"items": bom_items
+		}
 	return {"item": item, "bom": bom}

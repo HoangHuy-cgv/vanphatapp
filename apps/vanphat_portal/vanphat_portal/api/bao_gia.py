@@ -237,7 +237,7 @@ def normalize_layers(layers, total_thickness=None):
 	return normalized
 
 
-@frappe.whitelist(allow_guest=True)
+@frappe.whitelist()
 def calculate_packaging_quotation(
 	pouch_type="day_dung_co_voi",
 	width_mm=280,
