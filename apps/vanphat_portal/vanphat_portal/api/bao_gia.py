@@ -54,7 +54,7 @@ def create_quotation(payload):
 	doc = frappe.get_doc(
 		{
 			"doctype": "Quotation",
-			"naming_series": payload.get("naming_series") or "SAL-QTN-.YYYY.-",
+			"naming_series": payload.get("naming_series") or "BG-.YY..MM.-.###",
 			"quotation_to": "Customer",
 			"party_name": customer_id,
 			"company": company,
@@ -457,7 +457,11 @@ def get_order_details(name):
 	if not frappe.db.exists("Sales Order", name):
 		frappe.throw("Không tìm thấy đơn hàng " + str(name))
 	doc = frappe.get_doc("Sales Order", name)
-	credit_limit = frappe.db.get_value("Customer", doc.customer, "credit_limit") or 0
+	credit_limit = 0.0
+	try:
+		credit_limit = frappe.db.get_value("Customer Credit Limit", {"parent": doc.customer}, "credit_limit") or 0.0
+	except Exception:
+		credit_limit = 0.0
 	payment_type = "Trả sau" if credit_limit > 0 else "Trả trước"
 
 	advance_paid = frappe.utils.flt(doc.advance_paid)
@@ -630,8 +634,7 @@ def make_order_from_quotation(name, naming_series=None, delivery_date=None):
 	if doc.docstatus != 1 or doc.status not in ("Open", "Partially Ordered"):
 		frappe.throw("Chỉ chốt từ báo giá đã duyệt (Open).")
 	order = make_sales_order(name)
-	if naming_series:
-		order.naming_series = naming_series
+	order.naming_series = naming_series or "DH-.YY..MM.-.###"
 	if not order.get("delivery_date"):
 		order.delivery_date = delivery_date or frappe.utils.today()
 	order.insert()

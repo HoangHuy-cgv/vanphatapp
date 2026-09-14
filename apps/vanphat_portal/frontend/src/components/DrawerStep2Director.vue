@@ -23,7 +23,6 @@
 				<!-- LINE 1: Tên khách hàng & Brand Tag -->
 				<div class="cust-brand-bar">
 					<div class="cust-info">
-						<span class="icon-building">🏢</span>
 						<span class="cust-name">{{ formData.customer || 'Khách hàng' }}</span>
 					</div>
 					<div v-if="formData.brand" class="brand-tag">
@@ -43,13 +42,11 @@
 				<div class="spec-box">
 					<!-- LINE 3: Mô tả sản phẩm -->
 					<div class="spec-line">
-						<span class="spec-icon">📦</span>
 						<span class="spec-desc-text">{{ formData.description || 'Chưa có mô tả sản phẩm' }}</span>
 					</div>
 
 					<!-- LINE 4: Kích thước biên dịch đầy đủ nhãn & đơn vị đo -->
 					<div class="spec-line">
-						<span class="spec-icon">📐</span>
 						<span class="spec-dim-text">{{ compiledDimensions }}</span>
 					</div>
 
@@ -289,7 +286,11 @@ import ArtworkBox from './ArtworkBox.vue';
 const props = defineProps({
 	formData: {
 		type: Object,
-		required: true,
+		default: () => ({}),
+	},
+	step1Data: {
+		type: Object,
+		default: () => ({}),
 	},
 	previewFigures: {
 		type: Object,
@@ -301,6 +302,10 @@ const props = defineProps({
 			grand_total: '0 đ',
 		}),
 	},
+	figures: {
+		type: Object,
+		default: null,
+	},
 	savedData: {
 		type: Object,
 		default: () => ({}),
@@ -309,9 +314,22 @@ const props = defineProps({
 		type: Object,
 		default: null,
 	},
+	calcResult: {
+		type: Object,
+		default: null,
+	},
 });
 
 const emit = defineEmits(['close', 'back', 'submit', 'itemsChanged']);
+
+const formData = computed(() => {
+	if (props.formData && Object.keys(props.formData).length) return props.formData;
+	if (props.step1Data && Object.keys(props.step1Data).length) return props.step1Data;
+	return {};
+});
+
+const figuresData = computed(() => props.figures || props.previewFigures);
+const calcData = computed(() => props.calcResult || props.calculationResult);
 
 function formatCurrency(val) {
 	if (val == null || val === '') return '0 đ';
@@ -319,8 +337,8 @@ function formatCurrency(val) {
 	return Number(val).toLocaleString('vi-VN') + ' đ';
 }
 
-const isRoll = computed(() => props.formData.product_type === 'Cuộn màng ghép');
-const needCylinder = computed(() => props.formData.print_type === 'In trục' && props.formData.cylinder_status === 'Chưa có trục');
+const isRoll = computed(() => formData.value.product_type === 'Cuộn màng ghép');
+const needCylinder = computed(() => formData.value.print_type === 'In trục' && formData.value.cylinder_status === 'Chưa có trục');
 
 // M2 state — restored from App-held savedData so Quay lại không mất dữ liệu
 const selectedMaterials = ref([...(props.savedData.materials || ['OPP', 'PE sữa'])]);
@@ -371,7 +389,7 @@ function toggleMaterial(code) {
 
 // Line 4 compiled dimensions with explicit units mm and mic
 const compiledDimensions = computed(() => {
-	const fd = props.formData;
+	const fd = formData.value;
 	if (!fd.length && !fd.width && !fd.thickness) {
 		return 'Chưa nhập kích thước kỹ thuật';
 	}
@@ -414,7 +432,7 @@ function onItemChange() {
 
 function onSubmit() {
 	emit('submit', {
-		...props.formData,
+		...formData.value,
 		lines: itemRows.value,
 		materials: selectedMaterials.value,
 		artwork_url: artworkUrl.value,
@@ -536,18 +554,14 @@ onUnmounted(() => {
 .brand-tag {
 	font-size: 14px;
 	font-weight: 700;
-	color: #0284c7;
-	background: rgba(2, 132, 199, 0.14);
-	border: 1px solid rgba(2, 132, 199, 0.3);
-	padding: 3px 10px;
-	border-radius: 6px;
+	color: #38bdf8;
 	white-space: nowrap;
 	flex-shrink: 0;
 }
 
 .axis-badges {
 	display: flex;
-	gap: 8px;
+	gap: 12px;
 	flex-wrap: wrap;
 	margin-bottom: 12px;
 }
@@ -555,32 +569,23 @@ onUnmounted(() => {
 .axis-badge {
 	font-size: 14px;
 	font-weight: 700;
-	padding: 4px 11px;
-	border-radius: 6px;
+	padding: 0;
 }
 
 .badge-product {
 	color: #38bdf8;
-	background: rgba(56, 189, 248, 0.12);
-	border: 1px solid rgba(56, 189, 248, 0.25);
 }
 
 .badge-accessory {
 	color: #c084fc;
-	background: rgba(192, 132, 252, 0.12);
-	border: 1px solid rgba(192, 132, 252, 0.25);
 }
 
 .badge-print {
 	color: #94a3b8;
-	background: rgba(148, 163, 184, 0.12);
-	border: 1px solid rgba(148, 163, 184, 0.25);
 }
 
 .badge-cylinder {
 	color: #f59e0b;
-	background: rgba(245, 158, 11, 0.12);
-	border: 1px solid rgba(245, 158, 11, 0.25);
 }
 
 .spec-box {

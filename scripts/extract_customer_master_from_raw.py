@@ -7,7 +7,7 @@ Trích xuất Danh mục Khách Hàng (DocType Customer) trực tiếp 100% từ
 - data/clean-data/item_master.csv (các mặt hàng độc quyền đang gán khách hàng)
 
 Tuân thủ nghiêm ngặt 100% ERPNext Native v16 Wording:
-- name: CUST-00001 .. CUST-#####
+- name: KH-00001 .. KH-#####
 - customer_name: Tên pháp nhân đầy đủ theo ĐKKD / Hóa đơn VAT
 - alias: Tên gọi tắt thương mại UI Cockpit (cột native ERPNext)
 - customer_type: Company | Individual
@@ -346,7 +346,7 @@ def extract_all():
     ]
 
     for idx, (legal_name, data) in enumerate(sorted_customers, 1):
-        cust_id = f"CUST-{idx:05d}"
+        cust_id = f"KH-{idx:05d}"
         alias = derive_alias(legal_name)
         cust_type = detect_customer_type(legal_name)
         

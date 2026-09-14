@@ -1,46 +1,70 @@
 <template>
 	<div class="orders-view-wrapper">
-		<header class="page-head">
-			<h2 class="page-title">Đơn hàng</h2>
+		<!-- Header 1 Dòng Chuẩn Cockpit: 3 Tabs + Quick Search + Action Button -->
+		<header class="page-head catalog-header-cockpit">
+			<div class="order-tabs-bar catalog-tabs-bar">
+				<button
+					type="button"
+					class="order-tab-btn"
+					:class="{ active: activeOrderTab === 'xuong_sx' }"
+					@click="activeOrderTab = 'xuong_sx'"
+				>
+					<span>Xưởng sản xuất</span>
+					<span class="tab-badge">{{ xuongSxOrders.length }}</span>
+				</button>
+				<button
+					type="button"
+					class="order-tab-btn"
+					:class="{ active: activeOrderTab === 'ngcs' }"
+					@click="activeOrderTab = 'ngcs'"
+				>
+					<span>Túi NGCS</span>
+					<span class="tab-badge">{{ ngcsOrders.length }}</span>
+				</button>
+				<button
+					type="button"
+					class="order-tab-btn"
+					:class="{ active: activeOrderTab === 'mua_ngoai' }"
+					@click="activeOrderTab = 'mua_ngoai'"
+				>
+					<span>Mua ngoài trọn gói</span>
+					<span class="tab-badge">{{ muaNgoaiOrders.length }}</span>
+				</button>
+			</div>
+
+			<!-- Quick Search Tức Thời Cùng Hàng Header Cockpit -->
+			<div class="catalog-search-cockpit-wrap">
+				<div class="search-input-wrap">
+					<svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<circle cx="11" cy="11" r="8"></circle>
+						<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+					</svg>
+					<input
+						type="text"
+						v-model="orderSearchQuery"
+						placeholder="Tìm nhanh đơn hàng, khách, mặt hàng..."
+						class="catalog-search-input"
+					/>
+					<button
+						v-if="orderSearchQuery"
+						type="button"
+						class="btn-clear-search"
+						title="Xóa tìm kiếm"
+						@click="orderSearchQuery = ''"
+					>
+						✕
+					</button>
+				</div>
+			</div>
+
 			<button
 				type="button"
-				class="btn-new-quote"
+				class="btn-new-quote whitespace-nowrap"
 				@click="openCreateOrderModal"
 			>
 				+ Tạo đơn hàng
 			</button>
 		</header>
-
-		<!-- Sub-navigation 3 Tabs -->
-		<div class="order-tabs-bar">
-			<button
-				type="button"
-				class="order-tab-btn"
-				:class="{ active: activeOrderTab === 'xuong_sx' }"
-				@click="activeOrderTab = 'xuong_sx'"
-			>
-				<span>Xưởng sản xuất</span>
-				<span class="tab-badge">{{ xuongSxOrders.length }}</span>
-			</button>
-			<button
-				type="button"
-				class="order-tab-btn"
-				:class="{ active: activeOrderTab === 'ngcs' }"
-				@click="activeOrderTab = 'ngcs'"
-			>
-				<span>Túi NGCS</span>
-				<span class="tab-badge">{{ ngcsOrders.length }}</span>
-			</button>
-			<button
-				type="button"
-				class="order-tab-btn"
-				:class="{ active: activeOrderTab === 'mua_ngoai' }"
-				@click="activeOrderTab = 'mua_ngoai'"
-			>
-				<span>Mua ngoài trọn gói</span>
-				<span class="tab-badge">{{ muaNgoaiOrders.length }}</span>
-			</button>
-		</div>
 
 		<div class="table-container">
 			<table class="data-table">
@@ -85,84 +109,65 @@
 
 				<tbody>
 					<tr
-						v-for="o in currentTabOrders"
+						v-for="o in filteredTabOrders"
 						:key="o.name"
 						class="table-row cursor-pointer"
 						@click="openOrderDetail(o)"
 					>
-						<td class="text-secondary font-mono">{{ formatDateShort(o.transaction_date) }}</td>
+						<td class="text-secondary text-num">{{ formatDateShort(o.transaction_date) }}</td>
 						<td>
 							<div class="font-bold text-white">{{ o.customer_alias || o.alias || o.customer || o.customer_name }}</div>
 						</td>
 						<td class="truncate" :title="o.item_name">
 							<span class="font-medium text-white">{{ o.custom_alias || o.item_name || '—' }}</span>
 						</td>
-						<td class="text-right text-num">
+						<td class="text-right text-num font-bold">
 							<span>{{ formatNumber(o.qty) }}</span>
 							<span class="text-xs text-secondary" style="margin-left: 4px;">{{ o.uom || o.stock_uom || 'Túi' }}</span>
 						</td>
 						<td class="text-right">
-							<div v-if="o.payment_type === 'Trả sau'" class="text-xs text-secondary font-semibold">
+							<span v-if="o.payment_type === 'Trả sau'" class="text-secondary font-bold text-[14px]">
 								Trả sau
-							</div>
-							<div v-else class="deposit-mini-cell">
-								<div class="text-num font-bold" :class="o.advance_paid >= (o.required_deposit || o.grand_total * 0.5) ? 'text-emerald' : (o.advance_paid > 0 ? 'text-amber' : 'text-secondary')">
-									{{ formatCurrency(o.advance_paid) }}
-								</div>
-								<div class="mini-bar-track">
-									<div
-										class="mini-bar-fill"
-										:style="{ width: Math.min(100, Math.round((o.advance_paid / (o.required_deposit || (o.grand_total * 0.5))) * 100)) + '%' }"
-										:class="o.advance_paid >= (o.required_deposit || (o.grand_total * 0.5)) ? 'bg-emerald' : 'bg-amber'"
-									></div>
-								</div>
-							</div>
+							</span>
+							<span v-else class="text-num font-bold text-[14px]" :class="depositColorClass(o)">
+								{{ formatCurrency(o.advance_paid) }}
+							</span>
 						</td>
 
-						<!-- Cột theo Tab: Xưởng SX -->
-						<td v-if="activeOrderTab === 'xuong_sx'" class="text-center">
-							<div class="factory-status-cell">
-								<span class="badge-mat" :class="o.materials_status === 'Đủ màng' ? 'mat-ready' : 'mat-waiting'">
-									{{ o.materials_status || 'Chờ màng' }}
-								</span>
-								<span class="badge-stage">
-									{{ o.factory_stage || 'Chờ cọc' }}
-								</span>
-							</div>
+						<!-- Cột theo Tab: Xưởng SX (Trạng thái thuần màu 14px) -->
+						<td v-if="activeOrderTab === 'xuong_sx'" class="text-center whitespace-nowrap">
+							<span class="font-bold text-[14px]" :class="o.materials_status === 'Đủ màng' ? 'text-emerald' : 'text-amber'">
+								{{ o.materials_status || 'Chờ màng' }}
+							</span>
 						</td>
 
-						<!-- Cột theo Tab: NGCS In Lụa -->
-						<td v-else-if="activeOrderTab === 'ngcs'" class="text-center">
-							<div v-if="o.supplier_name" class="sla-cell">
-								<span class="sla-supplier">{{ o.supplier_name }}</span>
-								<span class="sla-badge" :class="supplierSlaBadge(o.supplier_eta_days).cls">
-									{{ supplierSlaBadge(o.supplier_eta_days).text }}
-								</span>
-							</div>
+						<!-- Cột theo Tab: NGCS In Lụa (Trạng thái thuần màu 14px) -->
+						<td v-else-if="activeOrderTab === 'ngcs'" class="text-center whitespace-nowrap">
+							<span v-if="o.supplier_name" class="font-bold text-[14px]" :class="supplierSlaColorClass(o.supplier_eta_days)">
+								{{ o.supplier_name }} ({{ supplierSlaText(o.supplier_eta_days) }})
+							</span>
 							<span v-else class="text-secondary text-xs">—</span>
 						</td>
 
-						<!-- Cột theo Tab: Mua Ngoài -->
-						<td v-else class="text-center">
-							<div v-if="o.supplier_name" class="sla-cell">
-								<span class="sla-supplier">{{ o.supplier_name }}</span>
-								<span class="sla-badge" :class="supplierSlaBadge(o.supplier_eta_days).cls">
-									{{ supplierSlaBadge(o.supplier_eta_days).text }}
-								</span>
-							</div>
+						<!-- Cột theo Tab: Mua Ngoài (Trạng thái thuần màu 14px) -->
+						<td v-else class="text-center whitespace-nowrap">
+							<span v-if="o.supplier_name" class="font-bold text-[14px]" :class="supplierSlaColorClass(o.supplier_eta_days)">
+								{{ o.supplier_name }} ({{ supplierSlaText(o.supplier_eta_days) }})
+							</span>
 							<span v-else class="text-secondary text-xs">—</span>
 						</td>
 
-						<!-- Trạng thái chung -->
-						<td class="text-center">
-							<span class="status-badge" :class="orderStatusClass(o)">
+						<!-- Trạng thái chung (Trạng thái thuần màu 14px in đậm) -->
+						<td class="text-center whitespace-nowrap">
+							<span class="font-bold text-[14px]" :class="orderStatusColorClass(o)">
 								{{ orderStatusText(o) }}
 							</span>
 						</td>
 					</tr>
-					<tr v-if="currentTabOrders.length === 0">
-						<td colspan="7" class="empty-cell">
-							{{ loadingOrders ? 'Đang tải...' : 'Không có dữ liệu trong tab này' }}
+					<tr v-if="filteredTabOrders.length === 0">
+						<td colspan="7" class="empty-cell" style="padding: 2.5rem 1rem; text-align: center;">
+							<div v-if="loadingOrders" class="text-secondary">Đang tải đơn hàng...</div>
+							<div v-else class="text-secondary text-sm">Không tìm thấy đơn hàng nào</div>
 						</td>
 					</tr>
 				</tbody>
@@ -205,6 +210,7 @@ const { ordersCount } = usePortalCounts();
 const orders = ref([]);
 const loadingOrders = ref(false);
 const activeOrderTab = ref('xuong_sx');
+const orderSearchQuery = ref('');
 
 const masterItems = ref([]);
 const selectedOrderId = ref('');
@@ -241,11 +247,37 @@ const currentTabOrders = computed(() => {
 	return muaNgoaiOrders.value;
 });
 
-function supplierSlaBadge(days) {
-	if (days == null) return { text: '—', cls: 'sla-none' };
-	if (days < 0) return { text: 'Trễ ' + Math.abs(days) + ' ngày', cls: 'sla-overdue' };
-	if (days === 0) return { text: 'Hôm nay giao', cls: 'sla-today' };
-	return { text: 'Còn ' + days + ' ngày', cls: 'sla-ontime' };
+const filteredTabOrders = computed(() => {
+	let list = currentTabOrders.value;
+	const q = orderSearchQuery.value.trim().toLowerCase();
+	if (!q) return list;
+	return list.filter((o) => {
+		const name = (o.name || '').toLowerCase();
+		const cust = (o.customer_alias || o.alias || o.customer || o.customer_name || '').toLowerCase();
+		const item = (o.custom_alias || o.item_name || '').toLowerCase();
+		return name.includes(q) || cust.includes(q) || item.includes(q);
+	});
+});
+
+function depositColorClass(o) {
+	const req = o.required_deposit || (o.grand_total * 0.5);
+	if (o.advance_paid >= req) return 'text-emerald';
+	if (o.advance_paid > 0) return 'text-amber';
+	return 'text-secondary';
+}
+
+function supplierSlaColorClass(days) {
+	if (days == null) return 'text-secondary';
+	if (days < 0) return 'text-rose';
+	if (days === 0) return 'text-amber';
+	return 'text-emerald';
+}
+
+function supplierSlaText(days) {
+	if (days == null) return '—';
+	if (days < 0) return `Trễ ${Math.abs(days)} ngày`;
+	if (days === 0) return 'Hôm nay';
+	return `Còn ${days} ngày`;
 }
 
 function orderStatusText(o) {
@@ -256,11 +288,16 @@ function orderStatusText(o) {
 	return 'Chờ cọc';
 }
 
-function orderStatusClass(o) {
-	if (o.order_status_class) return o.order_status_class;
-	if (o.is_hold || o.order_state?.includes('HOLD')) return 'status-hold';
-	if (o.docstatus === 1 || o.order_state?.includes('Chính thức')) return 'status-ordered';
-	return 'status-draft';
+function orderStatusColorClass(o) {
+	if (o.order_status_class) {
+		if (o.order_status_class.includes('hold')) return 'text-rose';
+		if (o.order_status_class.includes('ordered')) return 'text-emerald';
+		if (o.order_status_class.includes('draft')) return 'text-amber';
+	}
+	if (o.is_hold || o.order_state?.includes('HOLD')) return 'text-rose';
+	if (o.docstatus === 1 || o.order_state?.includes('Chính thức')) return 'text-emerald';
+	if (o.advance_paid > 0) return 'text-sky';
+	return 'text-amber';
 }
 
 function formatNumber(val) {
@@ -448,135 +485,20 @@ defineExpose({
 	color: #4ea1e0;
 }
 
-.sla-cell {
-	display: inline-flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 2px;
-}
-
-.sla-supplier {
-	font-size: 10.5px;
-	font-weight: 700;
-	color: #cbd5e1;
-	letter-spacing: 0.3px;
-}
-
-.sla-badge {
-	font-size: 10.5px;
-	font-weight: 700;
-	padding: 2px 7px;
-	border-radius: 4px;
-	white-space: nowrap;
-}
-
-.sla-ontime {
-	background: rgba(148, 163, 184, 0.15);
-	color: #94a3b8;
-	border: 1px solid rgba(148, 163, 184, 0.3);
-}
-
-.sla-today {
-	background: rgba(245, 158, 11, 0.18);
-	color: #fbbf24;
-	border: 1px solid rgba(245, 158, 11, 0.4);
-}
-
-.sla-overdue {
-	background: rgba(239, 68, 68, 0.25);
-	color: #fca5a5;
-	border: 1px solid rgba(239, 68, 68, 0.5);
-	animation: pulse-red 2s infinite;
-}
-
-@keyframes pulse-red {
-	0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
-	50% { box-shadow: 0 0 0 4px rgba(239, 68, 68, 0); }
-}
-
-.factory-status-cell {
-	display: inline-flex;
-	align-items: center;
-	gap: 6px;
-	justify-content: center;
-}
-
-.badge-mat {
-	font-size: 10.5px;
-	font-weight: 700;
-	padding: 2px 6px;
-	border-radius: 4px;
-}
-
-.mat-ready {
-	background: rgba(52, 211, 153, 0.15);
-	color: #34d399;
-	border: 1px solid rgba(52, 211, 153, 0.3);
-}
-
-.mat-waiting {
-	background: rgba(245, 158, 11, 0.15);
-	color: #fbbf24;
-	border: 1px solid rgba(245, 158, 11, 0.3);
-}
-
-.badge-stage {
-	font-size: 11px;
-	font-weight: 600;
-	color: #93c5fd;
-	background: rgba(78, 161, 224, 0.12);
-	border: 1px solid rgba(78, 161, 224, 0.3);
-	padding: 2px 6px;
-	border-radius: 4px;
-}
-
-.status-hold {
-	background: rgba(239, 68, 68, 0.2);
-	color: #f87171;
-	border: 1px solid rgba(239, 68, 68, 0.4);
-}
-
 .text-emerald {
 	color: #34d399;
 }
 
 .text-amber {
-	color: #f59e0b;
+	color: #fbbf24;
 }
 
-.font-mono {
-	font-family: inherit;
-	font-variant-numeric: tabular-nums;
-	font-feature-settings: "tnum";
+.text-sky {
+	color: #7dd3fc;
 }
 
-.deposit-mini-cell {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-end;
-	gap: 3px;
-}
-
-.mini-bar-track {
-	width: 100%;
-	max-width: 80px;
-	height: 3px;
-	background: rgba(255, 255, 255, 0.08);
-	border-radius: 2px;
-	overflow: hidden;
-}
-
-.mini-bar-fill {
-	height: 100%;
-	transition: width 0.3s ease;
-}
-
-.bg-emerald {
-	background-color: #34d399;
-}
-
-.bg-amber {
-	background-color: #f59e0b;
+.text-rose {
+	color: #f87171;
 }
 
 .empty-cell {

@@ -50,9 +50,22 @@ const catalogVuePath = path.join(ROOT_DIR, 'apps/vanphat_portal/frontend/src/vie
 const catalogVue = fs.existsSync(catalogVuePath) ? fs.readFileSync(catalogVuePath, 'utf8') : '';
 const ordersVuePath = path.join(ROOT_DIR, 'apps/vanphat_portal/frontend/src/views/OrdersView.vue');
 const ordersVue = fs.existsSync(ordersVuePath) ? fs.readFileSync(ordersVuePath, 'utf8') : '';
+const quotesVuePath = path.join(ROOT_DIR, 'apps/vanphat_portal/frontend/src/views/QuotesView.vue');
+const quotesVue = fs.existsSync(quotesVuePath) ? fs.readFileSync(quotesVuePath, 'utf8') : '';
 const portalCssPath = path.join(ROOT_DIR, 'apps/vanphat_portal/frontend/src/assets/portal.css');
 const portalCss = fs.existsSync(portalCssPath) ? fs.readFileSync(portalCssPath, 'utf8') : '';
-const portalSource = appVue + '\n' + catalogVue + '\n' + ordersVue + '\n' + portalCss;
+const drawerStep2VuePath = path.join(ROOT_DIR, 'apps/vanphat_portal/frontend/src/components/DrawerStep2Director.vue');
+const drawerStep2Vue = fs.existsSync(drawerStep2VuePath) ? fs.readFileSync(drawerStep2VuePath, 'utf8') : '';
+const custRaw = fs.readFileSync(path.join(CLEAN_DATA_DIR, 'customer_master.csv'), 'utf8');
+const custRows = parseCSV(custRaw);
+const suppRaw = fs.readFileSync(path.join(CLEAN_DATA_DIR, 'supplier_master.csv'), 'utf8');
+const suppRows = parseCSV(suppRaw);
+const propSetterJsonPath = path.join(ROOT_DIR, 'apps/vanphat_portal/fixtures/property_setter.json');
+const propSetterJson = fs.existsSync(propSetterJsonPath) ? fs.readFileSync(propSetterJsonPath, 'utf8') : '';
+const customerApiPath = path.join(ROOT_DIR, 'apps/vanphat_portal/vanphat_portal/api/customer.py');
+const customerApiSource = fs.existsSync(customerApiPath) ? fs.readFileSync(customerApiPath, 'utf8') : '';
+
+const portalSource = appVue + '\n' + catalogVue + '\n' + ordersVue + '\n' + quotesVue + '\n' + portalCss;
 
 const drawerVue = fs.readFileSync(path.join(ROOT_DIR, 'apps/vanphat_portal/frontend/src/components/DrawerItemDetail.vue'), 'utf8');
 const pythonApi = fs.readFileSync(path.join(ROOT_DIR, 'apps/vanphat_portal/vanphat_portal/api/item.py'), 'utf8');
@@ -288,7 +301,7 @@ const refinementChecks = [
 	{ name: 'Supplier code merged as subtle subtext under alias (no separate Mã NCC column)', test: !catalogVue.includes('MÃ NCC') && catalogVue.includes('Mã NCC: ') },
 	{ name: 'User table has SĐT đăng nhập column with mobile_no', test: catalogVue.includes('SĐT đăng nhập') && catalogVue.includes('u.mobile_no') },
 	{ name: 'User table de-duplicated designation and roles into unified column', test: catalogVue.includes('Vai trò ERPNext') && !catalogVue.includes('EMAIL ĐĂNG NHẬP') },
-	{ name: 'User table has Active/Inactive status column', test: catalogVue.includes('Trạng thái') && catalogVue.includes('badge-status-pill') }
+	{ name: 'User table has pure color 14px bold status (Hoạt động / Đã khóa, no bullet dot)', test: catalogVue.includes('text-emerald') && catalogVue.includes('Hoạt động') && catalogVue.includes('text-secondary') && !catalogVue.includes('●') && !catalogVue.includes('○') }
 ];
 
 let allRefinementPassed = true;
@@ -297,8 +310,30 @@ for (const check of refinementChecks) {
 	if (!check.test) allRefinementPassed = false;
 }
 
-const totalChecksCount = appChecks.length + drawerChecks.length + dimChecks.length + backendChecks.length + materialChecks.length + stickyChecks.length + aliasChecks.length + alignmentChecks.length + cylinderPurityChecks.length + masterDataChecks.length + refinementChecks.length;
-const finalStatus = allAppPassed && allDrawerPassed && allDimPassed && allBackendPassed && allMaterialPassed && allStickyPassed && allAliasPassed && allAlignmentPassed && allCylPurityPassed && allMasterDataPassed && allRefinementPassed;
+console.log('\n--- 13. INDUSTRIAL COCKPIT BASELINE (PILLARS 1-5, NATIVE NAMING & REFACTORED VIEWS) ---');
+const cockpitChecks = [
+	{ name: 'OrdersView single-line header with tabs, instant search and action button', test: ordersVue.includes('catalog-header-cockpit') && ordersVue.includes('orderSearchQuery') && ordersVue.includes('+ Tạo đơn hàng') },
+	{ name: 'OrdersView single-line row without progress bar (removed mini-bar-track)', test: !ordersVue.includes('mini-bar-track') && !ordersVue.includes('progress-fill') },
+	{ name: 'OrdersView pure 14px color status without boxed badges (no badge-stage, no badge-mat)', test: !ordersVue.includes('badge-stage') && !ordersVue.includes('badge-mat') && ordersVue.includes('text-emerald') && ordersVue.includes('text-amber') },
+	{ name: 'QuotesView single-line header with instant search and action button', test: quotesVue.includes('catalog-header-cockpit') && quotesVue.includes('quoteSearchQuery') && quotesVue.includes('+ Báo giá') },
+	{ name: 'QuotesView pure 14px color status without boxed badges', test: quotesVue.includes('quoteStatusColorClass') && quotesVue.includes('text-[14px]') },
+	{ name: 'QuotesView removed 30% width Thao tác column for full cockpit density', test: !quotesVue.includes('<th>Thao tác</th>') && !quotesVue.includes('row-actions') },
+	{ name: 'DrawerStep2Director clean of emojis (no building/box/ruler icons)', test: !drawerStep2Vue.includes('🏢') && !drawerStep2Vue.includes('📦') && !drawerStep2Vue.includes('📐') },
+	{ name: 'Customer Master CSV 100% compliant with KH- naming series (zero CUST-)', test: custRows.length > 0 && custRows.every(r => r.name.startsWith('KH-')) && !custRaw.includes('CUST-') },
+	{ name: 'Supplier Master CSV 100% compliant with NCC- naming series (zero SUPP-)', test: suppRows.length > 0 && suppRows.every(r => r.name.startsWith('NCC-')) && !suppRaw.includes('SUPP-') },
+	{ name: 'Property Setter fixtures define native ERPNext naming series for Quotation & Sales Order', test: propSetterJson.includes('Quotation-naming_series-options') && propSetterJson.includes('Sales Order-naming_series-options') },
+	{ name: 'Property Setter fixtures define native ERPNext naming series for Customer & Supplier', test: propSetterJson.includes('Customer-naming_series-options') && propSetterJson.includes('Supplier-naming_series-options') },
+	{ name: 'Customer API prevents MariaDB schema crash by not querying unjoined credit_limit on Customer doctype', test: !customerApiSource.includes('"credit_limit"') && !customerApiSource.includes("'credit_limit'") }
+];
+
+let allCockpitPassed = true;
+for (const check of cockpitChecks) {
+	console.log(`Cockpit Check "${check.name}": ${check.test ? 'PASS' : 'FAIL'}`);
+	if (!check.test) allCockpitPassed = false;
+}
+
+const totalChecksCount = appChecks.length + drawerChecks.length + dimChecks.length + backendChecks.length + materialChecks.length + stickyChecks.length + aliasChecks.length + alignmentChecks.length + cylinderPurityChecks.length + masterDataChecks.length + refinementChecks.length + cockpitChecks.length;
+const finalStatus = allAppPassed && allDrawerPassed && allDimPassed && allBackendPassed && allMaterialPassed && allStickyPassed && allAliasPassed && allAlignmentPassed && allCylPurityPassed && allMasterDataPassed && allRefinementPassed && allCockpitPassed;
 console.log(`\n======================================================`);
 console.log(`OVERALL STATUS: ${finalStatus ? `ALL ${totalChecksCount} CHECKS PASSED (100% READY)` : 'SOME CHECKS FAILED'}`);
 console.log(`======================================================`);

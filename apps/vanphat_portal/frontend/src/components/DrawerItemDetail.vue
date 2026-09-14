@@ -445,36 +445,30 @@ onUnmounted(() => {
 }
 
 .layer-badge {
-	font-size: 13px;
+	font-size: 14px;
 	font-weight: 700;
-	padding: 2.5px 8px;
-	border-radius: 4px;
+	padding: 0;
 	letter-spacing: 0.2px;
 }
 
 .spec-pills-wrap {
 	display: flex;
 	align-items: center;
-	gap: 6px;
+	gap: 10px;
 }
 
 .pill {
-	font-size: 13.5px;
-	padding: 2.5px 8px;
-	border-radius: 4px;
-	font-weight: 600;
+	font-size: 14px;
+	padding: 0;
+	font-weight: 700;
 }
 
 .pill-thick {
-	background: rgba(245, 158, 11, 0.15);
-	color: #f59e0b;
-	border: 1px solid rgba(245, 158, 11, 0.3);
+	color: #fbbf24;
 }
 
 .pill-dim {
-	background: rgba(255, 255, 255, 0.05);
 	color: #cbd5e1;
-	border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .spec-geo-row {
@@ -630,27 +624,19 @@ onUnmounted(() => {
 
 /* 4 Layer Badges Palette */
 .badge-layer-print {
-	background: rgba(78, 161, 224, 0.18);
 	color: #4ea1e0;
-	border: 1px solid rgba(78, 161, 224, 0.35);
 }
 
 .badge-layer-barrier {
-	background: rgba(245, 158, 11, 0.18);
 	color: #f59e0b;
-	border: 1px solid rgba(245, 158, 11, 0.35);
 }
 
 .badge-layer-pa {
-	background: rgba(168, 85, 247, 0.18);
 	color: #c084fc;
-	border: 1px solid rgba(168, 85, 247, 0.35);
 }
 
 .badge-layer-sealant {
-	background: rgba(16, 185, 129, 0.18);
 	color: #34d399;
-	border: 1px solid rgba(16, 185, 129, 0.35);
 }
 
 /* Utilities */

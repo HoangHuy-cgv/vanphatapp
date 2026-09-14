@@ -103,7 +103,7 @@ BOM_ITEMS.forEach(bi => {
 if (!fs.existsSync(QUOTATIONS_FILE)) {
 	const initialQuotes = [
 		{
-			name: 'BG-2026-0001',
+			name: 'BG-2609-001',
 			creation: '2026-09-12 14:30:00',
 			transaction_date: '2026-09-12',
 			party_name: 'CÔNG TY TNHH TM-DV HÓA MỸ PHẨM LÂM GIA',
@@ -115,7 +115,7 @@ if (!fs.existsSync(QUOTATIONS_FILE)) {
 			owner: 'giamdoc@vanphat.com'
 		},
 		{
-			name: 'BG-2026-0002',
+			name: 'BG-2609-002',
 			creation: '2026-09-12 10:15:00',
 			transaction_date: '2026-09-12',
 			party_name: 'CÔNG TY CP QUỐC TẾ VMT GROUP',
@@ -127,7 +127,7 @@ if (!fs.existsSync(QUOTATIONS_FILE)) {
 			owner: 'sale@vanphat.com'
 		},
 		{
-			name: 'BG-2026-0003',
+			name: 'BG-2609-003',
 			creation: '2026-09-11 16:45:00',
 			transaction_date: '2026-09-11',
 			party_name: 'CÔNG TY TNHH SẢN XUẤT MỸ PHẨM AN NHIÊN',
@@ -145,7 +145,7 @@ if (!fs.existsSync(QUOTATIONS_FILE)) {
 if (!fs.existsSync(ORDERS_FILE)) {
 	const initialOrders = [
 		{
-			name: 'SO-2026-0001',
+			name: 'DH-2609-001',
 			transaction_date: '2026-09-11',
 			customer_name: 'CÔNG TY TNHH SẢN XUẤT MỸ PHẨM AN NHIÊN',
 			grand_total: 15200000,
@@ -406,7 +406,7 @@ const server = http.createServer((req, res) => {
 				const payload = parsed.payload || parsed;
 				const quotes = getQuotations();
 				const nextIndex = quotes.length + 1;
-				const docCode = `BG-2026-${String(nextIndex).padStart(4, '0')}`;
+				const docCode = `BG-2609-${String(nextIndex).padStart(3, '0')}`;
 				const now = new Date();
 				const dateStr = now.toISOString().slice(0, 10);
 				const timeStr = now.toTimeString().slice(0, 8);
@@ -492,7 +492,7 @@ const server = http.createServer((req, res) => {
 					doc.status = 'Ordered';
 					saveQuotations(quotes);
 
-					const nextSo = `SO-2026-${String(orders.length + 1).padStart(4, '0')}`;
+					const nextSo = `DH-2609-${String(orders.length + 1).padStart(3, '0')}`;
 					const now = new Date();
 					const soDoc = {
 						name: nextSo,

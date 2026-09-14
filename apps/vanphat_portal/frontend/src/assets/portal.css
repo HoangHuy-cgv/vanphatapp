@@ -364,35 +364,31 @@ html, body {
 
 .status-badge {
 	display: inline-block;
-	font-size: 13px;
+	font-size: 14px;
 	font-weight: 700;
-	padding: 4px 10px;
-	border-radius: 6px;
+	padding: 0;
+	background: transparent;
+	border: none;
 }
 
 .status-open {
-	background: rgba(254, 200, 75, 0.14);
-	color: #fec84b;
+	color: #fbbf24;
 }
 
 .status-draft {
-	background: rgba(157, 167, 181, 0.14);
-	color: #9da7b5;
+	color: #94a3b8;
 }
 
 .status-ordered {
-	background: rgba(81, 207, 102, 0.14);
-	color: #51cf66;
+	color: #34d399;
 }
 
 .status-lost {
-	background: rgba(100, 116, 139, 0.2);
-	color: #64748b;
+	color: #f87171;
 }
 
 .status-expired {
-	background: rgba(249, 112, 102, 0.14);
-	color: #f97066;
+	color: #f87171;
 }
 
 .row-actions {
@@ -709,7 +705,19 @@ html, body {
 }
 
 .text-amber {
-	color: #f59e0b;
+	color: #fbbf24;
+}
+
+.text-sky {
+	color: #38bdf8;
+}
+
+.text-rose {
+	color: #f87171;
+}
+
+.text-secondary {
+	color: #94a3b8;
 }
 
 .font-mono {

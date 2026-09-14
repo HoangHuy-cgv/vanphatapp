@@ -3,14 +3,14 @@ app_title = "Van Phat Portal"
 app_publisher = "Van Phat"
 app_description = "Visual portal shell. Business logic lives in ERPNext native only."
 app_version = "0.0.1"
-required_apps = ["frappe"]
+required_apps = ["frappe", "erpnext"]
 
 # Route /login to custom login template
 website_route_rules = [
 	{"from_route": "/login", "to_route": "login"},
 ]
 
-# Fixtures for Packaging Master Data (DocType Item Customization)
+# Fixtures for Packaging Master Data and Naming Series
 fixtures = [
 	{
 		"dt": "Custom Field",
@@ -21,7 +21,11 @@ fixtures = [
 	{
 		"dt": "Property Setter",
 		"filters": [
-			["doc_type", "=", "Item"]
+			["doc_type", "in", [
+				"Item", "Quotation", "Sales Order", "Customer", "Supplier",
+				"Purchase Order", "Work Order", "Delivery Note", "Purchase Receipt",
+				"Sales Invoice", "Payment Entry"
+			]]
 		]
 	}
 ]

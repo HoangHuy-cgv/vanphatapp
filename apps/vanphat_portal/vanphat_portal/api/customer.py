@@ -31,7 +31,7 @@ def get_list(query=None):
 		fields = [
 			"name", "customer_name", "alias", "customer_type",
 			"customer_group", "territory", "payment_terms",
-			"default_currency", "credit_limit", "tax_id",
+			"default_currency", "tax_id",
 			"primary_address", "customer_primary_contact", "disabled"
 		]
 		custs = frappe.get_all("Customer", filters=filters, fields=fields, order_by="name asc")

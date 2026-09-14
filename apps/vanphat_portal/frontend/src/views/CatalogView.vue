@@ -307,11 +307,11 @@
 							</span>
 						</td>
 						<td class="text-center whitespace-nowrap">
-							<span v-if="u.enabled" class="badge-status-pill active">
-								● Hoạt động
+							<span v-if="u.enabled" class="font-bold text-[14px] text-emerald">
+								Hoạt động
 							</span>
-							<span v-else class="badge-status-pill inactive">
-								○ Đã khóa
+							<span v-else class="font-bold text-[14px] text-secondary">
+								Đã khóa
 							</span>
 						</td>
 					</tr>

@@ -251,5 +251,49 @@
     "property": "hidden",
     "property_type": "Check",
     "value": "1"
+  },
+  {
+    "name": "Quotation-naming_series-options",
+    "docstatus": 0,
+    "doctype": "Property Setter",
+    "doctype_or_field": "DocField",
+    "doc_type": "Quotation",
+    "field_name": "naming_series",
+    "property": "options",
+    "property_type": "Text",
+    "value": "BG-.YY..MM.-.###\nSAL-QTN-.YYYY.-"
+  },
+  {
+    "name": "Sales Order-naming_series-options",
+    "docstatus": 0,
+    "doctype": "Property Setter",
+    "doctype_or_field": "DocField",
+    "doc_type": "Sales Order",
+    "field_name": "naming_series",
+    "property": "options",
+    "property_type": "Text",
+    "value": "DH-.YY..MM.-.###\nSO-.YYYY.-"
+  },
+  {
+    "name": "Customer-naming_series-options",
+    "docstatus": 0,
+    "doctype": "Property Setter",
+    "doctype_or_field": "DocField",
+    "doc_type": "Customer",
+    "field_name": "naming_series",
+    "property": "options",
+    "property_type": "Text",
+    "value": "KH-.#####"
+  },
+  {
+    "name": "Supplier-naming_series-options",
+    "docstatus": 0,
+    "doctype": "Property Setter",
+    "doctype_or_field": "DocField",
+    "doc_type": "Supplier",
+    "field_name": "naming_series",
+    "property": "options",
+    "property_type": "Text",
+    "value": "NCC-.#####"
   }
 ]

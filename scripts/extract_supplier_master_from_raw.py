@@ -239,7 +239,7 @@ def main():
     ]
     rows = []
     for idx, supp in enumerate(RAW_SUPPLIERS_METADATA, start=1):
-        supp_id = f"SUPP-{idx:05d}"
+        supp_id = f"NCC-{idx:05d}"
         row = {
             "name": supp_id,
             "supplier_name": supp["supplier_name"],

@@ -285,26 +285,21 @@ onUnmounted(() => {
 }
 
 .role-pill {
-	padding: 3px 8px;
-	border-radius: 4px;
-	background: #1e1b4b;
+	font-size: 14px;
+	font-weight: 700;
 	color: #c4b5fd;
-	border: 1px solid rgba(196, 181, 253, 0.25);
-	font-size: 12px;
 }
 
 .aliases-wrap {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 6px;
+	gap: 10px;
 }
 
 .alias-pill {
-	padding: 2px 7px;
-	border-radius: 3px;
-	background: #1e293b;
+	font-size: 14px;
+	font-weight: 600;
 	color: #94a3b8;
-	font-size: 12px;
 }
 
 .text-primary {

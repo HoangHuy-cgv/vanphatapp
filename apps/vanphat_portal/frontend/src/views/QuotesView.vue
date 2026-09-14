@@ -1,10 +1,40 @@
 <template>
 	<div class="quotes-view-wrapper">
-		<header class="page-head">
-			<h2 class="page-title">Báo giá</h2>
+		<!-- Header 1 Dòng Chuẩn Cockpit: Tiêu đề + Quick Search + Action Button -->
+		<header class="page-head catalog-header-cockpit">
+			<div class="cockpit-title-wrap">
+				<h2 class="page-title">Báo giá</h2>
+				<span class="tab-badge">{{ quotations.length }}</span>
+			</div>
+
+			<!-- Quick Search Tức Thời Cùng Hàng Header Cockpit -->
+			<div class="catalog-search-cockpit-wrap">
+				<div class="search-input-wrap">
+					<svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<circle cx="11" cy="11" r="8"></circle>
+						<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+					</svg>
+					<input
+						type="text"
+						v-model="quoteSearchQuery"
+						placeholder="Tìm nhanh số báo giá, khách..."
+						class="catalog-search-input"
+					/>
+					<button
+						v-if="quoteSearchQuery"
+						type="button"
+						class="btn-clear-search"
+						title="Xóa tìm kiếm"
+						@click="quoteSearchQuery = ''"
+					>
+						✕
+					</button>
+				</div>
+			</div>
+
 			<button
 				type="button"
-				class="btn-new-quote"
+				class="btn-new-quote whitespace-nowrap"
 				@click="openStep1Modal"
 			>
 				+ Báo giá
@@ -15,62 +45,39 @@
 			<table class="data-table">
 				<thead>
 					<tr>
-						<th style="width: 14%;">Số báo giá</th>
-						<th style="width: 18%;">Khách hàng</th>
-						<th style="width: 11%;">Ngày tạo</th>
-						<th style="width: 15%; text-align: right;">Tổng tiền</th>
+						<th style="width: 18%;">Số báo giá</th>
+						<th style="width: 40%;">Khách hàng</th>
+						<th style="width: 14%;">Ngày tạo</th>
+						<th style="width: 16%; text-align: right;">Tổng tiền</th>
 						<th style="width: 12%; text-align: center;">Trạng thái</th>
-						<th style="width: 30%;">Thao tác</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr v-if="loading">
-						<td colspan="6" style="text-align: center; padding: 40px 0; color: #9da7b5;">
+						<td colspan="5" class="empty-cell">
 							Đang tải danh sách báo giá...
 						</td>
 					</tr>
-					<tr v-else-if="!quotations.length">
-						<td colspan="6" style="text-align: center; padding: 40px 0; color: #9da7b5;">
-							Chưa có báo giá nào. Bấm <b>+ Báo giá</b> để tạo mới.
+					<tr v-else-if="!filteredQuotations.length">
+						<td colspan="5" class="empty-cell">
+							Không tìm thấy báo giá nào
 						</td>
 					</tr>
-					<tr v-for="q in quotations" :key="q.name" class="table-row">
-						<td class="font-bold text-primary">{{ q.name }}</td>
-						<td>{{ q.customer_name || q.party_name || 'Khách vãng lai' }}</td>
-						<td class="text-secondary text-num">{{ q.transaction_date }}</td>
-						<td class="text-right font-bold text-num">{{ formatCurrency(q.grand_total) }}</td>
-						<td class="text-center">
-							<span class="status-badge" :class="statusClass(q.status)">
-								{{ q.status || 'Draft' }}
-							</span>
+					<tr
+						v-for="q in filteredQuotations"
+						:key="q.name"
+						class="table-row cursor-pointer"
+						@click="onRowClick(q)"
+					>
+						<td class="font-bold text-primary whitespace-nowrap">{{ q.name }}</td>
+						<td class="whitespace-nowrap truncate" :title="q.customer_name || q.party_name">
+							<span class="font-medium text-white">{{ q.customer_name || q.party_name || 'Khách vãng lai' }}</span>
 						</td>
-						<td class="row-actions">
-							<button
-								v-if="q.status === 'Draft'"
-								type="button"
-								class="row-btn row-btn-primary"
-								@click="onSendQuotation(q)"
-							>
-								Gửi
-							</button>
-							<button
-								v-if="q.status === 'Open'"
-								type="button"
-								class="row-btn row-btn-primary"
-								@click="onMakeOrder(q)"
-							>
-								Tạo ĐH
-							</button>
-							<button
-								v-if="q.status === 'Open'"
-								type="button"
-								class="row-btn row-btn-danger"
-								@click="onMarkLost(q)"
-							>
-								Rớt
-							</button>
-							<span v-if="q.status === 'Ordered'" class="text-secondary" style="font-size: 13px;">
-								✓ Đã lên đơn
+						<td class="text-secondary text-num whitespace-nowrap">{{ q.transaction_date }}</td>
+						<td class="text-right font-bold text-num whitespace-nowrap">{{ formatCurrency(q.grand_total) }}</td>
+						<td class="text-center whitespace-nowrap">
+							<span class="font-bold text-[14px]" :class="quoteStatusColorClass(q.status)">
+								{{ quoteStatusLabel(q.status) }}
 							</span>
 						</td>
 					</tr>
@@ -90,12 +97,12 @@
 		<DrawerStep2Director
 			v-if="showStep2"
 			:open="showStep2"
+			:form-data="step1Data"
 			:step1-data="step1Data"
-			:initial-lines="step2Data.lines"
-			:initial-materials="step2Data.materials"
-			:initial-cylinder-qty="step2Data.cylinder_qty"
-			:initial-artwork-url="step2Data.artwork_url"
+			:saved-data="step2Data"
+			:preview-figures="figures"
 			:figures="figures"
+			:calculation-result="calcResult"
 			:calc-result="calcResult"
 			@close="showStep2 = false"
 			@back="onStep2Back"
@@ -106,7 +113,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import ModalStep1Sale from '../components/ModalStep1Sale.vue';
 import DrawerStep2Director from '../components/DrawerStep2Director.vue';
@@ -119,6 +126,7 @@ const { quotesCount } = usePortalCounts();
 
 const quotations = ref([]);
 const loading = ref(false);
+const quoteSearchQuery = ref('');
 
 const showStep1 = ref(false);
 const showStep2 = ref(false);
@@ -155,25 +163,77 @@ const figures = ref({
 
 const calcResult = ref(null);
 
+const filteredQuotations = computed(() => {
+	const list = quotations.value;
+	const q = quoteSearchQuery.value.trim().toLowerCase();
+	if (!q) return list;
+	return list.filter((item) => {
+		const name = (item.name || '').toLowerCase();
+		const cust = (item.customer_name || item.party_name || '').toLowerCase();
+		return name.includes(q) || cust.includes(q);
+	});
+});
+
 function formatCurrency(val) {
 	if (val == null || val === '') return '0 đ';
 	if (typeof val === 'string' && isNaN(Number(val))) return val;
 	return Number(val).toLocaleString('vi-VN') + ' đ';
 }
 
-function statusClass(status) {
-	switch (status || 'Draft') {
+function quoteStatusLabel(status) {
+	switch (status) {
 		case 'Open':
 		case 'Partially Ordered':
-			return 'status-open';
+			return 'Chờ duyệt';
 		case 'Ordered':
-			return 'status-ordered';
+			return 'Đã lên đơn';
 		case 'Lost':
-			return 'status-lost';
+			return 'Rớt';
 		case 'Expired':
-			return 'status-expired';
+			return 'Hết hạn';
 		default:
-			return 'status-draft';
+			return 'Nháp';
+	}
+}
+
+function quoteStatusColorClass(status) {
+	switch (status) {
+		case 'Open':
+		case 'Partially Ordered':
+			return 'text-amber';
+		case 'Ordered':
+			return 'text-emerald';
+		case 'Lost':
+		case 'Expired':
+			return 'text-rose';
+		default:
+			return 'text-secondary';
+	}
+}
+
+function onRowClick(q) {
+	if (q.status === 'Draft') {
+		step1Data.value = {
+			product_type: q.product_type || 'Túi đáy đứng',
+			customer: q.customer_name || q.party_name || '',
+			brand: q.brand || '',
+			description: q.dimensions || '',
+			length: '',
+			width: '',
+			thickness: '',
+			bottom: '',
+		};
+		step2Data.value = {
+			lines: q.lines || [{ item_name: q.customer_name || 'Mẫu in', qty: 5000, rate: '' }],
+			materials: q.materials || ['OPP', 'PE sữa'],
+			cylinder_qty: q.cylinder_qty || 0,
+			artwork_url: '',
+		};
+		showStep2.value = true;
+	} else if (q.status === 'Open') {
+		if (window.confirm(`Tạo đơn hàng từ báo giá ${q.name}?`)) {
+			onMakeOrder(q);
+		}
 	}
 }
 

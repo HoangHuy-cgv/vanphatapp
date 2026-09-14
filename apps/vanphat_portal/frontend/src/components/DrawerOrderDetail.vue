@@ -32,8 +32,7 @@
 					<!-- Tên khách hàng & Brand -->
 					<div class="cust-brand-bar">
 						<div class="cust-info">
-							<span class="icon-building">🏢</span>
-							<span class="cust-name">{{ order.customer_alias || order.customer_name }}</span>
+							<span class="cust-name font-bold text-white text-[16px]">{{ order.customer_alias || order.customer_name }}</span>
 						</div>
 						<div class="brand-tag">
 							{{ order.brand || 'VẠN PHÁT' }}
@@ -54,8 +53,7 @@
 					<!-- Quy cách & CHỈ HIỂN THỊ CÁC CHẤT LIỆU ĐANG DÙNG -->
 					<div class="spec-row">
 						<div class="spec-dim">
-							<span class="spec-icon">📐</span>
-							<span class="dim-text">{{ order.dimensions_text || order.description }}</span>
+							<span class="dim-text font-mono">{{ order.dimensions_text || order.description }}</span>
 						</div>
 						<!-- Chỉ render các màng có thực, ẩn 100% màng không dùng -->
 						<div v-if="order.materials && order.materials.length" class="mat-chips-active">
