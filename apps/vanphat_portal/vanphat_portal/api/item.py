@@ -46,12 +46,34 @@ def _load_csv_boms():
 
 
 @frappe.whitelist(allow_guest=True)
-def get_list(query=None, item_group=None, supply_type=None, category=None):
-	"""Return master items filtered by query string, item group, supply type, or cockpit category."""
+def clear_catalog_cache(*args, **kwargs):
+	"""Clear Redis cache for Van Phat Master Catalog."""
+	try:
+		frappe.cache().delete_keys("vanphat:catalog:*")
+	except Exception:
+		pass
+	return {"success": True}
+
+
+@frappe.whitelist(allow_guest=True)
+def get_list(query=None, item_group=None, supply_type=None, category=None, page=1, page_length=15):
+	"""Return master items filtered by query string, item group, supply type, or cockpit category with Redis cache and pagination."""
+	import math
 	q = (query or "").strip().lower()
 	grp = (item_group or "").strip()
 	supply = (supply_type or "").strip()
 	cat = (category or "").strip().lower()
+	p = max(1, int(page or 1))
+	pl = max(1, int(page_length or 15))
+
+	cache_key = f"vanphat:catalog:{cat}:{grp}:{supply}:{p}:{pl}" if not q else None
+	if cache_key:
+		try:
+			cached = frappe.cache().get_value(cache_key)
+			if cached:
+				return cached
+		except Exception:
+			pass
 
 	def matches_category(it):
 		if not cat or cat == "all":
@@ -68,7 +90,7 @@ def get_list(query=None, item_group=None, supply_type=None, category=None):
 			return code.startswith("TRUC-") or group in ("Trục in", "Khuôn in")
 		return True
 
-	# Try fetching from Frappe DB first
+	raw_items = []
 	try:
 		filters = {}
 		if grp:
@@ -76,7 +98,7 @@ def get_list(query=None, item_group=None, supply_type=None, category=None):
 		if supply:
 			filters["default_material_request_type"] = supply
 
-		items = frappe.get_list(
+		raw_items = frappe.get_list(
 			"Item",
 			fields=[
 				"item_code",
@@ -111,41 +133,44 @@ def get_list(query=None, item_group=None, supply_type=None, category=None):
 			filters=filters,
 			limit=500
 		)
-		if cat and cat != "all":
-			items = [it for it in items if matches_category(it)]
-		if q:
-			items = [
-				it for it in items
-				if q in (it.get("item_code") or "").lower()
-				or q in (it.get("item_name") or "").lower()
-				or q in (it.get("custom_alias") or "").lower()
-				or q in (it.get("customer") or "").lower()
-				or q in (it.get("custom_structure_layers") or "").lower()
-			]
-		if items:
-			return items
 	except Exception:
-		# Fall back to clean-data CSV
-		pass
+		raw_items = _load_csv_items()
+		if grp:
+			raw_items = [it for it in raw_items if it.get("item_group") == grp]
+		if supply:
+			raw_items = [it for it in raw_items if it.get("default_material_request_type") == supply]
 
-	items = _load_csv_items()
-	if grp:
-		items = [it for it in items if it.get("item_group") == grp]
-	if supply:
-		items = [it for it in items if it.get("default_material_request_type") == supply]
-	if cat and cat != "all":
-		items = [it for it in items if matches_category(it)]
-	if q:
-		items = [
-			it for it in items
-			if q in (it.get("item_code") or "").lower()
-			or q in (it.get("item_name") or "").lower()
-			or q in (it.get("custom_alias") or "").lower()
-			or q in (it.get("customer") or "").lower()
-			or q in (it.get("custom_structure_layers") or "").lower()
-		]
+	filtered_items = []
+	for it in raw_items:
+		if cat and cat != "all" and not matches_category(it):
+			continue
+		if q:
+			search_space = f"{it.get('item_code', '')} {it.get('item_name', '')} {it.get('custom_alias', '')} {it.get('customer', '')} {it.get('custom_structure_layers', '')} {it.get('description', '')}".lower()
+			if q not in search_space:
+				continue
+		filtered_items.append(it)
 
-	return items
+	total_count = len(filtered_items)
+	total_pages = max(1, math.ceil(total_count / pl))
+	start = (p - 1) * pl
+	end = start + pl
+	paginated_items = filtered_items[start:end]
+
+	res = {
+		"items": paginated_items,
+		"page": p,
+		"page_length": pl,
+		"total_count": total_count,
+		"total_pages": total_pages,
+	}
+
+	if cache_key:
+		try:
+			frappe.cache().set_value(cache_key, res, expires_in_sec=300)
+		except Exception:
+			pass
+
+	return res
 
 
 @frappe.whitelist(allow_guest=True)

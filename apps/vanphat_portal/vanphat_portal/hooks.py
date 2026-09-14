@@ -29,3 +29,11 @@ fixtures = [
 		]
 	}
 ]
+
+# Master Data Cache Invalidation Hooks
+doc_events = {
+	"Item": {
+		"on_update": "vanphat_portal.api.item.clear_catalog_cache",
+		"on_trash": "vanphat_portal.api.item.clear_catalog_cache",
+	}
+}

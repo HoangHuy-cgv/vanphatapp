@@ -303,11 +303,18 @@
 					</div>
 
 					<div class="form-actions">
-						<button type="button" class="btn-cancel" @click="$emit('close')">
+						<button type="button" class="btn-cancel" @click="$emit('close')" :disabled="isSubmitting">
 							Hủy
 						</button>
-						<button type="submit" class="btn-submit">
-							+ TẠO ĐƠN HÀNG
+						<button
+							type="submit"
+							class="btn-submit"
+							:disabled="isSubmitting || isCalculatingPrice"
+							:class="{ 'opacity-60 cursor-not-allowed': isSubmitting || isCalculatingPrice }"
+						>
+							<span v-if="isSubmitting">ĐANG TẠO ĐƠN...</span>
+							<span v-else-if="isCalculatingPrice">ĐANG ĐỐI SOÁT GIÁ...</span>
+							<span v-else>+ TẠO ĐƠN HÀNG</span>
 						</button>
 					</div>
 				</div>
@@ -448,10 +455,19 @@ const serverPricing = ref({
 	required_deposit: 0,
 });
 
+const isCalculatingPrice = ref(false);
+let pricePreviewAbortController = null;
 let pricePreviewTimer = null;
+
 const fetchPricePreview = () => {
 	clearTimeout(pricePreviewTimer);
+	if (pricePreviewAbortController) {
+		pricePreviewAbortController.abort();
+	}
+	isCalculatingPrice.value = true;
+
 	pricePreviewTimer = setTimeout(async () => {
+		pricePreviewAbortController = new AbortController();
 		const items = isCustomMto.value
 			? variantRows.value.map((v) => ({ qty: Number(v.qty) || 0, rate: Number(v.rate) || 0 }))
 			: genericRows.value.map((g) => ({ qty: Number(g.qty) || 0, rate: Number(g.rate) || 0 }));
@@ -465,7 +481,10 @@ const fetchPricePreview = () => {
 					has_new_cylinders: hasNewCylinders.value,
 					cylinder_count: cylinderCount.value,
 				},
-				{ silent: true }
+				{
+					silent: true,
+					signal: pricePreviewAbortController.signal,
+				}
 			);
 			if (res) {
 				serverPricing.value = res;
@@ -474,7 +493,9 @@ const fetchPricePreview = () => {
 				}
 			}
 		} catch (err) {
-			// silent fallback
+			// silent fallback / AbortError
+		} finally {
+			isCalculatingPrice.value = false;
 		}
 	}, 150);
 };
@@ -613,6 +634,10 @@ watch(
 // Submit order to ERPNext native Sales Order
 const handleSubmit = async () => {
 	if (!currentCustomer.value || isSubmitting.value) return;
+	if (isCalculatingPrice.value) {
+		toast.warning('Đang đối soát giá từ ERPNext, vui lòng chờ trong giây lát...');
+		return;
+	}
 
 	let orderTab = 'xuong_sx';
 	if (productGroup.value === 'Túi NGCS') orderTab = 'ngcs';

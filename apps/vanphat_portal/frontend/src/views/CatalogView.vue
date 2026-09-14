@@ -195,7 +195,7 @@
 				</thead>
 				<tbody>
 					<tr
-						v-for="c in filteredCustomers"
+						v-for="c in paginatedCustomers"
 						:key="c.name"
 						class="table-row cursor-pointer"
 						@click="openCustomerDetail(c)"
@@ -267,7 +267,7 @@
 				</thead>
 				<tbody>
 					<tr
-						v-for="s in filteredSuppliers"
+						v-for="s in paginatedSuppliers"
 						:key="s.name"
 						class="table-row cursor-pointer"
 						@click="openSupplierDetail(s)"
@@ -340,7 +340,7 @@
 				</thead>
 				<tbody>
 					<tr
-						v-for="u in filteredUsers"
+						v-for="u in paginatedUsers"
 						:key="u.name"
 						class="table-row cursor-pointer"
 						@click="openUserDetail(u)"
@@ -395,6 +395,40 @@
 			</table>
 		</div>
 
+		<!-- Thanh Phân Trang Sát Đáy Màn Hình Chuẩn Buồng Lái (Zero-Scroll 1080p) -->
+		<div class="cockpit-pagination-bar">
+			<div class="cockpit-pagination-left">
+				<span>Hiển thị</span>
+				<span class="text-white font-bold">{{ startRecord }}–{{ endRecord }}</span>
+				<span>trên tổng số</span>
+				<span class="text-white font-bold">{{ currentTotalRecords }}</span>
+				<span>{{ currentTabLabel.toLowerCase() }}</span>
+			</div>
+			<div class="cockpit-pagination-right">
+				<button
+					type="button"
+					class="btn-page-nav"
+					:disabled="currentPage <= 1 || loadingCurrentTab"
+					title="Trang trước (Phím [)"
+					@click="prevPage"
+				>
+					‹
+				</button>
+				<span class="page-indicator">
+					Trang {{ currentPage }} / {{ totalPages }}
+				</span>
+				<button
+					type="button"
+					class="btn-page-nav"
+					:disabled="currentPage >= totalPages || loadingCurrentTab"
+					title="Trang sau (Phím ])"
+					@click="nextPage"
+				>
+					›
+				</button>
+			</div>
+		</div>
+
 		<!-- Slide-over Drawer Chi Tiết Mặt Hàng Master Data -->
 		<DrawerItemDetail
 			:is-open="showItemDrawer"
@@ -433,7 +467,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, nextTick, onMounted } from 'vue';
+import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue';
 import { useRoute } from 'vue-router';
 import DrawerItemDetail from '../components/DrawerItemDetail.vue';
 import DrawerCustomerDetail from '../components/DrawerCustomerDetail.vue';
@@ -465,6 +499,68 @@ const loadingMasterItems = ref(false);
 const activeCatalogTab = ref('sp'); // 'sp', 'nvl', 'truc', 'kh', 'ncc', 'user'
 const activeItemTab = activeCatalogTab; // backward-compatibility alias
 const itemSearchQuery = ref('');
+
+// --- Pagination State (Zero-Scroll 1080p: locked to 15 lines) ---
+const currentPage = ref(1);
+const pageSize = ref(15);
+const totalMasterItems = ref(0);
+
+const loadingCurrentTab = computed(() => {
+	if (['sp', 'nvl', 'truc'].includes(activeCatalogTab.value)) return loadingMasterItems.value;
+	if (activeCatalogTab.value === 'kh') return loadingCustomers.value;
+	if (activeCatalogTab.value === 'ncc') return loadingSuppliers.value;
+	return loadingUsers.value;
+});
+
+const currentTotalRecords = computed(() => {
+	if (['sp', 'nvl', 'truc'].includes(activeCatalogTab.value)) return totalMasterItems.value;
+	if (activeCatalogTab.value === 'kh') return filteredCustomers.value.length;
+	if (activeCatalogTab.value === 'ncc') return filteredSuppliers.value.length;
+	return filteredUsers.value.length;
+});
+
+const totalPages = computed(() => {
+	return Math.max(1, Math.ceil(currentTotalRecords.value / pageSize.value));
+});
+
+const startRecord = computed(() => {
+	if (currentTotalRecords.value === 0) return 0;
+	return (currentPage.value - 1) * pageSize.value + 1;
+});
+
+const endRecord = computed(() => {
+	return Math.min(currentPage.value * pageSize.value, currentTotalRecords.value);
+});
+
+function refreshCurrentTabData() {
+	resetTableScroll();
+	if (['sp', 'nvl', 'truc'].includes(activeCatalogTab.value)) {
+		loadMasterItems();
+	}
+}
+
+function prevPage() {
+	if (currentPage.value > 1 && !loadingCurrentTab.value) {
+		currentPage.value--;
+		refreshCurrentTabData();
+	}
+}
+
+function nextPage() {
+	if (currentPage.value < totalPages.value && !loadingCurrentTab.value) {
+		currentPage.value++;
+		refreshCurrentTabData();
+	}
+}
+
+function handleKeyDown(e) {
+	if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target?.tagName)) return;
+	if (e.key === '[') {
+		prevPage();
+	} else if (e.key === ']') {
+		nextPage();
+	}
+}
 
 const showItemDrawer = ref(false);
 const selectedMasterItem = ref(null);
@@ -564,13 +660,19 @@ let itemSearchTimer = null;
 watch(itemSearchQuery, () => {
 	clearTimeout(itemSearchTimer);
 	itemSearchTimer = setTimeout(() => {
+		currentPage.value = 1;
 		if (['sp', 'nvl', 'truc'].includes(activeCatalogTab.value)) {
 			loadMasterItems();
 		}
 	}, 250);
 });
 
+watch([customerSearchQuery, supplierSearchQuery, userSearchQuery], () => {
+	currentPage.value = 1;
+});
+
 watch(activeCatalogTab, (newTab) => {
+	currentPage.value = 1;
 	resetTableScroll();
 	if (['sp', 'nvl', 'truc'].includes(newTab)) {
 		loadMasterItems();
@@ -593,24 +695,29 @@ const currentTabLabel = computed(() => {
 	const map = {
 		sp: 'Sản phẩm',
 		nvl: 'Nguyên vật liệu',
-		truc: 'Trục in'
+		truc: 'Trục in',
+		kh: 'Khách hàng',
+		ncc: 'Nhà cung cấp',
+		user: 'Người dùng',
 	};
-	return map[activeItemTab.value] || 'mặt hàng';
+	return map[activeCatalogTab.value] || 'mặt hàng';
 });
 
-const filteredMasterItems = computed(() => {
-	const list = currentTabMasterItems.value;
-	const q = itemSearchQuery.value.trim().toLowerCase();
-	if (!q) return list;
-	return list.filter((it) =>
-		(it.item_code && it.item_code.toLowerCase().includes(q)) ||
-		(it.item_name && it.item_name.toLowerCase().includes(q)) ||
-		(it.custom_alias && it.custom_alias.toLowerCase().includes(q)) ||
-		(it.customer && it.customer.toLowerCase().includes(q)) ||
-		(it.brand && it.brand.toLowerCase().includes(q)) ||
-		(it.custom_structure_layers && it.custom_structure_layers.toLowerCase().includes(q)) ||
-		(it.description && it.description.toLowerCase().includes(q))
-	);
+const filteredMasterItems = computed(() => masterItems.value);
+
+const paginatedCustomers = computed(() => {
+	const start = (currentPage.value - 1) * pageSize.value;
+	return filteredCustomers.value.slice(start, start + pageSize.value);
+});
+
+const paginatedSuppliers = computed(() => {
+	const start = (currentPage.value - 1) * pageSize.value;
+	return filteredSuppliers.value.slice(start, start + pageSize.value);
+});
+
+const paginatedUsers = computed(() => {
+	const start = (currentPage.value - 1) * pageSize.value;
+	return filteredUsers.value.slice(start, start + pageSize.value);
 });
 
 function formatCurrency(val) {
@@ -661,9 +768,16 @@ async function loadMasterItems() {
 		const data = await api('item.get_list', {
 			category: activeItemTab.value,
 			query: itemSearchQuery.value.trim() || undefined,
+			page: currentPage.value,
+			page_length: pageSize.value,
 		}, { get: true });
-		if (Array.isArray(data)) {
+		if (data && Array.isArray(data.items)) {
+			masterItems.value = data.items;
+			totalMasterItems.value = data.total_count ?? data.items.length;
+			currentPage.value = data.page ?? currentPage.value;
+		} else if (Array.isArray(data)) {
 			masterItems.value = data;
+			totalMasterItems.value = data.length;
 		}
 	} catch (err) {
 		console.error('Error loading master items:', err);
@@ -801,6 +915,7 @@ async function loadAllCatalogData() {
 }
 
 onMounted(async () => {
+	window.addEventListener('keydown', handleKeyDown);
 	await loadAllCatalogData();
 
 	// Read URL query params
@@ -848,6 +963,10 @@ onMounted(async () => {
 		const usr = users.value.find(u => u.name === userParam);
 		if (usr) openUserDetail(usr);
 	}
+});
+
+onUnmounted(() => {
+	window.removeEventListener('keydown', handleKeyDown);
 });
 
 defineExpose({

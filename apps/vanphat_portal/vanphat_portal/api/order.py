@@ -91,11 +91,13 @@ def get_price_preview(payload=None, items=None, customer=None, has_new_cylinders
 
 
 @frappe.whitelist()
-def list_orders(tab=None, query=None, limit=100):
-	"""Return Sales Orders filtered by Cockpit Tab and search query at database level."""
+def list_orders(tab=None, query=None, page=1, page_length=15):
+	"""Return Sales Orders filtered by Cockpit Tab and search query with server pagination."""
+	import math
 	tab_filter = (tab or "").strip().lower()
 	q = (query or "").strip().lower()
-	max_rows = int(limit or 100)
+	p = max(1, int(page or 1))
+	pl = max(1, int(page_length or 15))
 
 	try:
 		orders = frappe.get_list(
@@ -111,12 +113,14 @@ def list_orders(tab=None, query=None, limit=100):
 				"docstatus",
 			],
 			order_by="creation desc",
-			limit=max_rows,
+			limit=500,
 		)
 	except Exception:
-		return []
+		orders = []
 
-	result = []
+	processed_orders = []
+	tab_counts = {"xuong_sx": 0, "ngcs": 0, "mua_ngoai": 0, "all": 0}
+
 	for o in orders:
 		gt = frappe.utils.flt(o.grand_total)
 		adv = frappe.utils.flt(o.advance_paid)
@@ -171,6 +175,11 @@ def list_orders(tab=None, query=None, limit=100):
 			o["order_tab"] = "xuong_sx"
 			o["product_group"] = "Túi màng ghép"
 
+		# Đếm tổng theo tab
+		tab_counts["all"] += 1
+		if o["order_tab"] in tab_counts:
+			tab_counts[o["order_tab"]] += 1
+
 		# Trạng thái buồng lái tính toán chuẩn mực tại backend ERPNext
 		if o.get("is_hold") or "HOLD" in (o.get("order_state") or ""):
 			o["order_status_label"] = "HOLD"
@@ -203,9 +212,22 @@ def list_orders(tab=None, query=None, limit=100):
 			if q not in search_space:
 				continue
 
-		result.append(o)
+		processed_orders.append(o)
 
-	return result
+	total_count = len(processed_orders)
+	total_pages = max(1, math.ceil(total_count / pl))
+	start = (p - 1) * pl
+	end = start + pl
+	paginated_orders = processed_orders[start:end]
+
+	return {
+		"orders": paginated_orders,
+		"page": p,
+		"page_length": pl,
+		"total_count": total_count,
+		"total_pages": total_pages,
+		"tab_counts": tab_counts,
+	}
 
 
 @frappe.whitelist()

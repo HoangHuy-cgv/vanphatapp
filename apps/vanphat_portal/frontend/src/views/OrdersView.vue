@@ -10,7 +10,7 @@
 					@click="activeOrderTab = 'xuong_sx'"
 				>
 					<span>Xưởng sản xuất</span>
-					<span class="tab-badge">{{ xuongSxOrders.length }}</span>
+					<span class="tab-badge">{{ tabCounts.xuong_sx || 0 }}</span>
 				</button>
 				<button
 					type="button"
@@ -19,7 +19,7 @@
 					@click="activeOrderTab = 'ngcs'"
 				>
 					<span>Túi NGCS</span>
-					<span class="tab-badge">{{ ngcsOrders.length }}</span>
+					<span class="tab-badge">{{ tabCounts.ngcs || 0 }}</span>
 				</button>
 				<button
 					type="button"
@@ -28,7 +28,7 @@
 					@click="activeOrderTab = 'mua_ngoai'"
 				>
 					<span>Mua ngoài trọn gói</span>
-					<span class="tab-badge">{{ muaNgoaiOrders.length }}</span>
+					<span class="tab-badge">{{ tabCounts.mua_ngoai || 0 }}</span>
 				</button>
 			</div>
 
@@ -187,6 +187,40 @@
 			</table>
 		</div>
 
+		<!-- Thanh Phân Trang Sát Đáy Màn Hình Chuẩn Buồng Lái (Zero-Scroll 1080p) -->
+		<div class="cockpit-pagination-bar">
+			<div class="cockpit-pagination-left">
+				<span>Hiển thị</span>
+				<span class="text-white font-bold">{{ startRecord }}–{{ endRecord }}</span>
+				<span>trên tổng số</span>
+				<span class="text-white font-bold">{{ totalOrders }}</span>
+				<span>đơn hàng</span>
+			</div>
+			<div class="cockpit-pagination-right">
+				<button
+					type="button"
+					class="btn-page-nav"
+					:disabled="currentPage <= 1 || loadingOrders"
+					title="Trang trước (Phím [)"
+					@click="prevPage"
+				>
+					‹
+				</button>
+				<span class="page-indicator">
+					Trang {{ currentPage }} / {{ totalPages }}
+				</span>
+				<button
+					type="button"
+					class="btn-page-nav"
+					:disabled="currentPage >= totalPages || loadingOrders"
+					title="Trang sau (Phím ])"
+					@click="nextPage"
+				>
+					›
+				</button>
+			</div>
+		</div>
+
 		<!-- Drawer Chi Tiết Đơn Hàng -->
 		<DrawerOrderDetail
 			:is-open="showOrderDetail"
@@ -209,7 +243,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, nextTick, onMounted } from 'vue';
+import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue';
 import { useRoute } from 'vue-router';
 import DrawerOrderDetail from '../components/DrawerOrderDetail.vue';
 import ModalCreateOrder from '../components/ModalCreateOrder.vue';
@@ -224,28 +258,61 @@ const loadingOrders = ref(false);
 const activeOrderTab = ref('xuong_sx');
 const orderSearchQuery = ref('');
 
+// Pagination state (Zero-scroll 1080p: locked to 15 lines)
+const currentPage = ref(1);
+const pageSize = ref(15);
+const totalOrders = ref(0);
+const totalPages = ref(1);
+const tabCounts = ref({ xuong_sx: 0, ngcs: 0, mua_ngoai: 0, all: 0 });
+
+const startRecord = computed(() => {
+	if (totalOrders.value === 0) return 0;
+	return (currentPage.value - 1) * pageSize.value + 1;
+});
+
+const endRecord = computed(() => {
+	return Math.min(currentPage.value * pageSize.value, totalOrders.value);
+});
+
+function prevPage() {
+	if (currentPage.value > 1 && !loadingOrders.value) {
+		currentPage.value--;
+		loadOrders();
+	}
+}
+
+function nextPage() {
+	if (currentPage.value < totalPages.value && !loadingOrders.value) {
+		currentPage.value++;
+		loadOrders();
+	}
+}
+
+function handleKeyDown(e) {
+	if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target?.tagName)) return;
+	if (e.key === '[') {
+		prevPage();
+	} else if (e.key === ']') {
+		nextPage();
+	}
+}
+
 const currentOrderSearchPlaceholder = computed(() => {
 	switch (activeOrderTab.value) {
 		case 'xuong_sx':
-			return 'Tìm nhanh đơn hàng, khách, màng ghép...';
+			return 'Tìm nhanh đơn xưởng sản xuất, tên khách, quy cách...';
 		case 'ngcs':
-			return 'Tìm nhanh đơn hàng, khách, túi có sẵn...';
+			return 'Tìm nhanh đơn túi NGCS in sẵn, thương hiệu in lụa...';
 		case 'mua_ngoai':
-			return 'Tìm nhanh đơn hàng, khách, quy cách mua ngoài...';
+			return 'Tìm nhanh đơn hàng mua ngoài trọn gói, nhà cung cấp...';
 		default:
 			return 'Tìm nhanh đơn hàng, khách, mặt hàng...';
 	}
 });
 
 watch(activeOrderTab, () => {
+	currentPage.value = 1;
 	loadOrders();
-	nextTick(() => {
-		const containers = document.querySelectorAll('.table-container');
-		containers.forEach((el) => {
-			el.scrollTop = 0;
-			el.scrollLeft = 0;
-		});
-	});
 });
 
 const masterItems = ref([]);
@@ -261,6 +328,7 @@ let searchTimer = null;
 watch(orderSearchQuery, () => {
 	clearTimeout(searchTimer);
 	searchTimer = setTimeout(() => {
+		currentPage.value = 1;
 		loadOrders();
 	}, 250);
 });
@@ -332,13 +400,26 @@ async function loadOrders() {
 		const data = await api('order.list_orders', {
 			tab: activeOrderTab.value,
 			query: orderSearchQuery.value.trim() || undefined,
+			page: currentPage.value,
+			page_length: pageSize.value,
 		}, { get: true });
-		if (Array.isArray(data)) {
+		if (data && Array.isArray(data.orders)) {
+			orders.value = data.orders;
+			totalOrders.value = data.total_count || 0;
+			totalPages.value = data.total_pages || 1;
+			if (data.tab_counts) {
+				tabCounts.value = data.tab_counts;
+			}
+		} else if (Array.isArray(data)) {
 			orders.value = data;
+			totalOrders.value = data.length;
+			totalPages.value = Math.ceil(data.length / pageSize.value) || 1;
 		} else {
 			orders.value = [];
+			totalOrders.value = 0;
+			totalPages.value = 1;
 		}
-		ordersCount.value = orders.value.length;
+		ordersCount.value = tabCounts.value.all || totalOrders.value;
 	} catch (err) {
 		console.error('Error loading orders:', err);
 		orders.value = [];
@@ -349,8 +430,10 @@ async function loadOrders() {
 
 async function loadMasterItems() {
 	try {
-		const data = await api('vanphat_portal.api.item.get_list', {}, { get: true });
-		if (Array.isArray(data)) {
+		const data = await api('item.get_list', { page_length: 500 }, { get: true });
+		if (data && Array.isArray(data.items)) {
+			masterItems.value = data.items;
+		} else if (Array.isArray(data)) {
 			masterItems.value = data;
 		}
 	} catch (err) {
@@ -396,6 +479,7 @@ function onOrderDelivery(order) {
 }
 
 onMounted(async () => {
+	window.addEventListener('keydown', handleKeyDown);
 	await Promise.all([loadOrders(), loadMasterItems()]);
 
 	// Sync from query parameters
@@ -417,6 +501,10 @@ onMounted(async () => {
 	if (modalParam === 'create') {
 		showCreateOrderModal.value = true;
 	}
+});
+
+onUnmounted(() => {
+	window.removeEventListener('keydown', handleKeyDown);
 });
 
 defineExpose({

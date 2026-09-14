@@ -42,6 +42,7 @@ export async function api(method, args = {}, options = {}) {
 		const fetchOptions = {
 			method: httpMethod,
 			headers,
+			...(options.signal ? { signal: options.signal } : {}),
 		};
 
 		if (httpMethod === 'POST' || httpMethod === 'PUT') {
@@ -82,6 +83,9 @@ export async function api(method, args = {}, options = {}) {
 		const json = await res.json();
 		return json.message !== undefined ? json.message : json;
 	} catch (err) {
+		if (err.name === 'AbortError') {
+			return null;
+		}
 		console.warn(`[api] Network error calling ${method}:`, err);
 		if (!options.silent) {
 			toast.error('Không thể kết nối máy chủ ERP');
