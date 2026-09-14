@@ -1,5 +1,7 @@
-# Ephemeral Todo: Bảng Nháp Tác Vụ Tức Thời
+# Ephemeral Todo — Variant native xong
 
-> **Policy**: File này là bảng nháp tạm thời (Ephemeral Scratchpad). Khi hoàn thành milestone và commit Git, dọn sạch task cũ.
+## Done (commit `7bc7f79`)
+- Spec + plan + 4 slice variant native, verify xanh
 
-## Active Milestone: Chưa có milestone mới (Sẵn sàng nhận chỉ đạo tiếp theo từ Sếp)
+## Chờ Sếp
+- Bench staging ERPNext thật + `git push` (chờ lệnh explicit)

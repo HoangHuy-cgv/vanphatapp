@@ -1,14 +1,11 @@
-# Handoff: Con Trỏ Vận Hành & Chuyển Giao Session
+# Handoff — Variant native xong, commit 7bc7f79 (SSOT rolling, <25 dòng)
 
-- **Mã Commit Gần Nhất**: `49cdc15`
-- **Trạng Thái CI/CD & Production Build**:
-  - Python: `order.py`, `item.py`, `hooks.py` biên dịch 100% không lỗi.
-  - Vite build: Thành công 100% (`npm run build`, bundle 74.42 kB gzip).
-  - Zero-Node runtime: Đồng bộ trực tiếp `portal.html`.
-- **Hạng Mục Vừa Hoàn Thành**:
-  - Giao diện 1080p Zero-Scroll: Khóa cứng 15 dòng/trang, phân trang `.cockpit-pagination-bar` đính sát đáy màn hình không phát sinh cuộn bảng hoặc cuộn trang.
-  - Triệt tiêu Race Condition: `AbortController` hủy request cũ khi gõ nhanh, nút tạo đơn khóa reactive `isCalculatingPrice` & kiểm tra Zero-Trust ở backend.
-  - Redis Caching & Invalidation: Cache danh mục Item 300s bằng Redis (`frappe.cache()`), tự động xóa cache qua `doc_events` (Item `on_update`, `on_trash`) trong `hooks.py`.
-  - Phím tắt buồng lái: Hỗ trợ chuyển trang nhanh bằng phím `[` (trang trước) và `]` (trang sau).
-- **Nhiệm Vụ Trọng Tâm Tiếp Theo**:
-  - Tiếp tục tối ưu hoặc mở rộng các tính năng nghiệp vụ buồng lái theo chỉ đạo của Sếp.
+> Commit: `7bc7f79` variant KH về native customer_items (tiếp `1f68ad5`).
+> Quy ước: Sếp/em, tiếng Việt. Không `git push` khi chưa lệnh.
+
+- Bỏ 2 cột gộp customer+variant khỏi item_master (293 dòng sạch).
+- Mới customer_items.csv (45 TP, 1 TP = 1 KH); API search customer_code.
+- Nguyên tắc ngành vào masterdata-spec: TP/BTP 1 KH; NGCS/TMD in lụa.
+- Verify: dry-run FK 0 lỗi, search 888-3.2KG-HONG → TP-00001, browser sạch.
+- Mock: http://127.0.0.1:8080/portal (log /tmp/portal-server.log).
+- Còn: bench staging ERPNext thật + `git push` (chờ lệnh Sếp).
