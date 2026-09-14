@@ -415,6 +415,24 @@ def list_orders():
 		o["advance_paid"] = adv
 		o["outstanding_amount"] = max(0.0, gt - adv)
 		o["deposit_pct"] = round((adv / gt * 100), 1) if gt > 0 else 0
+
+		# Trạng thái buồng lái tính toán chuẩn mực tại backend ERPNext
+		if o.get("is_hold") or "HOLD" in (o.get("order_state") or ""):
+			o["order_status_label"] = "HOLD"
+			o["order_status_class"] = "status-hold"
+		elif o.get("docstatus") == 1:
+			o["order_status_label"] = "Đã duyệt"
+			o["order_status_class"] = "status-ordered"
+		elif adv > 0 and adv < (gt * 0.5):
+			o["order_status_label"] = "HOLD"
+			o["order_status_class"] = "status-hold"
+		elif adv >= (gt * 0.5):
+			o["order_status_label"] = "Đã duyệt"
+			o["order_status_class"] = "status-ordered"
+		else:
+			o["order_status_label"] = "Chờ cọc"
+			o["order_status_class"] = "status-draft"
+
 		# Lấy tóm tắt mặt hàng đầu tiên & tổng số lượng
 		items = frappe.get_all(
 			"Sales Order Item",

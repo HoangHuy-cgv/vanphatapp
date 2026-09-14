@@ -249,17 +249,17 @@ function supplierSlaBadge(days) {
 }
 
 function orderStatusText(o) {
+	if (o.order_status_label) return o.order_status_label;
 	if (o.is_hold || o.order_state?.includes('HOLD')) return 'HOLD';
 	if (o.payment_type === 'Trả sau' && o.docstatus === 1) return 'Trả sau';
 	if (o.docstatus === 1) return 'Đã duyệt';
-	if (o.advance_paid > 0 && o.advance_paid < (o.required_deposit || o.grand_total * 0.5)) return 'HOLD';
 	return 'Chờ cọc';
 }
 
 function orderStatusClass(o) {
+	if (o.order_status_class) return o.order_status_class;
 	if (o.is_hold || o.order_state?.includes('HOLD')) return 'status-hold';
 	if (o.docstatus === 1 || o.order_state?.includes('Chính thức')) return 'status-ordered';
-	if (o.advance_paid > 0) return 'status-hold';
 	return 'status-draft';
 }
 
