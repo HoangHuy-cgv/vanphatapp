@@ -37,3 +37,7 @@ audit/
 
 # Archive snapshots (prototypes, PDF/PNG/rpm binaries — disk-only, never in git history)
 archive/
+
+# Vite unplugin auto-gen (không commit)
+auto-imports.d.ts
+components.d.ts

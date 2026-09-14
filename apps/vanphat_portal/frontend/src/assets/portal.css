@@ -1,9 +1,11 @@
-@import 'frappe-ui/style.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* P5: Inter subset latin + vietnamese (114KB thay full 264KB, giảm 57%).
-   Nguồn: rsms.me/inter (full >2000 glyphs/147 ngôn ngữ, app VN chỉ cần 2 subset).
-   frappe-ui/style.css đã phát @tailwind base/components/utilities + Inter import —
-   KHÔNG thêm directives Tailwind ở đây (tránh emit 2 lần). */
+/* KHÔNG @import 'frappe-ui/style.css' nguyên file: dòng 1 của nó kéo inter.css full
+   (Latin+Greek+Cyrillic+Hebrew+CJK+Hangul, ~560KB) đè mục tiêu subset.
+   Tailwind preset (darkMode/theme/plugins/safelist) đã nối qua tailwind.config.js.
+   Giữ font subset tự host dưới đây (latin 93KB + vietnamese 17KB). */
 @font-face {
 	font-family: 'InterVariable';
 	font-weight: 100 900;
