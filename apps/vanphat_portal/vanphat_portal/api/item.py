@@ -86,10 +86,11 @@ def get_list(query=None, item_group=None, supply_type=None, category=None, page=
 		filters["item_group"] = grp
 	if supply:
 		filters["default_material_request_type"] = supply
-	# category cockpit → điều kiện native (prefix mã + item_group), S9 chuyển Item Group filter khi có data
-	if cat == "sp":
-		filters["item_code"] = ["like", "TP-%"]
-	elif cat == "btp":
+	# category cockpit (Sếp chốt): tab Sản phẩm = hàng bán/xưởng TP+NGCS+TMD+BTP (88 mã);
+	# NVL/TRUC tab riêng. Lọc 4 prefix bằng OR native (filters đơn không OR được).
+	SP_PREFIXES = ("TP-", "NGCS-", "TMD-", "BTP-")
+	sp_only = (cat == "sp")
+	if cat == "btp":
 		filters["item_code"] = ["like", "BTP-%"]
 	elif cat == "nvl":
 		filters["item_code"] = ["like", "NVL-%"]
@@ -107,20 +108,21 @@ def get_list(query=None, item_group=None, supply_type=None, category=None, page=
 			["Item", "description", "like", like],
 		]
 
-	# S5: db.get_list tôn trọng permission (không get_all bypass); lỗi DB → [] truthful
-	items = frappe.db.get_list(
-		"Item",
-		fields=fields,
-		filters=filters or None,
-		or_filters=or_filters,
-		order_by="modified desc",
-		start=(p - 1) * pl,
-		page_length=pl,
-	)
-	total_count = frappe.db.count("Item", filters) if not or_filters else None
-	if total_count is None:
-		# có q: count cùng điều kiện bằng qb (get_list không trả total)
-		total_count = _count_items(filters, like if q else None)
+	# S5: db.get_list tôn trọng permission (không get_all bypass); lỗi DB → [] truthful.
+	# Tab SP (4 prefix OR) + mọi case có q đều đi qb 1 query (khớp count, chữa N+1).
+	if sp_only or or_filters:
+		like = f"%{q}%" if q else None
+		items, total_count = _query_items_qb(fields, filters, SP_PREFIXES if sp_only else None, like, (p - 1) * pl, pl)
+	else:
+		items = frappe.db.get_list(
+			"Item",
+			fields=fields,
+			filters=filters or None,
+			order_by="modified desc",
+			start=(p - 1) * pl,
+			page_length=pl,
+		)
+		total_count = frappe.db.count("Item", filters)
 	total_pages = max(1, math.ceil(total_count / pl)) if total_count else 1
 
 	res = {
@@ -139,26 +141,45 @@ def get_list(query=None, item_group=None, supply_type=None, category=None, page=
 	return res
 
 
-def _count_items(filters, like=None):
-	"""Đếm Item cùng điều kiện get_list (dùng khi có or_filters)."""
+def _query_items_qb(fields, filters, prefixes=None, like=None, start=0, page_length=15):
+	"""Query Item bằng qb 1 query: AND filters + OR prefix tab SP + OR search like.
+
+	Dùng cho tab SP (4 prefix TP/NGCS/TMD/BTP) và mọi case search (khớp list/count).
+	"""
 	IT = frappe.qb.DocType("Item")
-	qb = frappe.qb.from_(IT).select(frappe.query_builder.functions.Count("*").as_("c"))
+	qb = frappe.qb.from_(IT).select(*[getattr(IT, f) for f in fields])
+	qb_c = frappe.qb.from_(IT).select(frappe.query_builder.functions.Count("*").as_("c"))
 	for k, v in (filters or {}).items():
 		if isinstance(v, (list, tuple)) and len(v) == 2 and str(v[0]).lower() == "like":
 			qb = qb.where(getattr(IT, k).like(v[1]))
+			qb_c = qb_c.where(getattr(IT, k).like(v[1]))
 		else:
 			qb = qb.where(getattr(IT, k) == v)
+			qb_c = qb_c.where(getattr(IT, k) == v)
+	if prefixes:
+		cond = None
+		for pfx in prefixes:
+			c = IT.item_code.like(f"{pfx}%")
+			cond = c if cond is None else (cond | c)
+		qb = qb.where(cond)
+		qb_c = qb_c.where(cond)
 	if like:
 		cond = None
 		for col in ["item_code", "item_name", "custom_alias", "customer_code", "custom_structure_layers", "description"]:
 			c = getattr(IT, col).like(like)
 			cond = c if cond is None else (cond | c)
 		qb = qb.where(cond)
+		qb_c = qb_c.where(cond)
 	try:
-		rows = qb.run(as_dict=True)
-		return int(rows[0].get("c") or 0) if rows else 0
+		rows = qb.orderby(IT.modified, order=frappe.qb.Order.desc).limit(page_length).offset(start).run(as_dict=True)
 	except Exception:
-		return 0
+		rows = []
+	try:
+		crows = qb_c.run(as_dict=True)
+		total = int(crows[0].get("c") or 0) if crows else 0
+	except Exception:
+		total = 0
+	return rows, total
 
 
 @frappe.whitelist()

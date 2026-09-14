@@ -116,13 +116,10 @@
 						class="table-row cursor-pointer"
 						@click="openItemDetail(it)"
 					>
-						<!-- Tên gọi quen: alias lớn + mã biến thể KH (mã nội bộ chỉ tooltip backend) -->
+						<!-- Tên gọi quen (mã nội bộ + tên pháp lý chỉ tooltip; mã biến thể KH chỉ trong drawer) -->
 						<td>
 							<div class="font-semibold text-white leading-tight text-[15px]" :title="(it.item_name || '') + ' [' + (it.item_code || '') + ']'">
 								{{ it.custom_alias || it.item_name || '—' }}
-							</div>
-							<div v-if="it.customer_code" class="font-mono text-primary text-[12.5px] leading-tight" :title="'Mã biến thể KH'">
-								{{ it.customer_code }}
 							</div>
 						</td>
 

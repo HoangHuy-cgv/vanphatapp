@@ -256,7 +256,7 @@ const server = http.createServer((req, res) => {
 				const ci = ciMap.get(it.item_code);
 				return { ...it, customer_code: ci ? ci.ref_code : '', customer_items: ci ? [ci] : [] };
 			});
-				if (cat === 'sp') items = items.filter(it => it.item_code.startsWith('TP-'));
+				if (cat === 'sp') items = items.filter(it => it.item_code.startsWith('TP-') || it.item_code.startsWith('NGCS-') || it.item_code.startsWith('TMD-') || it.item_code.startsWith('BTP-'));
 				else if (cat === 'nvl') items = items.filter(it => it.item_code.startsWith('NVL-'));
 				else if (cat === 'truc') items = items.filter(it => it.item_code.startsWith('TRUC-'));
 				if (grp) {
