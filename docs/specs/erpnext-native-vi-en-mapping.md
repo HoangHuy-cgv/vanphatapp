@@ -73,7 +73,8 @@ Hệ thống sử dụng cơ chế Native Naming Series của Frappe Framework (
 | `safety_stock` | Mức tồn kho an toàn để cảnh báo sản xuất / mua thêm | **Tồn kho an toàn** |
 | `default_material_request_type` | Loại cung ứng mặc định (`Purchase`: Mua ngoài; `Manufacture`: Xưởng SX) | **Hình thức cung ứng** |
 | `customer` | Khách hàng sở hữu mẫu in độc quyền (MTO) | **Khách hàng sở hữu** |
-| `custom_customer_variant_code` *(Custom Field)* | Mã biến thể phía KH cho hàng TP (vd `888-3.2KG-HONG`); TRUC để trống, dùng `custom_cylinder_code` | **Mã biến thể KH** |
+| `customer_items` *(Child Table native → `Item Customer Detail`)* | Bảng con mã biến thể KH: `customer_name` (Link Customer) + `customer_group` (tự fetch) + `ref_code` (Data, mã riêng của KH, reqd). 1 TP/BTP = đúng 1 dòng con 1 KH; NGCS/TMD/NVL/BTP/TRUC không dòng con (bán nhiều KH, phân biệt bằng in lụa `custom_screen_print_brand`) | **Mã biến thể KH (bảng con)** |
+| `customer_code` *(native tự join)* | ERPNext tự nối các `ref_code` (qua `fill_customer_code`), dùng search mã biến thể | **Mã KH tổng hợp (tìm kiếm)** |
 | `custom_structure_layers` | Cấu trúc màng ghép phân cách bằng dấu `/` (vd: `PET/MPET/PA/PE sữa`) | **Cấu trúc màng ghép** |
 | `custom_thickness_mic` | Tổng độ dày màng ghép hoặc màng đơn ($\mu m$) | **Độ dày (mic)** |
 | `custom_film_width_mm` | Khổ cuộn màng đưa vào máy ghép hoặc chia cuộn (mm) | **Khổ màng (mm)** |

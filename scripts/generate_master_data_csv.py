@@ -7,16 +7,19 @@ os.makedirs(OUT_DIR, exist_ok=True)
 
 item_master_list = []
 customer_brand_list = []
+# SPEC native 2026-09-15 (Sếp chốt): variant KH ra bảng con native
+# Item.customer_items (Item Customer Detail: customer_name + ref_code).
+# 1 TP = 1 KH duy nhất (mẫu in riêng); NGCS/TMD nhiều KH qua in lụa brandname.
+customer_items_list = []
 
 MASTER_HEADERS = [
     "item_code", "item_name", "custom_alias",
     "item_group", "stock_uom", "brand",
     "default_material_request_type", "standard_rate", "min_order_qty", "safety_stock",
     "disabled", "is_stock_item", "is_sales_item", "is_purchase_item",
-    # Sếp chốt 2026-09-15: customer_ref_code cũ ĐA NGHĨA (TP=mã biến thể KH,
-    # TRUC=mã laser NCC) + thiếu prefix custom_ → tách 2 custom field + ADR:
-    # custom_customer_variant_code (TP) / custom_cylinder_code đã có (TRUC).
-    "customer", "custom_customer_variant_code",
+    # SPEC native 2026-09-15 (Sếp chốt): BỎ 2 cột gộp customer + custom_customer_variant_code.
+    # Variant KH nằm ở file riêng customer_items.csv → nạp vào bảng con native
+    # Item.customer_items (Item Customer Detail). TRUC dùng custom_cylinder_code chính chủ.
     "custom_structure_layers", "custom_thickness_mic", "custom_film_width_mm",
     "custom_pouch_width_mm", "custom_pouch_length_mm", "custom_gusset_mm", "custom_cut_length_mm",
     "custom_print_tech", "custom_accessory_spec", "custom_cylinder_item",
@@ -24,6 +27,9 @@ MASTER_HEADERS = [
     "custom_cylinder_qty", "custom_cylinder_location",
     "description"
 ]
+
+# Bảng con native Item.customer_items — CSV 3 cột, customer_group ERPNext tự fetch.
+CUSTOMER_ITEMS_HEADERS = ["item_code", "customer_name", "ref_code"]
 
 BRAND_HEADERS = [
     "customer_name", "brand_pattern", "color_variant",
@@ -52,6 +58,14 @@ def add_item(code, legal_name, alias, group, uom, brand="", desc="", req_type="M
              layers="", thick=0, film_w=0, pw=0, pl=0, gusset=0, cut_l=0,
              print_tech="Không in", accessory="", cyl_item="",
              cyl_code="", cyl_len=0, cyl_circ=0, cyl_qty=0, cyl_loc=""):
+    # SPEC native 2026-09-15: customer/ref KHÔNG còn là cột item_master.
+    # Chỉ TP có cả 2 (1 TP = 1 KH) → ghi 1 dòng con vào customer_items_list.
+    if code.startswith("TP-") and customer and ref:
+        customer_items_list.append({
+            "item_code": code,
+            "customer_name": customer,
+            "ref_code": ref,
+        })
     item_master_list.append({
         "item_code": code,
         "item_name": legal_name,
@@ -67,8 +81,6 @@ def add_item(code, legal_name, alias, group, uom, brand="", desc="", req_type="M
         "is_stock_item": is_stock,
         "is_sales_item": is_sales,
         "is_purchase_item": is_purchase,
-        "customer": customer,
-        "custom_customer_variant_code": ref,
         "custom_structure_layers": normalize_layers(layers),
         "custom_thickness_mic": thick,
         "custom_film_width_mm": film_w,
@@ -311,7 +323,7 @@ for idx, r in enumerate(truc_rows[1:], 1):
         item_code = "TRUC-WAX500G" if "WAX" in u else ("TRUC-KEM-DUANON" if "DỪA" in u else ("TRUC-LUCKYSTAR" if "LUCKY" in u else f"TRUC-PENDING-{idx:03d}"))
     legal_name, alias = clean_cylinder_title(sp, ma_truc)
     # TRUC: mã laser NCC chỉ nằm ở custom_cylinder_code (chính chủ);
-    # custom_customer_variant_code để trống (dành cho TP = mã biến thể KH).
+    # KHÔNG có dòng con customer_items (bảng con chỉ dành cho TP 1 KH).
     add_item(
         code=item_code, legal_name=legal_name, alias=alias, group="Trục In Ống Đồng", uom="Cây", brand="Trục in",
         desc=note, req_type="Purchase", standard_rate=3000000.0, is_purchase=1, ref="",
@@ -524,8 +536,9 @@ def write_csv(filename, rows, headers):
         w.writerows(rows)
     print(f" Xuất thành công {len(rows)} dòng vào: {path}")
 
-# XUẤT DUY NHẤT 1 FILE item_master.csv
+# XUẤT item_master.csv + customer_items.csv (bảng con native Item.customer_items)
 write_csv("item_master.csv", item_master_list, MASTER_HEADERS)
+write_csv("customer_items.csv", customer_items_list, CUSTOMER_ITEMS_HEADERS)
 
 # XÓA BỎ HOÀN TOÀN CÁC FILE THỪA LẠC HẬU
 for old_f in ["item_spec.csv", "customer_brand_matrix.csv"]:

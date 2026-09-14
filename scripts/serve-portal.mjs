@@ -248,6 +248,14 @@ const server = http.createServer((req, res) => {
 				const p = Math.max(1, Number(parsed.page) || 1);
 				const pl = Math.min(100, Math.max(1, Number(parsed.page_length) || 15));
 				let items = safeReadCSV('item_master.csv');
+			// SPEC native 2026-09-15: mock tự join customer_items.csv → customer_code
+			// (trên bench thật ERPNext tự join qua fill_customer_code).
+			const ciRows = safeReadCSV('customer_items.csv');
+			const ciMap = new Map(ciRows.map(r => [r.item_code, r]));
+			items = items.map(it => {
+				const ci = ciMap.get(it.item_code);
+				return { ...it, customer_code: ci ? ci.ref_code : '', customer_items: ci ? [ci] : [] };
+			});
 				if (cat === 'sp') items = items.filter(it => it.item_code.startsWith('TP-'));
 				else if (cat === 'nvl') items = items.filter(it => it.item_code.startsWith('NVL-'));
 				else if (cat === 'truc') items = items.filter(it => it.item_code.startsWith('TRUC-'));
@@ -262,7 +270,7 @@ const server = http.createServer((req, res) => {
 						it.item_code.toLowerCase().includes(q) ||
 						(it.item_name && it.item_name.toLowerCase().includes(q)) ||
 						(it.custom_alias && it.custom_alias.toLowerCase().includes(q)) ||
-						(it.customer && it.customer.toLowerCase().includes(q)) ||
+						(it.customer_code && it.customer_code.toLowerCase().includes(q)) ||
 						(it.custom_structure_layers && it.custom_structure_layers.toLowerCase().includes(q))
 					);
 				}

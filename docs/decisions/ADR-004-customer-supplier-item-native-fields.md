@@ -27,3 +27,14 @@ không tồn tại trong ERPNext chuẩn, `customer_ref_code` custom đa nghĩa 
 - CSV tái sinh: customer (bỏ credit), supplier (mobile_no), item (variant tách).
 - API: supplier select `mobile_no`; item select/search `custom_customer_variant_code`.
 - UI: drawer KH Trả trước/Trả sau; drawer NCC đọc `mobile_no`; bảng KH bỏ tooltip hạn mức.
+
+## Bổ sung 2026-09-15: variant phẳng SUPERSEDED → bảng con native (Sếp chốt hỏi đáp từng mục)
+- Ô phẳng `custom_customer_variant_code` + field `customer` (verify không tồn tại trên Item
+  native — item.json develop 135 fields, `has customer: False`) → chuyển sang native có sẵn:
+  `Item.customer_items` (Table → `Item Customer Detail`: `customer_name` + `customer_group`
+  tự fetch + `ref_code` reqd) và `customer_code` (ERPNext tự join qua `fill_customer_code`).
+- Nguyên tắc ngành (ghi vào masterdata-spec kịch bản 1/2/3/4): 1 TP/BTP = đúng 1 KH duy nhất
+  (mẫu in riêng); NGCS/TMD bán nhiều KH, phân biệt bằng in lụa `custom_screen_print_brand`.
+- Thực hiện: `customer_items.csv` mới (45 dòng TP) + import nạp bảng con + API search
+  `customer_code` + fixtures XÓA entry variant (native không cần custom). Xem
+  `docs/specs/SPEC-item-customer-variant-native.md`.

@@ -77,22 +77,26 @@ Toàn bộ hệ thống sử dụng đúng 5 đơn vị tính chuẩn mực, kh�
   1. *Size Nhỏ (1.8L – 2.4L):* Cấu trúc **PET/MPET/PA/PE sữa**, dày **220 mic**, Vòi **16mm**.
   2. *Size Trung (3 – 3.6Kg):* Cấu trúc **PET/PA/PE sữa**, kích thước **28x34 cm**, dày **230 mic**, Vòi **16mm**.
   3. *Size Lớn (3.5L – 5L):* Cấu trúc **PET/MPET/PA/PE sữa**, dày **250 mic**, Vòi **16mm**.
-- **In ấn lần 2:** Khi khách đặt in thương hiệu riêng lên túi có sẵn, nhân viên chọn brand in lụa tại trường `custom_screen_print_brand` trên Sales Order.
+- **1 mã NGCS bán cho NHIỀU khách** (mẫu in sẵn của Vạn Phát, không độc quyền) → KHÔNG gán customer cố định (customer/variant để trống).
+- **In ấn lần 2 (bắt buộc để phân biệt):** Túi NGCS qua in lụa thủ công, in brandname của từng khách lên túi để tạo sự khác biệt. Nhân viên chọn brand in lụa tại trường `custom_screen_print_brand` trên Sales Order Item.
 
 ### Kịch bản 2: Hàng Đặt In Riêng Độc Quyền (MTO - Make to Order)
 - **Bản chất:** Sản phẩm màng ghép in trục ống đồng độc quyền theo thương hiệu của khách (TopGia, Tanzy, Minh Râu, 888...).
+- **NGUYÊN TẮC NGÀNH (1 TP = 1 KH duy nhất):** Túi màng ghép TP và cuộn màng ghép BTP sản xuất riêng cho đúng 1 khách, vì NVL là cuộn PET in theo mẫu thiết kế riêng của khách đó — không bao giờ bán chung. Mã biến thể (VD `888-3.2KG-HONG`) là tiếng nói của đúng khách sở hữu (DS COSMETIC), mã TP- là tiếng nói nội bộ Vạn Phát.
 - **Vận hành trên ERPNext:**
   - Mã sản phẩm: `TP-#####`.
-  - Khách hàng liên kết: Gán tại trường `customer` và bảng `customer_items`.
+  - Khách hàng sở hữu duy nhất: gán tại trường `customer` và bảng `customer_items` (1 dòng con 1 KH — KHÔNG bao giờ có dòng thứ 2 cho TP/BTP).
   - Chỉ khi có Đơn đặt hàng bán (`Sales Order`), hệ thống mới phát sinh Lệnh sản xuất xưởng (`Work Order`).
 
 ### Kịch bản 3: Hàng Mua Ngoài Thương Mại (PTO - Purchase to Order)
 - **Bản chất:** Hàng xưởng không sản xuất mà mua lại từ NCC (như Túi màng đơn PE, PP).
+- **1 mã TMD bán cho NHIỀU khách** (hàng chợ, không độc quyền) → KHÔNG gán customer cố định.
+- **In lụa phân biệt như NGCS:** Túi màng đơn qua in lụa thủ công, in brandname của từng khách lên túi. Brand in lụa ghi tại `custom_screen_print_brand` trên Sales Order Item.
 - **Vận hành trên ERPNext:** `default_material_request_type = "Purchase"`. Khi duyệt `Sales Order`, hệ thống liên kết trực tiếp tạo Đơn mua hàng NCC (`Purchase Order`), hàng nhập về kho là xuất giao ngay.
 
 ### Kịch bản 4: 1 Thương Hiệu Nhiều Chủ Sở Hữu
 - **Thực tế nghiệp vụ:** Thương hiệu `Topgia` thuộc 2 chủ: KOVAA (túi nước giặt) và Phong Tín (túi màng bọc thực phẩm) $\rightarrow$ Khác mặt hàng, tạo 2 mã `TP` riêng biệt cùng mang `brand = Topgia`.
-- Cùng 1 mặt hàng bán cho nhiều khách (ví dụ 888 bán cho đại lý): Dùng 1 mã `TP` duy nhất kết hợp `Item Price` riêng từng khách.
+- **Làm rõ (tránh hiểu nhầm):** Mỗi mã TP vẫn chỉ thuộc 1 KH duy nhất (nguyên tắc kịch bản 2). Trường hợp "bán cho đại lý" không dùng chung mã TP — mỗi đại lý/kênh có mã TP riêng nếu mẫu in khác, hoặc dùng `Item Price` riêng từng khách trên cùng mã NGCS/TMD (hàng chợ, kịch bản 1/3).
 
 ### Kịch bản 5: Quản Lý Vòng Đời Sản Phẩm Ngừng Kinh Doanh (Disabled Items)
 - Các mã sản phẩm đã ngừng bán thương phẩm trên thị trường (như túi 888 0.6Kg) được gán cờ `disabled = 1` và `is_sales_item = 0`.

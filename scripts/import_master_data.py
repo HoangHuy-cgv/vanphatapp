@@ -99,6 +99,7 @@ def load_csv(filename):
 
 def load_all_nhom_a_data():
     master_items = load_csv("item_master.csv")
+    customer_items = load_csv("customer_items.csv")
     customers = load_csv("customer_master.csv")
     bom_master = load_csv("bom_master.csv")
     bom_items = load_csv("bom_items.csv")
@@ -110,6 +111,7 @@ def load_all_nhom_a_data():
 
     return {
         "items": [{"master": m, "spec": m} for m in master_items],
+        "customer_items": customer_items,
         "customers": customers,
         "warehouses": load_csv("warehouse_master.csv"),
         "suppliers": load_csv("supplier_master.csv"),
@@ -219,6 +221,14 @@ def import_to_frappe(data):
             }, f"Tạo Công Đoạn: {op_name} ({op['name']})")
 
         print(f"\n6. Nạp {len(data['items'])} Mặt Hàng...")
+        # SPEC native 2026-09-15: variant KH → bảng con Item.customer_items
+        # (Item Customer Detail). 1 TP = 1 KH duy nhất; NGCS/TMD/NVL/BTP/TRUC không dòng con.
+        ci_by_item = {}
+        for ci in data.get("customer_items", []):
+            ci_by_item.setdefault(ci["item_code"], []).append({
+                "customer_name": ci["customer_name"],
+                "ref_code": ci["ref_code"],
+            })
         def item_dep_rank(it):
             c = it["master"]["item_code"]
             if c.startswith("TRUC-"): return 1
@@ -252,6 +262,7 @@ def import_to_frappe(data):
                 "is_stock_item": safe_int(m.get("is_stock_item", 1)),
                 "is_sales_item": safe_int(m.get("is_sales_item", 1)),
                 "is_purchase_item": safe_int(m.get("is_purchase_item", 0)),
+                "customer_items": ci_by_item.get(code, []),
             }
             if s:
                 for k in SPEC_NUMERIC_FIELDS:
@@ -429,6 +440,16 @@ def run_dry_run(data):
     print("\n   - Thống kê theo Công Nghệ In (custom_print_tech):")
     for pt, cnt in sorted(print_tech_stats.items(), key=lambda x: x[1], reverse=True):
         print(f"      * {pt:<30}: {cnt:>3} mã")
+
+    print(f"\n   - Bảng con native Item.customer_items (mã biến thể KH):")
+    ci_list = data.get("customer_items", [])
+    ci_codes = {r["item_code"] for r in ci_list}
+    all_codes = {it["master"]["item_code"] for it in data["items"]}
+    cust_names = {c["customer_name"] for c in data["customers"]}
+    print(f"      * Tổng dòng con: {len(ci_list)} (TP 1 mã = 1 KH duy nhất)")
+    print(f"      * Item không tồn tại: {len([c for c in ci_codes if c not in all_codes])}")
+    print(f"      * KH không tồn tại: {len([r for r in ci_list if r['customer_name'] not in cust_names])}")
+    print(f"      * Mã trùng (1 TP 2 KH): {len(ci_list) - len(ci_codes)}")
 
     print(f"\n7. ĐỊNH MỨC SẢN XUẤT 2 CẤP (BOM - BILL OF MATERIALS):")
     bom_l1 = [b for b in data['boms'] if b['master']['item'].startswith("BTP-")]
