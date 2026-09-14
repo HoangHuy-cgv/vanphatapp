@@ -316,7 +316,7 @@ function onStep2Back() {
 }
 
 async function fetchPricePreview() {
-	const res = await api('get_price_preview', { quotation: '', lines: step2Data.value.lines });
+	const res = await api('bao_gia.get_quotation_price_preview', { quotation: '', lines: step2Data.value.lines });
 	const isPrintCylinder =
 		step1Data.value.print_type === 'In trục' &&
 		step1Data.value.cylinder_status === 'Chưa có trục';

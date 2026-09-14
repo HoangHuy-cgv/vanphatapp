@@ -86,9 +86,10 @@ def create_quotation(payload):
 
 
 @frappe.whitelist()
-def get_price_preview(quotation=None, lines=None):
+def get_quotation_price_preview(quotation=None, lines=None):
 	"""Preview figures computed server-side from unsaved rows or a saved doc.
 
+	S4 SSOT: tên riêng cho Quotation preview (tránh shadow với order.get_price_preview).
 	Frontend sends current M2 `lines`; server sums here so the shell never
 	computes. Packaging formula (GSM/keo/hao hụt/VAT) replaces the
 	zero placeholders per packaging-calculation-spec.md.
@@ -401,17 +402,10 @@ def mark_quotation_lost(name, reason=""):
 	doc.reload()
 	return {"name": doc.name, "status": doc.status}
 
-# Re-export order lifecycle methods from dedicated order.py module for backward compatibility
-from vanphat_portal.api.order import (
-	get_price_preview,
-	list_orders,
-	get_order_details,
-	record_order_deposit,
-	accountant_approve_procurement,
-	submit_sales_order,
-	create_sales_order,
-	make_order_from_quotation,
-)
+# S4: XÓA re-export ghi đè câm (get_price_preview của order đã shadow hàm quotation).
+# SSOT: order.* cho Sales Order lifecycle, bao_gia.* cho Quotation. Caller dùng path explicit.
+# Giữ alias tương thích cho bare `get_price_preview` cũ → trỏ đúng quotation preview.
+get_price_preview = get_quotation_price_preview
 
 @frappe.whitelist()
 def get_boot():
