@@ -3,17 +3,22 @@ repos:
     rev: v5.0.0
     hooks:
       - id: trailing-whitespace
+        exclude: ^\.agents/
       - id: end-of-file-fixer
+        exclude: ^\.agents/
       - id: check-yaml
       - id: check-json
+        exclude: ^\.agents/
       - id: mixed-line-ending
         args: ['--fix=lf']
+        exclude: ^\.agents/
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.9.0
     hooks:
+      # Chỉ check (không format) — repo Python dùng tabs, ruff-format đổi sang spaces sai chuẩn.
       - id: ruff
         args: [--fix]
-      - id: ruff-format
+        files: ^apps/vanphat_portal/
   - repo: local
     hooks:
       - id: forbid-frappe-patterns

@@ -92,7 +92,7 @@ def get_quotation_price_preview(quotation=None, lines=None, customer=None, compa
 	S4 SSOT: tên riêng cho Quotation preview (tránh shadow với order.get_price_preview).
 	Frontend gửi lines thô; server không math tay.
 	"""
-	from vanphat_portal.api.order import _price_via_doc, _resolve_tax_template
+	from vanphat_portal.api.order import _price_via_doc
 
 	if quotation and frappe.db.exists("Quotation", quotation):
 		doc = frappe.get_doc("Quotation", quotation)
@@ -213,7 +213,7 @@ def normalize_layers(layers, total_thickness=None):
 
 	if total_thickness and float(total_thickness) > 0 and len(normalized) > 1:
 		tot = float(total_thickness)
-		other_thick = sum(l["thickness"] for l in normalized[:-1])
+		other_thick = sum(lay["thickness"] for lay in normalized[:-1])
 		if tot > other_thick:
 			normalized[-1]["thickness"] = tot - other_thick
 
@@ -270,10 +270,10 @@ def calculate_packaging_quotation(
 	a_pouch = compute_pouch_area(pouch_type, width_mm / 1000.0, length_mm / 1000.0, gusset_mm / 1000.0)
 
 	# 2. Khối lượng và chi phí màng & keo ghép
-	pouch_weight_g = sum(a_pouch * l["thickness"] * DENSITIES.get(l["material"], 0.93) for l in norm_layers)
+	pouch_weight_g = sum(a_pouch * lay["thickness"] * DENSITIES.get(lay["material"], 0.93) for lay in norm_layers)
 	film_cost_raw = sum(
-		(a_pouch * l["thickness"] * DENSITIES.get(l["material"], 0.93) / 1000.0) * PRICES.get(l["material"], 50000.0)
-		for l in norm_layers
+		(a_pouch * lay["thickness"] * DENSITIES.get(lay["material"], 0.93) / 1000.0) * PRICES.get(lay["material"], 50000.0)
+		for lay in norm_layers
 	)
 	glue_cost_raw = a_pouch * GLUE_COST_PER_M2
 

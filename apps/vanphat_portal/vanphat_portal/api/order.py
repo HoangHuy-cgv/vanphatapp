@@ -9,7 +9,6 @@ Handles ERPNext Native Sales Order lifecycle:
 
 import frappe
 
-
 # S9: fallback khi native chưa cấu hình (chi tiết xem docs/decisions/ADR-002-native-pricing-fallback.md).
 # P1+P2 (goal mới, Sếp duyệt): VAT doc-driven — ERPNext tính trên draft doc, không math tay;
 # giá trục pass-through NCC — API không lookup/không fallback số nào (Sếp: trục do NCC quyết giá).
@@ -280,6 +279,7 @@ def list_orders(tab=None, query=None, page=1, page_length=15):
 	Tab phân loại từ item_code native (NGCS/TMD) — S9 chuyển Item Group filter server.
 	"""
 	import math
+
 	from pypika import Order
 	tab_filter = (tab or "").strip().lower()
 	q = (query or "").strip().lower()
@@ -347,7 +347,7 @@ def list_orders(tab=None, query=None, page=1, page_length=15):
 			.where(base_cond)
 		)
 
-	from frappe.query_builder.functions import Count, Sum
+	from frappe.query_builder.functions import Count
 
 	# Query đếm/tổng: build riêng từ cùng FROM/JOIN/WHERE (không reuse select list)
 	def count_query():
@@ -579,7 +579,7 @@ def get_order_details(name):
 			brand = frappe.db.get_value("Item", first_code, "brand") or ""
 			layers_raw = frappe.db.get_value("Item", first_code, "custom_structure_layers") or ""
 			if layers_raw:
-				materials = [l.strip() for l in layers_raw.split("/") if l.strip()]
+				materials = [s.strip() for s in layers_raw.split("/") if s.strip()]
 			dimensions_text = frappe.db.get_value("Item", first_code, "description") or ""
 		except Exception:
 			pass

@@ -1,6 +1,6 @@
 # BẢN ĐỒ ĐẶC TẢ HỆ THỐNG (SSOT CAPABILITY MAP) — BAO BÌ VẠN PHÁT
 
-> **Nguyên Tắc Tối Thượng:** 
+> **Nguyên Tắc Tối Thượng:**
 > 1. **ERPNext Native làm Backend:** 100% logic nghiệp vụ, công thức tính toán, trạng thái chứng từ và phân quyền nằm ở Backend Frappe/ERPNext v16 (`vanphat_portal.api`).
 > 2. **Frontend là Lớp Vỏ Mỏng (Thin Client):** Vue 3 SPA chỉ nhận dữ liệu hiển thị (data-binding) và phát sự kiện, tuyệt đối không chứa logic tính toán hay phán đoán trạng thái.
 > 3. **Một Nguồn Chân Lý Duy Nhất (Single Source of Truth - SSOT):** Mỗi thông tin chỉ tồn tại ở đúng một file chuyên trách, load on-demand theo ngữ cảnh. Tuyệt đối cấm sao chép rải rác dẫn đến xung đột ngầm.
@@ -41,7 +41,7 @@
 
 ### [Module 1: Schema, Thuật Ngữ & Naming Series](file:///var/home/huy/vanphatapp/docs/specs/erpnext-native-vi-en-mapping.md)
 - **Tệp SSOT:** `docs/specs/erpnext-native-vi-en-mapping.md`
-- **Nội dung:** 
+- **Nội dung:**
   - Quy chuẩn Naming Series Frappe Native v16 reset tự động hàng tháng (`KH-.#####`, `NCC-.#####`, `DH-.YY..MM.-.###`, `BG-.YY..MM.-.###`, `MH-.YY..MM.-.###`, `LSX-`, `GH-`, `NH-`, `HD-`, `PT-`, `PC-`).
   - Ánh xạ 100% fieldnames tiếng Anh sang tiếng Việt của 16 DocTypes ERPNext Native (`Customer`, `Item`, `Sales Order`, `Quotation`, `Purchase Order`, `Supplier`, `Work Order`, `Delivery Note`, `Purchase Receipt`, `Sales Invoice`, `Payment Entry`, `Warehouse`, `Operation`, `Workstation`, `BOM`, `User`).
 - **Khi nào tải:** Bất kỳ khi nào viết Python API, ORM migration, Schema fixture, hoặc thiết kế câu truy vấn dữ liệu.

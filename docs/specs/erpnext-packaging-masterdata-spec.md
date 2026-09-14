@@ -81,7 +81,7 @@ Toàn bộ hệ thống sử dụng đúng 5 đơn vị tính chuẩn mực, kh�
 
 ### Kịch bản 2: Hàng Đặt In Riêng Độc Quyền (MTO - Make to Order)
 - **Bản chất:** Sản phẩm màng ghép in trục ống đồng độc quyền theo thương hiệu của khách (TopGia, Tanzy, Minh Râu, 888...).
-- **Vận hành trên ERPNext:** 
+- **Vận hành trên ERPNext:**
   - Mã sản phẩm: `TP-#####`.
   - Khách hàng liên kết: Gán tại trường `customer` và bảng `customer_items`.
   - Chỉ khi có Đơn đặt hàng bán (`Sales Order`), hệ thống mới phát sinh Lệnh sản xuất xưởng (`Work Order`).

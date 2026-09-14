@@ -173,4 +173,3 @@ Mục tiêu tối thượng của hệ thống là: **ERPNext Native làm Backen
    - Trạng thái chứng từ (Đơn nháp, Chờ cọc, Đang sản xuất, Hoàn thành, HOLD) do Backend trả về trực tiếp theo trường `status` và `docstatus` của ERPNext native.
    - Tuyệt đối cấm viết code JS dạng `if (o.advance_paid < o.grand_total * 0.5) return 'HOLD'` trên file Vue.
 3. **Phân tab nghiệp vụ điều khiển từ Backend:** Các bộ lọc tab lớn (Xưởng SX, Mua ngoài, NGCS) phải được phân loại qua query params gửi lên Backend API, không dùng `computed` ở frontend để tự suy đoán nhóm hàng.
-

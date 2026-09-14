@@ -159,4 +159,3 @@ Khi khách hàng yêu cầu báo giá cho số lượng đặt hàng ($Q_{req}$)
 
 3. **Hiệu ứng đòn bẩy thương mại (Upsell Leverage):**
    * Báo giá song song 2 nấc tạo ra đòn bẩy tâm lý rõ ràng cho đội ngũ kinh doanh (Sales): Chỉ cần thêm một khoản ngân sách nhỏ, khách hàng sẽ nhận được số lượng túi nhiều hơn đáng kể với đơn giá trên từng túi giảm mạnh.
-
