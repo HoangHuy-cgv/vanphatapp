@@ -6,13 +6,16 @@ Portal bắt buộc login — không guest. DB trống → [] (truthful, không 
 
 import frappe
 
+from vanphat_portal.api._common import paginate, text
+
 
 @frappe.whitelist()
 def get_list(query=None, department=None, page=1, page_length=100):
 	"""Return internal system users filtered by query string and department."""
-	q = (query or "").strip().lower()
-	dept = (department or "").strip()
+	q = text(query).lower()
+	dept = text(department)
 	like = f"%{q}%" if q else None
+	_, pl, start = paginate(page, page_length, default=100)
 
 	filters = {"enabled": 1, "user_type": "System User"}
 	if dept:
@@ -33,5 +36,4 @@ def get_list(query=None, department=None, page=1, page_length=100):
 	] if like else None
 	# S5: get_list tôn trọng permission (không get_all bypass)
 	return frappe.db.get_list("User", filters=filters, or_filters=or_filters, fields=fields, order_by="name asc",
-		start=(max(1, int(page or 1)) - 1) * min(100, max(1, int(page_length or 100))),
-		page_length=min(100, max(1, int(page_length or 100))))
+		start=start, page_length=pl)

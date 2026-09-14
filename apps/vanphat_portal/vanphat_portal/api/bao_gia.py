@@ -7,6 +7,21 @@ and will replace these stubs.
 
 import frappe
 
+from vanphat_portal.api._common import as_json, page_result, paginate, text
+
+
+def _quotation_count(q):
+	"""COUNT khớp ĐÚNG bộ lọc của danh sách (name OR customer_name OR party_name).
+
+	Trước đây count chỉ lọc `name` → `total_count/total_pages` sai khi tìm theo KH.
+	"""
+	if not q:
+		return frappe.db.count("Quotation")
+	QUOT = frappe.qb.DocType("Quotation")
+	like = f"%{q}%"
+	condition = (QUOT.name.like(like)) | (QUOT.customer_name.like(like)) | (QUOT.party_name.like(like))
+	return frappe.db.count("Quotation", filters=condition)
+
 
 @frappe.whitelist()
 def list_quotations(query=None, page=1, page_length=15):
@@ -15,10 +30,8 @@ def list_quotations(query=None, page=1, page_length=15):
 	Trước đây limit=50 cứng + filter client — sai chuẩn spec §3 (page_length
 	mặc định 15, trần 100). Frontend QuotesView paginate như OrdersView.
 	"""
-	import math
-	q = (query or "").strip()
-	p = max(1, int(page or 1))
-	pl = min(100, max(1, int(page_length or 15)))
+	q = text(query)
+	p, pl, start = paginate(page, page_length)
 	or_filters = None
 	if q:
 		like = f"%{q}%"
@@ -27,21 +40,21 @@ def list_quotations(query=None, page=1, page_length=15):
 			["Quotation", "customer_name", "like", like],
 			["Quotation", "party_name", "like", like],
 		]
-	names = frappe.db.get_list(
+	quotations = frappe.db.get_list(
 		"Quotation",
 		fields=["name", "transaction_date", "customer_name", "party_name", "grand_total", "status"],
 		or_filters=or_filters,
 		order_by="creation desc",
-		start=(p - 1) * pl,
+		start=start,
 		page_length=pl,
 	)
-	total_count = frappe.db.count("Quotation", or_filters and {"name": ["like", f"%{q}%"]} or None)
-	total_pages = max(1, math.ceil(total_count / pl)) if total_count else 1
-	return {"quotations": names, "page": p, "page_length": pl, "total_count": total_count, "total_pages": total_pages}
+	return page_result("quotations", quotations, p, pl, _quotation_count(q))
+
+
 @frappe.whitelist()
 def search_customers(query=""):
 	"""Link-search Customer có sẵn cho ô Khách màn 1. Chỉ chọn, không tạo mới."""
-	q = (query or "").strip()
+	q = text(query)
 	like = f"%{q}%"
 	return frappe.get_list(
 		"Customer",
@@ -103,6 +116,7 @@ def create_quotation(payload):
 				file_name,
 				{"attached_to_doctype": "Quotation", "attached_to_name": doc.name},
 			)
+	frappe.db.commit()
 	return {"name": doc.name}
 
 
@@ -115,6 +129,7 @@ def get_quotation_price_preview(quotation=None, lines=None, customer=None, compa
 	"""
 	from vanphat_portal.api.order import _price_via_doc
 
+	lines = as_json(lines) or []
 	if quotation and frappe.db.exists("Quotation", quotation):
 		doc = frappe.get_doc("Quotation", quotation)
 		tax = frappe.utils.flt(doc.total_taxes_and_charges)
@@ -131,7 +146,7 @@ def get_quotation_price_preview(quotation=None, lines=None, customer=None, compa
 		}
 	priced = _price_via_doc(customer=customer, company=company, items=lines, cylinder_spec=None)
 	return {
-		"total_qty": sum(frappe.utils.flt((r or {}).get("qty") or 0) for r in (lines or [])),
+		"total_qty": sum(frappe.utils.flt((row or {}).get("qty") or 0) for row in lines),
 		"subtotal": priced["net_total"],
 		"vat_rate": priced["vat_rate"],
 		"tax_template": priced["tax_template"],
@@ -395,6 +410,7 @@ def submit_quotation(name):
 	if doc.docstatus != 0:
 		frappe.throw("Chỉ gửi QLSX từ phiếu nháp (Draft).")
 	doc.submit()
+	frappe.db.commit()
 	return {"name": doc.name, "status": doc.status}
 
 
@@ -402,14 +418,17 @@ def submit_quotation(name):
 def mark_quotation_lost(name, reason=""):
 	"""Rớt: native `declare_enquiry_lost` với lý do chi tiết."""
 	doc = frappe.get_doc("Quotation", name)
-	doc.declare_enquiry_lost([], [], (reason or "").strip() or None)
+	doc.declare_enquiry_lost([], [], text(reason) or None)
 	doc.reload()
+	frappe.db.commit()
 	return {"name": doc.name, "status": doc.status}
+
 
 # S4: XÓA re-export ghi đè câm (get_price_preview của order đã shadow hàm quotation).
 # SSOT: order.* cho Sales Order lifecycle, bao_gia.* cho Quotation. Caller dùng path explicit.
 # Giữ alias tương thích cho bare `get_price_preview` cũ → trỏ đúng quotation preview.
 get_price_preview = get_quotation_price_preview
+
 
 @frappe.whitelist()
 def get_boot():

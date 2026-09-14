@@ -54,7 +54,7 @@ def base_state():
 		{
 			"name": "TP-001",
 			"item_code": "TP-001",
-			"item_name": "Túi màng ghép BABA",
+			"item_name": "Túi đựng nước giặt BABA 500g",
 			"custom_alias": "BABA 500g",
 			"brand": "",
 			"custom_structure_layers": "PET/PA/PE",
@@ -85,7 +85,7 @@ def sales_order(**overrides):
 		"items": [
 			{
 				"item_code": "TP-001",
-				"item_name": "Túi màng ghép BABA",
+				"item_name": "Túi đựng nước giặt BABA 500g",
 				"qty": 100,
 				"rate": 10000.0,
 				"amount": 1000000.0,
@@ -196,9 +196,9 @@ class TestOrderDetails(unittest.TestCase):
 		self.assertEqual([row["is_cylinder"] for row in res["items"]], [False, True])
 		self.assertIs(res["can_submit"], False)
 		self.assertEqual(res["order_state"], "Chính thức (Đã cọc >=50%)")
-		# Chống N+1: không get_value từng dòng Item
+		# Chống N+1: brand + lớp cấu trúc + mô tả lấy trong ĐÚNG 1 query (trước là 3)
 		item_gets = [call for call in state.calls if call[0] == "get_value" and call[1] == "Item"]
-		self.assertEqual(item_gets, [])
+		self.assertEqual(len(item_gets), 1)
 
 	def test_chi_tiet_don_nhap_thieu_coc_thi_hold(self):
 		state = base_state()
