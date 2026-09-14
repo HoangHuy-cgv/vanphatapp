@@ -82,44 +82,6 @@
 			</div>
 		</header>
 
-		<!-- Sub-filter chips cho tab Sản Phẩm (Bỏ filter Tất Cả) -->
-		<div v-if="activeCatalogTab === 'sp'" class="catalog-subfilter-bar">
-			<div class="sub-filter-chips">
-				<button
-					type="button"
-					class="sub-chip-btn"
-					:class="{ active: activeProductSubFilter === 'tp' }"
-					@click="activeProductSubFilter = activeProductSubFilter === 'tp' ? 'all' : 'tp'"
-				>
-					Túi ghép ({{ tpItems.length }})
-				</button>
-				<button
-					type="button"
-					class="sub-chip-btn"
-					:class="{ active: activeProductSubFilter === 'ngcs' }"
-					@click="activeProductSubFilter = activeProductSubFilter === 'ngcs' ? 'all' : 'ngcs'"
-				>
-					Túi NGCS ({{ ngcsItems.length }})
-				</button>
-				<button
-					type="button"
-					class="sub-chip-btn"
-					:class="{ active: activeProductSubFilter === 'btp' }"
-					@click="activeProductSubFilter = activeProductSubFilter === 'btp' ? 'all' : 'btp'"
-				>
-					Cuộn màng ({{ btpItems.length }})
-				</button>
-				<button
-					type="button"
-					class="sub-chip-btn"
-					:class="{ active: activeProductSubFilter === 'tmd' }"
-					@click="activeProductSubFilter = activeProductSubFilter === 'tmd' ? 'all' : 'tmd'"
-				>
-					Màng đơn ({{ tmdItems.length }})
-				</button>
-			</div>
-		</div>
-
 		<!-- Bảng Mặt hàng: Sản phẩm, NVL, Trục in -->
 		<div v-if="activeCatalogTab === 'sp' || activeCatalogTab === 'nvl' || activeCatalogTab === 'truc'" class="table-container">
 			<table class="data-table">
@@ -419,7 +381,6 @@ const masterItems = ref([]);
 const loadingMasterItems = ref(false);
 const activeCatalogTab = ref('sp'); // 'sp', 'nvl', 'truc', 'kh', 'ncc', 'user'
 const activeItemTab = activeCatalogTab; // backward-compatibility alias
-const activeProductSubFilter = ref('all'); // 'all', 'tp', 'ngcs', 'btp', 'tmd'
 const itemSearchQuery = ref('');
 
 const showItemDrawer = ref(false);
@@ -491,9 +452,6 @@ const catalogSearchInput = computed({
 
 function switchCatalogTab(tabKey) {
 	activeCatalogTab.value = tabKey;
-	if (tabKey === 'sp') {
-		activeProductSubFilter.value = 'all';
-	}
 }
 
 function switchItemTab(tabKey) {
@@ -535,13 +493,7 @@ const trucItems = computed(() =>
 );
 
 const currentTabMasterItems = computed(() => {
-	if (activeItemTab.value === 'sp') {
-		if (activeProductSubFilter.value === 'tp') return tpItems.value;
-		if (activeProductSubFilter.value === 'ngcs') return ngcsItems.value;
-		if (activeProductSubFilter.value === 'btp') return btpItems.value;
-		if (activeProductSubFilter.value === 'tmd') return tmdItems.value;
-		return productItems.value;
-	}
+	if (activeItemTab.value === 'sp') return productItems.value;
 	if (activeItemTab.value === 'nvl') return nvlItems.value;
 	if (activeItemTab.value === 'truc') return trucItems.value;
 	return productItems.value;

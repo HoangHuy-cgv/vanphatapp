@@ -260,7 +260,7 @@ const userApiExists = fs.existsSync(path.join(ROOT_DIR, 'apps/vanphat_portal/van
 const masterDataChecks = [
 	{ name: 'Sidebar has single unified Danh mục button', test: appVue.includes("isCatalogView") && appVue.includes('>Danh mục</span>') },
 	{ name: 'Unified 6-tab cockpit (SP, NVL, Trục, KH, NCC, User)', test: portalSource.includes("activeCatalogTab === 'sp'") && portalSource.includes("activeCatalogTab === 'kh'") && portalSource.includes("activeCatalogTab === 'ncc'") && portalSource.includes("activeCatalogTab === 'user'") },
-	{ name: 'Sub-filter chips for Sản phẩm (Tất cả, Túi ghép, NGCS, Cuộn màng, Màng đơn)', test: portalSource.includes('sub-filter-chips') && portalSource.includes("activeProductSubFilter === 'tp'") },
+	{ name: 'Clean minimalist cockpit for Sản phẩm (removed 4 sub-filter chips for uncluttered view)', test: !catalogVue.includes('catalog-subfilter-bar') && !catalogVue.includes('activeProductSubFilter') },
 	{ name: 'Customer table with credit limit and alias inside catalog', test: portalSource.includes("activeCatalogTab === 'kh'") && portalSource.includes('c.credit_limit') },
 	{ name: 'Supplier table with tax ID and group inside catalog', test: portalSource.includes("activeCatalogTab === 'ncc'") && portalSource.includes('s.tax_id') },
 	{ name: 'User table with ERPNext native roles inside catalog', test: portalSource.includes("activeCatalogTab === 'user'") && portalSource.includes('u.role_profile_name') },
