@@ -14,7 +14,12 @@
   trên `<dialog>` native. Đo cùng app, cùng cấu hình: **entry JS 145→49 kB gzip (-66%)**,
   **CSS 54→6 kB gzip (-89%)**, tổng js+css 241→96 kB gzip (-60%). Smoke test CDP xanh
   (boot, modal mở, Esc đóng, 0 console error). Chưa đổi lockfile; chưa port token/animation.
-- **Còn nợ:** chốt stack UI (Sếp quyết theo số POC); 19 endpoint thiếu quyền (rủi ro cao nhất,
-  cần Sếp chốt ai-được-làm-gì); dọn hardcode client; Vitest chưa cài (không ra được npm);
+- **ADR-005 (2026-09-14, bằng chứng đã xác minh cùng ngày):** config native là SSOT
+  của giao diện, code custom chỉ ở tầng visual; giữ Modal 1 + Drawer 2, bỏ portal list native
+  cho Sales Order (frappe#42640 Open, chưa assignee, rò field permlevel + `read` ⇒ `print`);
+  hoãn Studio (0 release, docs 1 trang, pin frappe-ui beta.25, issues cơ bản còn mở).
+  UI spec §7/§7.1/§7.2 + DoD 13–15 chốt: không đào tạo, click-chọn, flow raw-data, config native.
+- **Còn nợ:** rút config cứng trong Vue ra native (plan item 3 — vật liệu màng, nhóm SP,
+  print_type, qty mặc định); 19 endpoint thiếu quyền (đang hoãn theo ý Sếp); Vitest chưa cài;
   chưa đo p95 trên bench staging; `Default Company = Bao Bì Vạn Phát` phải cấu hình ở site.
 - Chi tiết đầy đủ: `tasks/plan.md` (12 mục), `CONSTRAINTS.md` (luật + ngoại lệ W1/W2).

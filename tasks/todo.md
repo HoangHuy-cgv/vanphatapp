@@ -1,9 +1,8 @@
-# TODO — phiên audit kiến trúc (đã đóng)
+# TODO — phiên meta-driven config / ADR-005
 
-Đã xong trong phiên này: `CONSTRAINTS.md` + máy kiểm floor/ratchet + nối pre-commit;
-guard `check-composables.mjs`; fix lỗi production `serverPricingInitial`; POC đo bỏ frappe-ui
-(nhánh `poc/no-frappe-ui`); ghim `frappe-ui 1.0.0-beta.64`; đồng bộ plan/handoff.
+Đang làm: chốt ADR-005 (đã xác minh hết bằng chứng cùng ngày) + spec UI §7/DoD 13–15 +
+CONSTRAINTS §4.5 + đồng bộ plan/handoff → commit.
 
 Việc tiếp theo nằm ở `tasks/plan.md` mục "Còn lại" — chờ Sếp chọn thứ tự.
-Ưu tiên em đề xuất: **(1) chốt phân quyền 19 endpoint** → **(2) chốt stack UI theo số POC**
-→ **(3) dọn hardcode/logic client**.
+Ưu tiên em đề xuất: **(1) rút config cứng trong Vue ra native (plan item 3)** → (2)Bench staging
+ERPNext thật → **(3) chốt phân quyền 19 endpoint** (đang hoãn theo ý Sếp).

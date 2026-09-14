@@ -77,7 +77,7 @@ Vite chỉ bundle chứ không phân tích phạm vi biến. Đã sửa + guard 
 2. **Portal sở hữu ~6 luồng nghiệp vụ** (báo giá, tạo đơn, duyệt cọc, xưởng, giao hàng, tra cứu). **Desk giữ config + master data + mọi thứ chưa thiết kế.** Không cố thay Desk toàn bộ: UI tự làm mất khả năng custom form, còn Desk v16 vẫn đang được Frappe phát triển song song (nguồn: [frappe.io/framework/version-16](https://frappe.io/framework/version-16), [thảo luận với founder Frappe 11/2025](https://discuss.frappe.io/t/frappe-crm-ui-v-s-desk-ui/156477)).
 3. **Lớp vỏ không logic.** Client chỉ: thu thập input → gọi API → hiển thị. Validate client chỉ để UX tức thì; tính hợp lệ nghiệp vụ do server quyết.
 4. **Kết quả mutate chỉ lấy từ response server.** Không tự set `order_state`/`completed_qty`/`is_hold` ở client; không báo thành công khi API trả lỗi.
-5. **Frontend stack đang khoá tạm:** Vue 3.5 + Vite 7 + vue-router 4 + Tailwind **v3** + `frappe-ui` ghim exact. Tailwind v4 chưa được: preset của frappe-ui v1 là v3. Đổi framework/UI library phải có số đo POC và Sếp duyệt.
+5. **Frontend stack đang khoá tạm:** Vue 3.5 + Vite 7 + vue-router 4 + Tailwind **v3** + `frappe-ui` ghim exact. Tailwind v4 chưa được: preset của frappe-ui v1 là v3. Đổi framework/UI library phải có số đo POC và Sếp duyệt. **Không cài Frappe Studio lên production** cho tới khi đủ 3 điều kiện mở lại (ADR-005 §5). **Không dùng `www.list` / portal list native cho Sales Order** cho tới khi frappe#42640 được vá (ADR-005 §4).
 
 ## 5. Exceptions
 

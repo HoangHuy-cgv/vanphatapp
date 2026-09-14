@@ -10,6 +10,9 @@
 Hệ thống ERP & Portal Van Phat là công cụ điều hành tốc độ cao dành cho Ban Giám đốc và đội ngũ vận hành nhà máy sản xuất bao bì màng ghép. Mọi chi tiết trên màn hình phải phục vụ mục tiêu: **Nhìn nhanh – Quyết định tức thì trong 1 giây – Không mỏi mắt – Không thao tác thừa**.
 
 - **Triệt tiêu 100% Tutorial Prose:** Tuyệt đối cấm các đoạn văn bản hướng dẫn sử dụng, mô tả cho con người, subtitle giải thích dài dòng dưới tiêu đề.
+- **Không cần đào tạo (Sếp chốt 2026-09-14):** người mới phải hoàn tất luồng chính mà không đọc hướng dẫn. Nhãn của nút chọn phải tự giải thích; nếu phải viết thêm chú thích mới hiểu thì thiết kế sai, không phải người dùng sai.
+- **Chọn bằng click, không bằng dropdown (Sếp chốt 2026-09-14):** xem §7 — mặc định là nút chọn lớn nhìn-thấy-bấm-được, `<select>` chỉ còn cho trường hợp đặc biệt.
+- **Visual tuân thủ flow raw-data (Sếp chốt 2026-09-14):** xem §7.1 — thứ tự màn hình phải trùng trình tự nghiệp vụ có thật trong dữ liệu nguồn, không bịa bước.
 - **Mật độ thông tin cao & phẳng:** Ưu tiên cấu trúc bảng phẳng, chữ to rõ, đường viền thanh mảnh, không chia khối hộp lộn xộn.
 - **Quy tắc 80/20 về dữ liệu:** Bảng chính ngoài màn hình chỉ hiển thị các trường sinh tử (80% nhu cầu tra cứu thường nhật). 20% thông tin chi tiết chuyên sâu đẩy hoàn toàn vào Drawer trượt bên phải.
 
@@ -161,6 +164,9 @@ Trước khi commit bất kỳ giao diện nào (Page, Drawer, Modal), kỹ sư/
 10. [ ] **A11y Floor:** Contrast text ≥ 4.5:1 (cấm `#64748b` trên nền tối); mọi input có `<label>`; badge số có `aria-label`; touch target ≥ 24px; không keyboard trap.
 11. [ ] **Responsive Breakpoints:** 1024 sidebar icon-only; 768 drawer full-screen; 320 card thay table (không cuộn ngang ép).
 12. [ ] **Feedback Truthful:** Skeleton có `aria-busy`; empty state nêu bước tiếp theo; error toast có nút retry.
+13. [ ] **Click-To-Choose (§7):** mọi lựa chọn ≤ 8 phương án dùng nút chọn lớn có `role=radio` trong `role=radiogroup`, điều khiển được bằng bàn phím; không còn `<select>` cho các trường này.
+14. [ ] **Config Native (ADR-005):** không có danh sách lựa chọn, giá trị mặc định hay label nào hardcode trong Vue — tất cả đến từ native meta / DocType Layout; đổi trong Desk là giao diện đổi, không build lại.
+15. [ ] **Flow Raw-Data (§7.1):** thứ tự bước trên màn hình trùng trình tự nghiệp vụ trong dữ liệu nguồn; không có bước bịa, không có bước rỗng hiển thị.
 
 ---
 
@@ -173,3 +179,39 @@ Mục tiêu tối thượng của hệ thống là: **ERPNext Native làm Backen
    - Trạng thái chứng từ (Đơn nháp, Chờ cọc, Đang sản xuất, Hoàn thành, HOLD) do Backend trả về trực tiếp theo trường `status` và `docstatus` của ERPNext native.
    - Tuyệt đối cấm viết code JS dạng `if (o.advance_paid < o.grand_total * 0.5) return 'HOLD'` trên file Vue.
 3. **Phân tab nghiệp vụ điều khiển từ Backend:** Các bộ lọc tab lớn (Xưởng SX, Mua ngoài, NGCS) phải được phân loại qua query params gửi lên Backend API, không dùng `computed` ở frontend để tự suy đoán nhóm hàng.
+
+---
+
+## 7. Chuẩn Tương Tác: Click Chọn Thay Vì Dropdown (Sếp chốt 2026-09-14)
+
+Nguyên tắc gốc: **người mới phải dùng được ngay, không cần đào tạo.** Chọn bằng *nhìn thấy – bấm*,
+không bằng *mở danh sách ra rồi dò*.
+
+1. **≤ 8 lựa chọn → bắt buộc nút chọn lớn (card/chip). Cấm `<select>`.** Mỗi nút hiển thị nhãn tiếng
+   Việt đầy đủ (kèm quy cách/đơn vị khi cần), touch target ≥ 44px, trạng thái chọn thể hiện bằng
+   **viền + nền + chữ đậm** (không dùng màu làm kênh duy nhất — theo ADR-001).
+2. **> 8 lựa chọn, hoặc danh sách động (Khách hàng, NCC, Item) → ô Tìm-và-Chọn có gõ để lọc**, chỉ
+   render tối đa ~50 dòng khớp. Cấm dropdown tĩnh dài bắt người dùng cuộn dò.
+3. **Không hy sinh A11y để đổi lấy vẻ hiện đại:** nhóm nút chọn dùng `role="radiogroup"` + `role="radio"`
+   (hoặc `<fieldset>`/`<legend>`), điều khiển được bằng phím mũi tên + `Space`/`Enter`, `aria-checked`
+   đúng trạng thái. **Cấm** `div @click` trần không role — đây là bẫy dễ mắc nhất khi làm "click chọn".
+4. **Thứ tự và tập lựa chọn lấy từ native** (Item Group tree, Item, BOM — xem ADR-005), không hardcode
+   trong Vue; thứ tự hiển thị phải trùng thứ tự nghiệp vụ thật.
+5. **Nhãn tự giải thích, không thêm prose:** nút phải tự nói nội dung (VD "Túi màng ghép (ghép 2–3 lớp)",
+   "In trục (làm trục mới)", "In lụa (dùng phôi có sẵn)"), không thêm dòng hướng dẫn dưới tiêu đề.
+
+### 7.1. Visual tuân thủ flow raw-data
+
+- Mỗi màn hình phải đi đúng trình tự nghiệp vụ có thật trong dữ liệu nguồn (`data/clean-data`) và
+  DocType native. Ví dụ luồng báo giá: **Khách → Nhóm sản phẩm → Quy cách (kích thước/đáy/độ dày) →
+  Vật liệu màng (theo BOM) → Trục in → Giá**.
+- Cấm bịa bước không có trong dữ liệu, cấm gộp/đảo bước vì lý do thẩm mỹ.
+- Bước không có dữ liệu thì **ẩn bước đó**, tuyệt đối không hiện bước rỗng (đồng nhất với mục 4.4
+  "Xóa sổ cột rác").
+
+### 7.2. Config của giao diện phải là native (ADR-005)
+
+- Danh sách lựa chọn, giá trị mặc định, label, thứ tự, ẩn/hiện **không được** viết trong Vue. Nguồn:
+  Custom Field / Property Setter (vào thẳng meta), **DocType Layout**, Data Masking, Website Theme.
+- Tiêu chí nghiệm thu: đổi một Custom Field hoặc DocType Layout trong Desk thì giao diện đổi theo
+  **không cần build lại**.

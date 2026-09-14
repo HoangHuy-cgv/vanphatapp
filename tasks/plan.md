@@ -13,6 +13,11 @@
   ném ReferenceError, chết hoàn toàn. Đã sửa, đã kiểm chứng trên Chrome thật.
 - **POC bỏ frappe-ui** (nhánh `poc/no-frappe-ui`): entry JS 145→49 kB gzip, CSS 54→6 kB gzip.
 - Ghim `frappe-ui` đúng `1.0.0-beta.64` (nhánh beta, stable vẫn là 0.1.278).
+- **ADR-005 (2026-09-14, em quyết định theo ủy quyền):** config native là SSOT của giao diện
+  (Custom Field/Property Setter/DocType Layout/Data Masking/Website Theme), code custom chỉ ở tầng
+  visual; giữ Modal 1 + Drawer 2, cấm portal list native cho Sales Order (frappe#42640 còn mở);
+  hoãn Frappe Studio tới khi đủ 3 điều kiện mở lại. UI spec §7 (§7.1 flow raw-data, §7.2 config native)
+  + DoD 13–15 đã chốt theo yêu cầu Sếp: không đào tạo, click-chọn thay dropdown, visual theo flow raw-data.
 
 ## Còn lại (chờ Sếp ra việc)
 1. **Quyền — rủi ro cao nhất**: 19/24 endpoint chưa có cổng quyền; `order.list_orders` và
@@ -20,8 +25,13 @@
    ghi cọc, duyệt ngoại lệ) không có role gate. Cần Sếp chốt **ai được làm gì**.
 2. **Chốt stack frontend**: xem số đo POC ở nhánh `poc/no-frappe-ui` rồi quyết
    (giữ frappe-ui ghim version / tự viết 3 component / theo reviewer đổi shadcn-vue).
-3. **Dọn logic client**: `vat_rate || 8`, `qty: 5000/100`, user cứng trong `useSession.js`,
-   toast báo thành công giả trong `useOrderDeposit.js` (baseline ratchet đang giữ).
+   ↳ Sếp đổi ưu tiên (2026-09-14): chỉ phân tích Studio trước, **không cài** — xem ADR-005.
+   Rà lại Studio khi đủ 3 điều kiện mở lại.
+3. **Rút config cứng trong Vue ra native (ADR-005):** vật liệu màng (`DrawerStep2Director.vue:59-120`),
+   default vật liệu (`useStep2DirectorForm.js:21`), 4 option nhóm SP (`ModalCreateOrder.vue:49-52`),
+   print_type (`ModalStep1Sale.vue:117-134,292`), nhóm + `qty` mặc định (`useCreateOrderForm.js:85,100,226,278`).
+   Dùng field native sẵn có (`custom_print_tech`, `custom_accessory_spec`); Custom Field mới phải kèm
+   ADR + mapping entry (AGENTS.md).
 4. **Vitest**: chưa cài được (máy này không ra được npm registry + `~/.npm` không ghi được).
 5. **Remote + push**: chưa có remote — Sếp cho URL + lệnh explicit.
 6. **Bench staging ERPNext thật**: import master data; đo **p95 thật cho `list_orders` (<200ms)**;
