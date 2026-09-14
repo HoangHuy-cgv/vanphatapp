@@ -4,7 +4,8 @@
 			<!-- Minimalist Cockpit Header -->
 			<div class="drawer-head">
 				<div class="head-left">
-					<span class="item-code-badge font-mono">{{ item ? item.item_code : '' }}</span>
+					<span v-if="item && item.customer_code" class="item-code-badge font-mono" :title="'Mã nội bộ: ' + (item.item_code || '')">{{ item.customer_code }}</span>
+					<span v-else class="item-code-badge font-mono" :title="'Mã nội bộ: ' + (item ? item.item_code : '')">{{ item ? (item.custom_alias || item.item_code) : '' }}</span>
 					<span v-if="item" class="supply-badge" :class="isMfg ? 'badge-mfg' : 'badge-buy'">
 						{{ isMfg ? 'Xưởng SX' : 'Mua ngoài' }}
 					</span>
@@ -32,14 +33,15 @@
 
 			<!-- Cockpit Body -->
 			<div v-else-if="item" class="drawer-body">
-				<!-- Hero: Name, Customer & Brand -->
+				<!-- Hero: Tên quen + mã biến thể KH (bảng con native); tên pháp lý + mã nội bộ chỉ tooltip -->
 				<div class="hero-block">
-					<div class="hero-title" :title="item.item_name || ''">
+					<div class="hero-title" :title="(item.item_name || '') + ' [' + (item.item_code || '') + ']'">
 						{{ item.custom_alias || item.item_name || '—' }}
 					</div>
-					<div v-if="item.customer || item.brand" class="hero-meta text-sm">
-						<span v-if="item.customer" class="text-primary font-medium">{{ item.customer }}</span>
-						<span v-if="item.customer && item.brand" class="meta-dot">•</span>
+					<div v-if="customerRefCode || (item.customer_items && item.customer_items.length) || item.brand" class="hero-meta text-sm">
+						<span v-if="customerRefCode" class="text-primary font-medium font-mono">{{ customerRefCode }}</span>
+						<span v-else-if="item.customer_items && item.customer_items.length" class="text-primary font-medium">{{ customerDisplayName }}</span>
+						<span v-if="(customerRefCode || (item.customer_items && item.customer_items.length)) && item.brand" class="meta-dot">•</span>
 						<span v-if="item.brand" class="text-secondary">{{ item.brand }}</span>
 					</div>
 				</div>
@@ -195,6 +197,22 @@ const isMfg = computed(() => {
 const cylinderCode = computed(() => {
 	if (!props.item) return '';
 	return props.item.custom_cylinder_item || props.item.custom_cylinder_code || '';
+});
+
+// Mã biến thể KH từ native: ưu tiên customer_code (ERPNext tự join),
+// fallback dòng con customer_items[0].ref_code (mock/API detail).
+const customerRefCode = computed(() => {
+	if (!props.item) return '';
+	if (props.item.customer_code) return props.item.customer_code;
+	const rows = props.item.customer_items;
+	if (Array.isArray(rows) && rows.length) return rows[0].ref_code || '';
+	return '';
+});
+
+const customerDisplayName = computed(() => {
+	const rows = props.item?.customer_items;
+	if (Array.isArray(rows) && rows.length) return rows[0].customer_name || '';
+	return '';
 });
 
 const hasCylinder = computed(() => {

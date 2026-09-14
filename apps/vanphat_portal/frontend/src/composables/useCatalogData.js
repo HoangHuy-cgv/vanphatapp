@@ -174,7 +174,7 @@ export function useCatalogData() {
 			case 'truc':
 				return 'Tìm mã trục, quy cách trục, sản phẩm...';
 			default:
-				return 'Tìm mã, tên, khách hàng, màng...';
+				return 'Tìm tên gọi, mã biến thể KH...';
 		}
 	});
 

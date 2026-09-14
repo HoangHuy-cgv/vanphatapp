@@ -102,8 +102,7 @@
 			<table class="data-table">
 				<thead>
 					<tr>
-						<th style="width: 14%;">Mã sản phẩm</th>
-						<th style="width: 27%;">Tên sản phẩm</th>
+						<th style="width: 35%;">Tên gọi quen</th>
 						<th style="width: 21%;">Chất liệu</th>
 						<th style="width: 20%;">Kích thước (R x D x Dày)</th>
 						<th style="width: 11%; text-align: center;">Đáy</th>
@@ -117,15 +116,13 @@
 						class="table-row cursor-pointer"
 						@click="openItemDetail(it)"
 					>
-						<!-- Mã sản phẩm -->
-						<td class="font-mono font-bold text-primary text-[14.5px]">
-							{{ it.item_code }}
-						</td>
-
-						<!-- Tên sản phẩm (chỉ dùng tên ngắn) -->
+						<!-- Tên gọi quen: alias lớn + mã biến thể KH (mã nội bộ chỉ tooltip backend) -->
 						<td>
-							<div class="font-semibold text-white leading-tight text-[15px]" :title="it.item_name || ''">
+							<div class="font-semibold text-white leading-tight text-[15px]" :title="(it.item_name || '') + ' [' + (it.item_code || '') + ']'">
 								{{ it.custom_alias || it.item_name || '—' }}
+							</div>
+							<div v-if="it.customer_code" class="font-mono text-primary text-[12.5px] leading-tight" :title="'Mã biến thể KH'">
+								{{ it.customer_code }}
 							</div>
 						</td>
 
@@ -155,7 +152,7 @@
 						</td>
 					</tr>
 					<tr v-if="filteredMasterItems.length === 0">
-						<td colspan="6" class="empty-cell">
+						<td colspan="5" class="empty-cell">
 							<div v-if="loadingMasterItems" class="cockpit-empty-state">
 								<span class="empty-msg">Đang tải danh mục từ ERPNext...</span>
 							</div>
