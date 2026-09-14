@@ -1,12 +1,14 @@
 # Handoff: Con Trỏ Vận Hành & Chuyển Giao Session
 
-- **Mã Commit Hiện Tại**: `66db3d2` (`refactor(agents): streamline AGENTS.md to Elon Musk minimalist behavior policy`)
+- **Mã Commit Hiện Tại**: `4022d83` (`refactor(orders): delegate order status determination to backend ERPNext API`)
 - **Trạng Thái CI/CD & Test**:
   - Test Suite `scripts/verify-catalog-page.mjs`: **86/86 checks PASSED 100%**.
   - Production Build: Vite build thành công sạch sẽ (bundle 72.28 kB gzip).
-  - Codebase Health: AGENTS.md tối giản Elon Musk (36 dòng), 100% quy chuẩn hành vi thuần túy cho Agent.
+  - Kiến Trúc SSOT: Cấu trúc 4 module chuẩn mực (`docs/specs/`), triệt tiêu 100% xung đột ngầm.
 - **Hạng Mục Đã Hoàn Thành**:
-  - Viết lại AGENTS.md theo hướng tối giản Elon Musk: Xóa bỏ thông tin thừa đã có trong code/docs, chỉ giữ rule/policy điều khiển agent.
-  - Ban hành tài liệu quy chuẩn pháp lệnh `docs/specs/ui-cockpit-baseline-spec.md` (5 Trụ cột Buồng Lái Van Phát).
+  - Hợp nhất Naming Series vào bảng mapping, chuẩn hóa mã tiếng Việt (`KH-`, `NCC-`, `DH-`, `BG-`, `MH-`), xóa `naming-series-spec.md` thừa.
+  - Làm sạch ký tự cấu trúc màng (`//` -> `/`, `PES` -> `PE sữa`) trên toàn bộ specs và fixtures.
+  - Ban hành `docs/specs/README.md` làm bản đồ Capability Map trung tâm, phân rã 4 module load on-demand.
+  - Chuyển logic tính trạng thái đơn hàng sang Backend Python API, đảm bảo Vue là thin presentation layer.
 - **Nhiệm Vụ Trọng Tâm Tiếp Theo**:
-  - Sẵn sàng áp dụng Baseline Buồng Lái để rà soát hoặc nâng cấp các trang tiếp theo theo chỉ đạo của Sếp.
+  - Sẵn sàng nhận chỉ đạo tiếp theo từ Sếp cho các phân hệ nghiệp vụ.
