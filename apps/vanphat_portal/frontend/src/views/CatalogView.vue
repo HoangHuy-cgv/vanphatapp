@@ -86,7 +86,7 @@
 			<button
 				type="button"
 				class="btn-new-quote whitespace-nowrap flex-shrink-0"
-				@click="handleAddNew"
+				@click="onAddNew"
 			>
 				{{ currentAddButtonLabel }}
 			</button>
@@ -167,7 +167,7 @@
 							</div>
 							<div v-else class="cockpit-empty-state">
 								<span class="empty-msg">Chưa có dữ liệu trong mục {{ currentTabLabel }}</span>
-								<button type="button" class="btn-empty-action btn-empty-primary" @click="handleAddNew">
+								<button type="button" class="btn-empty-action btn-empty-primary" @click="onAddNew">
 									{{ currentAddButtonLabel }}
 								</button>
 							</div>
@@ -239,7 +239,7 @@
 							</div>
 							<div v-else class="cockpit-empty-state">
 								<span class="empty-msg">Chưa có khách hàng nào trên hệ thống</span>
-								<button type="button" class="btn-empty-action btn-empty-primary" @click="handleAddNew">
+								<button type="button" class="btn-empty-action btn-empty-primary" @click="onAddNew">
 									+ Thêm khách hàng
 								</button>
 							</div>
@@ -311,7 +311,7 @@
 							</div>
 							<div v-else class="cockpit-empty-state">
 								<span class="empty-msg">Chưa có nhà cung cấp nào trên hệ thống</span>
-								<button type="button" class="btn-empty-action btn-empty-primary" @click="handleAddNew">
+								<button type="button" class="btn-empty-action btn-empty-primary" @click="onAddNew">
 									+ Thêm NCC
 								</button>
 							</div>
@@ -385,7 +385,7 @@
 							</div>
 							<div v-else class="cockpit-empty-state">
 								<span class="empty-msg">Chưa có người dùng nào trên hệ thống</span>
-								<button type="button" class="btn-empty-action btn-empty-primary" @click="handleAddNew">
+								<button type="button" class="btn-empty-action btn-empty-primary" @click="onAddNew">
 									+ Thêm người dùng
 								</button>
 							</div>
@@ -467,449 +467,91 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, nextTick, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import { useRoute } from 'vue-router';
 import DrawerItemDetail from '../components/DrawerItemDetail.vue';
 import DrawerCustomerDetail from '../components/DrawerCustomerDetail.vue';
 import DrawerSupplierDetail from '../components/DrawerSupplierDetail.vue';
 import DrawerUserDetail from '../components/DrawerUserDetail.vue';
-import { usePortalCounts } from '../composables/usePortalCounts';
-import { api } from '../composables/useSession';
 import { useCockpitFormat } from '../composables/useCockpitFormat';
+import { useCatalogData } from '../composables/useCatalogData';
 
 const route = useRoute();
-const { catalogCount } = usePortalCounts();
 // S7c: formatter dùng chung (giữ formatItemRate riêng vì empty '—' khác chuẩn)
 const { formatCurrency } = useCockpitFormat();
 const emit = defineEmits(['add-new']);
 
-// --- Table Container Ref & Scroll Reset ---
+// S7d: master loads + filters + pagination tách composable
+const catalog = useCatalogData();
+const {
+	masterItems,
+	loadingMasterItems,
+	activeCatalogTab,
+	activeItemTab,
+	itemSearchQuery,
+	currentPage,
+	pageSize,
+	totalMasterItems,
+	loadingCurrentTab,
+	currentTotalRecords,
+	totalPages,
+	startRecord,
+	endRecord,
+	refreshCurrentTabData,
+	prevPage,
+	nextPage,
+	handleKeyDown,
+	showItemDrawer,
+	selectedMasterItem,
+	selectedMasterBom,
+	loadingItemDetail,
+	customers,
+	loadingCustomers,
+	customerSearchQuery,
+	selectedCustomer,
+	showCustomerDrawer,
+	suppliers,
+	loadingSuppliers,
+	supplierSearchQuery,
+	selectedSupplier,
+	showSupplierDrawer,
+	users,
+	loadingUsers,
+	userSearchQuery,
+	selectedUser,
+	showUserDrawer,
+	syncTotalCount,
+	currentCatalogSearchPlaceholder,
+	currentAddButtonLabel,
+	catalogSearchInput,
+	switchCatalogTab,
+	switchItemTab,
+	currentTabMasterItems,
+	currentTabLabel,
+	filteredMasterItems,
+	filteredCustomers,
+	filteredSuppliers,
+	filteredUsers,
+	paginatedCustomers,
+	paginatedSuppliers,
+	paginatedUsers,
+	loadMasterItems,
+	openItemDetail,
+	loadCustomers,
+	openCustomerDetail,
+	loadSuppliers,
+	openSupplierDetail,
+	loadUsers,
+	openUserDetail,
+	loadAllCatalogData,
+} = catalog;
+
+function onAddNew() {
+	emit('add-new', catalog.handleAddNew());
+}
+
+// --- Table Container Ref (scroll reset nằm trong useCatalogData) ---
 const tableContainerRef = ref(null);
-
-function resetTableScroll() {
-	nextTick(() => {
-		const container = tableContainerRef.value || document.querySelector('.table-container');
-		if (container) {
-			container.scrollTop = 0;
-			container.scrollLeft = 0;
-		}
-	});
-}
-
-// --- Master Catalog (Items) States ---
-const masterItems = ref([]);
-const loadingMasterItems = ref(false);
-const activeCatalogTab = ref('sp'); // 'sp', 'nvl', 'truc', 'kh', 'ncc', 'user'
-const activeItemTab = activeCatalogTab; // backward-compatibility alias
-const itemSearchQuery = ref('');
-
-// --- Pagination State (Zero-Scroll 1080p: locked to 15 lines) ---
-const currentPage = ref(1);
-const pageSize = ref(15);
-const totalMasterItems = ref(0);
-
-const loadingCurrentTab = computed(() => {
-	if (['sp', 'nvl', 'truc'].includes(activeCatalogTab.value)) return loadingMasterItems.value;
-	if (activeCatalogTab.value === 'kh') return loadingCustomers.value;
-	if (activeCatalogTab.value === 'ncc') return loadingSuppliers.value;
-	return loadingUsers.value;
-});
-
-const currentTotalRecords = computed(() => {
-	if (['sp', 'nvl', 'truc'].includes(activeCatalogTab.value)) return totalMasterItems.value;
-	if (activeCatalogTab.value === 'kh') return filteredCustomers.value.length;
-	if (activeCatalogTab.value === 'ncc') return filteredSuppliers.value.length;
-	return filteredUsers.value.length;
-});
-
-const totalPages = computed(() => {
-	return Math.max(1, Math.ceil(currentTotalRecords.value / pageSize.value));
-});
-
-const startRecord = computed(() => {
-	if (currentTotalRecords.value === 0) return 0;
-	return (currentPage.value - 1) * pageSize.value + 1;
-});
-
-const endRecord = computed(() => {
-	return Math.min(currentPage.value * pageSize.value, currentTotalRecords.value);
-});
-
-function refreshCurrentTabData() {
-	resetTableScroll();
-	if (['sp', 'nvl', 'truc'].includes(activeCatalogTab.value)) {
-		loadMasterItems();
-	}
-}
-
-function prevPage() {
-	if (currentPage.value > 1 && !loadingCurrentTab.value) {
-		currentPage.value--;
-		refreshCurrentTabData();
-	}
-}
-
-function nextPage() {
-	if (currentPage.value < totalPages.value && !loadingCurrentTab.value) {
-		currentPage.value++;
-		refreshCurrentTabData();
-	}
-}
-
-function handleKeyDown(e) {
-	if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target?.tagName)) return;
-	if (e.key === '[') {
-		prevPage();
-	} else if (e.key === ']') {
-		nextPage();
-	}
-}
-
-const showItemDrawer = ref(false);
-const selectedMasterItem = ref(null);
-const selectedMasterBom = ref(null);
-const loadingItemDetail = ref(false);
-
-// --- Customers States ---
-const customers = ref([]);
-const loadingCustomers = ref(false);
-const customerSearchQuery = ref('');
-const selectedCustomer = ref(null);
-const showCustomerDrawer = ref(false);
-
-// --- Suppliers States ---
-const suppliers = ref([]);
-const loadingSuppliers = ref(false);
-const supplierSearchQuery = ref('');
-const selectedSupplier = ref(null);
-const showSupplierDrawer = ref(false);
-
-// --- Users States ---
-const users = ref([]);
-const loadingUsers = ref(false);
-const userSearchQuery = ref('');
-const selectedUser = ref(null);
-const showUserDrawer = ref(false);
-
-// --- Unified Catalog Computed & Helpers ---
-const catalogTotalCount = computed(() => {
-	return masterItems.value.length + customers.value.length + suppliers.value.length + users.value.length;
-});
-
-function syncTotalCount() {
-	catalogCount.value = catalogTotalCount.value;
-}
-
-const currentCatalogSearchPlaceholder = computed(() => {
-	switch (activeCatalogTab.value) {
-		case 'kh':
-			return 'Tìm tên gọi tắt, tên pháp nhân, MST, mã KH...';
-		case 'ncc':
-			return 'Tìm tên tắt, pháp nhân, MST, nhóm NCC...';
-		case 'user':
-			return 'Tìm SĐT đăng nhập, họ tên, phòng ban, vai trò...';
-		case 'nvl':
-			return 'Tìm mã NVL, tên màng, keo, hóa chất...';
-		case 'truc':
-			return 'Tìm mã trục, quy cách trục, sản phẩm...';
-		default:
-			return 'Tìm mã, tên, khách hàng, màng...';
-	}
-});
-
-const currentAddButtonLabel = computed(() => {
-	switch (activeCatalogTab.value) {
-		case 'sp':
-			return '+ Thêm sản phẩm';
-		case 'nvl':
-			return '+ Thêm NVL';
-		case 'truc':
-			return '+ Thêm trục in';
-		case 'kh':
-			return '+ Thêm khách hàng';
-		case 'ncc':
-			return '+ Thêm NCC';
-		case 'user':
-			return '+ Thêm người dùng';
-		default:
-			return '+ Thêm mới';
-	}
-});
-
-function handleAddNew() {
-	emit('add-new', { tab: activeCatalogTab.value });
-}
-
-const catalogSearchInput = computed({
-	get() {
-		if (activeCatalogTab.value === 'kh') return customerSearchQuery.value;
-		if (activeCatalogTab.value === 'ncc') return supplierSearchQuery.value;
-		if (activeCatalogTab.value === 'user') return userSearchQuery.value;
-		return itemSearchQuery.value;
-	},
-	set(val) {
-		if (activeCatalogTab.value === 'kh') customerSearchQuery.value = val;
-		else if (activeCatalogTab.value === 'ncc') supplierSearchQuery.value = val;
-		else if (activeCatalogTab.value === 'user') userSearchQuery.value = val;
-		else itemSearchQuery.value = val;
-	}
-});
-
-function switchCatalogTab(tabKey) {
-	activeCatalogTab.value = tabKey;
-}
-
-let itemSearchTimer = null;
-watch(itemSearchQuery, () => {
-	clearTimeout(itemSearchTimer);
-	itemSearchTimer = setTimeout(() => {
-		currentPage.value = 1;
-		if (['sp', 'nvl', 'truc'].includes(activeCatalogTab.value)) {
-			loadMasterItems();
-		}
-	}, 250);
-});
-
-watch([customerSearchQuery, supplierSearchQuery, userSearchQuery], () => {
-	currentPage.value = 1;
-});
-
-watch(activeCatalogTab, (newTab) => {
-	currentPage.value = 1;
-	resetTableScroll();
-	if (['sp', 'nvl', 'truc'].includes(newTab)) {
-		loadMasterItems();
-	} else if (newTab === 'kh') {
-		loadCustomers();
-	} else if (newTab === 'ncc') {
-		loadSuppliers();
-	} else if (newTab === 'user') {
-		loadUsers();
-	}
-});
-
-function switchItemTab(tabKey) {
-	switchCatalogTab(tabKey);
-}
-
-const currentTabMasterItems = computed(() => masterItems.value);
-
-const currentTabLabel = computed(() => {
-	const map = {
-		sp: 'Sản phẩm',
-		nvl: 'Nguyên vật liệu',
-		truc: 'Trục in',
-		kh: 'Khách hàng',
-		ncc: 'Nhà cung cấp',
-		user: 'Người dùng',
-	};
-	return map[activeCatalogTab.value] || 'mặt hàng';
-});
-
-const filteredMasterItems = computed(() => masterItems.value);
-
-const paginatedCustomers = computed(() => {
-	const start = (currentPage.value - 1) * pageSize.value;
-	return filteredCustomers.value.slice(start, start + pageSize.value);
-});
-
-const paginatedSuppliers = computed(() => {
-	const start = (currentPage.value - 1) * pageSize.value;
-	return filteredSuppliers.value.slice(start, start + pageSize.value);
-});
-
-const paginatedUsers = computed(() => {
-	const start = (currentPage.value - 1) * pageSize.value;
-	return filteredUsers.value.slice(start, start + pageSize.value);
-});
-
-function formatItemRate(val) {
-	if (!val && val !== 0) return '—';
-	return new Intl.NumberFormat('vi-VN').format(Math.round(val)) + ' đ';
-}
-
-function getItemDimensionsText(it) {
-	if (!it) return '—';
-	const w = Number(it.custom_pouch_width_mm) || 0;
-	const l = Number(it.custom_pouch_length_mm) || 0;
-	const thick = Number(it.custom_thickness_mic) || 0;
-	if (w > 0 && l > 0) {
-		if (thick > 0) return `${w} x ${l} mm x ${thick} mic`;
-		return `${w} x ${l} mm`;
-	}
-	const rollW = Number(it.custom_film_width_mm) || 0;
-	if (rollW > 0) {
-		if (thick > 0) return `Khổ ${rollW} mm x ${thick} mic`;
-		return `Khổ ${rollW} mm`;
-	}
-	const cylL = Number(it.custom_cylinder_length_mm) || 0;
-	const cylC = Number(it.custom_cylinder_circ_mm) || 0;
-	if (cylL > 0 || cylC > 0) return `Dài ${cylL} x CV ${cylC} mm`;
-	return it.description || '—';
-}
-
-function getItemGussetText(it) {
-	if (!it) return null;
-	const g = Number(it.custom_gusset_mm) || 0;
-	if (g > 0) return `${g} mm`;
-	return null;
-}
-
-function getItemPouchDims(it) {
-	return getItemDimensionsText(it);
-}
-
-async function loadMasterItems() {
-	loadingMasterItems.value = true;
-	try {
-		const data = await api('item.get_list', {
-			category: activeItemTab.value,
-			query: itemSearchQuery.value.trim() || undefined,
-			page: currentPage.value,
-			page_length: pageSize.value,
-		}, { get: true });
-		if (data && Array.isArray(data.items)) {
-			masterItems.value = data.items;
-			totalMasterItems.value = data.total_count ?? data.items.length;
-			currentPage.value = data.page ?? currentPage.value;
-		} else if (Array.isArray(data)) {
-			masterItems.value = data;
-			totalMasterItems.value = data.length;
-		}
-	} catch (err) {
-		console.error('Error loading master items:', err);
-	}
-	syncTotalCount();
-	loadingMasterItems.value = false;
-}
-
-async function openItemDetail(item) {
-	selectedMasterItem.value = item;
-	selectedMasterBom.value = null;
-	showItemDrawer.value = true;
-	loadingItemDetail.value = true;
-	try {
-		const data = await api('vanphat_portal.api.item.get_detail', { item_code: item.item_code }, { get: true });
-		if (data) {
-			if (data.item) selectedMasterItem.value = data.item;
-			selectedMasterBom.value = data.bom || null;
-		}
-	} catch (e) {
-		// keep selected item
-	}
-	loadingItemDetail.value = false;
-}
-
-// --- Customer Methods ---
-async function loadCustomers() {
-	loadingCustomers.value = true;
-	try {
-		const data = await api('vanphat_portal.api.customer.get_list', {}, { get: true });
-		if (Array.isArray(data)) {
-			customers.value = data;
-		}
-	} catch (e) {
-		console.error('Error loading customers:', e);
-	}
-	syncTotalCount();
-	loadingCustomers.value = false;
-}
-
-function openCustomerDetail(c) {
-	selectedCustomer.value = c;
-	showCustomerDrawer.value = true;
-}
-
-const filteredCustomers = computed(() => {
-	const q = customerSearchQuery.value.trim().toLowerCase();
-	if (!q) return customers.value;
-	return customers.value.filter(c =>
-		(c.name && c.name.toLowerCase().includes(q)) ||
-		(c.customer_name && c.customer_name.toLowerCase().includes(q)) ||
-		(c.alias && c.alias.toLowerCase().includes(q)) ||
-		(c.customer_group && c.customer_group.toLowerCase().includes(q)) ||
-		(c.territory && c.territory.toLowerCase().includes(q)) ||
-		(c.payment_terms && c.payment_terms.toLowerCase().includes(q)) ||
-		(c.tax_id && c.tax_id.toLowerCase().includes(q))
-	);
-});
-
-// --- Supplier Methods ---
-async function loadSuppliers() {
-	loadingSuppliers.value = true;
-	try {
-		const data = await api('vanphat_portal.api.supplier.get_list', {}, { get: true });
-		if (Array.isArray(data)) {
-			suppliers.value = data;
-		}
-	} catch (e) {
-		console.error('Error loading suppliers:', e);
-	}
-	syncTotalCount();
-	loadingSuppliers.value = false;
-}
-
-function openSupplierDetail(s) {
-	selectedSupplier.value = s;
-	showSupplierDrawer.value = true;
-}
-
-const filteredSuppliers = computed(() => {
-	const q = supplierSearchQuery.value.trim().toLowerCase();
-	if (!q) return suppliers.value;
-	return suppliers.value.filter(s =>
-		(s.name && s.name.toLowerCase().includes(q)) ||
-		(s.supplier_name && s.supplier_name.toLowerCase().includes(q)) ||
-		(s.alias && s.alias.toLowerCase().includes(q)) ||
-		(s.supplier_group && s.supplier_group.toLowerCase().includes(q)) ||
-		(s.payment_terms && s.payment_terms.toLowerCase().includes(q)) ||
-		(s.tax_id && s.tax_id.toLowerCase().includes(q))
-	);
-});
-
-// --- User Methods ---
-async function loadUsers() {
-	loadingUsers.value = true;
-	try {
-		const data = await api('vanphat_portal.api.user.get_list', {}, { get: true });
-		if (Array.isArray(data)) {
-			users.value = data;
-		}
-	} catch (e) {
-		console.error('Error loading users:', e);
-	}
-	syncTotalCount();
-	loadingUsers.value = false;
-}
-
-function openUserDetail(u) {
-	selectedUser.value = u;
-	showUserDrawer.value = true;
-}
-
-const filteredUsers = computed(() => {
-	const q = userSearchQuery.value.trim().toLowerCase();
-	if (!q) return users.value;
-	return users.value.filter(u =>
-		(u.name && u.name.toLowerCase().includes(q)) ||
-		(u.full_name && u.full_name.toLowerCase().includes(q)) ||
-		(u.email && u.email.toLowerCase().includes(q)) ||
-		(u.mobile_no && u.mobile_no.includes(q)) ||
-		(u.department && u.department.toLowerCase().includes(q)) ||
-		(u.designation && u.designation.toLowerCase().includes(q)) ||
-		(u.role_profile_name && u.role_profile_name.toLowerCase().includes(q))
-	);
-});
-
-async function loadAllCatalogData() {
-	await Promise.all([
-		loadMasterItems(),
-		loadCustomers(),
-		loadSuppliers(),
-		loadUsers()
-	]);
-	syncTotalCount();
-}
 
 onMounted(async () => {
 	window.addEventListener('keydown', handleKeyDown);
@@ -974,7 +616,7 @@ defineExpose({
 	openCustomerDetail,
 	openSupplierDetail,
 	openUserDetail,
-	handleAddNew,
+	handleAddNew: onAddNew,
 	currentAddButtonLabel,
 });
 </script>
