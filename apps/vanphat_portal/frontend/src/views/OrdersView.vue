@@ -545,7 +545,9 @@ defineExpose({
 }
 
 .font-mono {
-	font-family: 'JetBrains Mono', monospace;
+	font-family: inherit;
+	font-variant-numeric: tabular-nums;
+	font-feature-settings: "tnum";
 }
 
 .deposit-mini-cell {

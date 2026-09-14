@@ -1109,7 +1109,9 @@ const formatCurrency = (val) => {
 	text-align: center;
 }
 .font-mono {
-	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+	font-family: inherit;
+	font-variant-numeric: tabular-nums;
+	font-feature-settings: "tnum";
 }
 .text-cyan {
 	color: #38bdf8;

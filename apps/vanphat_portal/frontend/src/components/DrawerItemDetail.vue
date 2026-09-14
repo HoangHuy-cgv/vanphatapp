@@ -662,8 +662,11 @@ onUnmounted(() => {
 .text-secondary { color: #8b949e; }
 .text-emerald { color: #34d399; }
 .text-amber { color: #f59e0b; }
-.text-red { color: #f87171; }
-.font-mono { font-family: monospace; }
+.font-mono {
+	font-family: inherit;
+	font-variant-numeric: tabular-nums;
+	font-feature-settings: "tnum";
+}
 .text-num { font-variant-numeric: tabular-nums; }
 .truncate {
 	overflow: hidden;
