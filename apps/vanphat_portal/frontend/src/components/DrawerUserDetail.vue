@@ -1,7 +1,6 @@
 <template>
-	<Teleport to="body">
-		<div v-if="isOpen" class="drawer-overlay" @click.self="$emit('close')">
-		<aside ref="drawerPanel" class="drawer-panel" role="dialog" aria-modal="true" aria-label="Chi tiết người dùng">
+	<BaseDrawer :open="isOpen" label="Chi tiết người dùng" @close="$emit('close')">
+		<div class="drawer-panel">
 			<!-- Header -->
 			<div class="drawer-head">
 				<div class="head-left">
@@ -89,14 +88,13 @@
 					</div>
 				</div>
 			</div>
-		</aside>
 		</div>
-	</Teleport>
+	</BaseDrawer>
 </template>
 
 <script setup>
 import { computed } from 'vue';
-import { useDrawerDialog } from '../composables/useDrawerDialog';
+import BaseDrawer from './BaseDrawer.vue';
 
 const props = defineProps({
 	isOpen: {
@@ -117,41 +115,19 @@ const parsedRoles = computed(() => {
 	return r.split(',').map(x => x.trim()).filter(Boolean);
 });
 
-// S10: Esc + focus trap/restore dùng chung
-const { panelRef: drawerPanel } = useDrawerDialog(null, emit);
+// P4 thí điểm: BaseDrawer native <dialog> lo Esc/focus/inert — xóa composable thủ công
 </script>
 
 <style scoped>
-.drawer-overlay {
-	position: fixed;
-	inset: 0;
-	z-index: 999;
-	background: rgba(0, 0, 0, 0.65);
-	backdrop-filter: blur(2px);
-	display: flex;
-	justify-content: flex-end;
-}
-
+/* P4: overlay/backdrop/focus do native <dialog> + BaseDrawer lo — chỉ giữ panel nội dung */
 .drawer-panel {
 	width: 500px;
 	max-width: 100vw;
-	height: 100vh;
+	min-height: 100%;
 	background: #161b22;
-	border-left: 1px solid #3a424e;
-	box-shadow: -8px 0 32px rgba(0, 0, 0, 0.6);
 	display: flex;
 	flex-direction: column;
-	animation: slideInRight 0.22s ease-out;
 	overflow-y: auto;
-}
-
-@keyframes slideInRight {
-	from {
-		transform: translateX(100%);
-	}
-	to {
-		transform: translateX(0);
-	}
 }
 
 .drawer-head {
