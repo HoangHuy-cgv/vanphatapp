@@ -1,252 +1,252 @@
-﻿bom_no,item_code,item_name,qty,uom,scrap_pct,note
-BOM-BTP-00001-001,NVL-00028,Cuộn màng PET in ống đồng mẫu 888 Phấn Thơm khổ 800mm,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
-BOM-BTP-00001-001,NVL-00004,Cuộn màng PE sữa khổ 750mm dày 190mic,144.2,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (144.2 Kg)
-BOM-BTP-00001-001,NVL-00009,Cuộn màng PA khổ 800mm dày 15mic,14.1,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (14.1 Kg)
-BOM-BTP-00001-001,NVL-00025,Keo ghép màng Polyurethane D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
-BOM-BTP-00001-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
-BOM-BTP-00001-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
-BOM-BTP-00002-001,NVL-00029,Cuộn màng PET in ống đồng mẫu 888 Huyền Bí Xanh khổ 800mm,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
-BOM-BTP-00002-001,NVL-00004,Cuộn màng PE sữa khổ 750mm dày 190mic,144.2,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (144.2 Kg)
-BOM-BTP-00002-001,NVL-00009,Cuộn màng PA khổ 800mm dày 15mic,14.1,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (14.1 Kg)
-BOM-BTP-00002-001,NVL-00025,Keo ghép màng Polyurethane D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
-BOM-BTP-00002-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
-BOM-BTP-00002-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
-BOM-BTP-00003-001,NVL-00030,Cuộn màng PET in ống đồng mẫu 888 Đam Mê Đỏ khổ 800mm,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
-BOM-BTP-00003-001,NVL-00004,Cuộn màng PE sữa khổ 750mm dày 190mic,144.2,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (144.2 Kg)
-BOM-BTP-00003-001,NVL-00009,Cuộn màng PA khổ 800mm dày 15mic,14.1,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (14.1 Kg)
-BOM-BTP-00003-001,NVL-00025,Keo ghép màng Polyurethane D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
-BOM-BTP-00003-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
-BOM-BTP-00003-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
-BOM-BTP-00004-001,NVL-00031,Cuộn màng PET in ống đồng mẫu NGCS Đỏ - Tím khổ 800mm,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
-BOM-BTP-00004-001,NVL-00004,Cuộn màng PE sữa khổ 750mm dày 190mic,144.2,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (144.2 Kg)
-BOM-BTP-00004-001,NVL-00009,Cuộn màng PA khổ 800mm dày 15mic,14.1,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (14.1 Kg)
-BOM-BTP-00004-001,NVL-00025,Keo ghép màng Polyurethane D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
-BOM-BTP-00004-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
-BOM-BTP-00004-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
-BOM-BTP-00005-001,NVL-00032,Cuộn màng PET in ống đồng mẫu NGCS Hồng - Xanh khổ 800mm,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
-BOM-BTP-00005-001,NVL-00004,Cuộn màng PE sữa khổ 750mm dày 190mic,144.2,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (144.2 Kg)
-BOM-BTP-00005-001,NVL-00009,Cuộn màng PA khổ 800mm dày 15mic,14.1,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (14.1 Kg)
-BOM-BTP-00005-001,NVL-00025,Keo ghép màng Polyurethane D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
-BOM-BTP-00005-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
-BOM-BTP-00005-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
-BOM-BTP-00006-001,NVL-00033,Cuộn màng PET in ống đồng mẫu Minh Râu Tím khổ 780mm,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
-BOM-BTP-00006-001,NVL-00003,Cuộn màng PE sữa khổ 740mm dày 190mic,140.6,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (140.6 Kg)
-BOM-BTP-00006-001,NVL-00008,Cuộn màng PA khổ 760mm dày 15mic,13.7,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (13.7 Kg)
-BOM-BTP-00006-001,NVL-00025,Keo ghép màng Polyurethane D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
-BOM-BTP-00006-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
-BOM-BTP-00006-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
-BOM-BTP-00007-001,NVL-00034,Cuộn màng PET in ống đồng mẫu TopGia 2L khổ 750mm,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
-BOM-BTP-00007-001,NVL-00004,Cuộn màng PE sữa khổ 750mm dày 190mic,135.2,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (135.2 Kg)
-BOM-BTP-00007-001,NVL-00009,Cuộn màng PA khổ 800mm dày 15mic,13.2,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (13.2 Kg)
-BOM-BTP-00007-001,NVL-00025,Keo ghép màng Polyurethane D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
-BOM-BTP-00007-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
-BOM-BTP-00007-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
-BOM-BTP-00008-001,NVL-00035,Cuộn màng PET in ống đồng mẫu Softy 3L Nền Tím khổ 800mm,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
-BOM-BTP-00008-001,NVL-00004,Cuộn màng PE sữa khổ 750mm dày 190mic,144.2,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (144.2 Kg)
-BOM-BTP-00008-001,NVL-00009,Cuộn màng PA khổ 800mm dày 15mic,14.1,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (14.1 Kg)
-BOM-BTP-00008-001,NVL-00025,Keo ghép màng Polyurethane D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
-BOM-BTP-00008-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
-BOM-BTP-00008-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
-BOM-BTP-00009-001,NVL-00036,Cuộn màng PET in ống đồng FUTA Xanh mặt trước khổ 900mm,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
-BOM-BTP-00009-001,NVL-00004,Cuộn màng PE sữa khổ 750mm dày 190mic,162.2,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (162.2 Kg)
-BOM-BTP-00009-001,NVL-00009,Cuộn màng PA khổ 800mm dày 15mic,15.8,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (15.8 Kg)
-BOM-BTP-00009-001,NVL-00025,Keo ghép màng Polyurethane D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
-BOM-BTP-00009-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
-BOM-BTP-00009-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
-BOM-BTP-00010-001,NVL-00037,Cuộn màng PET in ống đồng FUTA Xanh mặt sau khổ 900mm,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
-BOM-BTP-00010-001,NVL-00004,Cuộn màng PE sữa khổ 750mm dày 190mic,162.2,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (162.2 Kg)
-BOM-BTP-00010-001,NVL-00009,Cuộn màng PA khổ 800mm dày 15mic,15.8,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (15.8 Kg)
-BOM-BTP-00010-001,NVL-00025,Keo ghép màng Polyurethane D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
-BOM-BTP-00010-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
-BOM-BTP-00010-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
-BOM-BTP-00011-001,NVL-00038,Cuộn màng PET in ống đồng FUTA Tím mặt trước khổ 900mm,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
-BOM-BTP-00011-001,NVL-00004,Cuộn màng PE sữa khổ 750mm dày 190mic,162.2,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (162.2 Kg)
-BOM-BTP-00011-001,NVL-00009,Cuộn màng PA khổ 800mm dày 15mic,15.8,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (15.8 Kg)
-BOM-BTP-00011-001,NVL-00025,Keo ghép màng Polyurethane D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
-BOM-BTP-00011-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
-BOM-BTP-00011-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
-BOM-BTP-00012-001,NVL-00039,Cuộn màng PET in ống đồng FUTA Tím mặt sau khổ 900mm,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
-BOM-BTP-00012-001,NVL-00004,Cuộn màng PE sữa khổ 750mm dày 190mic,162.2,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (162.2 Kg)
-BOM-BTP-00012-001,NVL-00009,Cuộn màng PA khổ 800mm dày 15mic,15.8,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (15.8 Kg)
-BOM-BTP-00012-001,NVL-00025,Keo ghép màng Polyurethane D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
-BOM-BTP-00012-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
-BOM-BTP-00012-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
-BOM-BTP-00013-001,NVL-00028,Cuộn màng PET in ống đồng mẫu 888 Phấn Thơm khổ 800mm,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
-BOM-BTP-00013-001,NVL-00001,Cuộn màng PE sữa khổ 700mm dày 160mic,27.3,Kg,2.0,Màng PE sữa hàn dán dày 160mic mua từ máy thổi (27.3 Kg)
-BOM-BTP-00013-001,NVL-00025,Keo ghép màng Polyurethane D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
-BOM-BTP-00013-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
-BOM-BTP-00013-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
-BOM-BTP-00014-001,NVL-00045,Cuộn màng PET in ống đồng mẫu BABA 3.6Kg khổ 800mm,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
-BOM-BTP-00014-001,NVL-00004,Cuộn màng PE sữa khổ 750mm dày 190mic,144.2,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (144.2 Kg)
-BOM-BTP-00014-001,NVL-00009,Cuộn màng PA khổ 800mm dày 15mic,14.1,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (14.1 Kg)
-BOM-BTP-00014-001,NVL-00018,Cuộn màng MPET khổ 800mm dày 12mic,13.7,Kg,2.0,Lớp màng MPET mạ nhôm cản sáng 12mic (13.7 Kg)
-BOM-BTP-00014-001,NVL-00025,Keo ghép màng Polyurethane D-9700,2.0,Kg,0.0,Keo polyurethane ghép màng khô (2.0 Kg)
-BOM-BTP-00014-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,2.0,Kg,0.0,Chất đóng rắn Isocyanate (2.0 Kg)
-BOM-BTP-00014-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),8.0,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (8.0 Kg)
-BOM-BTP-00015-001,NVL-00046,Cuộn màng PET in ống đồng mẫu thực phẩm Năm Tàu khổ 800mm,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
-BOM-BTP-00015-001,NVL-00004,Cuộn màng PE sữa khổ 750mm dày 190mic,144.2,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (144.2 Kg)
-BOM-BTP-00015-001,NVL-00009,Cuộn màng PA khổ 800mm dày 15mic,14.1,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (14.1 Kg)
-BOM-BTP-00015-001,NVL-00025,Keo ghép màng Polyurethane D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
-BOM-BTP-00015-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
-BOM-BTP-00015-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
-BOM-BTP-00016-001,NVL-00047,Cuộn màng PET in ống đồng mẫu TopGia 1L Đắm Say khổ 750mm,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
-BOM-BTP-00016-001,NVL-00004,Cuộn màng PE sữa khổ 750mm dày 190mic,135.2,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (135.2 Kg)
-BOM-BTP-00016-001,NVL-00009,Cuộn màng PA khổ 800mm dày 15mic,13.2,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (13.2 Kg)
-BOM-BTP-00016-001,NVL-00025,Keo ghép màng Polyurethane D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
-BOM-BTP-00016-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
-BOM-BTP-00016-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
-BOM-TP-00001-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00001-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00001-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
-BOM-TP-00002-001,BTP-00002,Cuộn màng ghép PET/PA/PE 3 lớp 888 Huyền Bí Xanh khổ 800mm,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00002-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00002-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
-BOM-TP-00003-001,BTP-00003,Cuộn màng ghép PET/PA/PE 3 lớp 888 Đam Mê Đỏ khổ 800mm,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00003-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00003-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
-BOM-TP-00004-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,246.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 480.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00004-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00004-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
-BOM-TP-00005-001,BTP-00002,Cuộn màng ghép PET/PA/PE 3 lớp 888 Huyền Bí Xanh khổ 800mm,246.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 480.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00005-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00005-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
-BOM-TP-00006-001,BTP-00003,Cuộn màng ghép PET/PA/PE 3 lớp 888 Đam Mê Đỏ khổ 800mm,246.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 480.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00006-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00006-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
-BOM-TP-00007-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,174.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 340.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00007-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00007-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
-BOM-TP-00008-001,BTP-00002,Cuộn màng ghép PET/PA/PE 3 lớp 888 Huyền Bí Xanh khổ 800mm,174.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 340.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00008-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00008-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
-BOM-TP-00009-001,BTP-00003,Cuộn màng ghép PET/PA/PE 3 lớp 888 Đam Mê Đỏ khổ 800mm,174.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 340.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00009-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00009-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
-BOM-TP-00010-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,174.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 340.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00010-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00010-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
-BOM-TP-00011-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,174.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 340.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00011-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00011-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
-BOM-TP-00012-001,BTP-00006,Cuộn màng ghép PET/PA/PE 3 lớp Minh Râu Tím khổ 780mm,289.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 564.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00012-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00012-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
-BOM-TP-00013-001,BTP-00006,Cuộn màng ghép PET/PA/PE 3 lớp Minh Râu Tím khổ 780mm,289.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 564.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00013-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00013-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
-BOM-TP-00014-001,BTP-00007,Cuộn màng ghép PET/PA/PE 3 lớp TopGia 2L khổ 750mm,246.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 480.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00014-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00014-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
-BOM-TP-00015-001,BTP-00007,Cuộn màng ghép PET/PA/PE 3 lớp TopGia 2L khổ 750mm,246.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 480.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00015-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00015-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
-BOM-TP-00016-001,BTP-00014,Cuộn màng ghép 4 lớp BABA 3.6Kg khổ 800mm,297.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 580.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00016-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00016-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
-BOM-TP-00017-001,BTP-00008,Cuộn màng ghép PET/PA/PE 3 lớp Softy 3L khổ 800mm,307.5,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 600.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00017-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00017-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
-BOM-TP-00019-001,BTP-00007,Cuộn màng ghép PET/PA/PE 3 lớp TopGia 2L khổ 750mm,246.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 480.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00019-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
-BOM-TP-00020-001,BTP-00016,Cuộn màng ghép TopGia 1L Đắm Say khổ 750mm,215.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 420.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00020-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00020-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
-BOM-TP-00021-001,BTP-00016,Cuộn màng ghép TopGia 1L Đắm Say khổ 750mm,215.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 420.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00021-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00021-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
-BOM-TP-00022-001,BTP-00008,Cuộn màng ghép PET/PA/PE 3 lớp Softy 3L khổ 800mm,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00022-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00022-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
-BOM-TP-00023-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00023-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00023-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
-BOM-TP-00024-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,174.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 340.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00024-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00024-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
-BOM-TP-00025-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,174.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 340.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00025-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00025-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
-BOM-TP-00026-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,246.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 480.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00026-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00026-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
-BOM-TP-00027-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,174.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 340.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00027-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00027-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
-BOM-TP-00028-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00028-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00028-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
-BOM-TP-00029-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00029-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00029-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
-BOM-TP-00030-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00030-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00030-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
-BOM-TP-00031-001,BTP-00003,Cuộn màng ghép PET/PA/PE 3 lớp 888 Đam Mê Đỏ khổ 800mm,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00031-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00031-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
-BOM-TP-00032-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00032-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00032-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
-BOM-TP-00033-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00033-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00033-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
-BOM-TP-00034-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00034-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00034-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
-BOM-TP-00035-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,246.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 480.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00035-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00035-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
-BOM-TP-00036-001,BTP-00009,Cuộn màng ghép PET/PA/PE 3 lớp FUTA Xanh mặt trước khổ 900mm,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00036-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00036-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
-BOM-TP-00037-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00037-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00037-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
-BOM-TP-00045-001,BTP-00015,Cuộn màng ghép thực phẩm Năm Tàu khổ 800mm,246.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 480.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-TP-00045-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-TP-00045-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
-BOM-NGCS-00001-001,BTP-00004,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Đỏ - Tím khổ 800mm,246.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 480.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-NGCS-00001-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-NGCS-00001-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
-BOM-NGCS-00002-001,BTP-00005,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Hồng - Xanh khổ 800mm,246.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 480.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-NGCS-00002-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-NGCS-00002-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
-BOM-NGCS-00003-001,BTP-00004,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Đỏ - Tím khổ 800mm,246.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 480.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-NGCS-00003-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-NGCS-00003-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
-BOM-NGCS-00004-001,BTP-00005,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Hồng - Xanh khổ 800mm,246.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 480.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-NGCS-00004-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-NGCS-00004-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
-BOM-NGCS-00005-001,BTP-00004,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Đỏ - Tím khổ 800mm,246.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 480.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-NGCS-00005-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-NGCS-00005-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
-BOM-NGCS-00006-001,BTP-00004,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Đỏ - Tím khổ 800mm,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-NGCS-00006-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-NGCS-00006-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
-BOM-NGCS-00007-001,BTP-00005,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Hồng - Xanh khổ 800mm,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-NGCS-00007-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-NGCS-00007-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
-BOM-NGCS-00008-001,BTP-00004,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Đỏ - Tím khổ 800mm,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-NGCS-00008-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-NGCS-00008-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
-BOM-NGCS-00009-001,BTP-00005,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Hồng - Xanh khổ 800mm,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-NGCS-00009-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-NGCS-00009-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
-BOM-NGCS-00010-001,BTP-00004,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Đỏ - Tím khổ 800mm,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-NGCS-00010-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-NGCS-00010-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
-BOM-NGCS-00011-001,BTP-00004,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Đỏ - Tím khổ 800mm,297.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 580.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-NGCS-00011-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-NGCS-00011-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
-BOM-NGCS-00012-001,BTP-00005,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Hồng - Xanh khổ 800mm,297.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 580.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-NGCS-00012-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-NGCS-00012-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
-BOM-NGCS-00013-001,BTP-00004,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Đỏ - Tím khổ 800mm,297.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 580.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-NGCS-00013-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-NGCS-00013-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
-BOM-NGCS-00014-001,BTP-00005,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Hồng - Xanh khổ 800mm,297.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 580.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-NGCS-00014-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-NGCS-00014-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
-BOM-NGCS-00015-001,BTP-00004,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Đỏ - Tím khổ 800mm,297.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 580.0mm x 1.000 túi + 2.5% hao hụt)
-BOM-NGCS-00015-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
-BOM-NGCS-00015-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
+﻿bom_no,item_code,item_name,custom_alias,qty,uom,scrap_pct,note
+BOM-BTP-00001-001,NVL-00028,Cuộn màng PET in ống đồng mẫu 888 Phấn Thơm khổ 800mm,PET in 888 Phấn Thơm,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
+BOM-BTP-00001-001,NVL-00004,Cuộn màng PE sữa khổ 750mm dày 190mic,PE sữa K750 190mic,144.2,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (144.2 Kg)
+BOM-BTP-00001-001,NVL-00009,Cuộn màng PA khổ 800mm dày 15mic,PA K800 15mic,14.1,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (14.1 Kg)
+BOM-BTP-00001-001,NVL-00025,Keo ghép màng Polyurethane D-9700,Keo D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
+BOM-BTP-00001-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,Chất Đóng Rắn CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
+BOM-BTP-00001-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),Dung Môi EA,4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
+BOM-BTP-00002-001,NVL-00029,Cuộn màng PET in ống đồng mẫu 888 Huyền Bí Xanh khổ 800mm,PET in 888 Huyền Bí,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
+BOM-BTP-00002-001,NVL-00004,Cuộn màng PE sữa khổ 750mm dày 190mic,PE sữa K750 190mic,144.2,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (144.2 Kg)
+BOM-BTP-00002-001,NVL-00009,Cuộn màng PA khổ 800mm dày 15mic,PA K800 15mic,14.1,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (14.1 Kg)
+BOM-BTP-00002-001,NVL-00025,Keo ghép màng Polyurethane D-9700,Keo D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
+BOM-BTP-00002-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,Chất Đóng Rắn CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
+BOM-BTP-00002-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),Dung Môi EA,4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
+BOM-BTP-00003-001,NVL-00030,Cuộn màng PET in ống đồng mẫu 888 Đam Mê Đỏ khổ 800mm,PET in 888 Đam Mê,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
+BOM-BTP-00003-001,NVL-00004,Cuộn màng PE sữa khổ 750mm dày 190mic,PE sữa K750 190mic,144.2,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (144.2 Kg)
+BOM-BTP-00003-001,NVL-00009,Cuộn màng PA khổ 800mm dày 15mic,PA K800 15mic,14.1,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (14.1 Kg)
+BOM-BTP-00003-001,NVL-00025,Keo ghép màng Polyurethane D-9700,Keo D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
+BOM-BTP-00003-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,Chất Đóng Rắn CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
+BOM-BTP-00003-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),Dung Môi EA,4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
+BOM-BTP-00004-001,NVL-00031,Cuộn màng PET in ống đồng mẫu NGCS Đỏ - Tím khổ 800mm,PET in NGCS Đỏ-Tím,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
+BOM-BTP-00004-001,NVL-00004,Cuộn màng PE sữa khổ 750mm dày 190mic,PE sữa K750 190mic,144.2,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (144.2 Kg)
+BOM-BTP-00004-001,NVL-00009,Cuộn màng PA khổ 800mm dày 15mic,PA K800 15mic,14.1,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (14.1 Kg)
+BOM-BTP-00004-001,NVL-00025,Keo ghép màng Polyurethane D-9700,Keo D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
+BOM-BTP-00004-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,Chất Đóng Rắn CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
+BOM-BTP-00004-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),Dung Môi EA,4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
+BOM-BTP-00005-001,NVL-00032,Cuộn màng PET in ống đồng mẫu NGCS Hồng - Xanh khổ 800mm,PET in NGCS Hồng-Xanh,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
+BOM-BTP-00005-001,NVL-00004,Cuộn màng PE sữa khổ 750mm dày 190mic,PE sữa K750 190mic,144.2,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (144.2 Kg)
+BOM-BTP-00005-001,NVL-00009,Cuộn màng PA khổ 800mm dày 15mic,PA K800 15mic,14.1,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (14.1 Kg)
+BOM-BTP-00005-001,NVL-00025,Keo ghép màng Polyurethane D-9700,Keo D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
+BOM-BTP-00005-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,Chất Đóng Rắn CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
+BOM-BTP-00005-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),Dung Môi EA,4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
+BOM-BTP-00006-001,NVL-00033,Cuộn màng PET in ống đồng mẫu Minh Râu Tím khổ 780mm,PET in Minh Râu Tím,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
+BOM-BTP-00006-001,NVL-00003,Cuộn màng PE sữa khổ 740mm dày 190mic,PE sữa K740 190mic,140.6,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (140.6 Kg)
+BOM-BTP-00006-001,NVL-00008,Cuộn màng PA khổ 760mm dày 15mic,PA K760 15mic,13.7,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (13.7 Kg)
+BOM-BTP-00006-001,NVL-00025,Keo ghép màng Polyurethane D-9700,Keo D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
+BOM-BTP-00006-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,Chất Đóng Rắn CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
+BOM-BTP-00006-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),Dung Môi EA,4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
+BOM-BTP-00007-001,NVL-00034,Cuộn màng PET in ống đồng mẫu TopGia 2L khổ 750mm,PET in TopGia 2L,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
+BOM-BTP-00007-001,NVL-00004,Cuộn màng PE sữa khổ 750mm dày 190mic,PE sữa K750 190mic,135.2,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (135.2 Kg)
+BOM-BTP-00007-001,NVL-00009,Cuộn màng PA khổ 800mm dày 15mic,PA K800 15mic,13.2,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (13.2 Kg)
+BOM-BTP-00007-001,NVL-00025,Keo ghép màng Polyurethane D-9700,Keo D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
+BOM-BTP-00007-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,Chất Đóng Rắn CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
+BOM-BTP-00007-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),Dung Môi EA,4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
+BOM-BTP-00008-001,NVL-00035,Cuộn màng PET in ống đồng mẫu Softy 3L Nền Tím khổ 800mm,PET in Softy 3L,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
+BOM-BTP-00008-001,NVL-00004,Cuộn màng PE sữa khổ 750mm dày 190mic,PE sữa K750 190mic,144.2,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (144.2 Kg)
+BOM-BTP-00008-001,NVL-00009,Cuộn màng PA khổ 800mm dày 15mic,PA K800 15mic,14.1,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (14.1 Kg)
+BOM-BTP-00008-001,NVL-00025,Keo ghép màng Polyurethane D-9700,Keo D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
+BOM-BTP-00008-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,Chất Đóng Rắn CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
+BOM-BTP-00008-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),Dung Môi EA,4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
+BOM-BTP-00009-001,NVL-00036,Cuộn màng PET in ống đồng FUTA Xanh mặt trước khổ 900mm,PET in FUTA Xanh MT,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
+BOM-BTP-00009-001,NVL-00004,Cuộn màng PE sữa khổ 750mm dày 190mic,PE sữa K750 190mic,162.2,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (162.2 Kg)
+BOM-BTP-00009-001,NVL-00009,Cuộn màng PA khổ 800mm dày 15mic,PA K800 15mic,15.8,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (15.8 Kg)
+BOM-BTP-00009-001,NVL-00025,Keo ghép màng Polyurethane D-9700,Keo D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
+BOM-BTP-00009-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,Chất Đóng Rắn CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
+BOM-BTP-00009-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),Dung Môi EA,4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
+BOM-BTP-00010-001,NVL-00037,Cuộn màng PET in ống đồng FUTA Xanh mặt sau khổ 900mm,PET in FUTA Xanh MS,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
+BOM-BTP-00010-001,NVL-00004,Cuộn màng PE sữa khổ 750mm dày 190mic,PE sữa K750 190mic,162.2,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (162.2 Kg)
+BOM-BTP-00010-001,NVL-00009,Cuộn màng PA khổ 800mm dày 15mic,PA K800 15mic,15.8,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (15.8 Kg)
+BOM-BTP-00010-001,NVL-00025,Keo ghép màng Polyurethane D-9700,Keo D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
+BOM-BTP-00010-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,Chất Đóng Rắn CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
+BOM-BTP-00010-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),Dung Môi EA,4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
+BOM-BTP-00011-001,NVL-00038,Cuộn màng PET in ống đồng FUTA Tím mặt trước khổ 900mm,PET in FUTA Tím MT,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
+BOM-BTP-00011-001,NVL-00004,Cuộn màng PE sữa khổ 750mm dày 190mic,PE sữa K750 190mic,162.2,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (162.2 Kg)
+BOM-BTP-00011-001,NVL-00009,Cuộn màng PA khổ 800mm dày 15mic,PA K800 15mic,15.8,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (15.8 Kg)
+BOM-BTP-00011-001,NVL-00025,Keo ghép màng Polyurethane D-9700,Keo D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
+BOM-BTP-00011-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,Chất Đóng Rắn CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
+BOM-BTP-00011-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),Dung Môi EA,4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
+BOM-BTP-00012-001,NVL-00039,Cuộn màng PET in ống đồng FUTA Tím mặt sau khổ 900mm,PET in FUTA Tím MS,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
+BOM-BTP-00012-001,NVL-00004,Cuộn màng PE sữa khổ 750mm dày 190mic,PE sữa K750 190mic,162.2,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (162.2 Kg)
+BOM-BTP-00012-001,NVL-00009,Cuộn màng PA khổ 800mm dày 15mic,PA K800 15mic,15.8,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (15.8 Kg)
+BOM-BTP-00012-001,NVL-00025,Keo ghép màng Polyurethane D-9700,Keo D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
+BOM-BTP-00012-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,Chất Đóng Rắn CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
+BOM-BTP-00012-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),Dung Môi EA,4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
+BOM-BTP-00013-001,NVL-00028,Cuộn màng PET in ống đồng mẫu 888 Phấn Thơm khổ 800mm,PET in 888 Phấn Thơm,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
+BOM-BTP-00013-001,NVL-00001,Cuộn màng PE sữa khổ 700mm dày 160mic,PE sữa K700 160mic,27.3,Kg,2.0,Màng PE sữa hàn dán dày 160mic mua từ máy thổi (27.3 Kg)
+BOM-BTP-00013-001,NVL-00025,Keo ghép màng Polyurethane D-9700,Keo D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
+BOM-BTP-00013-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,Chất Đóng Rắn CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
+BOM-BTP-00013-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),Dung Môi EA,4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
+BOM-BTP-00014-001,NVL-00045,Cuộn màng PET in ống đồng mẫu BABA 3.6Kg khổ 800mm,PET in BABA,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
+BOM-BTP-00014-001,NVL-00004,Cuộn màng PE sữa khổ 750mm dày 190mic,PE sữa K750 190mic,144.2,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (144.2 Kg)
+BOM-BTP-00014-001,NVL-00009,Cuộn màng PA khổ 800mm dày 15mic,PA K800 15mic,14.1,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (14.1 Kg)
+BOM-BTP-00014-001,NVL-00018,Cuộn màng MPET khổ 800mm dày 12mic,MPET K800 12mic,13.7,Kg,2.0,Lớp màng MPET mạ nhôm cản sáng 12mic (13.7 Kg)
+BOM-BTP-00014-001,NVL-00025,Keo ghép màng Polyurethane D-9700,Keo D-9700,2.0,Kg,0.0,Keo polyurethane ghép màng khô (2.0 Kg)
+BOM-BTP-00014-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,Chất Đóng Rắn CL-3192K,2.0,Kg,0.0,Chất đóng rắn Isocyanate (2.0 Kg)
+BOM-BTP-00014-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),Dung Môi EA,8.0,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (8.0 Kg)
+BOM-BTP-00015-001,NVL-00046,Cuộn màng PET in ống đồng mẫu thực phẩm Năm Tàu khổ 800mm,PET in Năm Tàu,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
+BOM-BTP-00015-001,NVL-00004,Cuộn màng PE sữa khổ 750mm dày 190mic,PE sữa K750 190mic,144.2,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (144.2 Kg)
+BOM-BTP-00015-001,NVL-00009,Cuộn màng PA khổ 800mm dày 15mic,PA K800 15mic,14.1,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (14.1 Kg)
+BOM-BTP-00015-001,NVL-00025,Keo ghép màng Polyurethane D-9700,Keo D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
+BOM-BTP-00015-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,Chất Đóng Rắn CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
+BOM-BTP-00015-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),Dung Môi EA,4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
+BOM-BTP-00016-001,NVL-00047,Cuộn màng PET in ống đồng mẫu TopGia 1L Đắm Say khổ 750mm,PET in TopGia 1L Đắm Say,1020.0,m,2.0,Màng PET in ống đồng từ NCC (1000m + 2% hao hụt canh máy)
+BOM-BTP-00016-001,NVL-00004,Cuộn màng PE sữa khổ 750mm dày 190mic,PE sữa K750 190mic,135.2,Kg,2.0,Màng PE sữa hàn dán dày 190mic mua từ máy thổi (135.2 Kg)
+BOM-BTP-00016-001,NVL-00009,Cuộn màng PA khổ 800mm dày 15mic,PA K800 15mic,13.2,Kg,2.0,Màng PA rào cản chống bục thủng 15mic (13.2 Kg)
+BOM-BTP-00016-001,NVL-00025,Keo ghép màng Polyurethane D-9700,Keo D-9700,1.2,Kg,0.0,Keo polyurethane ghép màng khô (1.2 Kg)
+BOM-BTP-00016-001,NVL-00026,Chất đóng rắn keo ghép CL-3192K,Chất Đóng Rắn CL-3192K,1.2,Kg,0.0,Chất đóng rắn Isocyanate (1.2 Kg)
+BOM-BTP-00016-001,NVL-00027,Dung môi công nghiệp Ethyl Acetate (EA),Dung Môi EA,4.8,Kg,0.0,Dung môi pha keo bay hơi buồng sấy (4.8 Kg)
+BOM-TP-00001-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,Cuộn 888 Phấn Thơm,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00001-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00001-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
+BOM-TP-00002-001,BTP-00002,Cuộn màng ghép PET/PA/PE 3 lớp 888 Huyền Bí Xanh khổ 800mm,Cuộn 888 Huyền Bí,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00002-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00002-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
+BOM-TP-00003-001,BTP-00003,Cuộn màng ghép PET/PA/PE 3 lớp 888 Đam Mê Đỏ khổ 800mm,Cuộn 888 Đam Mê,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00003-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00003-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
+BOM-TP-00004-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,Cuộn 888 Phấn Thơm,246.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 480.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00004-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00004-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
+BOM-TP-00005-001,BTP-00002,Cuộn màng ghép PET/PA/PE 3 lớp 888 Huyền Bí Xanh khổ 800mm,Cuộn 888 Huyền Bí,246.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 480.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00005-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00005-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
+BOM-TP-00006-001,BTP-00003,Cuộn màng ghép PET/PA/PE 3 lớp 888 Đam Mê Đỏ khổ 800mm,Cuộn 888 Đam Mê,246.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 480.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00006-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00006-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
+BOM-TP-00007-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,Cuộn 888 Phấn Thơm,174.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 340.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00007-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00007-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
+BOM-TP-00008-001,BTP-00002,Cuộn màng ghép PET/PA/PE 3 lớp 888 Huyền Bí Xanh khổ 800mm,Cuộn 888 Huyền Bí,174.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 340.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00008-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00008-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
+BOM-TP-00009-001,BTP-00003,Cuộn màng ghép PET/PA/PE 3 lớp 888 Đam Mê Đỏ khổ 800mm,Cuộn 888 Đam Mê,174.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 340.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00009-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00009-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
+BOM-TP-00010-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,Cuộn 888 Phấn Thơm,174.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 340.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00010-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00010-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
+BOM-TP-00011-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,Cuộn 888 Phấn Thơm,174.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 340.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00011-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00011-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
+BOM-TP-00012-001,BTP-00006,Cuộn màng ghép PET/PA/PE 3 lớp Minh Râu Tím khổ 780mm,Cuộn Minh Râu Tím,289.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 564.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00012-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00012-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
+BOM-TP-00013-001,BTP-00006,Cuộn màng ghép PET/PA/PE 3 lớp Minh Râu Tím khổ 780mm,Cuộn Minh Râu Tím,289.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 564.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00013-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00013-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
+BOM-TP-00014-001,BTP-00007,Cuộn màng ghép PET/PA/PE 3 lớp TopGia 2L khổ 750mm,Cuộn TopGia 2L,246.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 480.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00014-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00014-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
+BOM-TP-00015-001,BTP-00007,Cuộn màng ghép PET/PA/PE 3 lớp TopGia 2L khổ 750mm,Cuộn TopGia 2L,246.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 480.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00015-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00015-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
+BOM-TP-00016-001,BTP-00014,Cuộn màng ghép 4 lớp BABA 3.6Kg khổ 800mm,Cuộn BABA 3.6Kg,297.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 580.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00016-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00016-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
+BOM-TP-00017-001,BTP-00008,Cuộn màng ghép PET/PA/PE 3 lớp Softy 3L khổ 800mm,Cuộn Softy 3L,307.5,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 600.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00017-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00017-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
+BOM-TP-00019-001,BTP-00007,Cuộn màng ghép PET/PA/PE 3 lớp TopGia 2L khổ 750mm,Cuộn TopGia 2L,246.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 480.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00019-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
+BOM-TP-00020-001,BTP-00016,Cuộn màng ghép TopGia 1L Đắm Say khổ 750mm,Cuộn TopGia 1L Đắm Say,215.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 420.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00020-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00020-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
+BOM-TP-00021-001,BTP-00016,Cuộn màng ghép TopGia 1L Đắm Say khổ 750mm,Cuộn TopGia 1L Đắm Say,215.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 420.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00021-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00021-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
+BOM-TP-00022-001,BTP-00008,Cuộn màng ghép PET/PA/PE 3 lớp Softy 3L khổ 800mm,Cuộn Softy 3L,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00022-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00022-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
+BOM-TP-00023-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,Cuộn 888 Phấn Thơm,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00023-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00023-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
+BOM-TP-00024-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,Cuộn 888 Phấn Thơm,174.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 340.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00024-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00024-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
+BOM-TP-00025-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,Cuộn 888 Phấn Thơm,174.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 340.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00025-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00025-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
+BOM-TP-00026-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,Cuộn 888 Phấn Thơm,246.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 480.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00026-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00026-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
+BOM-TP-00027-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,Cuộn 888 Phấn Thơm,174.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 340.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00027-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00027-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
+BOM-TP-00028-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,Cuộn 888 Phấn Thơm,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00028-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00028-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
+BOM-TP-00029-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,Cuộn 888 Phấn Thơm,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00029-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00029-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
+BOM-TP-00030-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,Cuộn 888 Phấn Thơm,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00030-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00030-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
+BOM-TP-00031-001,BTP-00003,Cuộn màng ghép PET/PA/PE 3 lớp 888 Đam Mê Đỏ khổ 800mm,Cuộn 888 Đam Mê,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00031-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00031-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
+BOM-TP-00032-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,Cuộn 888 Phấn Thơm,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00032-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00032-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
+BOM-TP-00033-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,Cuộn 888 Phấn Thơm,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00033-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00033-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
+BOM-TP-00034-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,Cuộn 888 Phấn Thơm,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00034-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00034-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
+BOM-TP-00035-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,Cuộn 888 Phấn Thơm,246.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 480.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00035-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00035-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
+BOM-TP-00036-001,BTP-00009,Cuộn màng ghép PET/PA/PE 3 lớp FUTA Xanh mặt trước khổ 900mm,Cuộn FUTA Xanh MT,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00036-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00036-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
+BOM-TP-00037-001,BTP-00001,Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm,Cuộn 888 Phấn Thơm,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00037-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00037-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
+BOM-TP-00045-001,BTP-00015,Cuộn màng ghép thực phẩm Năm Tàu khổ 800mm,Cuộn Năm Tàu,246.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 480.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-TP-00045-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-TP-00045-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
+BOM-NGCS-00001-001,BTP-00004,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Đỏ - Tím khổ 800mm,Cuộn NGCS Đỏ-Tím,246.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 480.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-NGCS-00001-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-NGCS-00001-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
+BOM-NGCS-00002-001,BTP-00005,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Hồng - Xanh khổ 800mm,Cuộn NGCS Hồng-Xanh,246.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 480.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-NGCS-00002-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-NGCS-00002-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
+BOM-NGCS-00003-001,BTP-00004,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Đỏ - Tím khổ 800mm,Cuộn NGCS Đỏ-Tím,246.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 480.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-NGCS-00003-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-NGCS-00003-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
+BOM-NGCS-00004-001,BTP-00005,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Hồng - Xanh khổ 800mm,Cuộn NGCS Hồng-Xanh,246.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 480.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-NGCS-00004-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-NGCS-00004-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
+BOM-NGCS-00005-001,BTP-00004,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Đỏ - Tím khổ 800mm,Cuộn NGCS Đỏ-Tím,246.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 480.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-NGCS-00005-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-NGCS-00005-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.0,Cái,0.0,Đóng gói tiêu chuẩn 500 túi xẹp/thùng 60x40x40
+BOM-NGCS-00006-001,BTP-00004,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Đỏ - Tím khổ 800mm,Cuộn NGCS Đỏ-Tím,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-NGCS-00006-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-NGCS-00006-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
+BOM-NGCS-00007-001,BTP-00005,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Hồng - Xanh khổ 800mm,Cuộn NGCS Hồng-Xanh,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-NGCS-00007-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-NGCS-00007-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
+BOM-NGCS-00008-001,BTP-00004,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Đỏ - Tím khổ 800mm,Cuộn NGCS Đỏ-Tím,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-NGCS-00008-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-NGCS-00008-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
+BOM-NGCS-00009-001,BTP-00005,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Hồng - Xanh khổ 800mm,Cuộn NGCS Hồng-Xanh,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-NGCS-00009-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-NGCS-00009-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
+BOM-NGCS-00010-001,BTP-00004,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Đỏ - Tím khổ 800mm,Cuộn NGCS Đỏ-Tím,287.0,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 560.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-NGCS-00010-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-NGCS-00010-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
+BOM-NGCS-00011-001,BTP-00004,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Đỏ - Tím khổ 800mm,Cuộn NGCS Đỏ-Tím,297.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 580.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-NGCS-00011-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-NGCS-00011-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
+BOM-NGCS-00012-001,BTP-00005,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Hồng - Xanh khổ 800mm,Cuộn NGCS Hồng-Xanh,297.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 580.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-NGCS-00012-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-NGCS-00012-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
+BOM-NGCS-00013-001,BTP-00004,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Đỏ - Tím khổ 800mm,Cuộn NGCS Đỏ-Tím,297.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 580.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-NGCS-00013-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-NGCS-00013-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
+BOM-NGCS-00014-001,BTP-00005,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Hồng - Xanh khổ 800mm,Cuộn NGCS Hồng-Xanh,297.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 580.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-NGCS-00014-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-NGCS-00014-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40
+BOM-NGCS-00015-001,BTP-00004,Cuộn màng ghép PET/PA/PE 3 lớp NGCS Đỏ - Tím khổ 800mm,Cuộn NGCS Đỏ-Tím,297.2,m,2.5,Cuộn màng ghép BTP chạy 2 lane (Bước cắt 580.0mm x 1.000 túi + 2.5% hao hụt)
+BOM-NGCS-00015-001,NVL-00040,Vòi nhựa đóng gói phi 16mm kèm nắp chống tràn,Vòi 16mm,1010.0,Cái,1.0,1 vòi 16mm/túi + 1% hao hụt máy hàn nhiệt
+BOM-NGCS-00015-001,NVL-00044,Thùng carton 5 lớp đóng gói giao hàng túi,Thùng carton,2.5,Cái,0.0,Đóng gói tiêu chuẩn 400 túi lớn xẹp/thùng 60x40x40

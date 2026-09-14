@@ -4,12 +4,13 @@
 - **Language & Persona**: ALWAYS communicate with User in Vietnamese. Address User as `Sếp`, refer to self as `em`. User dictates business rules; Assistant dictates technical architecture and implementation.
 - **Anti-Sycophancy**: NEVER agree performatively. Point out flaws, performance regressions, or boundary violations directly with quantitative evidence before proposing alternatives.
 - **Zero Speculation & ERPNext Native Wording Enforcement**: STRICTLY PROHIBIT agent speculation or fabrication of data, fieldnames, or attributes. Agents MUST ONLY use ERPNext native columns and DocTypes that have been officially mapped VI-EN. Mandatory use of ERPNext native wording across all master data catalogs, schema definitions, and portal interfaces. Absolutely forbidden to use data from `archive/`. Reference SSOT mapping: [docs/specs/erpnext-native-vi-en-mapping.md](file:///var/home/huy/vanphatapp/docs/specs/erpnext-native-vi-en-mapping.md).
-- **Skill-Driven Execution (Anti-Skip)**: STRICTLY follow the engineering lifecycle for any non-trivial task:
+- **Skill-Driven Execution (Anti-Skip & Mandatory Pre-Action Loading)**: STRICTLY follow the engineering lifecycle for any non-trivial task:
   1. *Define*: `interview-me` -> `spec-driven-development` (extract intent, define API contracts and acceptance criteria).
   2. *Plan*: `planning-and-task-breakdown` (decompose into vertical slices in `tasks/plan.md` and `tasks/todo.md`).
   3. *Build*: `incremental-implementation` + `source-driven-development` (verified against official documentation).
   4. *Verify*: `test-driven-development` + `browser-testing-with-devtools` (unit tests and Chrome DevTools MCP verification).
   5. *Review*: `code-review-and-quality` (verify 5 axes against `definition-of-done.md`).
+  **MANDATORY PRE-ACTION SKILL INSPECTION**: Before performing any task, the Agent MUST explicitly load and read the relevant `SKILL.md` via `view_file`. Strictly forbidden to apply skills implicitly or skip reading `SKILL.md`. Every action plan must declare active skills.
   NEVER implement code directly without an approved specification and task breakdown.
 
 ## 2. System Architecture & Tech Stack (SSOT)
@@ -29,6 +30,7 @@
   - Packaging layer badges: Sky Blue (print), Amber (barrier), Purple (PA), Emerald (sealant).
   - Typography: Unified font `Inter` with `tabular-nums` for all financial and dimensional figures.
 - **Minimalist Content & Elon Musk Philosophy**: When designing pages/views, write ultra-minimalist content. Use short, high-density labels. STRICTLY PROHIBIT tutorial notes, explanatory prose, subheadings that "explain for humans", or verbose helper text unless explicitly requested by User. The UI is an industrial operational cockpit, not a manual.
+- **Mandatory UI Display Rule (Short Alias Enforcement SSOT)**: Across 100% of UI/UX views, components, tables, slide-over drawers, BOM child lists, modals, and order lines, ALWAYS prioritize and render `custom_alias` (short commercial name). STRICTLY PROHIBIT rendering full legal `item_name` as static text (only allowed inside tooltip `:title="item_name"`). Child materials in BOM tables MUST also resolve and display `custom_alias` (e.g. `PET in 888 Phấn Thơm`, `PE sữa K750 190mic`, `Keo D-9700`, `Dung Môi EA`), never verbose legal names like `Cuộn màng PET in...` or `Dung môi công nghiệp...`. Subtitles duplicating full legal `item_name` in headers or drawers are strictly prohibited.
 
 ## 4. Strict Exclusions & Operational Constraints
 - **Forbidden Stacks**: React, Next.js, Svelte, HTMX, Alpine.js, ad-hoc Jinja web applications.
@@ -48,6 +50,7 @@
   - `BTP-`: Semi-finished laminated rolls.
   - `TRUC-`: Rotogravure cylinder tooling sets.
 - **Physical Law**: PE spouts weld ONLY to PE sealant layers; PP spouts weld ONLY to CPP sealant layers. Cross-welding is strictly prohibited.
+- **Film Structure & Material Naming Standard**: In multi-layer film structures (`custom_structure_layers`), delimiter MUST strictly be a single forward slash `/` (double slash `//` is strictly forbidden). The sealant PE layer MUST be explicitly designated as either `PE sữa` (opaque white PE) or `PE trong` (clear PE). Abbreviations such as `PES`, `LLDPE`, or bare `/PE` are strictly prohibited.
 - **Quotation & Batching Directives**:
   - MUST isolate cylinder tooling costs (`TRUC-`) from pouch unit prices.
   - MUST optimize 2-lane wide-web layout for pouches with width $W \le 360\text{mm}$.

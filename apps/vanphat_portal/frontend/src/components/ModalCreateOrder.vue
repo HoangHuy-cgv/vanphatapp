@@ -85,7 +85,7 @@
 							<select v-model="selectedCustomItemCode" class="select-input" @change="onCustomItemChange" required>
 								<option value="" disabled>-- Chọn quy cách đã lưu của khách --</option>
 								<option v-for="item in availableCustomItems" :key="item.item_code" :value="item.item_code">
-									{{ item.item_name }} ({{ item.dimensions_text }})
+									{{ item.custom_alias || item.item_name }} ({{ item.dimensions_text }})
 								</option>
 							</select>
 						</div>
@@ -246,7 +246,7 @@
 										<select v-model="row.item_code" class="select-input" @change="onGenericItemChange(row)" required>
 											<option value="" disabled>-- Chọn mã phôi có sẵn --</option>
 											<option v-for="item in availableGenericItems" :key="item.item_code" :value="item.item_code">
-												{{ item.item_name }}
+												{{ item.custom_alias || item.item_name }}
 											</option>
 										</select>
 									</td>

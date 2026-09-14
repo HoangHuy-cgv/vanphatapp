@@ -35,43 +35,114 @@
   - `drawer_baba_variants.png` (BABA 2 Mẫu in + Trục)
   - `drawer_minhrau_variants.png` (Minh Râu 2 Màu)
   - `drawer_fusimi_ngcs.png` (NGCS 2 Mã phôi)
-- **Git Commit**: `83f980c` trên branch `master`. Working tree sạch tinh 100%.
+### 1.3. Tối Giản Danh Mục Mặt Hàng Master Data (Elon Musk Cockpit), Rà Soát Raw-Data & Triệt Tiêu Hardcode (Hoàn tất 100%)
+1. **Triệt tiêu 100% trang HTML tĩnh độc lập (`master-data.html`)**:
+   - Chuyển đổi nút "Danh mục" trên Sidebar thành nút chuyển view SPA native (`view = 'items'`) có badge hiển thị số lượng mặt hàng (`293`).
+   - Tự động chuyển hướng (HTTP 302 Redirect) các truy cập `/master-data` về `/portal?view=items`.
+2. **Thiết kế buồng lái công nghiệp mật độ cao theo triết lý Elon Musk**:
+   - Xóa bỏ tiêu đề "Danh mục mặt hàng" và các card thống kê chiếm diện tích; đưa toàn bộ Tabs và Ô Search lên **cùng 1 line duy nhất**.
+   - Bỏ tab "Tất cả" và bỏ hoàn toàn bộ lọc cung ứng thừa ("Tất cả cung ứng", "Xưởng SX", "Mua ngoài").
+   - **6 Tab nghiệp vụ chuẩn xác** gắn badge số lượng: `Túi màng ghép` (45), `Túi NGCS` (15), `Túi màng đơn` (12), `Cuộn Màng` (16), `Nguyên vật liệu` (48), `Trục in` (157).
+   - **Instant Search Reactive cùng line**: Ô tìm kiếm đặt cạnh các Tab, phản hồi tức thì theo mã, tên, khách hàng, cấu trúc màng (`PET/PA/PE`).
+3. **Chuẩn hóa Bảng Dữ Liệu Tinh Gọn (6 Cột — Ẩn Khách Hàng, Đáy Riêng Biệt, R x D x Dày)**:
+   - **Ẩn cột Khách hàng**: Giữ lại trọn vẹn thông tin khách hàng trong Drawer khi click xem chi tiết; trên bảng ẩn cột này để tăng mật độ thông tin kỹ thuật.
+   - **Chỉ sử dụng tên ngắn**: Render duy nhất `it.custom_alias || it.item_name`, triệt tiêu dòng phụ đề tên pháp lý dài dòng.
+   - **Cột Chất liệu đơn dòng**: Chỉ hiển thị cấu trúc màng (`PET//PA/PE sữa`, `PET/AL/PE`...), không để độ dày dòng dưới làm dày bảng.
+   - **Cột Kích thước thống nhất (Rộng x Dài x Dày)**: Ghi rõ quy cách hình học gồm cả độ dày màng, vd: `280 x 340 mm x 230 mic`, `250 x 300 mm x 150 mic`.
+   - **Tách Cột Đáy riêng biệt**: Có nếp gấp đáy thì ghi kích thước đáy màu hổ phách đậm (vd: `45 mm`, `50 mm`), không có đáy (túi 3 biên, màng cuộn) thì để null (`—`).
+   - Bảng 6 cột chuẩn: `Mã sản phẩm` (14%), `Tên sản phẩm` (27%), `Chất liệu` (21%), `Kích thước (R x D x Dày)` (20%), `Đáy` (11%), `ĐVT` (7%).
+4. **Rà soát Raw-Data gốc và Giải mã thông số "Đáy 45mm"**:
+   - Đối soát file gốc `data/raw-data/tien do dat hang ncc.xlsx` (Sheet `CHỜ SẢN XUẤT`, dòng 16-19) bằng `fastexcel`:
+     - Các mặt hàng Enzy Hạt Nêm (900g, 450g, 220g) và Enzy Rắc Cơm là **Túi phẳng 3 biên** $\rightarrow$ Không có đáy (`gusset = 0`).
+     - SKX Đậu Nành (`TP-00039`) và TopGia MBTP (`TP-00019`) $\rightarrow$ Phẳng, không có đáy (`gusset = 0`).
+     - Chỉ có dòng Doypack (như 888 Nước giặt, túi vòi chiết) mới có nếp gấp đáy đứng (`gusset = 45mm`).
+   - Đã cập nhật lại `item_master.csv` 293 dòng chuẩn xác 100%.
+5. **Simplify Code trong `scripts/generate_master_data_csv.py`**:
+   - Định nghĩa bộ tuple tham số tường minh 8 phần tử `(name, customer, structure, pouch_type, w, l, gusset, thick, film_w)` cho từng sản phẩm.
+   - Triệt tiêu 100% việc gán mặc định hay hardcode `gusset=45` và `film_w=w*2+100`.
+6. **Slide-Over Drawer Chi Tiết Mặt Hàng (`DrawerItemDetail.vue`)**:
+   - Mở mượt mà khi click vào bất kỳ dòng nào trong bảng, hỗ trợ phím `Esc` và click backdrop.
+   - Tự động hiển thị nhãn `Kích thước túi (W x L)` khi không có đáy và `Kích thước túi (W x L + Đáy)` khi có đáy.
+   - **4 Khối thông số kỹ thuật mật độ cao**: Định danh & Cung ứng ERPNext, Cấu trúc màng & Quy cách bao bì, Trục in ống đồng, Bảng định mức BOM 2 cấp.
+7. **Chuẩn hóa Vật liệu & Cấu trúc màng ghép SSOT (Thống nhất dấu "/" và phân loại "PE sữa" / "PE trong")**:
+   - **Thống nhất 1 chuẩn duy nhất cho dấu phân cách**: Chỉ dùng duy nhất dấu gạch chéo đơn `/` (chuẩn quốc tế ISO/ASTM và ERPNext). Tuyệt đối cấm dùng `//`. Bóc tách các lớp màng trong Vue component `DrawerItemDetail.vue` (`split('/')`) đạt độ tin cậy 100%, không bị badge rỗng.
+   - **Chuẩn hóa lớp hàn dán PE**: Chỉ được dùng `PE sữa` (Opaque White PE, tỷ trọng 0.930 g/cm³, cản sáng cho túi nước giặt, hóa mỹ phẩm) hoặc `PE trong` (Clear PE, tỷ trọng 0.925 g/cm³, độ trong suốt cao cho thực phẩm, hạt nêm, đậu nành). Tuyệt đối cấm dùng các ký hiệu viết tắt tuỳ tiện như `PES`, `LLDPE` hay để đuôi `/PE` trơ trọi.
+   - **Đưa vào hiến pháp kỹ thuật AGENTS.md (Mục 6)**: Ràng buộc vĩnh viễn mọi Agent tuân thủ chuẩn cấu trúc này trong toàn bộ catalog, BOM và thuật toán báo giá.
+   - **Tự động hóa trong `scripts/generate_master_data_csv.py`**: Tích hợp hàm chuẩn hóa tự động `normalize_layers` và làm sạch toàn bộ tuple dữ liệu khai báo gốc (`custom_pouches`, `ngcs_sizes`, `btp_items`).
+8. **Cố Định Tiêu Đề, Tabs, Search Bar & Header Cột Bảng Khi Cuộn Trang (Sticky Cockpit Layout)**:
+   - **Fixed Viewport 100vh**: Thiết lập `height: 100vh; overflow: hidden;` cho `.portal-layout` và `.main-content`. Toàn bộ ứng dụng hoạt động như một desktop cockpit thực thụ, triệt tiêu 100% hiện tượng trôi header khi cuộn trang.
+   - **Ghim cố định đỉnh buồng lái**: Thanh điều hướng 6 Tab (`Túi màng ghép`, `Túi NGCS`, `Cuộn Màng`, `Trục in`...) và ô tìm kiếm tức thì (`.catalog-header-cockpit`) có `flex-shrink: 0`, luôn hiển thị ở đỉnh trang.
+   - **Ghim sticky header cột bảng (`<thead> <th>`)**: Bảng nằm trong container cuộn riêng (`.table-container { overflow-y: auto }`), dòng tiêu đề cột (`MÃ SẢN PHẨM`, `TÊN SẢN PHẨM`, `CHẤT LIỆU`, `KÍCH THƯỚC`, `ĐÁY`, `ĐVT`) được ghim `position: sticky; top: 0` với nền `#1a1f27` và đường viền sắc nét.
+   - **Kiểm thử & Bằng chứng trực quan**: Test suite `verify-catalog-page.mjs` đạt **46/46 checks PASS 100%**. Visual proof thực tế trên Chrome DevTools: `catalog_sticky_header_scrolled.png`.
+9. **Tối Giản Drawer Chi Tiết Mặt Hàng Theo Triết Lý Elon Musk (Ultra-minimalist Cockpit)**:
+   - **Triệt tiêu 100% tiêu đề phân mục và nhãn rác**: Xóa sạch các header số La Mã/thập phân ("1. THÔNG TIN QUY CÁCH BAO BÌ", "2. CƠ CẤU & ĐỘ DÀY MÀNG", "3. TRỤC IN ỐNG ĐỒNG", "4. ĐỊNH MỨC VẬT TƯ SẢN XUẤT (BOM)").
+   - **Thanh công cụ Trục in siêu tinh gọn**: Không còn các nhãn "Mã bộ trục:", "Số cây:", "Vị trí kho:". Toàn bộ thông tin được tinh giản thành một thanh duy nhất: `TRUC-G4006940 • In trục ống đồng • Kho Vạn Phát` (hoặc kèm số cây, kích thước nếu có).
+   - **Header Drawer mật độ cao**: Đặt trên 1 dòng duy nhất gồm mã hàng `TP-00001` (font-mono sky-blue), badge `Xưởng SX`/`Mua ngoài`, đơn giá niêm yết `5.166 đ / Túi` và nút đóng `✕`.
+   - **Hero Block & Packaging Specs tối giản**: Tên ngắn in đậm to rõ, khách hàng kèm mã, mảng badge màng ghép và kích thước hình học `280 x 340 mm (Đáy 45 mm)`, bước dao, phụ kiện; loại bỏ 100% các đoạn văn xuôi giải thích tại sao không có BOM hay hướng dẫn cho người dùng.
+   - **Kiểm thử & Visual Proof**: `verify-catalog-page.mjs` đạt **48/48 checks PASS 100%**. Bằng chứng trực quan Chrome DevTools: `catalog_drawer_minimalist_888.png` (Túi 888 Doypack có đáy + BOM) và `catalog_drawer_minimalist_enzy.png` (Túi Enzy 3 biên phẳng không đáy).
+10. **Tăng Cỡ Chữ (Font-Size Scaling) Toàn Bộ Trang Danh Mục & Drawer**:
+   - Nâng cỡ chữ các cột bảng danh mục từ `12px` lên `14px` - `15px` (`App.vue`).
+   - Nâng cỡ chữ các tab, badge và ô tìm kiếm lên `12.5px` - `14.5px`.
+    - Nâng cỡ chữ các cột bảng danh mục từ `12px` lên `14px` - `15px` (`App.vue`).
+    - Nâng cỡ chữ các tab, badge và ô tìm kiếm lên `12.5px` - `14.5px`.
+    - Nâng cỡ chữ Drawer chi tiết mặt hàng (`DrawerItemDetail.vue`): Hero `20px`, tiêu chuẩn túi `15px`, badge màng `13px`, bảng BOM `14px`.
+    - Test suite `verify-catalog-page.mjs` đạt **48/48 checks PASS 100%**. Bằng chứng trực quan Chrome DevTools: `catalog_table_font_boosted.png` và `catalog_drawer_font_boosted.png`.
+11. **Siết Chặt Quy Tắc Chỉ Sử Dụng Tên Ngắn / Alias Trên Toàn Bộ UI/UX (Short Alias Enforcement)**:
+    - **Tầng 1 (Hiến pháp kỹ thuật)**: Bổ sung điều khoản bất khả xâm phạm *Mandatory UI Display Rule (Short Alias Enforcement SSOT)* vào Mục 3 của `AGENTS.md`. Cấm tiệt việc render tĩnh `item_name` dài dòng, chỉ được dùng `custom_alias` ngắn gọn.
+    - **Tầng 2 (Data Contract & Backend)**: Bổ sung cột `custom_alias` vào `bom_items.csv` trong `scripts/generate_packaging_boms.py` (251 dòng vật tư đều có alias). Cập nhật API `item.py` và `serve-portal.mjs` tự động map/resolve `custom_alias` cho BOM items.
+    - **Tầng 3 (Frontend)**: Tối giản bảng BOM `DrawerItemDetail.vue` hiển thị `bi.custom_alias` đơn dòng (VD: `PET in 888 Phấn Thơm`, `PE sữa K750 190mic`, `Keo D-9700`, `Dung Môi EA`); xóa bỏ hoàn toàn dòng phụ đề `hero-sub` lặp lại tên pháp lý dài. Đồng bộ `custom_alias` trên Bảng Đơn hàng `App.vue` và Dropdown chọn phôi `ModalCreateOrder.vue`.
+    - **Tầng 4 (CI Gate Assertion)**: Bổ sung Section 8 vào `scripts/verify-catalog-page.mjs` quét cấm tiền tố danh pháp dài. Test suite nâng lên **54/54 checks PASS 100%**. Bằng chứng trực quan: `catalog_bom_alias_enforced.png`.
+12. **Khắc Phục Lệch Cột Định Mức & Đơn Giá Bảng BOM (`DrawerItemDetail.vue`)**:
+    - **Nguyên nhân gốc**: `<style scoped>` trong `DrawerItemDetail.vue` thiếu selector `.text-right { text-align: right; }`, khiến dữ liệu `<td>` bị trình duyệt áp dụng mặc định `text-align: start` (căn trái) trong khi `<th>` căn phải.
+    - **Xử lý**: Bổ sung selector `.text-right` và `.bom-table th.text-right, .bom-table td.text-right` vào scoped CSS; cân chỉnh tỷ lệ độ rộng 4 cột (22% - 44% - 17% - 17%) giúp số liệu và đơn vị `tabular-nums` thẳng tắp mép phải. Bằng chứng trực quan: `catalog_bom_alignment_fixed.png`.
+13. **Làm Sạch Danh Mục Trục In (Triệt Tiêu 100% Lặp Lại Mã Trục Trong Tên Sản Phẩm)**:
+    - **Vấn đề**: Cột 1 ghi `TRUC-G4010806`, cột 2 lại lặp lại `Trục Sachpoong 3.2Kg (G4010806)`, gây dư thừa thị giác và vi phạm triết lý tối giản buồng lái.
+    - **Xử lý**: Nâng cấp hàm `clean_cylinder_title` trong `scripts/generate_master_data_csv.py` loại bỏ hoàn toàn việc nối `({ma_truc})` vào tên/alias; giữ trọn vẹn thông tin nhận diện sản phẩm gốc (Hương Phấn Thơm Hồng, Huyền Bí Tím, Đam Mê Đỏ, Lau Sàn, Rửa Chén, Dung tích, Màu sắc). Tái tạo `item_master.csv` sạch 100%. Bằng chứng trực quan: `catalog_truc_clean_names.png`.
+    - **CI Gate**: Nâng tổng số kiểm thử tự động trong `scripts/verify-catalog-page.mjs` lên **64/64 checks PASS 100%**.
+
+14. **Gộp Tab Mặt Hàng Thành "Sản Phẩm" (88 Mã) & Tích Hợp Sub-Filters (Hoàn Tất 100%)**:
+    - Gộp: Túi màng ghép (45), Túi NGCS (15), Cuộn màng (16), Túi màng đơn (12) thành Tab `Sản phẩm` (88).
+    - Thanh điều hướng mặt hàng chỉ còn 3 Tab buồng lái chính: `Sản phẩm (88)` | `Nguyên vật liệu (48)` | `Trục in (157)`.
+    - Thanh chip lọc con phản hồi tức thì: `Tất cả (88)`, `Túi ghép (45)`, `Túi NGCS (15)`, `Cuộn màng (16)`, `Màng đơn (12)`.
+15. **Bổ Sung Toàn Diện 3 Danh Mục Master Data Lên Sidebar & Buồng Lái Cockpit**:
+    - **Danh mục Khách hàng (`Customer` - 117 khách)**: View bảng 6 cột kèm hạn mức công nợ VND căn phải; Slide-over Drawer `DrawerCustomerDetail.vue` hiển thị MST, điều khoản cọc/gối đầu, địa chỉ, người liên hệ và danh sách mặt hàng độc quyền.
+    - **Danh mục Nhà cung cấp (`Supplier` - 14 NCC)**: Giữ nguyên 14 NCC cốt lõi thực tế; View bảng kèm nhóm cung ứng và MST; Slide-over Drawer `DrawerSupplierDetail.vue`.
+    - **Danh mục Người dùng & Phân quyền (`User` - 11 nhân sự)**: View bảng nhân sự nội bộ; Slide-over Drawer `DrawerUserDetail.vue` hiển thị bộ vai trò ERPNext Native và aliases.
+16. **Hệ Thống Whitelisted REST APIs & CI Gate**:
+    - Tạo các controller chuẩn Frappe v16: `customer.py`, `supplier.py`, `user.py`.
+    - Nâng cấp test suite tự động `scripts/verify-catalog-page.mjs`: **78/78 checks PASS 100%**.
+    - Chụp 8 ảnh kiểm chứng visual proof Chrome DevTools: `items_products_grouped.png`, `items_cuon_mang_subfilter.png`, `customers_view.png`, `customer_drawer_ds_cosmetic.png`, `suppliers_view.png`, `supplier_drawer_sungdo.png`, `users_view.png`, `user_drawer_lam_doan.png`.
+
+17. **Thống Nhất Toàn Bộ Master Data Vào Trang "Danh Mục" Duy Nhất (Single Catalog Cockpit)**:
+    - **Tối giản Sidebar triệt để**: Gỡ bỏ 3 nút riêng lẻ `Khách hàng`, `Nhà cung cấp`, `Người dùng`. Sidebar chỉ còn **1 nút duy nhất mang tên `Danh mục`** với tổng badge 435 bản ghi.
+    - **Hệ thống 6 Tab buồng lái cấp 1 trên đỉnh trang `Danh mục`**:
+      1. `Sản phẩm` (88) — Gồm 5 sub-filter chips: Tất cả (88), Túi ghép (45), Túi NGCS (15), Cuộn màng (16), Màng đơn (12).
+      2. `Nguyên vật liệu` (48) — Màng thô NVL, keo ghép, hóa chất, phụ kiện.
+      3. `Trục in` (157) — Toàn bộ bộ trục in ống đồng với tên chuẩn hóa không lặp mã.
+      4. `Khách hàng` (117) — Khách hàng & chính sách công nợ gối đầu / cọc 50%.
+      5. `Nhà cung cấp` (14) — 14 NCC cung ứng hạt nhựa, màng, keo, gia công.
+      6. `Người dùng` (11) — 11 tài khoản nhân sự với vai trò ERPNext Native.
+    - **Tìm kiếm tức thì thích ứng (Adaptive Search)**: Đặt cùng hàng bên phải thanh tabs, tự động đổi placeholder và count pill theo tab đang chọn (`... SP`, `... NVL`, `... Trục`, `... KH`, `... NCC`, `... User`).
+    - **Slide-Over Drawers liên kết đầy đủ**: Chuyển đổi và mở mượt mà cả 4 slide-over drawers (`DrawerItemDetail`, `DrawerCustomerDetail`, `DrawerSupplierDetail`, `DrawerUserDetail`).
+    - **CI Gate**: Toàn bộ **77/77 checks PASSED 100%** trong `scripts/verify-catalog-page.mjs`.
+    - **Visual Proof**: Chụp và kiểm chứng 6 ảnh chụp thực tế bằng Chrome DevTools: `unified_catalog_products.png`, `unified_catalog_customers.png`, `unified_catalog_customer_drawer.png`, `unified_catalog_suppliers.png`, `unified_catalog_supplier_drawer.png`, `unified_catalog_users.png`, `unified_catalog_user_drawer.png`, `unified_catalog_search_enzy.png`.
 
 ---
 
-## 2. TRỌNG TÂM CHO SESSION TIẾP THEO: MASTER DATA & RAW-DATA THEO ERPNEXT NATIVE
+## 2. TRỌNG TÂM CHO SESSION TIẾP THEO: CHUẨN HOÁ RAW-DATA GIAO DỊCH (TRANSACTION DATA)
 
-Theo chỉ đạo của Sếp, session tiếp theo sẽ tập trung vào **phần lõi dữ liệu master**:
+Sau khi đã hoàn thiện 100% 4 danh mục Master Data trụ cột (`Item`, `Customer`, `Supplier`, `User`), trọng tâm tiếp theo là chuẩn hóa các **CHỨNG TỪ GIAO DỊCH THỰC TẾ** từ các file Excel gốc sang các dataset chuẩn ERPNext Native v16:
 
-### 2.1. Hoàn Thiện Các Danh Mục Master Data (Catalogs)
-1. **Danh mục Mặt Hàng (`Item`)**:
-   - Phân cấp rõ ràng theo Item Group và tiền tố mã:
-     - `TP-`: Thành phẩm túi (Doypack đáy đứng, 3 biên, 8 cạnh, túi dán lưng...).
-     - `BTP-`: Bán thành phẩm màng cuộn ghép (OPP/PE, PET/AL/PE...).
-     - `NVL-`: Nguyên vật liệu (Màng đơn cuộn lớn, hạt nhựa, keo ghép khô, dung môi EA, vòi nhựa 16mm/22mm).
-     - `TRUC-`: Bộ trục in ống đồng Rotogravure.
-   - Lưu trữ đầy đủ thông số kỹ thuật bao bì trong ERPNext: Chiều rộng ($W$), Chiều dài ($L$), Xếp hông/Đáy ($G$), Cấu trúc màng (Layers), Độ dày ($\mu m$), Phụ kiện vòi, Quy cách đóng gói.
-2. **Danh mục Khách Hàng (`Customer`)**:
-   - Danh sách khách hàng, bí danh (Alias), thương hiệu (Brand), hạn mức công nợ & hình thức thanh toán (`Trả trước cọc 50%` / `Trả sau công nợ`).
-3. **Danh mục Nhà Cung Cấp (`Supplier`)**:
-   - NCC in lụa: Mộc Ấn, Anh Tùng...
-   - NCC màng đơn/túi mua ngoài: Trang Tín, Hà Linh...
-   - NCC màng in/màng ghép: Kiến Tâm, Tân Cường Phát...
-4. **Danh mục Xưởng & Sản Xuất**:
-   - Trạm máy (`Workstation`): Máy ghép màng, Máy chia cuộn, Máy cắt túi đáy đứng, Máy đóng vòi tự động.
-   - Công đoạn (`Operation`): In gia công $\rightarrow$ Ghép màng khô $\rightarrow$ Cắt dán túi $\rightarrow$ Đóng vòi $\rightarrow$ Đóng thùng KCS.
-
-### 2.2. Chuẩn Hoá Raw-Data Theo Wording Chuẩn ERPNext Native
-- **Tuyệt đối tuân thủ SSOT**: [docs/specs/erpnext-native-vi-en-mapping.md](file:///var/home/huy/vanphatapp/docs/specs/erpnext-native-vi-en-mapping.md).
-- **Cấm suy diễn**: Không sử dụng trường tự chế hoặc dữ liệu từ `archive/`. Mọi DocType và Fieldname phải khớp 1:1 với schema ERPNext v16:
-  - Báo giá: `Quotation`
-  - Đơn bán hàng: `Sales Order` (Child table: `Sales Order Item`)
-  - Đơn mua hàng: `Purchase Order`
-  - Lệnh sản xuất: `Work Order`
-  - Phiếu giao hàng: `Delivery Note`
-  - Phiếu nhập kho mua hàng: `Purchase Receipt`
-  - Hóa đơn bán hàng: `Sales Invoice`
-  - Bút toán thanh toán: `Payment Entry`
+1. **Đơn Bán Hàng (`Sales Order` & `Sales Order Item`)**:
+   - Trích xuất từ `TỔNG HỢP ĐƠN HÀNG ĐÃ CỌC CHƯA GIAO.xlsx` thành `sales_order_master.csv` và `sales_order_items.csv`.
+   - Chuẩn hóa: `name` (SO-...), `customer`, `transaction_date`, `delivery_date`, `advance_paid`, `net_total`, `grand_total`, `status`, chi tiết từng dòng `item_code`, `qty`, `rate`, `amount`.
+2. **Đơn Mua Hàng Nhà Cung Cấp (`Purchase Order` & `Purchase Order Item`)**:
+   - Trích xuất từ `tien do dat hang ncc.xlsx` và `TIEN DO MUA HÀNG NCC T8.xlsx` thành `purchase_order_master.csv` và `purchase_order_items.csv`.
+   - Chuẩn hóa: Đơn in gia công (Tuệ Nhi, Kiến Tâm, Trang Tín), Keo (Sungdo), Dung môi (Thịnh Đạt), Vòi (Access), In lụa (Thanh Tùng).
+3. **Lệnh Sản Xuất Xưởng (`Work Order`)**:
+   - Trích xuất từ `TIẾN ĐỘ SẢN XUẤT.xlsx` (24 đợt chạy máy xưởng: 888, Phấn Thơm, Softy, Minh Râu...) thành `work_order_master.csv`.
+4. **Bút Toán Thu Chi & Cọc (`Payment Entry`)**:
+   - Trích xuất từ `THU CHI - 2026 vanphat.xlsx` và sổ công nợ 131/331 thành `payment_entry_master.csv`.
 
 ---
 
@@ -80,6 +151,6 @@ Theo chỉ đạo của Sếp, session tiếp theo sẽ tập trung vào **phầ
 Sếp chỉ cần copy câu lệnh sau và gửi cho em:
 
 ```text
-Đọc docs/handoff.md và bắt tay ngay vào việc:
-Hoàn thiện toàn diện các danh mục Master Data (Item, Customer, Supplier, Workstation, Operation) và chuẩn hoá raw-data theo đúng 100% wording ERPNext Native (dựa trên docs/specs/erpnext-native-vi-en-mapping.md).
+Đọc docs/handoff.md và tiếp tục triển khai:
+Chuẩn hoá các bộ dữ liệu giao dịch thực tế (Sales Order, Purchase Order, Work Order, Payment Entry) từ raw-data gốc theo đúng 100% wording ERPNext Native v16 (dựa trên docs/specs/erpnext-native-vi-en-mapping.md).
 ```

@@ -345,6 +345,12 @@ def main():
     out_master_csv = os.path.join(CLEAN_DIR, "bom_master.csv")
     out_items_csv = os.path.join(CLEAN_DIR, "bom_items.csv")
 
+    # Siết chặt quy tắc UI/UX: Đảm bảo mọi dòng vật tư đều có custom_alias ngắn gọn
+    for bi in bom_items:
+        code = bi.get("item_code")
+        matched = item_map.get(code, {})
+        bi["custom_alias"] = matched.get("custom_alias") or bi.get("item_name") or code
+
     with open(out_master_csv, "w", encoding="utf-8-sig", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=[
             "bom_no", "item", "item_name", "quantity", "uom", "is_active", "is_default",
@@ -356,11 +362,11 @@ def main():
 
     with open(out_items_csv, "w", encoding="utf-8-sig", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=[
-            "bom_no", "item_code", "item_name", "qty", "uom", "scrap_pct", "note"
+            "bom_no", "item_code", "item_name", "custom_alias", "qty", "uom", "scrap_pct", "note"
         ])
         writer.writeheader()
         writer.writerows(bom_items)
-    print(f"[+] Xuất thành công: {out_items_csv} ({len(bom_items)} Dòng chi tiết vật tư BOM Items)")
+    print(f"[+] Xuất thành công: {out_items_csv} ({len(bom_items)} Dòng chi tiết vật tư BOM Items có custom_alias)")
     print("=" * 75)
 
 if __name__ == "__main__":

@@ -195,13 +195,16 @@ const server = http.createServer((req, res) => {
 	}
 
 	// APIs
-	if (req.method === 'POST') {
+	if (pathname.startsWith('/api/method/') || req.method === 'POST') {
 		let body = '';
 		req.on('data', chunk => body += chunk);
 		req.on('end', () => {
 			res.setHeader('Content-Type', 'application/json');
 			let parsed = {};
 			try { parsed = JSON.parse(body); } catch (e) { void e; }
+			for (const [k, v] of url.searchParams.entries()) {
+				if (parsed[k] === undefined) parsed[k] = v;
+			}
 
 			// 1. Auth & Session
 			if (pathname === '/api/method/login') {
@@ -238,9 +241,13 @@ const server = http.createServer((req, res) => {
 			if (pathname === '/api/method/vanphat_portal.api.item.get_list') {
 				const q = (parsed.query || '').trim().toLowerCase();
 				const grp = (parsed.item_group || '').trim();
-				let items = MASTER_ITEMS;
+				const supply = (parsed.supply_type || '').trim();
+				let items = safeReadCSV('item_master.csv');
 				if (grp) {
 					items = items.filter(it => it.item_group === grp);
+				}
+				if (supply) {
+					items = items.filter(it => it.default_material_request_type === supply);
 				}
 				if (q) {
 					items = items.filter(it =>
@@ -258,20 +265,117 @@ const server = http.createServer((req, res) => {
 			// 1.2 Item APIs: Item Detail with Associated BOM
 			if (pathname === '/api/method/vanphat_portal.api.item.get_detail') {
 				const code = (parsed.item_code || '').trim();
-				const item = MASTER_ITEMS.find(it => it.item_code === code);
+				const currentItems = safeReadCSV('item_master.csv');
+				const item = currentItems.find(it => it.item_code === code);
 				if (!item) {
 					res.statusCode = 404;
 					res.end(JSON.stringify({ error: 'Item not found' }));
 					return;
 				}
+				const itemAliasMap = new Map();
+				currentItems.forEach(it => {
+					itemAliasMap.set(it.item_code, it.custom_alias || it.item_name);
+				});
+				const currentBOMMasters = safeReadCSV('bom_master.csv');
+				const currentBOMItems = safeReadCSV('bom_items.csv');
+				const bomMaster = currentBOMMasters.find(b => b.item === code);
 				let bom = null;
-				for (const [bom_no, b] of BOM_TREE.entries()) {
-					if (b.master.item === code) {
-						bom = b;
-						break;
-					}
+				if (bomMaster) {
+					const items = currentBOMItems
+						.filter(bi => bi.bom_no === bomMaster.bom_no)
+						.map(bi => ({
+							...bi,
+							custom_alias: bi.custom_alias || itemAliasMap.get(bi.item_code) || bi.item_name
+						}));
+					bom = { master: bomMaster, items };
 				}
 				res.end(JSON.stringify({ message: { item, bom } }));
+				return;
+			}
+
+			// 1.3 Customer APIs
+			if (pathname === '/api/method/vanphat_portal.api.customer.get_list') {
+				const q = (parsed.query || '').trim().toLowerCase();
+				let custs = safeReadCSV('customer_master.csv');
+				if (q) {
+					custs = custs.filter(c =>
+						(c.name && c.name.toLowerCase().includes(q)) ||
+						(c.customer_name && c.customer_name.toLowerCase().includes(q)) ||
+						(c.alias && c.alias.toLowerCase().includes(q)) ||
+						(c.territory && c.territory.toLowerCase().includes(q)) ||
+						(c.customer_group && c.customer_group.toLowerCase().includes(q))
+					);
+				}
+				res.end(JSON.stringify({ message: custs }));
+				return;
+			}
+
+			if (pathname === '/api/method/vanphat_portal.api.customer.get_detail') {
+				const name = (parsed.name || '').trim();
+				const custs = safeReadCSV('customer_master.csv');
+				const found = custs.find(c => c.name === name || c.customer_name === name || c.alias === name);
+				if (!found) {
+					res.statusCode = 404;
+					res.end(JSON.stringify({ error: 'Customer not found' }));
+					return;
+				}
+				res.end(JSON.stringify({ message: found }));
+				return;
+			}
+
+			// 1.4 Supplier APIs
+			if (pathname === '/api/method/vanphat_portal.api.supplier.get_list') {
+				const q = (parsed.query || '').trim().toLowerCase();
+				const grp = (parsed.supplier_group || '').trim();
+				let supps = safeReadCSV('supplier_master.csv');
+				if (grp) {
+					supps = supps.filter(s => s.supplier_group === grp);
+				}
+				if (q) {
+					supps = supps.filter(s =>
+						(s.name && s.name.toLowerCase().includes(q)) ||
+						(s.supplier_name && s.supplier_name.toLowerCase().includes(q)) ||
+						(s.alias && s.alias.toLowerCase().includes(q)) ||
+						(s.supplier_group && s.supplier_group.toLowerCase().includes(q)) ||
+						(s.tax_id && s.tax_id.toLowerCase().includes(q))
+					);
+				}
+				res.end(JSON.stringify({ message: supps }));
+				return;
+			}
+
+			if (pathname === '/api/method/vanphat_portal.api.supplier.get_detail') {
+				const name = (parsed.name || '').trim();
+				const supps = safeReadCSV('supplier_master.csv');
+				const found = supps.find(s => s.name === name || s.supplier_name === name || s.alias === name);
+				if (!found) {
+					res.statusCode = 404;
+					res.end(JSON.stringify({ error: 'Supplier not found' }));
+					return;
+				}
+				res.end(JSON.stringify({ message: found }));
+				return;
+			}
+
+			// 1.5 User APIs
+			if (pathname === '/api/method/vanphat_portal.api.user.get_list') {
+				const q = (parsed.query || '').trim().toLowerCase();
+				const dept = (parsed.department || '').trim();
+				let users = safeReadCSV('user_master.csv');
+				if (dept) {
+					users = users.filter(u => u.department === dept);
+				}
+				if (q) {
+					users = users.filter(u =>
+						(u.name && u.name.toLowerCase().includes(q)) ||
+						(u.full_name && u.full_name.toLowerCase().includes(q)) ||
+						(u.email && u.email.toLowerCase().includes(q)) ||
+						(u.department && u.department.toLowerCase().includes(q)) ||
+						(u.designation && u.designation.toLowerCase().includes(q)) ||
+						(u.role_profile_name && u.role_profile_name.toLowerCase().includes(q))
+					);
+				}
+				res.end(JSON.stringify({ message: users }));
 				return;
 			}
 
@@ -521,10 +625,10 @@ const server = http.createServer((req, res) => {
 		return;
 	}
 
-	// Master Data Reviewer Web Page (/master-data)
+	// Master Data: Redirect seamlessly to integrated SPA cockpit
 	if (pathname === '/master-data' || pathname === '/review') {
-		res.setHeader('Content-Type', 'text/html; charset=utf-8');
-		res.end(renderMasterDataReviewerHtml());
+		res.writeHead(302, { Location: '/portal?view=items' });
+		res.end();
 		return;
 	}
 

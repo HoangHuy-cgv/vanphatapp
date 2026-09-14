@@ -1,26 +1,21 @@
-# Implementation Plan: Trang 1 — Đơn Hàng & Tiền Cọc (Orders & Deposit)
+# Implementation Plan: Thống Nhất Toàn Bộ Master Data Vào Trang "Danh Mục" (Elon Musk Cockpit)
 
-## Overview
-Xây dựng màn hình Đơn Hàng chính thức cho Vạn Phát Portal theo chuẩn frappe/crm (danh sách phẳng tinh gọn, click dòng mở Drawer chi tiết từ phải sang), tuân thủ 100% SSOT ERPNext v16 Backend, và tuyệt đối không đụng vào trang Báo Giá hiện tại, Modal 1 và Drawer 2.
+## Mục Tiêu
+1. Gỡ bỏ 3 nút riêng lẻ `Khách hàng`, `Nhà cung cấp`, `Người dùng` trên Sidebar. Sidebar chỉ giữ 1 nút duy nhất **`Danh mục`** (`view = 'catalog'` hoặc `view = 'items'`) với tổng badge 435 bản ghi.
+2. Tái cấu trúc trang Mặt hàng thành trang **`Danh mục`** chứa trọn vẹn 6 phân hệ Master Data:
+   - **`Sản phẩm`** (88) [kèm sub-filter chips: Tất cả (88), Túi ghép (45), Túi NGCS (15), Cuộn màng (16), Màng đơn (12)]
+   - **`Nguyên vật liệu`** (48)
+   - **`Trục in`** (157)
+   - **`Khách hàng`** (117)
+   - **`Nhà cung cấp`** (14)
+   - **`Người dùng`** (11)
+3. Tìm kiếm tức thì thích ứng theo từng tab trên cùng dòng buồng lái (Elon Musk single-row cockpit).
+4. Tích hợp trọn vẹn 4 slide-over drawers: `DrawerItemDetail`, `DrawerCustomerDetail`, `DrawerSupplierDetail`, `DrawerUserDetail`.
+5. Đảm bảo toàn bộ 78+ automated tests pass và kiểm chứng trực quan bằng Chrome DevTools MCP.
 
 ## Task Breakdown
-1. **Task 1: Backend APIs for Orders & Deposit Control (`bao_gia.py`)**
-   - Nâng cấp `list_orders` trả về `advance_paid`, `outstanding_amount`, `item_name`, `total_qty`.
-   - Thêm `get_order_details(name)` lấy đầy đủ items, thông tin cọc và điều kiện submit.
-   - Thêm `record_order_deposit(name, amount, is_vip_guarantee, note)`.
-   - Thêm `submit_sales_order(name)` với validation chặn submit nếu chưa đủ cọc / chưa duyệt VIP.
-
-2. **Task 2: Drawer Chi Tiết Đơn Hàng (`DrawerOrderDetail.vue`)**
-   - Xây dựng component slideover từ phải sang theo chuẩn Industrial Dark.
-   - Hiển thị bảng chi tiết mặt hàng, số lượng, đơn giá.
-   - Hiển thị tiến độ cọc (% cọc, đã cọc, còn nợ).
-   - Form nhập cọc / Checkbox bảo lãnh VIP + nút Submit đơn hàng.
-
-3. **Task 3: Tích hợp Trang Đơn Hàng vào `App.vue`**
-   - Cập nhật bảng `view === 'orders'` với các cột thực tế: Ngày | Mã | Khách (Alias) | Mặt hàng | SL | Tổng tiền | ĐÃ CỌC | CÒN NỢ | Trạng thái.
-   - Bắt sự kiện `@click="openOrderDetail(order)"` để mở Drawer.
-   - Giữ nguyên 100% phần `view === 'quotes'`, `ModalStep1Sale.vue`, `DrawerStep2Director.vue`.
-
-4. **Task 4: Build Verification & Testing**
-   - Chạy `yarn build` kiểm tra biên dịch Vite.
-   - Test luồng click dòng mở Drawer, nhập cọc và submit đơn hàng.
+- [ ] Task 1: Tái Cấu Trúc Sidebar & Navigation State trong `App.vue` (Nút "Danh mục", loại bỏ 3 nút thừa)
+- [ ] Task 2: Xây Dựng Thanh 6 Tab Buồng Lái & Ô Tìm Kiếm Thích Ứng Trong View `Danh mục`
+- [ ] Task 3: Kết Nối Bảng Dữ Liệu Tương Ứng & 4 Slide-Over Drawers Vào View `Danh mục`
+- [ ] Task 4: Cập Nhật & Mở Rộng Bộ Kiểm Thử Tự Động `scripts/verify-catalog-page.mjs`
+- [ ] Task 5: Build Vite Production & Chụp Ảnh Kiểm Chứng Trực Quan Bằng Chrome DevTools MCP

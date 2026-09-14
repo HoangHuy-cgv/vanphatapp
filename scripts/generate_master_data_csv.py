@@ -28,6 +28,21 @@ BRAND_HEADERS = [
 ]
 
 
+def normalize_layers(layers):
+    if not layers:
+        return ""
+    # 1. Thống nhất dấu phân cách duy nhất là dấu gạch chéo đơn /
+    s = str(layers).replace("//", "/")
+    # 2. Cấm dùng PES -> Chuẩn hóa thành PE sữa
+    s = re.sub(r'\bPES\b', 'PE sữa', s, flags=re.IGNORECASE)
+    # 3. Cấm dùng LLDPE -> Chuẩn hóa thành PE trong
+    s = re.sub(r'\bLLDPE\b', 'PE trong', s, flags=re.IGNORECASE)
+    # 4. Chuẩn hóa PE đơn thuần thành PE trong (hoặc giữ nguyên nếu đã là PE sữa / PE trong)
+    if s.endswith("/PE"):
+        s = s[:-3] + "/PE trong"
+    return s
+
+
 def add_item(code, legal_name, alias, group, uom, brand="", desc="", req_type="Manufacture",
              standard_rate=0.0, min_order_qty=0, safety_stock=0, disabled=0,
              is_stock=1, is_sales=1, is_purchase=0, customer="", ref="",
@@ -51,7 +66,7 @@ def add_item(code, legal_name, alias, group, uom, brand="", desc="", req_type="M
         "is_purchase_item": is_purchase,
         "customer": customer,
         "customer_ref_code": ref,
-        "custom_structure_layers": layers,
+        "custom_structure_layers": normalize_layers(layers),
         "custom_thickness_mic": thick,
         "custom_film_width_mm": film_w,
         "custom_pouch_width_mm": pw,
@@ -83,7 +98,7 @@ ngcs_colors = [
 ]
 ngcs_sizes = [
     (1, "Nhỏ", "2L", 220, 600, 220, 280, 40, 6500.0, "PET/MPET/PA/PE sữa"),
-    (6, "Trung", "3.2Kg", 230, 700, 280, 340, 45, 7368.0, "PET//PA/PE sữa"),
+    (6, "Trung", "3.2Kg", 230, 700, 280, 340, 45, 7368.0, "PET/PA/PE sữa"),
     (11, "Lớn", "3.8Kg", 250, 800, 300, 380, 50, 9400.0, "PET/MPET/PA/PE sữa"),
 ]
 for start_idx, size_lbl, cap, thick, film_w, pw, pl, gusset, rate, layers in ngcs_sizes:
@@ -133,56 +148,80 @@ for code, legal_name, alias, w, l, thick, layers, gusset, rate in tmd_items:
 #         và sheet 'Sheet1' trong THÔNG TIN TRỤC IN.xlsx
 # ==============================================================================
 custom_pouches = [
-    # code, legal_name, alias, brand, cust, ref, cap, w, l, thick, layers, cyl_code, cyl_wh, cyl_l, cyl_c, cyl_q, accessory, print_tech, rate, req_type, desc
-    ("TP-00001", "Túi đựng nước giặt 888 3.2Kg có vòi (Màu Hồng)", "888 3.2Kg Hồng", "888", "CÔNG TY CỔ PHẦN DS COSMETIC", "888-3.2KG-HONG", "3.2Kg", 280, 340, 230, "PET//PA/PE sữa", "G4006940", "Kho Kiến Tâm", 800, 564, 5, "Vòi 16mm", "In trục ống đồng", 5166.0, "Manufacture", ""),
-    ("TP-00002", "Túi đựng nước giặt 888 3.2Kg có vòi (Màu Tím)", "888 3.2Kg Tím", "888", "CÔNG TY CỔ PHẦN DS COSMETIC", "888-3.2KG-TIM", "3.2Kg", 280, 340, 230, "PET//PA/PE sữa", "G4006961", "Kho Kiến Tâm", 800, 564, 5, "Vòi 16mm", "In trục ống đồng", 5166.0, "Manufacture", ""),
-    ("TP-00003", "Túi đựng nước giặt 888 3.2Kg có vòi (Màu Đỏ)", "888 3.2Kg Đỏ", "888", "CÔNG TY CỔ PHẦN DS COSMETIC", "888-3.2KG-DO", "3.2Kg", 280, 340, 230, "PET//PA/PE sữa", "G4006960", "Kho Vạn Phát", 800, 564, 5, "Vòi 16mm", "In trục ống đồng", 5166.0, "Manufacture", ""),
-    ("TP-00004", "Túi đựng nước giặt 888 2Kg có vòi (Màu Hồng)", "888 2Kg Hồng", "888", "CÔNG TY CỔ PHẦN DS COSMETIC", "888-2KG-HONG", "2Kg", 240, 300, 210, "PET//PA/PE sữa", "G4006677", "Kho Vạn Phát", 750, 484, 5, "Vòi 16mm", "In trục ống đồng", 4500.0, "Manufacture", ""),
-    ("TP-00005", "Túi đựng nước giặt 888 2Kg có vòi (Màu Tím)", "888 2Kg Tím", "888", "CÔNG TY CỔ PHẦN DS COSMETIC", "888-2KG-TIM", "2Kg", 240, 300, 210, "PET//PA/PE sữa", "G4005893", "Kho Vạn Phát", 750, 484, 5, "Vòi 16mm", "In trục ống đồng", 4500.0, "Manufacture", ""),
-    ("TP-00006", "Túi đựng nước giặt 888 2Kg có vòi (Màu Đỏ)", "888 2Kg Đỏ", "888", "CÔNG TY CỔ PHẦN DS COSMETIC", "888-2KG-DO", "2Kg", 240, 300, 210, "PET//PA/PE sữa", "G4005897", "Kho Vạn Phát", 750, 484, 5, "Vòi 16mm", "In trục ống đồng", 4500.0, "Manufacture", ""),
-    ("TP-00007", "Túi đựng nước giặt 888 0.6Kg có vòi (Màu Hồng)", "888 0.6Kg Hồng", "888", "CÔNG TY CỔ PHẦN DS COSMETIC", "888-0.6KG-HONG", "0.6Kg", 180, 240, 180, "PET//PA/PE", "G4006660", "Kho Vạn Phát", 750, 456, 5, "Vòi 16mm", "In trục ống đồng", 2800.0, "Manufacture", "[NGỪNG KINH DOANH THƯƠNG MẠI] Bảo lưu lịch sử kỹ thuật và trục in."),
-    ("TP-00008", "Túi đựng nước giặt 888 0.6Kg có vòi (Màu Tím)", "888 0.6Kg Tím", "888", "CÔNG TY CỔ PHẦN DS COSMETIC", "888-0.6KG-TIM", "0.6Kg", 180, 240, 180, "PET//PA/PE", "G4006655", "Kho Vạn Phát", 750, 456, 5, "Vòi 16mm", "In trục ống đồng", 2800.0, "Manufacture", "[NGỪNG KINH DOANH THƯƠNG MẠI] Bảo lưu lịch sử kỹ thuật và trục in."),
-    ("TP-00009", "Túi đựng nước giặt 888 0.6Kg có vòi (Màu Đỏ)", "888 0.6Kg Đỏ", "888", "CÔNG TY CỔ PHẦN DS COSMETIC", "888-0.6KG-DO", "0.6Kg", 180, 240, 180, "PET//PA/PE", "G4005877", "Kho Vạn Phát", 750, 456, 6, "Vòi 16mm", "In trục ống đồng", 2800.0, "Manufacture", "[NGỪNG KINH DOANH THƯƠNG MẠI] Bảo lưu lịch sử kỹ thuật và trục in."),
-    ("TP-00010", "Túi đựng nước lau sàn 888 0.6Kg có vòi", "NLS 888 0.6Kg", "888", "CÔNG TY CỔ PHẦN DS COSMETIC", "888-NLS-0.6KG", "0.6Kg", 180, 240, 180, "PET//PE", "G4012417", "Kho Vạn Phát", 750, 456, 6, "Vòi 16mm", "In trục ống đồng", 2500.0, "Manufacture", "[NGỪNG KINH DOANH THƯƠNG MẠI] Bảo lưu lịch sử kỹ thuật và trục in."),
-    ("TP-00011", "Túi đựng nước rửa chén 888 0.6Kg có vòi", "NRC 888 0.6Kg", "888", "CÔNG TY CỔ PHẦN DS COSMETIC", "888-NRC-0.6KG", "0.6Kg", 180, 240, 180, "PET//PE", "G4012418", "Kho Vạn Phát", 750, 456, 5, "Vòi 16mm", "In trục ống đồng", 2500.0, "Manufacture", "[NGỪNG KINH DOANH THƯƠNG MẠI] Bảo lưu lịch sử kỹ thuật và trục in."),
-    ("TP-00012", "Túi đựng nước giặt Minh Râu 3.2Kg có vòi (Màu Tím)", "Minh Râu 3.2Kg Tím", "Minh Râu", "CÔNG TY CỔ PHẦN DS COSMETIC", "MINHRAU-3.2KG-TIM", "3.2Kg", 280, 340, 230, "PET//PA/PE sữa", "G4005887", "Kho Kiến Tâm", 780, 564, 6, "Vòi 16mm", "In trục ống đồng", 5166.0, "Manufacture", ""),
-    ("TP-00013", "Túi đựng nước giặt Minh Râu 3.2Kg có vòi (Màu Hồng)", "Minh Râu 3.2Kg Hồng", "Minh Râu", "CÔNG TY CỔ PHẦN DS COSMETIC", "MINHRAU-3.2KG-HONG", "3.2Kg", 280, 340, 230, "PET//PA/PE sữa", "G4005883", "Kho Kiến Tâm", 780, 564, 6, "Vòi 16mm", "In trục ống đồng", 5166.0, "Manufacture", ""),
-    ("TP-00014", "Túi đựng nước giặt xả Lamy 2Kg có vòi (Màu Vàng)", "Lamy 2Kg Vàng", "Lamy", "CÔNG TY CỔ PHẦN ECO WIPES VIỆT NAM", "LAMY-2KG-VANG", "2Kg", 240, 320, 200, "PET/MPET/PA/LLDPE", "", "", "", "", "", "Vòi 16mm", "In trục ống đồng", 5056.0, "Manufacture", ""),
-    ("TP-00015", "Túi đựng nước giặt xả Lamy 2Kg có vòi (Màu Xanh)", "Lamy 2Kg Xanh", "Lamy", "CÔNG TY CỔ PHẦN ECO WIPES VIỆT NAM", "LAMY-2KG-XANH", "2Kg", 240, 320, 200, "PET/MPET/PA/LLDPE", "", "", "", "", "", "Vòi 16mm", "In trục ống đồng", 5056.0, "Manufacture", ""),
-    ("TP-00016", "Túi đựng nước giặt BABA 3.6Kg có vòi", "BABA 3.6Kg", "BABA", "CÔNG TY TNHH MTV SX TM XNK ANH PHÁT", "BABA-3.6KG", "3.6Kg", 280, 380, 230, "PET/MPET/PA/PE sữa", "TRUC-BABA", "Kho Vạn Phát", 800, 564, 8, "Vòi 16mm", "In trục ống đồng", 6759.0, "Manufacture", ""),
-    ("TP-00017", "Túi đựng keo dán gạch SUPERGEO 5L có vòi", "Supergeo 5L", "Supergeo", "CÔNG TY TNHH CÔNG NGHỆ VẬT LIỆU TIÊN PHONG VIETCOAT", "SUPERGEO-5L", "5L", 320, 340, 240, "PET/PA/PA/PE sữa", "TRUC-SUPERGEO", "Kho Vạn Phát", 800, 564, 6, "Vòi 16mm", "In trục ống đồng", 9685.0, "Manufacture", ""),
-    ("TP-00018", "Túi đựng xốt phô mai KOVAA 200g có vòi", "Xốt Pho Mai 200g", "KOVAA", "CÔNG TY TNHH SX THƯƠNG MẠI BAO BÌ KOVAA", "KOVAA-200G", "200g", 150, 220, 150, "PET/PA/PES", "", "", "", "", "", "Vòi 10mm", "In trục ống đồng", 1944.0, "Manufacture", "Chịu nhiệt độ rót xốt nóng 70 - 80°C."),
-    ("TP-00019", "Túi màng bọc thực phẩm TopGia", "TopGia MBTP", "TopGia", "CÔNG TY TNHH PHONG TÍN", "TOPGIA-MBTP", "Tiêu chuẩn", 200, 300, 80, "PET/PE", "", "", "", "", "", "", "In trục ống đồng", 1780.0, "Purchase", ""),
-    ("TP-00020", "Túi đựng nước giặt TopGia 1L có vòi (Hoa Nắng)", "TopGia 1L Hoa Nắng", "TopGia", "CÔNG TY TNHH PHONG TÍN", "TOPGIA-1L-HN", "1L", 180, 250, 190, "PET/PA/PE", "G4011425", "Kho Kiến Tâm", 750, 404, 6, "Vòi 16mm", "In trục ống đồng", 2852.0, "Manufacture", ""),
-    ("TP-00021", "Túi đựng nước giặt TopGia 1L có vòi (Đắm Say)", "TopGia 1L Đắm Say", "TopGia", "CÔNG TY TNHH PHONG TÍN", "TOPGIA-1L-DS", "1L", 180, 250, 190, "PET/PA/PE", "G4011427", "Kho Kiến Tâm", 750, 404, 6, "Vòi 16mm", "In trục ống đồng", 2852.0, "Manufacture", ""),
-    ("TP-00022", "Túi đựng nước giặt Softy 3L có vòi (Nền Tím)", "Softy 3L Tím", "Softy", "CÔNG TY TNHH SẢN XUẤT - XUẤT NHẬP KHẨU AMYCO", "SOFTY-3L-TIM", "3L", 280, 340, 230, "PET/PA/PE sữa", "", "", "", "", "", "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture", ""),
-    ("TP-00023", "Túi đựng nước giặt Sachpoong 3.2Kg có vòi", "Sachpoong 3.2Kg", "Sachpoong", "Khách hàng Sachpoong", "SACHPOONG-3.2KG", "3.2Kg", 280, 340, 230, "PET//PA/PE sữa", "G4010806", "Kho Vạn Phát", 800, 564, 5, "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture", ""),
-    ("TP-00024", "Túi đựng nước giặt Sachpoong 0.6Kg có vòi", "Sachpoong 0.6Kg", "Sachpoong", "Khách hàng Sachpoong", "SACHPOONG-0.6KG", "0.6Kg", 180, 240, 180, "PET//PA/PE", "G4010805", "Kho Vạn Phát", 750, 456, 5, "Vòi 16mm", "In trục ống đồng", 2800.0, "Manufacture", ""),
-    ("TP-00025", "Túi đựng nước giặt Raptor Clean 0.6Kg có vòi", "Raptor Clean 0.6Kg", "Raptor Clean", "Khách hàng Raptor Clean", "RAPTOR-0.6KG", "0.6Kg", 180, 240, 180, "PET//PA/PE", "G4010947", "Kho Vạn Phát", 750, 456, 7, "Vòi 16mm", "In trục ống đồng", 2800.0, "Manufacture", ""),
-    ("TP-00026", "Túi đựng nước giặt Trần Quân 2Kg có vòi", "Trần Quân 2Kg", "Trần Quân", "Khách hàng Trần Quân", "TRANQUAN-2KG", "2Kg", 240, 300, 210, "PET//PA/PE sữa", "G4011409", "Kho Vạn Phát", 750, 484, 4, "Vòi 16mm", "In trục ống đồng", 4500.0, "Manufacture", ""),
-    ("TP-00027", "Túi đựng nước giặt DPClean 0.6Kg có vòi", "DPClean 0.6Kg", "DPClean", "Khách hàng DPClean", "DPCLEAN-0.6KG", "0.6Kg", 180, 240, 180, "PET//PA/PE", "G4011542", "Kho Vạn Phát", 750, 456, 5, "Vòi 16mm", "In trục ống đồng", 2800.0, "Manufacture", ""),
-    ("TP-00028", "Túi đựng nước giặt Bluum 3Kg có vòi (Màu Đen)", "Bluum 3Kg Đen", "Bluum", "Khách hàng Bluum", "BLUUM-3KG-DEN", "3Kg", 280, 340, 230, "PET//PA/PE sữa", "G4012179", "Kho Vạn Phát", 800, 564, 5, "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture", ""),
-    ("TP-00029", "Túi đựng nước giặt Bluum 3Kg có vòi (Màu Xanh)", "Bluum 3Kg Xanh", "Bluum", "Khách hàng Bluum", "BLUUM-3KG-XANH", "3Kg", 280, 340, 230, "PET//PA/PE sữa", "G4012178", "Kho Vạn Phát", 800, 564, 6, "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture", ""),
-    ("TP-00030", "Túi đựng nước giặt Premium 3.2Kg có vòi (Màu Tím)", "Premium 3.2Kg Tím", "Premium", "Khách hàng Premium", "PREMIUM-3.2KG-TIM", "3.2Kg", 280, 340, 230, "PET//PA/PE sữa", "G4006905", "Kho Kiến Tâm", 800, 564, 5, "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture", ""),
-    ("TP-00031", "Túi đựng nước giặt Premium 3.2Kg có vòi (Màu Đỏ)", "Premium 3.2Kg Đỏ", "Premium", "Khách hàng Premium", "PREMIUM-3.2KG-DO", "3.2Kg", 280, 340, 230, "PET//PA/PE sữa", "G4006924", "Kho Vạn Phát", 800, 564, 5, "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture", ""),
-    ("TP-00032", "Túi đựng nước giặt Yumi Care 3.6L có vòi", "Yumi Care 3.6L", "Yumi Care", "Khách hàng Yumi Care", "YUMICARE-3.6L", "3.6L", 280, 350, 230, "PET//PA/PE sữa", "G631383", "Kho Vạn Phát", 900, 568, 5, "Vòi 16mm", "In trục ống đồng", 7200.0, "Manufacture", ""),
-    ("TP-00033", "Túi đựng nước giặt Sofia 3Kg có vòi (Hương LyLy)", "Sofia 3Kg Xanh", "Sofia", "CÔNG TY CỔ PHẦN EZ COSMETIC VIỆT NAM – CHI NHÁNH LONG AN", "SOFIA-3KG-XANH", "3Kg", 280, 340, 230, "PET//PA/PE sữa", "G4002697", "Kho Vạn Phát", 850, 526, 5, "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture", ""),
-    ("TP-00034", "Túi đựng nước giặt Clean 3.6L có vòi", "Clean 3.6L", "Clean", "Khách hàng Clean", "CLEAN-3.6L", "3.6L", 280, 350, 230, "PET//PA/PE sữa", "Z418556", "Kho Vạn Phát", 900, 568, 8, "Vòi 16mm", "In trục ống đồng", 7200.0, "Manufacture", ""),
-    ("TP-00035", "Túi đựng nước giặt Clean 2L có vòi", "Clean 2L", "Clean", "Khách hàng Clean", "CLEAN-2L", "2L", 240, 300, 210, "PET//PA/PE sữa", "G630657", "Kho Vạn Phát", 800, 466, 8, "Vòi 16mm", "In trục ống đồng", 4500.0, "Manufacture", ""),
-    ("TP-00036", "Túi đựng nước giặt Futa True 3Kg có vòi", "Futa True 3Kg", "Futa True", "CÔNG TY TNHH MTV TM TRANG UYÊN", "FUTA-3KG", "3Kg", 280, 340, 230, "PET//PA/PE sữa", "G4013050", "Kho Trang Tín", 900, 544, 6, "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture", ""),
-    ("TP-00037", "Túi đựng nước giặt Chakari Louis 3.2Kg có vòi", "Chakari Louis 3.2Kg", "Chakari", "Khách hàng Chakari", "CHAKARI-3.2KG", "3.2Kg", 280, 340, 230, "PET//PA/PE sữa", "G4014585", "Kho Trang Tín", 850, 846, 7, "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture", ""),
-    # CÁC MÃ BỔ SUNG MỚI TỪ ĐƠN CỌC CHƯA GIAO
-    ("TP-00038", "Túi đựng nước giặt CHLOE'LY 2L có vòi", "Chloe'ly 2L", "Chloe'ly", "CÔNG TY TNHH SẢN XUẤT - XUẤT NHẬP KHẨU AMYCO", "CHLOELY-2L", "2L", 240, 300, 210, "PET/MPET/PA/PE sữa", "", "", "", "", "", "Vòi 16mm", "In trục ống đồng", 5074.0, "Manufacture", ""),
-    ("TP-00039", "Túi đựng hạt đậu dinh dưỡng SKX 16x23.5cm", "SKX Đậu Nành", "SKX", "CÔNG TY CỔ PHẦN DINH DƯỠNG SKX", "SKX-DAUNANH", "500g", 160, 235, 160, "OPPMalt/PE", "G652829", "Kho Vạn Phát", 650, 470, 4, "", "In trục ống đồng", 1290.0, "Manufacture", ""),
-    ("TP-00040", "Túi đựng hạt nêm Enzy 900g có zipper", "Enzy Hạt Nêm 900g", "Enzy", "CÔNG TY TNHH ENZY FOOD", "ENZY-900G", "900g", 250, 300, 150, "PET/AL/PE", "G4012180", "Kho Vạn Phát", 750, 500, 6, "Khóa Zipper", "In trục ống đồng", 3963.0, "Manufacture", ""),
-    ("TP-00041", "Túi đựng hạt nêm Enzy 450g có zipper", "Enzy Hạt Nêm 450g", "Enzy", "CÔNG TY TNHH ENZY FOOD", "ENZY-450G", "450g", 200, 260, 140, "PET/AL/PE", "", "", "", "", "", "Khóa Zipper", "In trục ống đồng", 3037.0, "Manufacture", ""),
-    ("TP-00042", "Túi đựng hạt nêm Enzy 220g có zipper", "Enzy Hạt Nêm 220g", "Enzy", "CÔNG TY TNHH ENZY FOOD", "ENZY-220G", "220g", 170, 220, 120, "PET/AL/PE", "", "", "", "", "", "Khóa Zipper", "In trục ống đồng", 2111.0, "Manufacture", ""),
-    ("TP-00043", "Túi đựng gia vị rắc cơm vị hải sản Enzy 11x17cm", "Enzy Rắc Cơm 11x17", "Enzy", "CÔNG TY TNHH ENZY FOOD", "ENZY-RACCOM", "100g", 110, 170, 100, "PET/AL/PE", "", "", "", "", "", "Khóa Zipper", "In trục ống đồng", 1315.0, "Manufacture", ""),
-    ("TP-00044", "Túi đựng nước giặt Trang Uyên 2L có vòi", "Trang Uyên 2L", "Trang Uyên", "CÔNG TY TNHH MTV TM TRANG UYÊN", "TRANGUYEN-2L", "2L", 240, 300, 200, "PET/PA/PE sữa", "", "", "", "", "", "Vòi 16mm", "In offset (Không trục)", 6880.0, "Manufacture", "Công nghệ in offset không trục."),
-    ("TP-00045", "Túi đựng nước giặt xả Sofia 2L có vòi (Hương Ngọc Lan)", "Sofia 2L Ngọc Lan", "Sofia", "CÔNG TY CỔ PHẦN EZ COSMETIC VIỆT NAM – CHI NHÁNH LONG AN", "SOFIA-2L-NL", "2L", 240, 300, 210, "PET/PA/PE sữa", "TRUC-SOFIA2L", "Kho Vạn Phát", 750, 484, 5, "Vòi 16mm", "In trục ống đồng", 5537.0, "Manufacture", ""),
+    # code, legal_name, alias, brand, cust, ref, cap, w, l, gusset, thick, film_w, layers, cyl_code, cyl_wh, cyl_l, cyl_c, cyl_q, accessory, print_tech, rate, req_type, desc
+    # --- 888 3.2Kg DS Cosmetic (Doypack đáy đứng có vòi) ---
+    ("TP-00001", "Túi đựng nước giặt 888 3.2Kg có vòi (Màu Hồng)", "888 3.2Kg Hồng", "888", "CÔNG TY CỔ PHẦN DS COSMETIC", "888-3.2KG-HONG", "3.2Kg", 280, 340, 45, 230, 700, "PET/PA/PE sữa", "G4006940", "Kho Kiến Tâm", 800, 564, 5, "Vòi 16mm", "In trục ống đồng", 5166.0, "Manufacture", ""),
+    ("TP-00002", "Túi đựng nước giặt 888 3.2Kg có vòi (Màu Tím)", "888 3.2Kg Tím", "888", "CÔNG TY CỔ PHẦN DS COSMETIC", "888-3.2KG-TIM", "3.2Kg", 280, 340, 45, 230, 700, "PET/PA/PE sữa", "G4006961", "Kho Kiến Tâm", 800, 564, 5, "Vòi 16mm", "In trục ống đồng", 5166.0, "Manufacture", ""),
+    ("TP-00003", "Túi đựng nước giặt 888 3.2Kg có vòi (Màu Đỏ)", "888 3.2Kg Đỏ", "888", "CÔNG TY CỔ PHẦN DS COSMETIC", "888-3.2KG-DO", "3.2Kg", 280, 340, 45, 230, 700, "PET/PA/PE sữa", "G4006960", "Kho Vạn Phát", 800, 564, 5, "Vòi 16mm", "In trục ống đồng", 5166.0, "Manufacture", ""),
+    # --- 888 2Kg DS Cosmetic (Doypack đáy đứng có vòi) ---
+    ("TP-00004", "Túi đựng nước giặt 888 2Kg có vòi (Màu Hồng)", "888 2Kg Hồng", "888", "CÔNG TY CỔ PHẦN DS COSMETIC", "888-2KG-HONG", "2Kg", 240, 300, 45, 210, 600, "PET/PA/PE sữa", "G4006677", "Kho Vạn Phát", 750, 484, 5, "Vòi 16mm", "In trục ống đồng", 4500.0, "Manufacture", ""),
+    ("TP-00005", "Túi đựng nước giặt 888 2Kg có vòi (Màu Tím)", "888 2Kg Tím", "888", "CÔNG TY CỔ PHẦN DS COSMETIC", "888-2KG-TIM", "2Kg", 240, 300, 45, 210, 600, "PET/PA/PE sữa", "G4005893", "Kho Vạn Phát", 750, 484, 5, "Vòi 16mm", "In trục ống đồng", 4500.0, "Manufacture", ""),
+    ("TP-00006", "Túi đựng nước giặt 888 2Kg có vòi (Màu Đỏ)", "888 2Kg Đỏ", "888", "CÔNG TY CỔ PHẦN DS COSMETIC", "888-2KG-DO", "2Kg", 240, 300, 45, 210, 600, "PET/PA/PE sữa", "G4005897", "Kho Vạn Phát", 750, 484, 5, "Vòi 16mm", "In trục ống đồng", 4500.0, "Manufacture", ""),
+    # --- 888 0.6Kg Ngừng kinh doanh (Doypack đáy đứng nhỏ có vòi) ---
+    ("TP-00007", "Túi đựng nước giặt 888 0.6Kg có vòi (Màu Hồng)", "888 0.6Kg Hồng", "888", "CÔNG TY CỔ PHẦN DS COSMETIC", "888-0.6KG-HONG", "0.6Kg", 180, 240, 35, 180, 450, "PET/PA/PE trong", "G4006660", "Kho Vạn Phát", 750, 456, 5, "Vòi 16mm", "In trục ống đồng", 2800.0, "Manufacture", "[NGỪNG KINH DOANH THƯƠNG MẠI] Bảo lưu lịch sử kỹ thuật và trục in."),
+    ("TP-00008", "Túi đựng nước giặt 888 0.6Kg có vòi (Màu Tím)", "888 0.6Kg Tím", "888", "CÔNG TY CỔ PHẦN DS COSMETIC", "888-0.6KG-TIM", "0.6Kg", 180, 240, 35, 180, 450, "PET/PA/PE trong", "G4006655", "Kho Vạn Phát", 750, 456, 5, "Vòi 16mm", "In trục ống đồng", 2800.0, "Manufacture", "[NGỪNG KINH DOANH THƯƠNG MẠI] Bảo lưu lịch sử kỹ thuật và trục in."),
+    ("TP-00009", "Túi đựng nước giặt 888 0.6Kg có vòi (Màu Đỏ)", "888 0.6Kg Đỏ", "888", "CÔNG TY CỔ PHẦN DS COSMETIC", "888-0.6KG-DO", "0.6Kg", 180, 240, 35, 180, 450, "PET/PA/PE trong", "G4005877", "Kho Vạn Phát", 750, 456, 6, "Vòi 16mm", "In trục ống đồng", 2800.0, "Manufacture", "[NGỪNG KINH DOANH THƯƠNG MẠI] Bảo lưu lịch sử kỹ thuật và trục in."),
+    ("TP-00010", "Túi đựng nước lau sàn 888 0.6Kg có vòi", "NLS 888 0.6Kg", "888", "CÔNG TY CỔ PHẦN DS COSMETIC", "888-NLS-0.6KG", "0.6Kg", 180, 240, 35, 180, 450, "PET/PE trong", "G4012417", "Kho Vạn Phát", 750, 456, 6, "Vòi 16mm", "In trục ống đồng", 2500.0, "Manufacture", "[NGỪNG KINH DOANH THƯƠNG MẠI] Bảo lưu lịch sử kỹ thuật và trục in."),
+    ("TP-00011", "Túi đựng nước rửa chén 888 0.6Kg có vòi", "NRC 888 0.6Kg", "888", "CÔNG TY CỔ PHẦN DS COSMETIC", "888-NRC-0.6KG", "0.6Kg", 180, 240, 35, 180, 450, "PET/PE trong", "G4012418", "Kho Vạn Phát", 750, 456, 5, "Vòi 16mm", "In trục ống đồng", 2500.0, "Manufacture", "[NGỪNG KINH DOANH THƯƠNG MẠI] Bảo lưu lịch sử kỹ thuật và trục in."),
+    # --- Minh Râu 3.2Kg DS Cosmetic (Doypack đáy đứng có vòi) ---
+    ("TP-00012", "Túi đựng nước giặt Minh Râu 3.2Kg có vòi (Màu Tím)", "Minh Râu 3.2Kg Tím", "Minh Râu", "CÔNG TY CỔ PHẦN DS COSMETIC", "MINHRAU-3.2KG-TIM", "3.2Kg", 280, 340, 45, 230, 700, "PET/PA/PE sữa", "G4005887", "Kho Kiến Tâm", 780, 564, 6, "Vòi 16mm", "In trục ống đồng", 5166.0, "Manufacture", ""),
+    ("TP-00013", "Túi đựng nước giặt Minh Râu 3.2Kg có vòi (Màu Hồng)", "Minh Râu 3.2Kg Hồng", "Minh Râu", "CÔNG TY CỔ PHẦN DS COSMETIC", "MINHRAU-3.2KG-HONG", "3.2Kg", 280, 340, 45, 230, 700, "PET/PA/PE sữa", "G4005883", "Kho Kiến Tâm", 780, 564, 6, "Vòi 16mm", "In trục ống đồng", 5166.0, "Manufacture", ""),
+    # --- Lamy 2Kg Eco Wipes (Doypack đáy đứng có vòi) ---
+    ("TP-00014", "Túi đựng nước giặt xả Lamy 2Kg có vòi (Màu Vàng)", "Lamy 2Kg Vàng", "Lamy", "CÔNG TY CỔ PHẦN ECO WIPES VIỆT NAM", "LAMY-2KG-VANG", "2Kg", 240, 320, 40, 200, 600, "PET/MPET/PA/PE trong", "", "", "", "", "", "Vòi 16mm", "In trục ống đồng", 5056.0, "Manufacture", ""),
+    ("TP-00015", "Túi đựng nước giặt xả Lamy 2Kg có vòi (Màu Xanh)", "Lamy 2Kg Xanh", "Lamy", "CÔNG TY CỔ PHẦN ECO WIPES VIỆT NAM", "LAMY-2KG-XANH", "2Kg", 240, 320, 40, 200, 600, "PET/MPET/PA/PE trong", "", "", "", "", "", "Vòi 16mm", "In trục ống đồng", 5056.0, "Manufacture", ""),
+    # --- BABA 3.6Kg Anh Phát (Doypack đáy đứng lớn có vòi) ---
+    ("TP-00016", "Túi đựng nước giặt BABA 3.6Kg có vòi", "BABA 3.6Kg", "BABA", "CÔNG TY TNHH MTV SX TM XNK ANH PHÁT", "BABA-3.6KG", "3.6Kg", 280, 380, 50, 230, 800, "PET/MPET/PA/PE sữa", "TRUC-BABA", "Kho Vạn Phát", 800, 564, 8, "Vòi 16mm", "In trục ống đồng", 6759.0, "Manufacture", ""),
+    # --- Supergeo 5L Vietcoat (Doypack đáy đứng dung tích lớn có vòi) ---
+    ("TP-00017", "Túi đựng keo dán gạch SUPERGEO 5L có vòi", "Supergeo 5L", "Supergeo", "CÔNG TY TNHH CÔNG NGHỆ VẬT LIỆU TIÊN PHONG VIETCOAT", "SUPERGEO-5L", "5L", 320, 340, 50, 240, 800, "PET/PA/PA/PE sữa", "TRUC-SUPERGEO", "Kho Vạn Phát", 800, 564, 6, "Vòi 16mm", "In trục ống đồng", 9685.0, "Manufacture", ""),
+    # --- Xốt Phô Mai KOVAA 200g (Túi xếp đáy 4cm có vòi nhỏ 10mm) ---
+    ("TP-00018", "Túi đựng xốt phô mai KOVAA 200g có vòi", "Xốt Pho Mai 200g", "KOVAA", "CÔNG TY TNHH SX THƯƠNG MẠI BAO BÌ KOVAA", "KOVAA-200G", "200g", 150, 220, 40, 150, 400, "PET/PA/PE sữa", "", "", "", "", "", "Vòi 10mm", "In trục ống đồng", 1944.0, "Manufacture", "Chịu nhiệt độ rót xốt nóng 70 - 80°C."),
+    # --- TopGia MBTP (Túi phẳng màng bọc thực phẩm - KHÔNG ĐÁY) ---
+    ("TP-00019", "Túi màng bọc thực phẩm TopGia", "TopGia MBTP", "TopGia", "CÔNG TY TNHH PHONG TÍN", "TOPGIA-MBTP", "Tiêu chuẩn", 200, 300, 0, 80, 420, "PET/PE trong", "", "", "", "", "", "", "In trục ống đồng", 1780.0, "Purchase", ""),
+    # --- TopGia 1L Phong Tín (Doypack đáy đứng có vòi) ---
+    ("TP-00020", "Túi đựng nước giặt TopGia 1L có vòi (Hoa Nắng)", "TopGia 1L Hoa Nắng", "TopGia", "CÔNG TY TNHH PHONG TÍN", "TOPGIA-1L-HN", "1L", 180, 250, 35, 190, 450, "PET/PA/PE trong", "G4011425", "Kho Kiến Tâm", 750, 404, 6, "Vòi 16mm", "In trục ống đồng", 2852.0, "Manufacture", ""),
+    ("TP-00021", "Túi đựng nước giặt TopGia 1L có vòi (Đắm Say)", "TopGia 1L Đắm Say", "TopGia", "CÔNG TY TNHH PHONG TÍN", "TOPGIA-1L-DS", "1L", 180, 250, 35, 190, 450, "PET/PA/PE trong", "G4011427", "Kho Kiến Tâm", 750, 404, 6, "Vòi 16mm", "In trục ống đồng", 2852.0, "Manufacture", ""),
+    # --- Softy 3L Amyco (Doypack đáy đứng có vòi) ---
+    ("TP-00022", "Túi đựng nước giặt Softy 3L có vòi (Nền Tím)", "Softy 3L Tím", "Softy", "CÔNG TY TNHH SẢN XUẤT - XUẤT NHẬP KHẨU AMYCO", "SOFTY-3L-TIM", "3L", 280, 340, 45, 230, 700, "PET/PA/PE sữa", "", "", "", "", "", "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture", ""),
+    # --- Sachpoong (Doypack đáy đứng có vòi) ---
+    ("TP-00023", "Túi đựng nước giặt Sachpoong 3.2Kg có vòi", "Sachpoong 3.2Kg", "Sachpoong", "Khách hàng Sachpoong", "SACHPOONG-3.2KG", "3.2Kg", 280, 340, 45, 230, 700, "PET/PA/PE sữa", "G4010806", "Kho Vạn Phát", 800, 564, 5, "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture", ""),
+    ("TP-00024", "Túi đựng nước giặt Sachpoong 0.6Kg có vòi", "Sachpoong 0.6Kg", "Sachpoong", "Khách hàng Sachpoong", "SACHPOONG-0.6KG", "0.6Kg", 180, 240, 35, 180, 450, "PET/PA/PE trong", "G4010805", "Kho Vạn Phát", 750, 456, 5, "Vòi 16mm", "In trục ống đồng", 2800.0, "Manufacture", ""),
+    # --- Raptor Clean (Doypack đáy đứng nhỏ có vòi) ---
+    ("TP-00025", "Túi đựng nước giặt Raptor Clean 0.6Kg có vòi", "Raptor Clean 0.6Kg", "Raptor Clean", "Khách hàng Raptor Clean", "RAPTOR-0.6KG", "0.6Kg", 180, 240, 35, 180, 450, "PET/PA/PE trong", "G4010947", "Kho Vạn Phát", 750, 456, 7, "Vòi 16mm", "In trục ống đồng", 2800.0, "Manufacture", ""),
+    # --- Trần Quân 2Kg (Doypack đáy đứng có vòi) ---
+    ("TP-00026", "Túi đựng nước giặt Trần Quân 2Kg có vòi", "Trần Quân 2Kg", "Trần Quân", "Khách hàng Trần Quân", "TRANQUAN-2KG", "2Kg", 240, 300, 45, 210, 600, "PET/PA/PE sữa", "G4011409", "Kho Vạn Phát", 750, 484, 4, "Vòi 16mm", "In trục ống đồng", 4500.0, "Manufacture", ""),
+    # --- DPClean 0.6Kg (Doypack đáy đứng nhỏ có vòi) ---
+    ("TP-00027", "Túi đựng nước giặt DPClean 0.6Kg có vòi", "DPClean 0.6Kg", "DPClean", "Khách hàng DPClean", "DPCLEAN-0.6KG", "0.6Kg", 180, 240, 35, 180, 450, "PET/PA/PE trong", "G4011542", "Kho Vạn Phát", 750, 456, 5, "Vòi 16mm", "In trục ống đồng", 2800.0, "Manufacture", ""),
+    # --- Bluum 3Kg (Doypack đáy đứng có vòi) ---
+    ("TP-00028", "Túi đựng nước giặt Bluum 3Kg có vòi (Màu Đen)", "Bluum 3Kg Đen", "Bluum", "Khách hàng Bluum", "BLUUM-3KG-DEN", "3Kg", 280, 340, 45, 230, 700, "PET/PA/PE sữa", "G4012179", "Kho Vạn Phát", 800, 564, 5, "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture", ""),
+    ("TP-00029", "Túi đựng nước giặt Bluum 3Kg có vòi (Màu Xanh)", "Bluum 3Kg Xanh", "Bluum", "Khách hàng Bluum", "BLUUM-3KG-XANH", "3Kg", 280, 340, 45, 230, 700, "PET/PA/PE sữa", "G4012178", "Kho Vạn Phát", 800, 564, 6, "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture", ""),
+    # --- Premium 3.2Kg (Doypack đáy đứng có vòi) ---
+    ("TP-00030", "Túi đựng nước giặt Premium 3.2Kg có vòi (Màu Tím)", "Premium 3.2Kg Tím", "Premium", "Khách hàng Premium", "PREMIUM-3.2KG-TIM", "3.2Kg", 280, 340, 45, 230, 700, "PET/PA/PE sữa", "G4006905", "Kho Kiến Tâm", 800, 564, 5, "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture", ""),
+    ("TP-00031", "Túi đựng nước giặt Premium 3.2Kg có vòi (Màu Đỏ)", "Premium 3.2Kg Đỏ", "Premium", "Khách hàng Premium", "PREMIUM-3.2KG-DO", "3.2Kg", 280, 340, 45, 230, 700, "PET/PA/PE sữa", "G4006924", "Kho Vạn Phát", 800, 564, 5, "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture", ""),
+    # --- Yumi Care, Sofia, Clean 3.6L (Doypack đáy đứng lớn có vòi) ---
+    ("TP-00032", "Túi đựng nước giặt Yumi Care 3.6L có vòi", "Yumi Care 3.6L", "Yumi Care", "Khách hàng Yumi Care", "YUMICARE-3.6L", "3.6L", 280, 350, 45, 230, 700, "PET/PA/PE sữa", "G631383", "Kho Vạn Phát", 900, 568, 5, "Vòi 16mm", "In trục ống đồng", 7200.0, "Manufacture", ""),
+    ("TP-00033", "Túi đựng nước giặt Sofia 3Kg có vòi (Hương LyLy)", "Sofia 3Kg Xanh", "Sofia", "CÔNG TY CỔ PHẦN EZ COSMETIC VIỆT NAM – CHI NHÁNH LONG AN", "SOFIA-3KG-XANH", "3Kg", 280, 340, 45, 230, 700, "PET/PA/PE sữa", "G4002697", "Kho Vạn Phát", 850, 526, 5, "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture", ""),
+    ("TP-00034", "Túi đựng nước giặt Clean 3.6L có vòi", "Clean 3.6L", "Clean", "Khách hàng Clean", "CLEAN-3.6L", "3.6L", 280, 350, 45, 230, 700, "PET/PA/PE sữa", "Z418556", "Kho Vạn Phát", 900, 568, 8, "Vòi 16mm", "In trục ống đồng", 7200.0, "Manufacture", ""),
+    ("TP-00035", "Túi đựng nước giặt Clean 2L có vòi", "Clean 2L", "Clean", "Khách hàng Clean", "CLEAN-2L", "2L", 240, 300, 45, 210, 600, "PET/PA/PE sữa", "G630657", "Kho Vạn Phát", 800, 466, 8, "Vòi 16mm", "In trục ống đồng", 4500.0, "Manufacture", ""),
+    ("TP-00036", "Túi đựng nước giặt Futa True 3Kg có vòi", "Futa True 3Kg", "Futa True", "CÔNG TY TNHH MTV TM TRANG UYÊN", "FUTA-3KG", "3Kg", 280, 340, 45, 230, 700, "PET/PA/PE sữa", "G4013050", "Kho Trang Tín", 900, 544, 6, "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture", ""),
+    ("TP-00037", "Túi đựng nước giặt Chakari Louis 3.2Kg có vòi", "Chakari Louis 3.2Kg", "Chakari", "Khách hàng Chakari", "CHAKARI-3.2KG", "3.2Kg", 280, 340, 45, 230, 700, "PET/PA/PE sữa", "G4014585", "Kho Trang Tín", 850, 846, 7, "Vòi 16mm", "In trục ống đồng", 6500.0, "Manufacture", ""),
+    # --- Chloe'ly 2L (Doypack đáy đứng có vòi) ---
+    ("TP-00038", "Túi đựng nước giặt CHLOE'LY 2L có vòi", "Chloe'ly 2L", "Chloe'ly", "CÔNG TY TNHH SẢN XUẤT - XUẤT NHẬP KHẨU AMYCO", "CHLOELY-2L", "2L", 240, 300, 45, 210, 600, "PET/MPET/PA/PE sữa", "", "", "", "", "", "Vòi 16mm", "In trục ống đồng", 5074.0, "Manufacture", ""),
+    # --- SKX Đậu Nành (Túi phẳng 3 biên OPPMalt/PE trong - KHÔNG ĐÁY) ---
+    ("TP-00039", "Túi đựng hạt đậu dinh dưỡng SKX 16x23.5cm", "SKX Đậu Nành", "SKX", "CÔNG TY CỔ PHẦN DINH DƯỠNG SKX", "SKX-DAUNANH", "500g", 160, 235, 0, 160, 340, "OPPMalt/PE trong", "G652829", "Kho Vạn Phát", 650, 470, 4, "", "In trục ống đồng", 1290.0, "Manufacture", ""),
+    # --- ENZY FOOD (Túi 3 biên PET/AL/PE trong có khóa zipper - KHÔNG ĐÁY) ---
+    ("TP-00040", "Túi đựng hạt nêm Enzy 900g có zipper", "Enzy Hạt Nêm 900g", "Enzy", "CÔNG TY TNHH ENZY FOOD", "ENZY-900G", "900g", 250, 300, 0, 150, 520, "PET/AL/PE trong", "G4012180", "Kho Vạn Phát", 750, 500, 6, "Khóa Zipper", "In trục ống đồng", 3963.0, "Manufacture", ""),
+    ("TP-00041", "Túi đựng hạt nêm Enzy 450g có zipper", "Enzy Hạt Nêm 450g", "Enzy", "CÔNG TY TNHH ENZY FOOD", "ENZY-450G", "450g", 200, 260, 0, 140, 420, "PET/AL/PE trong", "", "", "", "", "", "Khóa Zipper", "In trục ống đồng", 3037.0, "Manufacture", ""),
+    ("TP-00042", "Túi đựng hạt nêm Enzy 220g có zipper", "Enzy Hạt Nêm 220g", "Enzy", "CÔNG TY TNHH ENZY FOOD", "ENZY-220G", "220g", 170, 220, 0, 120, 360, "PET/AL/PE trong", "", "", "", "", "", "Khóa Zipper", "In trục ống đồng", 2111.0, "Manufacture", ""),
+    ("TP-00043", "Túi đựng gia vị rắc cơm vị hải sản Enzy 11x17cm", "Enzy Rắc Cơm 11x17", "Enzy", "CÔNG TY TNHH ENZY FOOD", "ENZY-RACCOM", "100g", 110, 170, 0, 100, 240, "PET/AL/PE trong", "", "", "", "", "", "Khóa Zipper", "In trục ống đồng", 1315.0, "Manufacture", ""),
+    # --- Trang Uyên 2L & Sofia 2L ---
+    ("TP-00044", "Túi đựng nước giặt Trang Uyên 2L có vòi", "Trang Uyên 2L", "Trang Uyên", "CÔNG TY TNHH MTV TM TRANG UYÊN", "TRANGUYEN-2L", "2L", 240, 300, 40, 200, 600, "PET/PA/PE sữa", "", "", "", "", "", "Vòi 16mm", "In offset (Không trục)", 6880.0, "Manufacture", "Công nghệ in offset không trục."),
+    ("TP-00045", "Túi đựng nước giặt xả Sofia 2L có vòi (Hương Ngọc Lan)", "Sofia 2L Ngọc Lan", "Sofia", "CÔNG TY CỔ PHẦN EZ COSMETIC VIỆT NAM – CHI NHÁNH LONG AN", "SOFIA-2L-NL", "2L", 240, 300, 45, 210, 600, "PET/PA/PE sữa", "TRUC-SOFIA2L", "Kho Vạn Phát", 750, 484, 5, "Vòi 16mm", "In trục ống đồng", 5537.0, "Manufacture", ""),
 ]
+
 discontinued_codes = {"TP-00007", "TP-00008", "TP-00009", "TP-00010", "TP-00011"}
-for code, legal_name, alias, brand, cust, ref, cap, w, l, thick, layers, cyl_code, cyl_wh, cyl_l, cyl_c, cyl_q, accessory, print_tech, rate, req_type, note in custom_pouches:
+for item in custom_pouches:
+    (code, legal_name, alias, brand, cust, ref, cap, w, l, gusset, thick, film_w, layers,
+     cyl_code, cyl_wh, cyl_l, cyl_c, cyl_q, accessory, print_tech, rate, req_type, note) = item
     cyl_item = f"TRUC-{cyl_code}" if cyl_code and cyl_code not in ["TRUC-BABA", "TRUC-SUPERGEO", "TRUC-SOFIA2L"] else (cyl_code if cyl_code else "")
     dis = code in discontinued_codes
     add_item(
@@ -190,7 +229,7 @@ for code, legal_name, alias, brand, cust, ref, cap, w, l, thick, layers, cyl_cod
         desc=note, req_type=req_type, standard_rate=rate, min_order_qty=5000, safety_stock=0,
         disabled=1 if dis else 0, is_sales=0 if dis else 1, is_purchase=1 if req_type == "Purchase" else 0,
         customer=cust, ref=ref,
-        layers=layers, thick=thick, film_w=w * 2 + 100, pw=w, pl=l, gusset=45, cut_l=l,
+        layers=layers, thick=thick, film_w=film_w, pw=w, pl=l, gusset=gusset, cut_l=l,
         print_tech=print_tech, accessory=accessory, cyl_item=cyl_item
     )
 
@@ -200,15 +239,59 @@ for code, legal_name, alias, brand, cust, ref, cap, w, l, thick, layers, cyl_cod
 # ==============================================================================
 def clean_cylinder_title(raw_sp, ma_truc):
     text = raw_sp.strip()
-    for p in ['TÚI NƯỚC GIẶT XẢ ', 'TÚI NƯỚC GIẶT ', 'TÚI NƯỚC LAU SÀN ', 'TÚI NƯỚC RỬA CHÉN ', 'TÚI ĐỰNG ', 'CUỘN MÀNG ', 'TÚI MÀNG ', 'TÚI ']:
-        if text.upper().startswith(p):
-            text = text[len(p):]
+    text = re.sub(r'\s+', ' ', text)
+
+    # Trim packaging type prefixes while preserving product subcategory
+    pats = [
+        r'^TÚI NƯỚC GIẶT XẢ\s+',
+        r'^TÚI NƯỚC GIẶT\s+',
+        r'^TÚI NƯỚC LAU SÀN\s+',
+        r'^TÚI NƯỚC RỬA CHÉN\s+',
+        r'^TÚI ĐỰNG\s+',
+        r'^CUỘN MÀNG\s+',
+        r'^TÚI MÀNG\s+',
+        r'^TÚI\s+',
+        r'^MÀNG\s+',
+    ]
+    is_lau_san = 'LAU SÀN' in text.upper()
+    is_rua_chen = 'RỬA CHÉN' in text.upper()
+
+    for p in pats:
+        if re.search(p, text, flags=re.IGNORECASE):
+            text = re.sub(p, '', text, flags=re.IGNORECASE)
             break
-    text = re.sub(r'\s*\([^)]*(KT|MÀU|MẪU|ZIPPER|PHỦ MỜ|TRỤC CŨ|ĐÁY ĐỨNG|TIỆT TRÙNG|4 LỚP|NỀN|24\*30|22\*28)[^)]*\)', '', text, flags=re.IGNORECASE)
-    text = re.sub(r'\s*-\s*IN\s+\d+\s+MÀU.*', '', text, flags=re.IGNORECASE).strip(' -+')
-    words = text.split()
-    title = (' '.join(words[:3]) if len(words) > 3 else text).title()
-    return f"Bộ trục in ống đồng {title} ({ma_truc})" if ma_truc else f"Bộ trục in ống đồng {title}", f"Trục {title} ({ma_truc})" if ma_truc else f"Trục {title}"
+
+    if is_lau_san and not text.upper().startswith('LAU SÀN'):
+        text = 'Lau Sàn ' + text
+    elif is_rua_chen and not text.upper().startswith('RỬA CHÉN'):
+        text = 'Rửa Chén ' + text
+
+    # Remove internal technical bracketed notes
+    text = re.sub(r'\s*\([^)]*(KT|MÀU|MẪU|ZIPPER|PHỦ MỜ|TRỤC CŨ|ĐÁY ĐỨNG|TIỆT TRÙNG|4 LỚP|24\*30|22\*28)[^)]*\)', '', text, flags=re.IGNORECASE)
+    text = re.sub(r'\s*-\s*IN\s+\d+\s+MÀU.*', '', text, flags=re.IGNORECASE)
+    text = text.strip(' -+')
+
+    def title_word(w):
+        wu = w.upper()
+        if re.match(r'^\d+(\.\d+)?(KG|G|L|ML)$', wu):
+            num = re.search(r'^\d+(\.\d+)?', wu).group(0)
+            unit = wu[len(num):]
+            unit_str = 'Kg' if unit == 'KG' else ('g' if unit == 'G' else ('L' if unit == 'L' else 'ml'))
+            return f'{num}{unit_str}'
+        if wu in ['SKX', 'EZ', 'BABA', 'BOPP', 'OPP', 'PET', 'PA', 'PE', 'MBTP']:
+            return wu
+        if '(' in w or ')' in w or '+' in w:
+            return w.title()
+        return w.capitalize()
+
+    words = [w for w in text.split(' ') if w]
+    clean_words = [title_word(w) for w in words]
+    title = ' '.join(clean_words)
+    title = re.sub(r'\s*-\s*', ' ', title).strip()
+
+    legal_name = f"Bộ trục in ống đồng {title}"
+    alias = f"Trục {title}"
+    return legal_name, alias
 
 wb_truc = CalamineWorkbook.from_path(os.path.join(RAW_DIR, "THÔNG TIN TRỤC IN.xlsx"))
 truc_rows = wb_truc.get_sheet_by_name("Sheet1").to_python()
@@ -324,22 +407,22 @@ for code, legal_name, alias, layer, w, thick, uom, rate in pet_in_items:
 # Căn cứ: TIẾN ĐỘ SẢN XUẤT.xlsx (sheet THEO DÕI TỔNG)
 # ==============================================================================
 btp_items = [
-    ("BTP-00001", "Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm", "Cuộn 888 Phấn Thơm", "PET//PA/PE sữa", 800, 230, "m", 12500.0),
-    ("BTP-00002", "Cuộn màng ghép PET/PA/PE 3 lớp 888 Huyền Bí Xanh khổ 800mm", "Cuộn 888 Huyền Bí", "PET//PA/PE sữa", 800, 230, "m", 12500.0),
-    ("BTP-00003", "Cuộn màng ghép PET/PA/PE 3 lớp 888 Đam Mê Đỏ khổ 800mm", "Cuộn 888 Đam Mê", "PET//PA/PE sữa", 800, 230, "m", 12500.0),
-    ("BTP-00004", "Cuộn màng ghép PET/PA/PE 3 lớp NGCS Đỏ - Tím khổ 800mm", "Cuộn NGCS Đỏ-Tím", "PET//PA/PE sữa", 800, 230, "m", 12000.0),
-    ("BTP-00005", "Cuộn màng ghép PET/PA/PE 3 lớp NGCS Hồng - Xanh khổ 800mm", "Cuộn NGCS Hồng-Xanh", "PET//PA/PE sữa", 800, 230, "m", 12000.0),
-    ("BTP-00006", "Cuộn màng ghép PET/PA/PE 3 lớp Minh Râu Tím khổ 780mm", "Cuộn Minh Râu Tím", "PET//PA/PE sữa", 780, 230, "m", 12500.0),
-    ("BTP-00007", "Cuộn màng ghép PET/PA/PE 3 lớp TopGia 2L khổ 750mm", "Cuộn TopGia 2L", "PET/PA/PE", 750, 190, "m", 11000.0),
+    ("BTP-00001", "Cuộn màng ghép PET/PA/PE 3 lớp 888 Phấn Thơm khổ 800mm", "Cuộn 888 Phấn Thơm", "PET/PA/PE sữa", 800, 230, "m", 12500.0),
+    ("BTP-00002", "Cuộn màng ghép PET/PA/PE 3 lớp 888 Huyền Bí Xanh khổ 800mm", "Cuộn 888 Huyền Bí", "PET/PA/PE sữa", 800, 230, "m", 12500.0),
+    ("BTP-00003", "Cuộn màng ghép PET/PA/PE 3 lớp 888 Đam Mê Đỏ khổ 800mm", "Cuộn 888 Đam Mê", "PET/PA/PE sữa", 800, 230, "m", 12500.0),
+    ("BTP-00004", "Cuộn màng ghép PET/PA/PE 3 lớp NGCS Đỏ - Tím khổ 800mm", "Cuộn NGCS Đỏ-Tím", "PET/PA/PE sữa", 800, 230, "m", 12000.0),
+    ("BTP-00005", "Cuộn màng ghép PET/PA/PE 3 lớp NGCS Hồng - Xanh khổ 800mm", "Cuộn NGCS Hồng-Xanh", "PET/PA/PE sữa", 800, 230, "m", 12000.0),
+    ("BTP-00006", "Cuộn màng ghép PET/PA/PE 3 lớp Minh Râu Tím khổ 780mm", "Cuộn Minh Râu Tím", "PET/PA/PE sữa", 780, 230, "m", 12500.0),
+    ("BTP-00007", "Cuộn màng ghép PET/PA/PE 3 lớp TopGia 2L khổ 750mm", "Cuộn TopGia 2L", "PET/PA/PE trong", 750, 190, "m", 11000.0),
     ("BTP-00008", "Cuộn màng ghép PET/PA/PE 3 lớp Softy 3L khổ 800mm", "Cuộn Softy 3L", "PET/PA/PE sữa", 800, 230, "m", 12500.0),
-    ("BTP-00009", "Cuộn màng ghép PET/PA/PE 3 lớp FUTA Xanh mặt trước khổ 900mm", "Cuộn FUTA Xanh MT", "PET//PA/PE sữa", 900, 230, "m", 13500.0),
-    ("BTP-00010", "Cuộn màng ghép PET/PA/PE 3 lớp FUTA Xanh mặt sau khổ 900mm", "Cuộn FUTA Xanh MS", "PET//PA/PE sữa", 900, 230, "m", 13500.0),
-    ("BTP-00011", "Cuộn màng ghép PET/PA/PE 3 lớp FUTA Tím mặt trước khổ 900mm", "Cuộn FUTA Tím MT", "PET//PA/PE sữa", 900, 230, "m", 13500.0),
-    ("BTP-00012", "Cuộn màng ghép PET/PA/PE 3 lớp FUTA Tím mặt sau khổ 900mm", "Cuộn FUTA Tím MS", "PET//PA/PE sữa", 900, 230, "m", 13500.0),
+    ("BTP-00009", "Cuộn màng ghép PET/PA/PE 3 lớp FUTA Xanh mặt trước khổ 900mm", "Cuộn FUTA Xanh MT", "PET/PA/PE sữa", 900, 230, "m", 13500.0),
+    ("BTP-00010", "Cuộn màng ghép PET/PA/PE 3 lớp FUTA Xanh mặt sau khổ 900mm", "Cuộn FUTA Xanh MS", "PET/PA/PE sữa", 900, 230, "m", 13500.0),
+    ("BTP-00011", "Cuộn màng ghép PET/PA/PE 3 lớp FUTA Tím mặt trước khổ 900mm", "Cuộn FUTA Tím MT", "PET/PA/PE sữa", 900, 230, "m", 13500.0),
+    ("BTP-00012", "Cuộn màng ghép PET/PA/PE 3 lớp FUTA Tím mặt sau khổ 900mm", "Cuộn FUTA Tím MS", "PET/PA/PE sữa", 900, 230, "m", 13500.0),
     ("BTP-00013", "Cuộn màng ghép cắt đáy đứng túi 3.2Kg khổ 180mm", "Cuộn màng đáy 3.2Kg", "PET/PE sữa", 180, 150, "m", 5500.0),
     ("BTP-00014", "Cuộn màng ghép 4 lớp BABA 3.6Kg khổ 800mm", "Cuộn BABA 3.6Kg", "PET/MPET/PA/PE sữa", 800, 230, "m", 13000.0),
-    ("BTP-00015", "Cuộn màng ghép thực phẩm Năm Tàu khổ 800mm", "Cuộn Năm Tàu", "PET/PA/PE", 800, 200, "m", 12000.0),
-    ("BTP-00016", "Cuộn màng ghép TopGia 1L Đắm Say khổ 750mm", "Cuộn TopGia 1L Đắm Say", "PET/PA/PE", 750, 190, "m", 11000.0),
+    ("BTP-00015", "Cuộn màng ghép thực phẩm Năm Tàu khổ 800mm", "Cuộn Năm Tàu", "PET/PA/PE trong", 800, 200, "m", 12000.0),
+    ("BTP-00016", "Cuộn màng ghép TopGia 1L Đắm Say khổ 750mm", "Cuộn TopGia 1L Đắm Say", "PET/PA/PE trong", 750, 190, "m", 11000.0),
 ]
 for code, legal_name, alias, layer, w, thick, uom, rate in btp_items:
     add_item(
