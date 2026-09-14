@@ -1,14 +1,14 @@
 # Handoff: Con Trỏ Vận Hành & Chuyển Giao Session
 
-- **Mã Commit Hiện Tại**: `d0d6ed0` (`fix(catalog): remove hardcoded max-width from .truncate to display full legal names`)
+- **Mã Commit Hiện Tại**: `7915edb` (`feat(portal): unify typography to ERPNext native Inter font across all pages, drawers, and modals`)
 - **Trạng Thái CI/CD & Test**:
   - Test Suite `scripts/verify-catalog-page.mjs`: **86/86 checks PASSED 100%**.
-  - Production Build: Vite build thành công sạch sẽ (bundle 72.64 kB gzip).
-  - Chrome DevTools MCP: Đã kiểm chứng thực tế toàn bộ các bảng. Tên pháp nhân đạt `isTruncated: false` 100% (hiển thị trọn vẹn cả tên dài 67 ký tự).
+  - Production Build: Vite build thành công sạch sẽ (bundle 72.64 kB gzip, woff2 264 kB).
+  - Chrome DevTools MCP: Đã kiểm chứng 100% DOM nodes trên live browser (1037 nodes) đồng nhất font `Inter` (Arial: 0, JetBrains Mono: 0, monospace: 0).
 - **Hạng Mục Đã Hoàn Thành**:
-  - Khóa cứng tiêu đề bảng 1 dòng duy nhất và Title Case toàn bộ 4 bảng danh mục.
-  - Tái cấu trúc bảng Khách hàng & Nhà cung cấp theo Phương án 1 (Tên tắt | Tên pháp nhân 46% hiển thị trọn vẹn | MST | Thanh toán).
-  - Khắc phục triệt để lỗi bóp méo `.truncate` (xóa `max-width: 220px`), giải phóng cell 713px hiển thị đầy đủ tên pháp nhân.
-  - Chuẩn hóa bảng Người dùng theo ERPNext native: Đăng nhập bằng SĐT (`mobile_no`), khử trùng lặp Chức danh/Vai trò.
+  - Đồng nhất 1 font chữ duy nhất: `Inter` theo chuẩn native ERPNext v16 trên toàn bộ pages, drawers và modals.
+  - Nạp font 2 tầng: Google Fonts Inter (online) và local `Inter.var.woff2` (offline).
+  - Khử triệt để font `Arial` bằng CSS reset `button, input, select, textarea { font-family: inherit; }`.
+  - Thay thế font monospace bằng tính năng OpenType bản địa `tabular-nums` của Inter cho toàn bộ số liệu và mã số.
 - **Nhiệm Vụ Trọng Tâm Tiếp Theo**:
   - Sẵn sàng nhận chỉ đạo kinh doanh hoặc tính năng tiếp theo từ Sếp.
