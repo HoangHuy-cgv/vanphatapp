@@ -29,7 +29,6 @@
   `limit=500` rồi filter/lọc bằng Python.
 - Join nhiều DocType (Customer alias, SO Item đầu, Item `custom_alias`): **1 query `frappe.qb`** thay vì vòng lặp `get_value`/`get_all` từng dòng (N+1).
 - **Sổ đo query/trang (đếm tĩnh theo code, 2026-09-14):**
-
 | Endpoint | Trước | Sau |
 |---|---|---|
 | `order.list_orders` (15 đơn/trang) | ~3 + 2N ≈ 33 query | **6 query cố định** (count + rows + tab counts + 1 dòng hàng cả trang + 2 cọc/KH) |
@@ -119,3 +118,35 @@
 ## 8. Cấm Tuyệt Đối (Nhắc Lại Từ AGENTS.md)
 - `get_all` cho master nhạy cảm, `allow_guest` dữ liệu nội bộ, raw SQL CRUD thường, re-export ghi đè câm, cache key thiếu params, `limit=500` + filter Python.
 - Toán tiền/thuế tay trong Python, mọi hằng số/fallback giá trục (`3100000`, `CYLINDER_STANDARD_RATE`, `_get_cylinder_rate`).
+
+## 9. Số Đo p95 Thật (site fresh `app.vanphat.io.vn`, 2026-09-15 — Sếp chốt wipe + deploy từ local)
+- **Môi trường:** VPS Lightsail 2 vCPU/3.7GB RAM, site tạo mới từ HEAD local, import
+  ~800 dòng master data (293 Item, 117 Customer, 15 SO seed DH-2609-001→015).
+  Đo 50 request đọc qua Cloudflare Tunnel (Singapore) + 20 request local trong VPS.
+- **Kết quả qua tunnel (người dùng cảm nhận):**
+
+  | Endpoint | p50 | p95 | max |
+  |---|---|---|---|
+  | `list_orders` p1 | 185 | 213 | 218 |
+  | `list_orders` search | 192 | 213 | 226 |
+  | `list_orders` tab ngcs | 193 | 210 | 217 |
+  | `item.get_list` | 177 | 200 | 201 |
+  | `get_order_details` | 206 | 302 | 386 |
+
+- **Trong VPS (tách tunnel):** `list_orders` HTTP local p95 = **13ms**; in-process p95 = **7ms**.
+  **Kết luận: app nhanh (13ms), tunnel/TLS Singapore +193ms.** Mốc `<200ms` Sếp đặt:
+  list đạt (210–213ms ≈ mốc, sai số tunnel), detail vượt (302ms — do payload 30 keys +
+  tunnel, không phải query chậm).
+- **Hướng tối ưu (không đụng query):** bật Cloudflare Argo/đổi PoP gần VN, hoặc HTTP/2
+  multiplex + cache edge cho list; detail tách 2 call (header trước, items sau).
+  Làm khi Sếp ra việc — hiện tại query đã tối ưu (6 query cố định/trang).
+- **Bug bắt được nhờ đo thật (đã fix cùng đợt):** pypika `Table.alias` nổ 500
+  (`CUST.field("alias")` → resolve alias bằng `get_list` batch); `frappe.qb.Order`
+  không tồn tại ngoài request context (→ `from frappe.query_builder import Order`);
+  `clear_catalog_cache` thiếu `*args` (doc_events truyền doc); `create_sales_order`
+  thiếu `warehouse` (stock item bắt source warehouse).
+- **Deploy fresh từ local:** `git archive HEAD | tar -x` tại `/opt/vanphat`, image
+  `frappe/erpnext:v16.34.2` ghim digest; site + Company + Price List + gốc cây
+  (Item/Customer/Territory/Supplier Group) tạo bằng script; `import_master_data.py`
+  đã vá 4 điểm fresh-site (Country ISO, Workstation autoname, Operation Prompt,
+  UOM Cái lẻ). Script đo: `scripts/measure_p95.py`.

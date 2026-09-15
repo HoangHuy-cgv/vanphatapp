@@ -25,9 +25,10 @@
 1. **Flow cọc 2 bước** (quyền đã đóng — `api_ungated = 0`, 48 test): hiện `record_order_deposit`
    chỉ Kế toán bấm; Sếp chốt "sale yêu cầu → kế toán xác nhận" làm slice riêng (thêm nút yêu cầu
    cho Sales + hàng đợi xác nhận cho Kế toán).
-2. **Bench staging ERPNext thật**: import master data (`data/clean-data/` + `scripts/import_master_data.py`);
-   đo **p95 thật cho `list_orders` (<200ms)**; đo LCP/INP/CLS; cấu hình
-   **Default Company = Bao Bì Vạn Phát** (thiếu là tạo đơn báo lỗi).
+2. **p95 — ĐÃ ĐO 2026-09-15** (site fresh từ HEAD local, wipe prod theo lệnh Sếp):
+   `list_orders` p95 = 213ms, detail p95 = 302ms qua tunnel; trong VPS chỉ 13ms/7ms.
+   Kết luận: app nhanh, tunnel Singapore +193ms. Chi tiết §9 backend spec.
+   Tối ưu tiếp (Argo/cache edge/tách detail) chờ Sếp ra việc.
 3. **Vitest**: chưa cài được (máy này không ra được npm registry + `~/.npm` không ghi được).
 4. **Stack frontend**: giữ `frappe-ui` ghim version (POC dự phòng ở nhánh `poc/no-frappe-ui`).
    Rà lại Studio khi đủ 3 điều kiện mở lại (ADR-005 §5).
