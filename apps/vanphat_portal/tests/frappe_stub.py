@@ -146,6 +146,7 @@ class State:
 		self.rows = {}
 		self.docs = {}
 		self.permission = True
+		self.roles = ["System Manager"]
 		self.defaults = {"Company": "Bao Bì Vạn Phát"}
 		self.tax_templates = {}
 		self.writes = []
@@ -372,6 +373,7 @@ dữ liệu riêng mà không cần reload module. Trả về (frappe, state).
 	frappe.ValidationError = Exception
 	frappe.defaults = SimpleNamespace(get_user_default=lambda key: state.defaults.get(key))
 	frappe.has_permission = lambda *args, **kwargs: state.permission
+	frappe.get_roles = lambda *args, **kwargs: list(state.roles)
 	frappe.cache = lambda: _Cache(state)
 	frappe.logger = lambda name=None: _Logger(state)
 	frappe.session = SimpleNamespace(user="tester@vanphat.com")

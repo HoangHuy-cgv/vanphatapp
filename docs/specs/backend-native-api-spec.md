@@ -63,12 +63,36 @@
 - TTL 300s. Invalidate chủ động qua `doc_events` (`Item`, `Quotation`, `Customer`, `Sales Order` `on_update`) thay vì endpoint guest xả cache (`clear_catalog_cache allow_guest` — slice S3 đóng).
 - Không cache dữ liệu per-user/permission-sensitive chung key.
 
-## 6. Bảo Mật (Đóng 4 Lỗ Hổng Đã Biết — Slices S5/S6)
+## 6. Bảo Mật (Đóng 4 Lỗ Hổng Đã Biết — Slices S5/S6; cổng quyền full — Sếp chốt 2026-09-15)
 - Xóa `allow_guest=True` khỏi master data nội bộ (`item.get_list`, `customer.get_list/get_detail`, `clear_catalog_cache`).
 - Portal bắt buộc login + role check (`System Manager`, `Sales User`, `Accounts User`, `Manufacturing User`, `Stock User`).
 - GET chi tiết: `get_doc` + `frappe.has_permission()` tại nơi action; child table truyền `parent` để check quyền (không trả cả doc thừa field nhạy cảm).
 - CSRF: mọi POST qua `api()` đã gắn token; không whitelist POST không cần auth.
 - Fallback CSV (`customer.py`, `item.py` `_load_csv_*`): thay bằng truthful empty state + log server. DB trống → `[]`, không đọc file hệ thống thay thế.
+
+### 6.1. Ma trận quyền native (Sếp chốt 2026-09-15 — Desk giữ "ai được làm gì", code chỉ gác cổng)
+- **Cơ chế native:** 1 user kiêm nhiệm nhiều role; quyền trên từng DocType cấu hình trong
+  **Role Permission Manager** (Desk), lọc theo bản ghi bằng **User Permissions**. Code gọi 2 API:
+  `frappe.get_roles()` (user có role gì) + `frappe.has_permission(doctype, ptype, doc?)`
+  (role + User Permissions có cho phép không). Helper duy nhất: `api/_guards.py`
+  (`require_roles` = OR role, `require_doc` = has_permission tới cấp chứng từ + báo lỗi tiếng Việt).
+- **Nhóm đọc catalog (Item/Customer/Supplier + preview/lookup/config):** `has_permission(read)` tương ứng
+  (`Item` cho catalog + `get_product_groups`/`get_print_config` + engine R&D; `Customer` cho
+  `get_list/get_detail/search_customers`; `Supplier` cho NCC; `Payment Terms Template` cho
+  `get_payment_options`; `Quotation` cho `list_quotations`/preview; `Sales Order` cho
+  `list_orders`/`get_order_details`/`get_price_preview`). Đường `qb` không tự áp permission như
+  `get_list` → cổng read ở đầu mỗi endpoint (Sếp chọn "thấy hết công ty" nên chưa lọc theo owner).
+  Cache `get_list` key kèm `roles=` để không rò dữ liệu vượt quyền.
+- **Nhóm Sales tạo/chốt (Sales User | Sales Manager | System Manager):** `create_sales_order` (create SO),
+  `submit_sales_order` (submit SO — đơn HOLD tự chặn), `make_order_from_quotation` (read BG + create SO),
+  `create/submit/lost_quotation` (create/submit/write BG).
+- **Nhóm Kế toán độc quyền (Accounts User | Accounts Manager):** `record_order_deposit` (write SO),
+  `accountant_approve_procurement` (submit SO — duyệt đơn HOLD).
+- **Khóa riêng:** `user.get_list` chỉ System Manager (PII nội bộ); `clear_catalog_cache` bỏ whitelist —
+  hàm nội bộ, `doc_events` gọi trực tiếp (26 endpoint còn lại, không còn W1).
+- **Cấm:** `ignore_permissions` ở mọi API người dùng (đã xóa khỏi `create_sales_order`).
+- **Máy kiểm:** `constraints-check.py → api_ungated = 0` (25 gated + W2 `get_boot`).
+  Quyết Sếp còn treo làm slice riêng: flow cọc 2 bước (Sales yêu cầu → Kế toán xác nhận).
 
 ## 7. Giá & Thuế Native (P1+P2 Sếp duyệt 2026-09-15 — ADR-002)
 - VAT doc-driven: gán Sales Taxes and Charges Template (Default theo Company → Tax Rule theo KH)

@@ -7,6 +7,7 @@ Portal bắt buộc login — không guest. DB trống → [] (truthful, không 
 import frappe
 
 from vanphat_portal.api._common import page_result, paginate, text
+from vanphat_portal.api._guards import require_doc
 
 
 @frappe.whitelist()
@@ -16,6 +17,7 @@ def get_list(query=None, page=1, page_length=100):
 	ADR-006: envelope `page_result` thống nhất mọi list; picker tham chiếu
 	default 100/max 100 + filter server (không tải vượt trần).
 	"""
+	require_doc("Customer", "read")
 	q = text(query).lower()
 	like = f"%{q}%" if q else None
 	p, pl, start = paginate(page, page_length, default=100)
@@ -44,6 +46,7 @@ def get_list(query=None, page=1, page_length=100):
 @frappe.whitelist()
 def get_detail(name=None):
 	"""Return detailed customer information (login + permission check)."""
+	require_doc("Customer", "read")
 	if not name:
 		return None
 	if not frappe.db.exists("Customer", name):
@@ -61,6 +64,7 @@ def get_payment_options():
 	Trả sau ⟺ template có dòng cọc 0% (KH có Credit Limit — khớp _credit_limit).
 	DB trống → [] truthful, UI ẩn khối thanh toán thay vì hiện option bịa.
 	"""
+	require_doc("Payment Terms Template", "read")
 	try:
 		templates = frappe.db.get_list(
 			"Payment Terms Template",

@@ -8,6 +8,7 @@ Ngữ nghĩa tiền/HOLD/envelope duy nhất: xem ADR-006.
 import frappe
 
 from vanphat_portal.api._common import as_json, page_result, paginate, text
+from vanphat_portal.api._guards import require_doc, require_roles
 
 
 def _quotation_count(q):
@@ -29,7 +30,9 @@ def list_quotations(query=None, page=1, page_length=15):
 
 	Trước đây limit=50 cứng + filter client — sai chuẩn spec §3 (page_length
 	mặc định 15, trần 100). Frontend QuotesView paginate như OrdersView.
+	Sếp chốt 2026-09-15: cổng read (get_list tự áp User Permissions).
 	"""
+	require_doc("Quotation", "read")
 	q = text(query)
 	p, pl, start = paginate(page, page_length)
 	or_filters = None
@@ -54,6 +57,7 @@ def list_quotations(query=None, page=1, page_length=15):
 @frappe.whitelist()
 def search_customers(query=""):
 	"""Link-search Customer có sẵn cho ô Khách màn 1. Chỉ chọn, không tạo mới."""
+	require_doc("Customer", "read")
 	q = text(query)
 	like = f"%{q}%"
 	return frappe.get_list(
@@ -77,7 +81,10 @@ def create_quotation(payload):
 	No arithmetic here; rates come from the director's input verbatim.
 	Prereq for `BG-` naming: add `BG-.YYYY.-` to `naming_series` options
 	via Customize Form (Property Setter), then pass it in payload.
+	Sếp chốt 2026-09-15: Sales tạo nháp (create native).
 	"""
+	require_roles("Sales User", "Sales Manager", "System Manager")
+	require_doc("Quotation", "create")
 	payload = frappe.parse_json(payload) if isinstance(payload, str) else (payload or {})
 	company = payload.get("company") or frappe.defaults.get_user_default("Company")
 	if not company:
@@ -125,8 +132,9 @@ def get_quotation_price_preview(quotation=None, lines=None, customer=None, compa
 	"""P1 doc-driven (Sếp duyệt): đọc số ERPNext đã tính trên saved doc; unsaved thì dựng nháp chung order._price_via_doc.
 
 	S4 SSOT: tên riêng cho Quotation preview (tránh shadow với order.get_price_preview).
-	Frontend gửi lines thô; server không math tay.
+	Frontend gửi lines thô; server không math tay. Sếp chốt: cổng read Quotation.
 	"""
+	require_doc("Quotation", "read")
 	from vanphat_portal.api.order import _price_via_doc
 
 	lines = as_json(lines) or []
@@ -280,7 +288,9 @@ def calculate_packaging_quotation(
 	   phần túi dư (surplus) nhập kho lưu trữ để bán tiếp cho đơn hàng sau.
 	3. Tối ưu 2 lane (khổ to): Với các khổ túi vừa/nhỏ (W <= 360mm), xưởng chọn màng
 	   khổ to chạy 2 con (2 lane) trên trục in để tối ưu tốc độ máy và triệt tiêu màng dở dang.
+	Engine R&D nội bộ (ADR-002): cổng read Item — ai được xem catalog mới được tính.
 	"""
+	require_doc("Item", "read")
 	import math
 
 	try:
@@ -405,7 +415,9 @@ def calculate_packaging_quotation(
 
 @frappe.whitelist()
 def submit_quotation(name):
-	"""Gửi QLSX: submit Draft → Open (native `on_submit`)."""
+	"""Gửi QLSX: submit Draft → Open (native `on_submit`). Sếp chốt: Sales + submit."""
+	require_roles("Sales User", "Sales Manager", "System Manager")
+	require_doc("Quotation", "submit", name=name)
 	doc = frappe.get_doc("Quotation", name)
 	if doc.docstatus != 0:
 		frappe.throw("Chỉ gửi QLSX từ phiếu nháp (Draft).")
@@ -416,7 +428,9 @@ def submit_quotation(name):
 
 @frappe.whitelist()
 def mark_quotation_lost(name, reason=""):
-	"""Rớt: native `declare_enquiry_lost` với lý do chi tiết."""
+	"""Rớt: native `declare_enquiry_lost` với lý do chi tiết. Sếp chốt: Sales + write."""
+	require_roles("Sales User", "Sales Manager", "System Manager")
+	require_doc("Quotation", "write", name=name)
 	doc = frappe.get_doc("Quotation", name)
 	doc.declare_enquiry_lost([], [], text(reason) or None)
 	doc.reload()

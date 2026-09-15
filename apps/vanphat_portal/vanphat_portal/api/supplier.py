@@ -7,6 +7,7 @@ Portal bắt buộc login — không guest. DB trống → [] (truthful, không 
 import frappe
 
 from vanphat_portal.api._common import page_result, paginate, text
+from vanphat_portal.api._guards import require_doc
 
 
 @frappe.whitelist()
@@ -16,6 +17,7 @@ def get_list(query=None, supplier_group=None, page=1, page_length=100):
 	ADR-006: envelope `page_result` thống nhất mọi list; picker tham chiếu
 	default 100/max 100 + filter server (không tải vượt trần).
 	"""
+	require_doc("Supplier", "read")
 	q = text(query).lower()
 	grp = text(supplier_group)
 	like = f"%{q}%" if q else None
@@ -47,6 +49,7 @@ def get_list(query=None, supplier_group=None, page=1, page_length=100):
 @frappe.whitelist()
 def get_detail(name=None):
 	"""Return detailed supplier information (login + permission check)."""
+	require_doc("Supplier", "read")
 	if not name:
 		return None
 	if not frappe.db.exists("Supplier", name):

@@ -32,7 +32,6 @@ API_GLOBS = ("*.py",)
 
 # Endpoint cố ý không gated — mỗi dòng phải kèm lý do, người duyệt đọc được.
 GATE_ALLOWLIST = {
-    ("item.py", "clear_catalog_cache"): "hook doc_events xoá cache, không phải endpoint người dùng gọi",
     ("bao_gia.py", "get_boot"): "chỉ trả session user + csrf token cho chính người đang đăng nhập",
 }
 
@@ -141,14 +140,22 @@ RATCHET_RULES = [
 
 
 def api_permission_ledger() -> tuple[int, list[str]]:
-    """Đếm endpoint @frappe.whitelist() không có cổng quyền nào."""
+    """Đếm endpoint @frappe.whitelist() không có cổng quyền nào.
+
+    Cổng quyền = gọi trực tiếp has_permission/get_roles/... trong thân hàm,
+    HOẶC gọi helper nhà mình trong `_guards` (require_doc/require_roles —
+    2 hàm này bọc has_permission/get_roles native, Sếp chốt 2026-09-15).
+    Hàm không whitelist (như clear_catalog_cache nội bộ) không tính endpoint.
+    """
     gate = re.compile(
-        r"has_permission|only_for|require_roles|check_permission|get_roles|"
+        r"has_permission|only_for|require_roles|require_doc|check_permission|get_roles|"
         r"session\.user\s*(==|!=)|has_role|frappe\.permissions"
     )
     total = 0
     ungated: list[str] = []
     for path in sorted(API.rglob("*.py")):
+        if path.name == "_guards.py":
+            continue
         lines = path.read_text(encoding="utf-8").splitlines()
         for number, line in enumerate(lines):
             if "frappe.whitelist" not in line:

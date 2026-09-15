@@ -7,6 +7,7 @@ Portal bắt buộc login — không guest. DB trống → [] (truthful, không 
 import frappe
 
 from vanphat_portal.api._common import page_result, paginate, text
+from vanphat_portal.api._guards import require_roles
 
 
 @frappe.whitelist()
@@ -16,6 +17,8 @@ def get_list(query=None, department=None, page=1, page_length=100):
 	ADR-006: envelope `page_result` thống nhất mọi list; picker tham chiếu
 	default 100/max 100 + filter server (không tải vượt trần).
 	"""
+	# Sếp chốt 2026-09-15: danh sách User nội bộ (email/SĐT) chỉ System Manager.
+	require_roles("System Manager")
 	q = text(query).lower()
 	dept = text(department)
 	like = f"%{q}%" if q else None

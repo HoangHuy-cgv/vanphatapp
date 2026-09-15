@@ -24,6 +24,7 @@ from vanphat_portal.api._common import (
 	resolve_customer,
 	text,
 )
+from vanphat_portal.api._guards import require_doc, require_roles
 
 FALLBACK_DEPOSIT_PCT = 0.5
 DEFAULT_ORDER_NAMING_SERIES = "DH-.YY..MM.-.###"
@@ -317,8 +318,9 @@ def get_price_preview(
 
 	Giữ params cũ (has_new_cylinders/cylinder_count) cho caller cũ: thiếu `cylinder_spec`
 	mà có số cây → `cylinder_pending=True` (chờ giá NCC, totals null truthful).
-	Enforces SSOT: Zero client-side math.
+	Enforces SSOT: Zero client-side math. Sếp chốt 2026-09-15: preview = read SO.
 	"""
+	require_doc("Sales Order", "read")
 	data = as_json(payload) or {}
 	items = items or data.get("items")
 	customer = customer or data.get("customer")
@@ -416,7 +418,10 @@ def list_orders(tab=None, query=None, page=1, page_length=15):
 	Bộ query CỐ ĐỊNH cho mọi trang (không N+1):
 	1 count + 1 rows + 1 tab counts + 1 dòng hàng cả trang + 2 query cọc/KH.
 	Tab counts tính theo đúng từ khóa đang tìm (khớp danh sách), không phụ thuộc tab đang mở.
+	Đường qb KHÔNG tự áp permission như get_list → cổng read ở đầu (Sếp chốt 2026-09-15;
+	Sếp chọn "thấy hết công ty" nên chưa thêm User Permissions lọc theo owner).
 	"""
+	require_doc("Sales Order", "read")
 	from frappe.query_builder.functions import Count
 
 	SO = frappe.qb.DocType("Sales Order")
@@ -680,6 +685,7 @@ def _first_item_fields(item_code):
 @frappe.whitelist()
 def get_order_details(name):
 	"""Return comprehensive single Sales Order details for the inspection drawer."""
+	require_doc("Sales Order", "read", name=name)
 	doc = _get_sales_order(name)
 	life = _order_lifecycle(doc)
 
@@ -750,7 +756,13 @@ def _get_sales_order(name):
 
 @frappe.whitelist()
 def record_order_deposit(name, amount=0, note=""):
-	"""Record customer advance payment against a Sales Order."""
+	"""Kế toán xác nhận cọc cho Sales Order (Sếp chốt 2026-09-15: chỉ Kế toán).
+
+	Trước đây Sales cũng bấm trực tiếp; từ slice quyền này Sales chỉ "yêu cầu",
+	Kế toán là người xác nhận duy nhất (flow 2 bước làm slice riêng).
+	"""
+	require_roles("Accounts User", "Accounts Manager")
+	require_doc("Sales Order", "write", name=name)
 	doc = _get_sales_order(name)
 	if doc.docstatus == 2:
 		frappe.throw("Đơn hàng đã bị hủy, không thể ghi nhận cọc.")
@@ -791,7 +803,9 @@ def record_order_deposit(name, amount=0, note=""):
 
 @frappe.whitelist()
 def accountant_approve_procurement(name, note=""):
-	"""Accountant approval for HOLD orders."""
+	"""Kế toán duyệt ngoại lệ đơn HOLD → chuyển bước 'Mua hàng NCC' (độc quyền Kế toán)."""
+	require_roles("Accounts User", "Accounts Manager")
+	require_doc("Sales Order", "submit", name=name)
 	doc = _get_sales_order(name)
 	doc.add_comment(
 		"Comment",
@@ -816,7 +830,9 @@ def accountant_approve_procurement(name, note=""):
 
 @frappe.whitelist()
 def submit_sales_order(name):
-	"""Submit draft sales order when deposit conditions are satisfied."""
+	"""Sales kích hoạt đơn đủ cọc (Sếp chốt: Sales User/Manager + submit native)."""
+	require_roles("Sales User", "Sales Manager", "System Manager")
+	require_doc("Sales Order", "submit", name=name)
 	doc = _get_sales_order(name)
 	if doc.docstatus != 0:
 		frappe.throw("Chỉ có thể submit đơn hàng ở trạng thái Nháp (Draft).")
@@ -840,7 +856,13 @@ def submit_sales_order(name):
 
 @frappe.whitelist()
 def create_sales_order(payload):
-	"""Accept new order payload, create native ERPNext Sales Order with DH- series."""
+	"""Sales tạo đơn mới (DH- series) — Sếp chốt: Sales User/Manager + create native.
+
+	Sếp chốt 2026-09-15: bỏ `ignore_permissions` — ai không có quyền tạo SO
+	trong Role Permission Manager thì API cũng từ chối, không lách.
+	"""
+	require_roles("Sales User", "Sales Manager", "System Manager")
+	require_doc("Sales Order", "create")
 	payload = as_json(payload) or {}
 	company = payload.get("company") or frappe.defaults.get_user_default("Company")
 	if not company:
@@ -898,8 +920,6 @@ def create_sales_order(payload):
 		"order_type": "Sales",
 		"items": so_items,
 	})
-	doc.flags.ignore_mandatory = True
-	doc.flags.ignore_permissions = True
 	doc.insert()
 	frappe.db.commit()
 
@@ -913,7 +933,10 @@ def create_sales_order(payload):
 
 @frappe.whitelist()
 def make_order_from_quotation(name, naming_series=None, delivery_date=None):
-	"""Convert approved Quotation to Sales Order."""
+	"""Sales chốt báo giá đã duyệt → Sales Order (native make_sales_order)."""
+	require_roles("Sales User", "Sales Manager", "System Manager")
+	require_doc("Quotation", "read", name=name)
+	require_doc("Sales Order", "create")
 	from erpnext.selling.doctype.quotation.quotation import make_sales_order
 
 	doc = frappe.get_doc("Quotation", name)

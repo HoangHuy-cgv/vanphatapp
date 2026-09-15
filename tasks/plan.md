@@ -22,10 +22,9 @@
   docs/rule/policy/skill cùng một ngữ cảnh (triple rule).
 
 ## Còn lại (chờ Sếp ra việc — KHÔNG đụng trước khi Sếp chốt)
-1. **Quyền — rủi ro cao nhất**: 22/27 endpoint chưa cổng quyền (gồm 3 endpoint config mới —
-   chờ cổng chung); `order.list_orders` và `item.get_list` đi `frappe.qb` nên **bỏ qua
-   permission model**; 4 mutation (tạo/submit SO, ghi cọc, duyệt ngoại lệ) không role gate.
-   Cần Sếp chốt **ai được làm gì**.
+1. **Flow cọc 2 bước** (quyền đã đóng — `api_ungated = 0`, 48 test): hiện `record_order_deposit`
+   chỉ Kế toán bấm; Sếp chốt "sale yêu cầu → kế toán xác nhận" làm slice riêng (thêm nút yêu cầu
+   cho Sales + hàng đợi xác nhận cho Kế toán).
 2. **Bench staging ERPNext thật**: import master data (`data/clean-data/` + `scripts/import_master_data.py`);
    đo **p95 thật cho `list_orders` (<200ms)**; đo LCP/INP/CLS; cấu hình
    **Default Company = Bao Bì Vạn Phát** (thiếu là tạo đơn báo lỗi).

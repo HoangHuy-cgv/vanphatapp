@@ -8,6 +8,7 @@ DB trống → [] (truthful, không CSV fallback).
 import frappe
 
 from vanphat_portal.api._common import page_result, paginate, text
+from vanphat_portal.api._guards import require_doc
 
 # Cột tìm kiếm dùng chung cho cả `or_filters` (get_list) lẫn qb — 1 nguồn duy nhất.
 SEARCH_COLUMNS = (
@@ -57,12 +58,11 @@ CATALOG_FIELDS = [
 ]
 
 
-@frappe.whitelist()
-def clear_catalog_cache(*args, **kwargs):
-	"""Clear Redis cache for Van Phat Master Catalog (S3: login-only, doc_events gọi nội bộ).
+def clear_catalog_cache():
+	"""Xóa cache catalog nội bộ — KHÔNG whitelist, chỉ doc_events gọi trực tiếp.
 
-	S3 đóng guest xả cache: endpoint này chỉ cho user đã login (portal bắt buộc login);
-	doc_events Item/Customer/Sales Order/Quotation on_update/on_trash gọi trực tiếp.
+	Sếp chốt 2026-09-15: bỏ whitelist (giảm 27 còn 26 endpoint, xóa W1).
+	`hooks.py doc_events` trỏ thẳng hàm này, không đi qua HTTP.
 	"""
 	try:
 		frappe.cache().delete_keys("vp:items:list|*")
@@ -125,8 +125,10 @@ def get_list(query=None, item_group=None, supply_type=None, category=None, page=
 
 	Docs: frappe.db.get_list(doctype, filters, or_filters, fields, order_by, start,
 	page_length) tự áp permission (https://docs.frappe.io/framework/user/en/api/database).
-	DB lọc, vỏ chỉ hiển thị — không lấy thừa + filter Python.
+	DB lọc, vỏ chỉ hiển thị — không lấy thừa + filter Python. Nhánh qb KHÔNG tự
+	áp permission như get_list → cổng require_doc("Item", "read") ở đầu (Sếp chốt).
 	"""
+	require_doc("Item", "read")
 	q = text(query)
 	grp = text(item_group)
 	supply = text(supply_type)
@@ -134,8 +136,10 @@ def get_list(query=None, item_group=None, supply_type=None, category=None, page=
 	p, pl, start = paginate(page, page_length)
 	like = f"%{q}%" if q else None
 
-	# S3: key chứa MỌI params (tab/cat/grp/supply/q/page/pl) — key cũ thiếu q gây stale cross-filter
-	cache_key = f"vp:items:list|tab={cat}|grp={grp}|supply={supply}|q={q.lower()}|page={p}|pl={pl}"
+	# S3: key chứa MỌI params + roles (cache chung key rò dữ liệu vượt quyền) —
+	# key cũ thiếu q gây stale cross-filter
+	roles_key = ",".join(sorted(frappe.get_roles() or []))
+	cache_key = f"vp:items:list|roles={roles_key}|tab={cat}|grp={grp}|supply={supply}|q={q.lower()}|page={p}|pl={pl}"
 	try:
 		cached = frappe.cache().get_value(cache_key)
 		if cached:
@@ -201,6 +205,7 @@ def get_detail(item_code):
 
 	S5/S6: login + permission check; không CSV fallback — DB trống → throw truthful.
 	"""
+	require_doc("Item", "read")
 	code = text(item_code)
 	if not code:
 		frappe.throw("Thiếu item_code")
@@ -277,6 +282,7 @@ def get_product_groups():
 
 	DB trống → nhóm giữ label nhưng count 0 + min_qty null (truthful, không số bịa).
 	"""
+	require_doc("Item", "read")
 	groups = []
 	for spec in PRODUCT_GROUPS:
 		count = 0
@@ -319,6 +325,8 @@ def get_print_config():
 	đổi options trong Customize Form → UI đổi theo, không build lại.
 	Field thiếu/trống → list rỗng truthful, UI ẩn khối tương ứng.
 	"""
+	require_doc("Item", "read")
+
 	def select_options(dt, fieldname):
 		try:
 			df = frappe.get_meta(dt).get_field(fieldname)

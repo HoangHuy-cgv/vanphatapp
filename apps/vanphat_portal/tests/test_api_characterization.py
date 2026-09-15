@@ -226,6 +226,7 @@ class TestOrderDetails(unittest.TestCase):
 class TestOrderMutations(unittest.TestCase):
 	def test_ghi_nhan_coc_du_thi_tu_dong_submit(self):
 		state = base_state()
+		state.roles = ["Accounts User"]
 		state.add("Sales Order", sales_order(docstatus=0, status="Draft", advance_paid=0.0))
 		res = order.record_order_deposit("SO-1", amount=1500000, note="Cọc lần 1")
 		self.assertTrue(res["success"])
@@ -234,6 +235,7 @@ class TestOrderMutations(unittest.TestCase):
 
 	def test_ghi_nhan_coc_thieu_thi_giu_hold(self):
 		state = base_state()
+		state.roles = ["Accounts User"]
 		state.add("Sales Order", sales_order(docstatus=0, status="Draft", advance_paid=0.0))
 		res = order.record_order_deposit("SO-1", amount=1000000)
 		self.assertTrue(res["success"])
@@ -243,12 +245,22 @@ class TestOrderMutations(unittest.TestCase):
 
 	def test_ghi_nhan_coc_am_thi_bao_loi(self):
 		state = base_state()
+		state.roles = ["Accounts User"]
 		state.add("Sales Order", sales_order(docstatus=0, status="Draft"))
 		with self.assertRaises(FrappeThrow):
 			order.record_order_deposit("SO-1", amount=0)
 
+	def test_sale_ghi_coc_thi_bi_chan(self):
+		"""Sếp chốt 2026-09-15: chỉ Kế toán xác nhận cọc — Sales bấm → PermissionError."""
+		state = base_state()
+		state.roles = ["Sales User"]
+		state.add("Sales Order", sales_order(docstatus=0, status="Draft", advance_paid=0.0))
+		with self.assertRaises(FrappeThrow):
+			order.record_order_deposit("SO-1", amount=1500000)
+
 	def test_submit_don_du_coc(self):
 		state = base_state()
+		state.roles = ["Sales User"]
 		state.add("Sales Order", sales_order(docstatus=0, status="Draft", advance_paid=1500000.0))
 		res = order.submit_sales_order("SO-1")
 		self.assertEqual(res["name"], "SO-1")
@@ -256,6 +268,7 @@ class TestOrderMutations(unittest.TestCase):
 
 	def test_submit_don_hold_thi_chan(self):
 		state = base_state()
+		state.roles = ["Sales User"]
 		state.add("Sales Order", sales_order(docstatus=0, status="Draft", advance_paid=500000.0))
 		with self.assertRaises(FrappeThrow) as ctx:
 			order.submit_sales_order("SO-1")
@@ -263,10 +276,19 @@ class TestOrderMutations(unittest.TestCase):
 
 	def test_ke_toan_duyet_ngoai_le_hold(self):
 		state = base_state()
+		state.roles = ["Accounts Manager"]
 		state.add("Sales Order", sales_order(docstatus=0, status="Draft", advance_paid=500000.0))
 		res = order.accountant_approve_procurement("SO-1", note="Cho chạy tiếp")
 		self.assertTrue(res["success"])
 		self.assertEqual(res["docstatus"], 1)
+
+	def test_sale_duyet_hold_thi_bi_chan(self):
+		"""Duyệt HOLD độc quyền Kế toán — Sales bấm → PermissionError."""
+		state = base_state()
+		state.roles = ["Sales Manager"]
+		state.add("Sales Order", sales_order(docstatus=0, status="Draft", advance_paid=500000.0))
+		with self.assertRaises(FrappeThrow):
+			order.accountant_approve_procurement("SO-1")
 
 
 class TestCreateSalesOrder(unittest.TestCase):
