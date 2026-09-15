@@ -9,6 +9,6 @@
   "entry_gzip_kb": 142,
   "fe_guard_ok": 1,
   "fe_test_files": 0,
-  "py_tests": 48,
+  "py_tests": 54,
   "swallowed_catch": 1
 }

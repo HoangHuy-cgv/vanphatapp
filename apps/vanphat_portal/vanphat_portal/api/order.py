@@ -78,6 +78,45 @@ def _order_tab_of_group(product_group):
 	}.get(product_group, "xuong_sx")
 
 
+def _required_deposit(payment_type, product_total, deposit_pct, cylinder_total):
+	"""MỘT công thức cọc: Trả sau = 0; Trả trước = % terms trên tiền hàng + 100% tiền trục."""
+	if payment_type == "Trả sau":
+		return 0.0
+	return round((product_total * deposit_pct) + cylinder_total)
+
+
+def _order_status(docstatus, payment_type, advance_paid, required_deposit):
+	"""MỘT công thức trạng thái cho list + drawer (ADR-006).
+
+	Trả sau không bao giờ HOLD. Trả trước: thiếu cọc một phần = HOLD.
+	Trả về (label, css_class, is_hold, can_submit).
+	"""
+	submitted = docstatus == 1
+	is_hold = payment_type == "Trả trước" and 0 < advance_paid < required_deposit
+	paid_enough = payment_type == "Trả sau" or advance_paid >= required_deposit
+	if submitted:
+		return ("Đã duyệt", "status-ordered", False, False)
+	if is_hold:
+		return ("HOLD", "status-hold", True, False)
+	if paid_enough:
+		return ("Đã duyệt", "status-ordered", False, True)
+	return ("Chờ cọc", "status-draft", False, False)
+
+
+def _order_detail_status(docstatus, payment_type, advance_paid, required_deposit):
+	"""Trạng thái drawer/mutation (order_state dài) — cùng 1 công thức HOLD với list."""
+	is_hold = payment_type == "Trả trước" and 0 < advance_paid < required_deposit
+	if payment_type == "Trả sau":
+		state = "Chính thức (Trả sau)" if docstatus == 1 else "Chờ kích hoạt (Trả sau)"
+		return (state, is_hold, docstatus == 0)
+	if advance_paid >= required_deposit:
+		state = "Chính thức (Đã cọc >=50%)" if docstatus == 1 else "Đủ cọc (Chờ kích hoạt)"
+		return (state, False, docstatus == 0)
+	if advance_paid > 0:
+		return ("HOLD (Thiếu cọc)", True, False)
+	return ("Chờ cọc", False, False)
+
+
 # --------------------------------------------------------------------------
 # Payload & pass-through trục (ADR-002)
 # --------------------------------------------------------------------------
@@ -355,9 +394,7 @@ def get_price_preview(
 	# (chưa VAT, không trục), khớp list_orders/get_order_details.
 	product_total = max(0.0, net_total - cylinder_total)
 	# Trả sau cọc 0đ; Trả trước = % Payment Terms trên tiền hàng + 100% tiền trục
-	required_deposit = (
-		0.0 if payment_type == "Trả sau" else round((product_total * deposit_pct) + cylinder_total)
-	)
+	required_deposit = _required_deposit(payment_type, product_total, deposit_pct, cylinder_total)
 
 	return {
 		"net_total": net_total,
@@ -560,9 +597,7 @@ def list_orders(tab=None, query=None, page=1, page_length=15):
 		cfg_pct = deposit_pcts.get(order.get("customer"), FALLBACK_DEPOSIT_PCT)
 		credit_limit = credit_limits.get(order.get("customer"), 0.0)
 		payment_type = "Trả sau" if credit_limit > 0 else "Trả trước"
-		required_deposit = (
-			0.0 if payment_type == "Trả sau" else round((product_total * cfg_pct) + cylinder_total)
-		)
+		required_deposit = _required_deposit(payment_type, product_total, cfg_pct, cylinder_total)
 
 		order["advance_paid"] = advance_paid
 		order["outstanding_amount"] = max(0.0, grand_total - advance_paid)
@@ -590,20 +625,12 @@ def list_orders(tab=None, query=None, page=1, page_length=15):
 
 		# ADR-006: MỘT công thức HOLD cho list + drawer — Trả trước AND thiếu cọc.
 		# Trả sau không bao giờ HOLD. Đơn đã duyệt giữ nguyên "Đã duyệt".
-		is_hold = payment_type == "Trả trước" and 0 < advance_paid < required_deposit
+		label, css_class, is_hold, _ = _order_status(
+			order.get("docstatus"), payment_type, advance_paid, required_deposit
+		)
 		order["is_hold"] = is_hold
-		if order.get("docstatus") == 1:
-			order["order_status_label"] = "Đã duyệt"
-			order["order_status_class"] = "status-ordered"
-		elif is_hold:
-			order["order_status_label"] = "HOLD"
-			order["order_status_class"] = "status-hold"
-		elif payment_type == "Trả sau" or advance_paid >= required_deposit:
-			order["order_status_label"] = "Đã duyệt"
-			order["order_status_class"] = "status-ordered"
-		else:
-			order["order_status_label"] = "Chờ cọc"
-			order["order_status_class"] = "status-draft"
+		order["order_status_label"] = label
+		order["order_status_class"] = css_class
 
 		orders.append(order)
 
@@ -632,23 +659,14 @@ def _order_lifecycle(doc):
 	advance_paid = frappe.utils.flt(doc.advance_paid)
 	credit_limit = _credit_limit(doc.customer)
 	payment_type = "Trả sau" if credit_limit > 0 else "Trả trước"
-	required_deposit = round((product_total * _get_deposit_pct(doc.customer)) + cylinder_total)
+	required_deposit = _required_deposit(
+		payment_type, product_total, _get_deposit_pct(doc.customer), cylinder_total
+	)
 
-	# Quy tắc Vàng: Trả sau cọc 0đ; Trả trước cọc theo Payment Terms + 100% tiền trục
-	is_hold = False
-	if payment_type == "Trả sau":
-		can_submit = doc.docstatus == 0
-		order_state = "Chính thức (Trả sau)" if doc.docstatus == 1 else "Chờ kích hoạt (Trả sau)"
-	elif advance_paid >= required_deposit:
-		can_submit = doc.docstatus == 0
-		order_state = "Chính thức (Đã cọc >=50%)" if doc.docstatus == 1 else "Đủ cọc (Chờ kích hoạt)"
-	elif advance_paid > 0:
-		is_hold = True
-		can_submit = False
-		order_state = "HOLD (Thiếu cọc)"
-	else:
-		can_submit = False
-		order_state = "Chờ cọc"
+	# Cùng 1 công thức HOLD với list (Trả sau không bao giờ HOLD).
+	order_state, is_hold, can_submit = _order_detail_status(
+		doc.docstatus, payment_type, advance_paid, required_deposit
+	)
 
 	return {
 		"net_total": net_total,

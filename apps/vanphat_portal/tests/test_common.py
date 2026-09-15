@@ -229,5 +229,33 @@ class TestOrderLifecycle(unittest.TestCase):
 		self.assertEqual(life["order_state"], "Chờ kích hoạt (Trả sau)")
 
 
+class TestOrderStatusHelpers(unittest.TestCase):
+	def test_required_deposit_tra_sau_bang_0(self):
+		self.assertEqual(order._required_deposit("Trả sau", 1000000.0, 0.5, 200000.0), 0.0)
+
+	def test_required_deposit_tra_truoc(self):
+		self.assertEqual(
+			order._required_deposit("Trả trước", 1000000.0, 0.5, 200000.0), 700000.0
+		)
+
+	def test_list_status_hold_chi_khi_thieu_coc_mot_phan(self):
+		label, css, is_hold, can_submit = order._order_status(0, "Trả trước", 500000.0, 1500000.0)
+		self.assertEqual((label, css, is_hold, can_submit), ("HOLD", "status-hold", True, False))
+
+	def test_list_status_tra_sau_bao_gio_cung_khong_hold(self):
+		label, css, is_hold, can_submit = order._order_status(0, "Trả sau", 0.0, 0.0)
+		self.assertEqual((label, css, is_hold, can_submit), ("Đã duyệt", "status-ordered", False, True))
+
+	def test_list_status_da_duyet_giu_nguyen(self):
+		label, css, is_hold, _ = order._order_status(1, "Trả trước", 500000.0, 1500000.0)
+		self.assertEqual((label, css, is_hold), ("Đã duyệt", "status-ordered", False))
+
+	def test_detail_va_list_cung_cong_thuc_hold(self):
+		for advance, required in [(0.0, 1500000.0), (500000.0, 1500000.0), (1500000.0, 1500000.0)]:
+			_, _, list_hold, _ = order._order_status(0, "Trả trước", advance, required)
+			_, detail_hold, _ = order._order_detail_status(0, "Trả trước", advance, required)
+			self.assertEqual(list_hold, detail_hold)
+
+
 if __name__ == "__main__":
 	unittest.main()
