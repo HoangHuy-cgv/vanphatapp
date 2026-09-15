@@ -887,6 +887,27 @@ def submit_sales_order(name):
 	return {"name": doc.name, "status": doc.status, "docstatus": doc.docstatus}
 
 
+def _default_finished_warehouse(company=None):
+	"""Kho thành phẩm mặc định cho dòng SO (native bắt source warehouse với stock item).
+
+	Ưu tiên kho có tên chứa 'Thành Phẩm' của đúng company; thiếu → None (để native báo).
+	"""
+	try:
+		abbr = frappe.db.get_value("Company", company, "abbr") if company else None
+		filters: dict = {"is_group": 0}
+		if abbr:
+			filters["company"] = frappe.db.get_value("Company", {"abbr": abbr}, "name") or company
+		rows = frappe.db.get_list(
+			"Warehouse", filters=filters, fields=["name"], order_by="name asc", page_length=50
+		)
+		for row in rows or []:
+			if "Thành Phẩm" in (row.get("name") or ""):
+				return row.get("name")
+		return (rows or [{}])[0].get("name")
+	except Exception:
+		return None
+
+
 @frappe.whitelist()
 def create_sales_order(payload):
 	"""Sales tạo đơn mới (DH- series) — Sếp chốt: Sales User/Manager + create native.
@@ -907,6 +928,8 @@ def create_sales_order(payload):
 	customer_id = resolve_customer(customer_id) or customer_id
 
 	delivery_date = payload.get("delivery_date") or frappe.utils.add_days(frappe.utils.today(), 7)
+	# Kho xuất mặc định cho stock item (native bắt buộc source warehouse khi tạo SO).
+	default_wh = text(payload.get("warehouse")) or _default_finished_warehouse(company)
 	so_items = []
 	for row in payload.get("items") or payload.get("lines") or []:
 		code = text(row.get("item_code"))
@@ -920,6 +943,9 @@ def create_sales_order(payload):
 			"conversion_factor": 1,
 			"delivery_date": delivery_date,
 		}
+		wh = text(row.get("warehouse")) or default_wh
+		if wh:
+			so_item["warehouse"] = wh
 		if code:
 			so_item["item_code"] = code
 		so_items.append(so_item)
