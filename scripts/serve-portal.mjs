@@ -1,3 +1,8 @@
+// Preview server LOCAL ONLY (triple rule boundary — Sếp chốt 2026-09-15):
+// - Đọc data/clean-data/*.csv THẬT (không bịa số), shape khớp API Python.
+// - KHÔNG thay bench staging: tiền/thuế/cọc/quyền chỉ verify thật trên bench.
+// - orders/quotations tạo ở preview là file local tạm (truthful empty khi xóa),
+//   KHÔNG phải chứng từ ERPNext. Cấm dùng số preview để đối soát thật.
 import http from 'http';
 import fs from 'fs';
 import path from 'path';

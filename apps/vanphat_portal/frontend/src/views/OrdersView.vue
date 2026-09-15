@@ -502,11 +502,6 @@ onUnmounted(() => {
 	window.removeEventListener('keydown', handleKeyDown);
 });
 
-defineExpose({
-	loadOrders,
-	openOrderDetail,
-	openCreateOrderModal,
-});
 </script>
 
 <style scoped>

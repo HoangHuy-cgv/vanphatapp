@@ -1,7 +1,7 @@
 # ĐẶC TẢ MASTER DATA & PHÂN CẤP SẢN PHẨM BAO BÌ (PACKAGING TAXONOMY)
 
 > **Mục đích:** Nguồn chân lý duy nhất (SSOT) cho cấu trúc cây nhóm hàng, quy chuẩn 5 ĐVT, quy tắc đặt tên sản phẩm, và 5 kịch bản kinh doanh thực tế tại nhà máy Bao Bì Vạn Phát.
-> **Nguyên tắc ERPNext Native:** Sử dụng 100% cấu trúc `Item Group`, `Item`, `BOM`, `Customer` của ERPNext Native v16. Ánh xạ chi tiết các trường dữ liệu tham chiếu tại [1-erpnext-native-mapping.md](file:///var/home/huy/vanphatapp/docs/specs/erpnext-native-vi-en-mapping.md).
+> **Nguyên tắc ERPNext Native:** Sử dụng 100% cấu trúc `Item Group`, `Item`, `BOM`, `Customer` của ERPNext Native v16. Ánh xạ chi tiết các trường dữ liệu tham chiếu tại [1-erpnext-native-mapping.md](./erpnext-native-vi-en-mapping.md).
 
 ---
 

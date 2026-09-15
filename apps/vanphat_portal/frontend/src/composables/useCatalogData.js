@@ -392,13 +392,18 @@ export function useCatalogData() {
 		showUserDrawer.value = true;
 	}
 
-	async function loadAllCatalogData() {
-		await Promise.all([
-			loadMasterItems(),
-			loadCustomers(),
-			loadSuppliers(),
-			loadUsers()
-		]);
+	async function loadInitialTabData() {
+		// Triple rule 1: chỉ tải tab đang mở (không tải thừa 4 tab còn lại).
+		const tab = activeCatalogTab.value;
+		if (['sp', 'nvl', 'truc'].includes(tab)) {
+			await loadMasterItems();
+		} else if (tab === 'kh') {
+			await loadCustomers();
+		} else if (tab === 'ncc') {
+			await loadSuppliers();
+		} else if (tab === 'user') {
+			await loadUsers();
+		}
 		syncTotalCount();
 	}
 
@@ -465,6 +470,6 @@ export function useCatalogData() {
 		openSupplierDetail,
 		loadUsers,
 		openUserDetail,
-		loadAllCatalogData,
+		loadInitialTabData,
 	};
 }

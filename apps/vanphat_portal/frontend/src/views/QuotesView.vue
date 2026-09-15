@@ -513,10 +513,6 @@ onUnmounted(() => {
 	window.removeEventListener('keydown', handleKeyDown);
 });
 
-defineExpose({
-	loadQuotations,
-	openStep1Modal,
-});
 </script>
 
 <style scoped>

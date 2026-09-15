@@ -476,26 +476,15 @@ const handleSubmit = async () => {
 	else if (productGroup.value === 'Túi màng đơn') orderTab = 'mua_ngoai';
 
 	let builtItems = [];
-	let totalQty = 0;
-	let orderDesc = '';
-	let dimsText = '';
 	let mats = [];
-	let accessoryText = 'Không vòi';
-	let printTypeText = 'In trục';
-	let cylinderStatusText = 'Không trục';
-	let artworkUrl = '/samples/baba.jpg';
+	// Triple rule 1: ảnh/despec do Item native quyết (artwork_url); rỗng thì không gửi.
+	let artworkUrl = '';
 
 	if (isCustomMto.value && currentCustomItem.value) {
-		orderDesc = currentCustomItem.value.item_name;
-		dimsText = currentCustomItem.value.dimensions_text;
 		mats = currentCustomItem.value.materials;
-		accessoryText = currentCustomItem.value.accessory;
-		printTypeText = currentCustomItem.value.print_type;
 		artworkUrl = currentCustomItem.value.artwork_url;
-		cylinderStatusText = hasNewCylinders.value ? `${cylinderCount.value} cây` : 'Có sẵn trục';
 
 		variantRows.value.forEach((v) => {
-			totalQty += Number(v.qty) || 0;
 			builtItems.push({
 				item_code: currentCustomItem.value.item_code,
 				item_name: `${currentCustomItem.value.item_name} - ${v.variant_name}`,
@@ -509,29 +498,13 @@ const handleSubmit = async () => {
 			});
 		});
 
-		if (hasNewCylinders.value && cylinderCount.value > 0) {
-			// P2 pass-through: dòng trục do backend cộng từ cylinder_spec (giá NCC).
-			// Vỏ không tự build dòng trục nữa — chỉ gửi spec, backend quyết.
-			cylinderStatusText = `${cylinderCount.value} cây (NCC ${cylinderSupplier.value || 'chờ báo giá'})`;
-		}
+		// P2 pass-through: dòng trục do backend cộng từ cylinder_spec (giá NCC).
+		// Vỏ không tự build dòng trục nữa — chỉ gửi spec, backend quyết.
 	} else {
-		// Generic MTS
-		if (productGroup.value === 'Túi NGCS') {
-			orderDesc = `Túi NGCS in lụa ${screenPrintBrand.value || brand.value}`;
-			printTypeText = 'In lụa';
-			artworkUrl = '/samples/ngcs.jpg';
-		} else {
-			orderDesc = `Túi màng đơn ${brand.value}`;
-			printTypeText = 'Không in';
-			artworkUrl = '/samples/mangdon.jpg';
-		}
-
+		// Generic MTS — spec/despec theo Item native tìm được, không nhãn cứng.
 		genericRows.value.forEach((g) => {
 			const itemDef = catalogItems.value.find((i) => i.item_code === g.item_code) || {};
-			dimsText = itemDef.dimensions_text || '';
 			mats = itemDef.materials || [];
-			accessoryText = itemDef.accessory || 'Không quai';
-			totalQty += Number(g.qty) || 0;
 
 			builtItems.push({
 				item_code: g.item_code,
@@ -590,18 +563,6 @@ const handleSubmit = async () => {
 </script>
 
 <style scoped>
-.modal-backdrop {
-	position: fixed;
-	inset: 0;
-	background: rgba(0, 0, 0, 0.75);
-	backdrop-filter: blur(4px);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	z-index: 1050;
-	padding: 16px;
-}
-
 .modal-panel {
 	background: #161b22;
 	border: 1px solid #3a424e;

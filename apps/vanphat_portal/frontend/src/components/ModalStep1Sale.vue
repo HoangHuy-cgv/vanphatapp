@@ -378,17 +378,6 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.modal-overlay {
-	position: fixed;
-	inset: 0;
-	background: rgba(0, 0, 0, 0.65);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	z-index: 100;
-	padding: 16px;
-}
-
 .modal-card {
 	width: 440px;
 	max-width: 100%;

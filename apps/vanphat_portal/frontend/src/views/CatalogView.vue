@@ -543,7 +543,7 @@ const {
 	openSupplierDetail,
 	loadUsers,
 	openUserDetail,
-	loadAllCatalogData,
+	loadInitialTabData,
 } = catalog;
 
 function onAddNew() {
@@ -584,7 +584,7 @@ const tableContainerRef = ref(null);
 
 onMounted(async () => {
 	window.addEventListener('keydown', handleKeyDown);
-	await loadAllCatalogData();
+	await loadInitialTabData();
 
 	// Read URL query params
 	const query = route?.query || {};
@@ -637,17 +637,6 @@ onUnmounted(() => {
 	window.removeEventListener('keydown', handleKeyDown);
 });
 
-defineExpose({
-	activeCatalogTab,
-	switchCatalogTab,
-	loadAllCatalogData,
-	openItemDetail,
-	openCustomerDetail,
-	openSupplierDetail,
-	openUserDetail,
-	handleAddNew: onAddNew,
-	currentAddButtonLabel,
-});
 </script>
 
 <style scoped>

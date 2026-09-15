@@ -1,5 +1,9 @@
 # SPEC: Variant KH về native `Item.customer_items` (child table `Item Customer Detail`)
 
+> Trạng thái: **ĐÃ XONG** (triple-rule slice `b1de2ff`) — `api/item.py` select/search
+> `customer_code` + `get_detail` đọc bảng con; `customer_items.csv` 45 dòng TP;
+> fixtures không còn entry variant. File này giữ làm hồ sơ kỹ thuật, không còn việc mở.
+
 ## 1. Objective
 - Bỏ custom field phẳng `custom_customer_variant_code` (trái native-first, kẹt khi 1 mã TP bán cho 2 KH).
 - Dùng native có sẵn: Item.`customer_items` (Table → `Item Customer Detail`: `customer_name` Link Customer, `customer_group` fetch, `ref_code` Data reqd=1, search_index) + Item.`customer_code` (Small Text, ERPNext tự join từ các `ref_code` qua `fill_customer_code`, dùng search).
@@ -13,12 +17,14 @@
 - NGUYÊN TẮC NGÀNH (Sếp dạy 2026-09-15, đã ghi vào masterdata-spec kịch bản 1/2/3/4): 1 mã TP/BTP chỉ bán cho đúng 1 KH (NVL là cuộn PET in theo mẫu thiết kế riêng của khách); NGCS/TMD bán nhiều KH, phân biệt bằng in lụa brandname (`custom_screen_print_brand` trên Sales Order Item). Bảng con native mỗi TP đúng 1 dòng con 1 KH.
 - Cộng đồng + docs: Ref Code = "Item Code that this customer uses at their end... shown in Sales Orders" ([docs Item §3.15](https://docs.frappe.io/erpnext/item), [discuss 46792](https://discuss.frappe.io/t/item-what-the-customer-details-for/46792)).
 
-## 3. Commands
+## 3. Commands (chuẩn verify hiện tại — triple rule)
 - Sinh CSV: `python3 scripts/generate_master_data_csv.py`
 - Dry-run verify: `python3 scripts/import_master_data.py --dry-run`
 - Backend compile: `python3 -m py_compile apps/vanphat_portal/vanphat_portal/api/item.py scripts/import_master_data.py`
-- Frontend build: `pnpm --dir apps/vanphat_portal/frontend build` (khi chạm Vue)
-- Browser verify: `node scripts/browser-test.mjs` (mock serve-portal)
+- Test đặc tả: `python3 -m unittest discover -s apps/vanphat_portal/tests -p "test_*.py"`
+- Máy kiểm: `python3 scripts/constraints-check.py` (GATE: PASS mới commit)
+- Preview LOCAL: `node scripts/serve-portal.mjs` (đọc CSV thật; đơn tạo ở preview là file
+  local tạm, không phải chứng từ ERPNext — cấm đối soát thật)
 
 ## 4. Project Structure (vùng chạm / không chạm)
 - Chạm: `scripts/generate_master_data_csv.py` (xuất thêm customer_items.csv), `scripts/import_master_data.py` (nạp bảng con), `api/item.py` (select/search native), `mapping.md` + `masterdata-spec` + `ADR-004` (sửa), `fixtures/custom_field.json` (XÓA entry variant — native không cần fixture custom).
@@ -35,7 +41,7 @@ or_filters = [..., ["Item", "customer_code", "like", like], ...]
 
 ## 6. Testing Strategy
 - TDD characterization trước: script đọc item_master.csv đếm TP có variant (45) + TRUC trống variant (157) → sau refactor đếm customer_items.csv tương ứng.
-- Không có bench ERPNext ở đây → verify bằng: dry-run import (FK customer tồn tại), py_compile, browser-test mock (search `888-3.2KG` ra TP-00001).
+- Không có bench ERPNext ở đây → verify bằng: dry-run import (FK customer tồn tại), py_compile, unittest đặc tả (search `888-3.2KG` ra TP-00001 qua `customer_code`).
 - Bench staging thật (có Frappe): Sếp chạy `bench --site <site> migrate` + import 1 TP 2 KH kiểm tra bảng con.
 
 ## 7. Boundaries
