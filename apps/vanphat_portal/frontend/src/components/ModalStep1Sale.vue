@@ -1,5 +1,5 @@
 <template>
-	<Dialog v-model:open="dialogOpen" size="2xl" @close="$emit('close')">
+	<BaseModal :open="open" label="Tạo báo giá" @close="$emit('close')">
 		<div class="modal-card">
 			<!-- Header with title & close button -->
 			<div class="modal-header">
@@ -175,10 +175,13 @@
 							<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
 						</svg>
 						<input
+							id="step1-customer"
+							name="customer"
 							v-model="form.customer"
 							type="text"
 							class="form-input cust-input"
 							placeholder="Tìm khách hàng có sẵn"
+							aria-label="Tìm khách hàng có sẵn"
 							autocomplete="off"
 							@input="onCustomerInput"
 							@focus="onCustomerInput"
@@ -193,10 +196,13 @@
 					</div>
 					<div class="field-brand-wrap">
 						<input
+							id="step1-brand"
+							name="brand"
 							v-model="form.brand"
 							type="text"
 							class="form-input brand-input"
 							placeholder="Brand name"
+							aria-label="Brand name"
 							autocomplete="off"
 						/>
 					</div>
@@ -205,37 +211,52 @@
 				<!-- CỤM 5: MÔ TẢ SẢN PHẨM & KÍCH THƯỚC KỸ THUẬT -->
 				<div class="spec-input-group">
 					<input
+						id="step1-desc"
+						name="description"
 						v-model="form.description"
 						type="text"
 						class="form-input desc-input"
 						placeholder="Mô tả sản phẩm (VD: Túi nước giặt đậm đặc 3.2L)"
+						aria-label="Mô tả sản phẩm"
 						autocomplete="off"
 					/>
 					<div class="dims-grid">
 						<input
+							id="step1-length"
+							name="length"
 							v-model.number="form.length"
 							type="number"
 							class="form-input no-spin text-center"
 							:placeholder="lengthPlaceholder"
+							:aria-label="lengthPlaceholder"
 						/>
 						<input
+							id="step1-width"
+							name="width"
 							v-model.number="form.width"
 							type="number"
 							class="form-input no-spin text-center"
 							placeholder="Rộng (mm)"
+							aria-label="Rộng (mm)"
 						/>
 						<input
+							id="step1-thick"
+							name="thickness"
 							v-model.number="form.thickness"
 							type="number"
 							class="form-input no-spin text-center"
 							placeholder="Dày (mic)"
+							aria-label="Dày (mic)"
 						/>
 						<input
+							id="step1-bottom"
+							name="bottom"
 							v-model.number="form.bottom"
 							type="number"
 							class="form-input no-spin text-center"
 							:class="{ 'is-blocked': isThreeSide }"
 							:placeholder="bottomPlaceholder"
+							:aria-label="bottomPlaceholder"
 							:disabled="isThreeSide"
 						/>
 					</div>
@@ -260,12 +281,12 @@
 				</div>
 			</div>
 		</div>
-	</Dialog>
+	</BaseModal>
 </template>
 
 <script setup>
 import { reactive, computed, ref, onMounted, onUnmounted } from 'vue';
-import { Dialog } from 'frappe-ui';
+import BaseModal from './BaseModal.vue';
 import { api } from '../composables/useSession';
 
 const props = defineProps({
@@ -276,16 +297,7 @@ const props = defineProps({
 	open: { type: Boolean, default: true },
 });
 
-const emit = defineEmits(['close', 'next', 'update:open']);
-
-// P4c: Dialog lib điều khiển mở/đóng (v-model:open)
-const dialogOpen = computed({
-	get: () => props.open,
-	set: (v) => {
-		emit('update:open', v);
-		if (!v) emit('close');
-	},
-});
+const emit = defineEmits(['close', 'submit', 'update:open']);
 
 const form = reactive({
 	product_type: props.initialData.product_type || 'Túi đáy đứng',
@@ -359,7 +371,8 @@ function hideCustomerResults() {
 }
 
 function onContinue() {
-	emit('next', { ...form });
+	// ADR-007: 1 contract duy nhất `submit` mang payload form (QuotesView @submit).
+	emit('submit', { ...form });
 }
 
 function handleKeydown(e) {

@@ -165,8 +165,8 @@ const dedicatedItems = computed(() => {
 
 <style scoped>
 .drawer-panel {
-	width: 540px;
-	max-width: 100vw;
+	width: 100%;
+	max-width: 680px;
 	height: 100vh;
 	background: #161b22;
 	border-left: 1px solid #3a424e;

@@ -20,9 +20,12 @@
 						<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
 					</svg>
 					<input
+						id="quote-search-input"
+						name="quote_search"
 						type="text"
 						v-model="quoteSearchQuery"
 						placeholder="Tìm nhanh số báo giá, khách..."
+						aria-label="Tìm nhanh số báo giá, khách hàng"
 						class="catalog-search-input"
 					/>
 					<button
@@ -174,7 +177,7 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted, defineAsyncComponent } from 'vue';
 import { useRouter } from 'vue-router';
-import { dialog } from 'frappe-ui';
+import { dialog } from '../composables/useConfirmDialog';
 // S8: drawers/modals nặng async — chunk riêng, render khi mở
 const ModalStep1Sale = defineAsyncComponent(() => import('../components/ModalStep1Sale.vue'));
 const DrawerStep2Director = defineAsyncComponent(() => import('../components/DrawerStep2Director.vue'));

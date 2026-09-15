@@ -12,16 +12,13 @@ import { build } from 'vite';
 const here = dirname(fileURLToPath(import.meta.url));
 const outDir = join(here, '.composables-check');
 const entryFile = join(here, '.composables-check-entry.js');
-const stubFile = join(here, '.composables-check-frappe-ui.js');
+const stubFile = join(here, '.composables-check-ui-stub.js');
 
-// Chặn thư viện UI: guard này kiểm code của mình, không kéo SFC của frappe-ui vào Node.
+// Chặn thư viện toast UI: guard này kiểm code của mình, không kéo `vue-sonner` vào Node.
+// ADR-007: chỉ còn vue-sonner là external UI dep duy nhất; stub giữ contract tối thiểu.
 const UI_STUB = `
 const noop = () => {};
-export const toast = Object.assign(noop, { success: noop, error: noop, warning: noop, info: noop, dismiss: noop });
-export const dialog = { confirm: noop, prompt: noop, alert: noop };
-const stub = { name: 'Stub', render: (ctx) => (ctx.slots && ctx.slots.default ? ctx.slots.default() : null) };
-export const Dialog = stub;
-export const FrappeUIProvider = stub;
+export const toast = Object.assign(noop, { success: noop, error: noop, warning: noop, info: noop, dismiss: noop, promise: noop, custom: noop });
 `;
 
 const names = (await readdir(join(here, 'src/composables')))
@@ -67,7 +64,7 @@ try {
 		root: here,
 		logLevel: 'error',
 		plugins: [vue()],
-		resolve: { alias: { 'frappe-ui': stubFile } },
+		resolve: { alias: { 'vue-sonner': stubFile } },
 		ssr: { noExternal: true },
 		build: {
 			ssr: entryFile,

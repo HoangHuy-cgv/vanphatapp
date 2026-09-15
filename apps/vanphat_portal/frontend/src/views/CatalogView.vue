@@ -67,10 +67,13 @@
 						<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
 					</svg>
 					<input
+						id="catalog-search-input"
+						name="catalog_search"
 						type="text"
 						class="catalog-search-input"
 						v-model="catalogSearchInput"
 						:placeholder="currentCatalogSearchPlaceholder"
+						aria-label="Tìm kiếm danh mục"
 					/>
 					<button
 						v-if="catalogSearchInput"
@@ -507,6 +510,7 @@ const DrawerSupplierDetail = defineAsyncComponent(() => import('../components/Dr
 const DrawerUserDetail = defineAsyncComponent(() => import('../components/DrawerUserDetail.vue'));
 import { useCockpitFormat } from '../composables/useCockpitFormat';
 import { useCatalogData } from '../composables/useCatalogData';
+import { toast } from '../composables/useToast';
 
 const route = useRoute();
 // S7c: formatter dùng chung (giữ formatItemRate riêng vì empty '—' khác chuẩn)
@@ -580,6 +584,7 @@ const {
 
 function onAddNew() {
 	emit('add-new', catalog.handleAddNew());
+	toast.info(`Dữ liệu ${currentTabLabel.value || 'danh mục'} được quản lý và tạo mới trực tiếp từ ERPNext Desk.`);
 }
 
 // Khôi phục từ bản pre-S7d (commit 1356141^): 2 helpers này bị rơi khi tách

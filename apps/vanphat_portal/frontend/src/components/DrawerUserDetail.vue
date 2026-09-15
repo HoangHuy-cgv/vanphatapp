@@ -121,8 +121,8 @@ const parsedRoles = computed(() => {
 <style scoped>
 /* P4: overlay/backdrop/focus do native <dialog> + BaseDrawer lo — chỉ giữ panel nội dung */
 .drawer-panel {
-	width: 500px;
-	max-width: 100vw;
+	width: 100%;
+	max-width: 680px;
 	min-height: 100%;
 	background: #161b22;
 	display: flex;

@@ -1,5 +1,5 @@
 <template>
-	<Dialog v-model:open="dialogOpen" size="4xl" :dismissible="!isSubmitting" @close="$emit('close')">
+	<BaseModal :open="open || isOpen" label="Tạo Đơn Hàng Mới" @close="$emit('close')">
 		<div class="modal-panel">
 			<!-- Header -->
 			<div class="modal-head">
@@ -43,8 +43,10 @@
 
 						<!-- Brand / Thương hiệu -->
 						<div class="field-col">
-							<label class="field-label">Brand / Nhãn hiệu</label>
+							<label class="field-label" for="order-brand">Brand / Nhãn hiệu</label>
 							<input
+								id="order-brand"
+								name="brand"
 								type="text"
 								v-model="brand"
 								class="text-input"
@@ -77,8 +79,8 @@
 					<div class="info-row-2">
 						<!-- Ngày hẹn giao -->
 						<div class="field-col">
-							<label class="field-label">Ngày hẹn giao</label>
-							<input type="date" v-model="deliveryDate" class="text-input font-mono" required />
+							<label class="field-label" for="order-delivery-date">Ngày hẹn giao</label>
+							<input id="order-delivery-date" name="deliveryDate" type="date" v-model="deliveryDate" class="text-input font-mono" required />
 						</div>
 
 						<!-- Hình thức thanh toán: nút click-chọn từ Payment Terms native -->
@@ -163,20 +165,26 @@
 								<tr v-for="(row, idx) in variantRows" :key="idx">
 									<td>
 										<input
+											:id="'var-name-' + idx"
+											name="variant_name"
 											type="text"
 											v-model="row.variant_name"
 											class="text-input"
 											placeholder="VD: Nước phở bò, Màu Hồng..."
+											aria-label="Tên mẫu in / biến thể"
 											required
 										/>
 									</td>
 									<td>
 										<input
+											:id="'var-qty-' + idx"
+											name="qty"
 											type="number"
 											v-model.number="row.qty"
 											class="text-input text-right text-num"
 											min="1"
 											step="1"
+											aria-label="Số lượng (cái)"
 											required
 										/>
 									</td>
@@ -185,10 +193,13 @@
 									</td>
 									<td>
 										<input
+											:id="'var-rate-' + idx"
+											name="rate"
 											type="number"
 											v-model.number="row.rate"
 											class="text-input text-right text-num"
 											min="0"
+											aria-label="Đơn giá (đ)"
 											required
 										/>
 									</td>
@@ -214,22 +225,22 @@
 					<!-- Phần Trục In (Nếu có) -->
 					<div class="cylinder-block">
 						<label class="checkbox-label">
-							<input type="checkbox" v-model="hasNewCylinders" />
+							<input id="order-has-cylinders" name="hasNewCylinders" type="checkbox" v-model="hasNewCylinders" />
 							<span>Đơn hàng có làm bộ trục in mới</span>
 						</label>
 
 						<div v-if="hasNewCylinders" class="cylinder-inputs">
 							<div class="cyl-col">
-								<label class="field-label-sm">Số cây trục</label>
-								<input type="number" v-model.number="cylinderCount" class="text-input text-right text-num" min="1" />
+								<label class="field-label-sm" for="order-cyl-count">Số cây trục</label>
+								<input id="order-cyl-count" name="cylinderCount" type="number" v-model.number="cylinderCount" class="text-input text-right text-num" min="1" aria-label="Số cây trục" />
 							</div>
 							<div class="cyl-col">
-								<label class="field-label-sm">NCC trục</label>
-								<input type="text" v-model="cylinderSupplier" class="text-input" placeholder="VD: Kiến Tâm" />
+								<label class="field-label-sm" for="order-cyl-supplier">NCC trục</label>
+								<input id="order-cyl-supplier" name="cylinderSupplier" type="text" v-model="cylinderSupplier" class="text-input" placeholder="VD: Kiến Tâm" aria-label="NCC trục" />
 							</div>
 							<div class="cyl-col">
-								<label class="field-label-sm">Giá NCC (VNĐ/cây)</label>
-								<input type="number" v-model.number="cylinderUnitPrice" class="text-input text-right text-num" min="0" step="100000" placeholder="Giá NCC báo" />
+								<label class="field-label-sm" for="order-cyl-price">Giá NCC (VNĐ/cây)</label>
+								<input id="order-cyl-price" name="cylinderUnitPrice" type="number" v-model.number="cylinderUnitPrice" class="text-input text-right text-num" min="0" step="100000" placeholder="Giá NCC báo" aria-label="Giá NCC (VNĐ/cây)" />
 							</div>
 							<div class="cyl-col">
 								<label class="field-label-sm">Tiền trục</label>
@@ -246,12 +257,15 @@
 				<div v-else class="form-section generic-section">
 					<!-- Tiêu đề in lụa của khách (Nếu là NGCS) -->
 					<div v-if="productGroup === 'Túi NGCS'" class="field-col" style="margin-bottom: 16px;">
-						<label class="field-label">Nội dung / Tên thương hiệu in lụa</label>
+						<label class="field-label" for="order-screen-brand">Nội dung / Tên thương hiệu in lụa</label>
 						<input
+							id="order-screen-brand"
+							name="screenPrintBrand"
 							type="text"
 							v-model="screenPrintBrand"
 							class="text-input"
 							placeholder="VD: CÀ PHÊ NGUYÊN CHẤT DAKLAK"
+							aria-label="Nội dung / Tên thương hiệu in lụa"
 						/>
 					</div>
 
@@ -270,7 +284,7 @@
 							<tbody>
 								<tr v-for="(row, idx) in genericRows" :key="idx">
 									<td>
-										<select v-model="row.item_code" class="select-input select-table" @change="onGenericItemChange(row)">
+										<select :id="'gen-item-' + idx" name="generic_item" v-model="row.item_code" class="select-input select-table" aria-label="Mặt hàng" @change="onGenericItemChange(row)">
 											<option v-for="item in availableGenericItems" :key="item.item_code" :value="item.item_code">
 												{{ item.item_name }} ({{ item.item_code }})
 											</option>
@@ -278,19 +292,25 @@
 									</td>
 									<td class="text-right">
 										<input
+											:id="'gen-qty-' + idx"
+											name="generic_qty"
 											type="number"
 											v-model.number="row.qty"
 											class="text-input text-right text-num"
 											min="1"
+											aria-label="Số lượng (cái)"
 										/>
 									</td>
 									<td class="text-right">
 										<input
+											:id="'gen-rate-' + idx"
+											name="generic_rate"
 											type="number"
 											v-model.number="row.rate"
 											class="text-input text-right text-num"
 											min="0"
 											step="100"
+											aria-label="Đơn giá (đ)"
 										/>
 									</td>
 									<td class="text-right text-num bold-num">
@@ -361,25 +381,26 @@
 				</div>
 			</form>
 		</div>
-	</Dialog>
+	</BaseModal>
 </template>
 
 <script setup>
 import { watch, toRef, computed } from 'vue';
-import { Dialog } from 'frappe-ui';
+import BaseModal from './BaseModal.vue';
 import { api } from '../composables/useSession';
 import { toast } from '../composables/useToast';
 import { useCreateOrderForm } from '../composables/useCreateOrderForm';
 import { useCockpitFormat } from '../composables/useCockpitFormat';
 
 const props = defineProps({
+	open: { type: Boolean, default: false },
 	isOpen: { type: Boolean, default: false },
 	initialTab: { type: String, default: 'xuong_sx' },
 	masterItems: { type: Array, default: () => [] },
 });
 
 // S7: emit contract khớp caller OrdersView (@order-created) — sửa bug khai báo thiếu
-const emit = defineEmits(['close', 'order-created', 'update:isOpen']);
+const emit = defineEmits(['close', 'order-created', 'update:isOpen', 'update:open']);
 
 // P4c: Dialog lib điều khiển mở/đóng (v-model:open), sync về isOpen + emit close
 const dialogOpen = computed({

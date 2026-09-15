@@ -1,9 +1,9 @@
-import { toast as libToast } from 'frappe-ui';
+import { toast as libToast } from 'vue-sonner';
 
 /**
- * P4c: Toast qua lib frappe-ui (đã có FrappeUIProvider portals ở App root).
+ * ADR-007: Toast qua `vue-sonner` trực tiếp (zero-dep, ~10KB gzip lib + CSS).
  * Giữ nguyên contract success/error/warning/info/message để không sửa callers.
- * Xóa CockpitToast.vue + singleton ref khi Sếp duyệt (hiện giữ song song 1 round để so sánh).
+ * Root `App.vue` mount duy nhất 1 `<Toaster theme="dark" position="top-right" rich-colors />`.
  */
 function show(message, type = 'info') {
 	if (type === 'success') return libToast.success(message);

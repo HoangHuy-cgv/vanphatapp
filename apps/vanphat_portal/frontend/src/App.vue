@@ -1,6 +1,7 @@
 <template>
-	<FrappeUIProvider>
 	<div class="portal-layout">
+		<Toaster theme="dark" position="top-right" rich-colors />
+		<ConfirmDialog />
 		<!-- Sidebar Navigation -->
 		<aside class="sidebar">
 			<div class="brand-block">
@@ -117,15 +118,15 @@
 			</router-view>
 		</main>
 
-		<!-- Toast qua lib frappe-ui (FrappeUIProvider portals) — P4c xóa CockpitToast tự viết -->
+		<!-- Toast qua vue-sonner (ADR-007) -->
 	</div>
-	</FrappeUIProvider>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { FrappeUIProvider } from 'frappe-ui';
+import { Toaster } from 'vue-sonner';
+import ConfirmDialog from './components/ConfirmDialog.vue';
 import logoUrl from './assets/logo-vanphat.png';
 import { useSession } from './composables/useSession';
 import { usePortalCounts } from './composables/usePortalCounts';

@@ -40,9 +40,12 @@
 						<line x1="21" y1="21" x2="16.65" y2="16.65"></line>
 					</svg>
 					<input
+						id="order-search-input"
+						name="order_search"
 						type="text"
 						v-model="orderSearchQuery"
 						:placeholder="currentOrderSearchPlaceholder"
+						aria-label="Tìm kiếm đơn hàng"
 						class="catalog-search-input"
 					/>
 					<button

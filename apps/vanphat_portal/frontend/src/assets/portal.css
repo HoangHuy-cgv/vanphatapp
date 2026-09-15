@@ -2,10 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-/* KHÔNG @import 'frappe-ui/style.css' nguyên file: dòng 1 của nó kéo inter.css full
-   (Latin+Greek+Cyrillic+Hebrew+CJK+Hangul, ~560KB) đè mục tiêu subset.
-   Tailwind preset (darkMode/theme/plugins/safelist) đã nối qua tailwind.config.js.
-   Giữ font subset tự host dưới đây (latin 93KB + vietnamese 17KB). */
+/* ADR-007: Không dùng external UI framework CSS. Font Inter subset tự host
+   dưới đây (latin 93KB + vietnamese 17KB — xem budget-gate.sh).
+   Tailwind v3 standalone (tailwind.config.js không còn preset ngoài). */
 @font-face {
 	font-family: 'InterVariable';
 	font-weight: 100 900;

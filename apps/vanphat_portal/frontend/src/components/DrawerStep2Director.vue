@@ -1,5 +1,5 @@
 <template>
-	<BaseDrawer :open="isOpen" label="Soạn báo giá" @close="$emit('close')">
+	<BaseDrawer :open="open || isOpen" label="Soạn báo giá" @close="$emit('close')">
 		<div class="drawer-panel">
 			<!-- Header -->
 			<div class="drawer-head">
@@ -88,32 +88,42 @@
 						class="item-row"
 					>
 						<input
+							:id="'step2-item-name-' + idx"
+							name="step2_item_name"
 							v-model="row.item_name"
 							type="text"
 							class="form-input"
 							placeholder="Mẫu in"
+							:aria-label="'Mẫu in dòng ' + (idx + 1)"
 							autocomplete="off"
 							@input="onItemChange"
 						/>
 						<input
+							:id="'step2-item-qty-' + idx"
+							name="step2_item_qty"
 							v-model.number="row.qty"
 							type="number"
 							class="form-input no-spin text-center w-110"
 							placeholder="Số lượng"
+							:aria-label="'Số lượng dòng ' + (idx + 1)"
 							@input="onItemChange"
 						/>
 						<input
+							:id="'step2-item-rate-' + idx"
+							name="step2_item_rate"
 							v-model.number="row.rate"
 							type="number"
 							class="form-input no-spin text-center w-120"
 							placeholder="Giá chưa thuế"
+							:aria-label="'Giá chưa thuế dòng ' + (idx + 1)"
 							@input="onItemChange"
 						/>
 						<button
 							v-if="itemRows.length > 1"
 							type="button"
 							class="btn-icon-del"
-							title="Xóa dòng"
+							:title="'Xóa dòng ' + (idx + 1)"
+							:aria-label="'Xóa dòng ' + (idx + 1)"
 							@click="removeItemRow(idx)"
 						>
 							✕
@@ -128,17 +138,23 @@
 						<span class="cyl-title">Trục in (1 màu = 1 cây)</span>
 					</div>
 					<input
+						id="step2-cylinder-qty"
+						name="step2_cylinder_qty"
 						v-model.number="cylinderQty"
 						type="number"
 						class="form-input no-spin text-center w-110"
 						placeholder="Số cây"
+						aria-label="Số cây trục in"
 						@input="onItemChange"
 					/>
 					<input
+						id="step2-cylinder-rate"
+						name="step2_cylinder_rate"
 						:value="cylinderRateDisplay"
 						type="text"
 						class="form-input text-center w-120 read-only"
 						placeholder="Giá chưa thuế"
+						aria-label="Giá trục chưa thuế (từ NCC)"
 						readonly
 					/>
 				</div>
@@ -201,6 +217,14 @@ import ArtworkBox from './ArtworkBox.vue';
 import { useStep2DirectorForm } from '../composables/useStep2DirectorForm';
 
 const props = defineProps({
+	open: {
+		type: Boolean,
+		default: false,
+	},
+	isOpen: {
+		type: Boolean,
+		default: false,
+	},
 	formData: {
 		type: Object,
 		default: () => ({}),
@@ -256,8 +280,8 @@ const {
 
 <style scoped>
 .drawer-panel {
-	width: 580px;
-	max-width: 94vw;
+	width: 100%;
+	max-width: 680px;
 	height: 100vh;
 	background: #161b22;
 	border-left: 1px solid #3a424e;

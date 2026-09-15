@@ -266,7 +266,7 @@ const getLayerBadgeClass = (layer) => {
 <style scoped>
 .drawer-panel {
 	width: 100%;
-	max-width: 580px;
+	max-width: 680px;
 	height: 100%;
 	background: #0b0f19;
 	border-left: 1px solid #3a424e;
