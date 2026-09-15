@@ -208,19 +208,23 @@ def import_to_frappe(data):
             }, f"Tạo NCC: {s['supplier_name']} ({s.get('alias', '')})")
 
         print("\n5. Nạp Trạm Máy & Công Đoạn Sản Xuất...")
+        ws_name_by_code = {}
         for ws in data.get("workstations", []):
-            create_if_missing("Workstation", ws["name"], {
-                # name = mã trạm (WS-*) để Operation.workstation link đúng mã CSV.
-                "doctype": "Workstation", "name": ws["name"],
+            create_if_missing("Workstation", ws["workstation_name"], {
+                # Workstation autoname native = workstation_name (không set name tay được);
+                # giữ map mã → tên để Operation.workstation link đúng.
+                "doctype": "Workstation",
                 "workstation_name": ws["workstation_name"],
                 "production_capacity": safe_int(ws.get("production_capacity", 1)), "hour_rate": 0.0,
                 "description": ws.get("description", "")
             }, f"Tạo Trạm Máy: {ws['workstation_name']}")
+            ws_name_by_code[ws["name"]] = ws["workstation_name"]
         for op in data["operations"]:
             op_name = op.get("operation_name", op.get("operation", op.get("name")))
             create_if_missing("Operation", op["name"], {
                 "doctype": "Operation", "operation_name": op_name,
-                "workstation": op.get("workstation", ""), "description": op.get("description", op.get("desc", ""))
+                "workstation": ws_name_by_code.get(op.get("workstation", ""), ""),
+                "description": op.get("description", op.get("desc", ""))
             }, f"Tạo Công Đoạn: {op_name} ({op['name']})")
 
         print(f"\n6. Nạp {len(data['items'])} Mặt Hàng...")
