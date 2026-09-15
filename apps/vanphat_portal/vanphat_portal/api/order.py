@@ -425,6 +425,7 @@ def list_orders(tab=None, query=None, page=1, page_length=15):
 	trên prod (bắt được khi đo p95 staging 2026-09-15).
 	"""
 	require_doc("Sales Order", "read")
+	from frappe.qb import Order
 	from frappe.query_builder.functions import Count
 
 	SO = frappe.qb.DocType("Sales Order")
@@ -516,7 +517,7 @@ def list_orders(tab=None, query=None, page=1, page_length=15):
 				SOI.uom,
 				ITEM.custom_alias,
 			)
-			.orderby(SO.creation, order=frappe.qb.Order.desc)
+			.orderby(SO.creation, order=Order.desc)
 			.limit(pl)
 			.offset(start)
 			.run(as_dict=True)
