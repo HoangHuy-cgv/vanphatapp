@@ -1,13 +1,13 @@
-# Handoff — Slice cleanup triple-rule (SSOT rolling, <25 dòng)
+# Handoff — sau slice p95 + wipe prod (SSOT rolling, <25 dòng)
 
-> Nhánh `master` (ghim `frappe-ui 1.0.0-beta.64`). Không `git push` khi chưa lệnh.
+> Nhánh `master` (`5009c43`). Không `git push` khi chưa lệnh.
 
-- **Mục tiêu:** docs, code, rule cùng một ngữ cảnh (triple rule) trước khi đụng nợ
-  quyền/bench/Vitest (Sếp hoãn — plan mục Còn lại).
-- **Đã dọn code:** CSS overlay chết ×2, biến submit chết ×6, ảnh mẫu cứng ×3,
-  `defineExpose` chết ×3, `loadAllCatalogData` → `loadInitialTabData` (chỉ tải tab mở),
-  JSON mock local ×2, `serve-portal.mjs` gắn boundary LOCAL ONLY.
-- **Đã cập nhật docs:** README + specs/README (triple rule) + plan gọn (Đã xong/Còn lại)
-  + SPEC variant (lệnh verify mới) + link tương đối.
-- **Số:** 27 endpoint/22 ungated (nợ quyền) · entry ~145 kB · 46 test backend · guard 8/8.
-- Chi tiết: `tasks/todo.md`, `tasks/plan.md`.
+- **Định hướng chốt:** local mới nhất, prod wipe + deploy fresh từ HEAD.
+  Triple rule ghim: backend native + config native + visual custom.
+- **Đã xong:** quyền 26 endpoint (`api_ungated=0`) · p95 thật (list 213ms,
+  detail 302ms qua tunnel; 13ms trong VPS — app nhanh, tunnel chậm) ·
+  import fresh-site 293 Item/117 KH · 48 test + GATE PASS.
+- **Rule/docs nhất quán:** CONSTRAINTS + backend/frontend spec + plan/todo/handoff
+  cùng số liệu mới (48 test, p95 §9, entry 142KB).
+- **Chờ Sếp:** cọc 2 bước → Vitest → tối ưu đường truyền.
+- Chi tiết: `tasks/plan.md`, `docs/specs/backend-native-api-spec.md` §9.

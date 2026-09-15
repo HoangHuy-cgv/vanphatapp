@@ -27,19 +27,21 @@
   cho ô chọn) `default 100, max 100` + filter server, vì picker hiện tải một lần cho ô chọn.
   Slice sau paginate picker + search server. Cấm `page_length=500` vượt trần và cấm
   `limit=500` rồi filter/lọc bằng Python.
-- Join nhiều DocType (Customer alias, SO Item đầu, Item `custom_alias`): **1 query `frappe.qb`** thay vì vòng lặp `get_value`/`get_all` từng dòng (N+1).
-- **Sổ đo query/trang (đếm tĩnh theo code, 2026-09-14):**
+- Join nhiều DocType (SO Item đầu, Item `custom_alias`): **1 query `frappe.qb`** thay vì vòng lặp `get_value`/`get_all` từng dòng (N+1). Alias KH đọc bằng 1 query `get_list` batch (native, tôn trọng permission) + resolve tìm theo alias — thay JOIN Customer qb (pypika `Table.alias` nổ TypeError trên prod, fix đợt p95 2026-09-15).
+- **Sổ đo query/trang (site fresh `app.vanphat.io.vn`, đo thật 2026-09-15 — thay đếm tĩnh cũ):**
 | Endpoint | Trước | Sau |
 |---|---|---|
-| `order.list_orders` (15 đơn/trang) | ~3 + 2N ≈ 33 query | **6 query cố định** (count + rows + tab counts + 1 dòng hàng cả trang + 2 cọc/KH) |
+| `order.list_orders` (15 đơn/trang) | ~3 + 2N ≈ 33 query | **7 query cố định** (1 alias resolve + count + rows + tab counts + 1 dòng hàng cả trang + 1 alias batch + 2 cọc/KH) — trong VPS p95 = 13ms |
 | `item.get_detail` (BOM n dòng) | 1 + n query alias | **+1 query** (`["in", codes]`) |
-| `order.get_order_details` | 3 query `Item` rời + 3 cọc | **1 query `Item`** + cọc gộp |
+| `order.get_order_details` | 3 query `Item` rời + 3 cọc | **1 query `Item`** + cọc gộp — trong VPS p50 = 10ms |
 | `bao_gia.list_quotations` khi tìm | count chỉ lọc `name` (sai số) | count khớp đúng `or_filters` (1 Criterion) |
 
-  Chưa đo được p95 trên site thật (chưa có bench staging — plan item 2); số trên là đếm tĩnh + harness `apps/vanphat_portal/tests`.
+  p95 qua tunnel (người dùng cảm nhận): list 210–213ms, detail 302ms — chênh do tunnel
+  Singapore +~200ms, không phải query (chi tiết §9). Đo lại bằng `scripts/measure_p95.py`
+  mỗi khi đổi query.
 - Soi SQL bằng `debug=True` khi nghi ngờ. Raw SQL chỉ cho báo cáo join phức tạp, cấm mutation production.
 - Master data nhạy cảm: `get_list` (tôn trọng permission), cấm `get_all` bypass.
-- Nợ tồn: `order.list_orders`/`item.get_list` (nhánh qb) chưa áp permission như `get_list`; cần role check ở tầng endpoint (Sếp chốt sau).
+- Mọi endpoint đã gated (`api_ungated = 0`, ma trận §6.1) — đường `qb` cổng read ở đầu hàm.
 
 ## 4. Chuẩn Method (GET/POST, Commit, Response)
 - GET cho read/preview, POST cho create/submit/cancel. Không GET gây mutation.
@@ -57,9 +59,10 @@
 - Thiếu `Default Company`: báo lỗi rõ ràng, KHÔNG hardcode tên công ty (Sếp chốt 2026-09-14 — cấu hình Default Company = Bao Bì Vạn Phát ở site).
 
 ## 5. Cache Redis
-- Key PHẢI chứa mọi params: `vp:items:list|tab=<t>|grp=<g>|supply=<s>|q=<q>|page=<p>|pl=<pl>`
-  (`item.py:138` — đã đủ params từ trước; backend spec cũ mô tả thiếu là sai, sửa theo code).
-- TTL 300s. Invalidate chủ động qua `doc_events` (`Item`, `Quotation`, `Customer`, `Sales Order` `on_update`) thay vì endpoint guest xả cache (`clear_catalog_cache allow_guest` — slice S3 đóng).
+- Key PHẢI chứa mọi params + roles: `vp:items:list|roles=<r>|tab=<t>|grp=<g>|supply=<s>|q=<q>|page=<p>|pl=<pl>`
+  (cache chung key rò dữ liệu vượt quyền — fix slice quyền 2026-09-15).
+- TTL 300s. Invalidate chủ động qua `doc_events` (`Item`, `Quotation`, `Customer`, `Sales Order` `on_update`);
+  `clear_catalog_cache` là hàm nội bộ (bỏ whitelist), không phải endpoint người dùng.
 - Không cache dữ liệu per-user/permission-sensitive chung key.
 
 ## 6. Bảo Mật (Đóng 4 Lỗ Hổng Đã Biết — Slices S5/S6; cổng quyền full — Sếp chốt 2026-09-15)

@@ -45,7 +45,7 @@
 - Budget (làm rõ đơn vị): `chunkSizeWarningLimit: 500` (uncompressed, theo V8); CI gate trên **gzip**: initial warn 170KB / fail 300KB, async chunk warn 500KB. Gate chạy trên `dist` static (`scripts/budget-gate.sh`), `reportCompressedSize: true`.
 - `modulePreload.polyfill: false` khi toàn bộ máy nội bộ đạt Baseline; font Inter subset latin+vietnamese + `font-display:swap`.
 - Đo: `vite-bundle-visualizer` + Lighthouse CI khi có staging (không regress Perf/A11y/Best-practice).
-- RUM sau deploy: `web-vitals` p75 — LCP ≤ 2.5s, INP ≤ 200ms, CLS ≤ 0.1 (LAN gate nội bộ: LCP ≤ 1.5s). Chưa có bench staging → chưa đo runtime, cấm bịa số.
+- RUM sau deploy: `web-vitals` p75 — LCP ≤ 2.5s, INP ≤ 200ms, CLS ≤ 0.1 (LAN gate nội bộ: LCP ≤ 1.5s). p95 API đã đo thật 2026-09-15 (backend spec §9: list 213ms, detail 302ms qua tunnel; 13ms trong VPS) — cấm bịa số khác.
 
 ## 6. A11y & UX Áp Cho Mọi View
 - Theo cockpit spec §5 DoD 12 mục: text+màu trạng thái, contrast ≥ 4.5:1, label cho input, `aria-label` badge số, touch ≥ 24px, drawer native `<dialog>` + `BaseDrawer` (`showModal`, Esc/inert/focus miễn phí từ browser, cấm `tabindex` trên `<dialog>`), skeleton `aria-busy` truthful, empty state có bước tiếp theo, error toast có retry.

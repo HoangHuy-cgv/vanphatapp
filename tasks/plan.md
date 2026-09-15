@@ -3,7 +3,7 @@
 ## Đã xong
 - **Simplify + tối ưu backend API**: `_common.py`, hết N+1, tiền native một ngữ nghĩa
   (`product_total = net_total − cylinder_total`, trục chưa VAT, `qty` bỏ trục), count báo giá
-  khớp filter, POST tự commit, bỏ `FALLBACK_VAT_RATE`. 46 test trong `apps/vanphat_portal/tests/`.
+  khớp filter, POST tự commit, bỏ `FALLBACK_VAT_RATE`. 48 test trong `apps/vanphat_portal/tests/`.
 - **Chuẩn "tối ưu" có máy kiểm**: `CONSTRAINTS.md` (triple rule ghim + 5 trục + floor 10 luật +
   ratchet) và `scripts/constraints-check.py` (floor trong pre-commit; `--init` ghi baseline).
 - **Guard frontend**: `apps/vanphat_portal/frontend/check-composables.mjs` — import + khởi tạo
@@ -17,9 +17,18 @@
   (`get_product_groups/get_payment_options/get_print_config`); ModalCreateOrder bỏ `<select>`
   cứng → nút click-chọn + search-select KH; DrawerStep2 vật liệu từ cấu trúc màng native;
   `qty` gợi ý từ `min_order_qty`; picker KH/NCC/User paginate + search server.
-- **Cleanup (slice này)**: xóa CSS chết, biến submit chết, ảnh mẫu cứng, `defineExpose` chết,
+- **Cleanup**: xóa CSS chết, biến submit chết, ảnh mẫu cứng, `defineExpose` chết,
   `loadAllCatalogData` tải thừa; xóa JSON mock local; `serve-portal.mjs` gắn boundary LOCAL ONLY;
   docs/rule/policy/skill cùng một ngữ cảnh (triple rule).
+- **Quyền native (2026-09-15, `3d71990`)**: 1 user nhiều role, Desk giữ "ai được làm gì";
+  `_guards.py` (`require_roles`/`require_doc`); Sales tạo/chốt, Kế toán độc quyền cọc + duyệt HOLD;
+  User list chỉ System Manager; bỏ whitelist cache; xóa `ignore_permissions`;
+  `api_ungated 22→0`, 48 test (+2 case Sale bị chặn).
+- **Wipe prod + deploy fresh + p95 thật (2026-09-15)**: local mới nhất, VPS wipe sạch,
+  site mới từ HEAD + import 293 Item/117 KH + seed 15 SO; p95 list 213ms / detail 302ms
+  qua tunnel, 13ms/7ms trong VPS (app nhanh, tunnel chậm — chi tiết backend spec §9);
+  fix 4 bug bắt được khi đo thật (pypika alias, qb.Order, hook args, warehouse SO);
+  `scripts/measure_p95.py` đo lại.
 
 ## Còn lại (chờ Sếp ra việc — KHÔNG đụng trước khi Sếp chốt)
 1. **Flow cọc 2 bước** (quyền đã đóng — `api_ungated = 0`, 48 test): hiện `record_order_deposit`
