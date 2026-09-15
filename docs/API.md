@@ -38,4 +38,4 @@
 
 ## Tests
 
-`apps/vanphat_portal/tests/`: 48 unittest, no bench (`frappe_stub.py`). Covers money invariant, HOLD, deposit flow, role denials, warehouse default.
+`apps/vanphat_portal/tests/`: unittest, no bench (`frappe_stub.py`). Covers money invariant, HOLD, deposit flow, role denials, warehouse default. Count: xem baseline (`py_tests`), không ghi số cứng ở đây.

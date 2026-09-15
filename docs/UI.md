@@ -1,6 +1,6 @@
 # UI (`apps/vanphat_portal/frontend/src/`)
 
-Stack: Vue 3.5 `<script setup>`, hash router (3 lazy routes: Orders/Quotes/Catalog, `keep-alive` read lists), native `<dialog>` (`BaseModal`, `BaseDrawer`, `ConfirmDialog`) + `vue-sonner`, Tailwind v3, Vite 7. Budget: entry gzip warn 170KB / fail 300KB (now 52KB).
+Stack: Vue 3.5 `<script setup>`, hash router (3 lazy routes: Orders/Quotes/Catalog, `keep-alive` read lists), native `<dialog>` (`BaseModal`, `BaseDrawer`, `ConfirmDialog`) + `vue-sonner`, Tailwind v3, Vite 7. Budget: `bash scripts/budget-gate.sh` decides warn/fail (now 52KB).
 
 ## Rules
 
