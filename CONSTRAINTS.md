@@ -26,6 +26,7 @@ bash scripts/budget-gate.sh                   # bundle weight gate
 | `raw_fetch` | No direct `fetch(` in `frontend/src` — all HTTP via `api()` (`composables/useSession.js` only excluded impl) |
 | `hardcoded_user` | No hardcoded email/user in client (identity from `get_boot`) |
 | `hardcoded_config` | No new hardcoded option lists/defaults/labels/order in Vue (config from native) |
+| `mock_server` | No mock server/CSRF/API/local-JSON preview (`serve-portal.mjs` deleted 2026-09-15; browser test = staging bench + `TEST-` docs + cleanup) |
 
 Tighten silently; loosen loudly (Exceptions table entry with owner + expiry).
 

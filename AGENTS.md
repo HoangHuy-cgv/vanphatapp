@@ -70,7 +70,8 @@ ERPNext v16 native backend + thin Vue cockpit for flexible-packaging factory (qu
 ## Never
 
 - Mock data, `Math.random()` IDs, local-only mutation, `v-html`, `frappe.get_all` on permissioned data, `allow_guest=True` on internal data, hand-rolled money/tax math, hardcoded commercial constants, raw-SQL prod mutation, `openpyxl`.
-- `git push` without explicit order. Commit atomically, conventional prefixes.
+- Mock server / mock CSRF / mock API / local JSON preview (`serve-portal.mjs` đã xóa 2026-09-15). Browser test chỉ chạy vs staging bench: real API + real CSRF + real login; chứng từ test prefix `TEST-` và cleanup sau test (`scripts/test-browser-portal.mjs`). Không đối soát tiền/thuế/cọc bằng số preview local.
+- `git push` without explicit order. Commit atomically, conventional prefixes. Local commit khuyến khích (save points). Pre-commit cache là workspace-local: `export PRE_COMMIT_HOME=/var/home/huy/vanphatapp/.cache/pre-commit` (home cache read-only trên máy này, đã ignore trong `.gitignore`). Không `--no-verify` khi chưa chạy đủ gates tay.
 - Bypass hooks (`-c core.hooksPath=/dev/null`) only on hook-loop after correct manual fix; state reason in message.
 
 ## Verify

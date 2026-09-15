@@ -47,3 +47,7 @@ apps/vanphat_portal/vanphat_portal/public/frontend/assets/
 
 # Artifact tạm của guard composable (guard tự dọn; đây là lưới an toàn nếu guard crash)
 apps/vanphat_portal/frontend/.composables-check*
+
+# pre-commit cache — workspace-local (home cache is read-only on this machine).
+# PRE_COMMIT_HOME=/var/home/huy/vanphatapp/.cache/pre-commit (xem AGENTS.md Never).
+.cache/

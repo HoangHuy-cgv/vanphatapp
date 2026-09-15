@@ -22,7 +22,7 @@ python3 -m unittest discover -s apps/vanphat_portal/tests -p "test_*.py"
 node apps/vanphat_portal/frontend/check-composables.mjs
 python3 scripts/constraints-check.py        # GATE: PASS to commit
 bash scripts/budget-gate.sh                 # after build
-node scripts/serve-portal.mjs               # LOCAL preview only (CSV data, not ERPNext docs)
+node scripts/test-browser-portal.mjs        # browser test vs STAGING bench (real API + real CSRF, never mock; creates TEST- orders/quotes, deletes after)
 ```
 
 Deploy: local is newest; prod wiped + deployed fresh from HEAD (see `docs/SETUP.md`).

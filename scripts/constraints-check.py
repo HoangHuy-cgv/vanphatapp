@@ -24,11 +24,13 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 FE = ROOT / "apps/vanphat_portal/frontend/src"
 API = ROOT / "apps/vanphat_portal/vanphat_portal/api"
+SCRIPTS = ROOT / "scripts"
 ASSETS = ROOT / "apps/vanphat_portal/vanphat_portal/public/frontend/assets"
 BASELINE = ROOT / ".constraints-baseline.json"
 
 FE_GLOBS = ("*.vue", "*.js")
 API_GLOBS = ("*.py",)
+SCRIPT_GLOBS = ("*.mjs", "*.js")
 
 # Endpoint cố ý không gated — mỗi dòng phải kèm lý do, người duyệt đọc được.
 GATE_ALLOWLIST = {
@@ -92,6 +94,15 @@ FLOOR_RULES = [
         r"BEGIN (RSA|OPENSSH|EC|PGP) PRIVATE KEY|(api_secret|password|token)\s*=\s*[\"'][A-Za-z0-9/+_-]{16,}[\"']",
     ),
     ("stub", "hàm chưa làm (NotImplementedError/TODO trong API)", API_GLOBS, r"NotImplementedError|\bTODO\b|\bFIXME\b"),
+    # Quy định Sếp 2026-09-15: cấm mock server/CSRF/API/local-JSON preview.
+    # Browser test chỉ vs staging bench (real API + real CSRF + TEST- docs + cleanup).
+    # Quét cả scripts/ vì mock cũ sống ở đó (serve-portal.mjs đã xóa).
+    (
+        "mock_server",
+        "mock server/CSRF/API/local-JSON preview (serve-portal đã xóa)",
+        SCRIPT_GLOBS,
+        r"mock_csrf_token|local_quotations|local_orders|serve-portal|MASTER_ITEMS\.length",
+    ),
     # Triple rule ghim 2026-09-15 (backend native + config native + visual custom):
     # mọi HTTP qua api() duy nhất; không identity/config hardcode mới trong Vue.
     ("raw_fetch", "fetch() trực tiếp trong src (phải qua api())", FE_GLOBS, r"(?<![\w$.])fetch\s*\("),
@@ -220,11 +231,19 @@ def frontend_guard() -> int:
 def measure(full: bool) -> tuple[dict[str, int], list[str], list[str]]:
     fe_paths = files({FE: FE_GLOBS})
     api_paths = files({API: API_GLOBS})
+    script_paths = files({SCRIPTS: SCRIPT_GLOBS})
     all_paths = fe_paths + api_paths
 
     floor_failures: list[str] = []
     for rule_id, desc, globs, pattern in FLOOR_RULES:
-        targets = all_paths if globs == FE_GLOBS + API_GLOBS else (api_paths if globs == API_GLOBS else fe_paths)
+        if globs == FE_GLOBS + API_GLOBS:
+            targets = all_paths
+        elif globs == API_GLOBS:
+            targets = api_paths
+        elif globs == SCRIPT_GLOBS:
+            targets = script_paths
+        else:
+            targets = fe_paths
         hits = scan(targets, pattern)
         for excluded in FLOOR_EXCLUDE.get(rule_id, ()):
             hits = [hit for hit in hits if not hit.startswith(excluded + ":")]
