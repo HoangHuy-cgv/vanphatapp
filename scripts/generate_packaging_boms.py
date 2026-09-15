@@ -5,7 +5,7 @@ Script: generate_packaging_boms.py
 Sinh định mức sản xuất 2 cấp (BOM - Bill of Materials) chuẩn ERPNext v16 Native
 Dựa trên tam giác kiểm chứng (Triangulation):
 1. Raw-data thực tế từ xưởng: TIẾN ĐỘ SẢN XUẤT.xlsx & Nhap xuat ton NVL-T9.xlsx
-2. Đặc tả kỹ thuật nội bộ: docs/specs/packaging-calculation-spec.md
+2. Đặc tả kỹ thuật nội bộ: docs/specs/packaging-math.md
 3. Chuẩn ngành bao bì màng ghép: ASTM D792, Dry Bond Lamination, 2-up Totani Pouch Making
 4. Quy cách đóng thùng carton rỗng chuẩn xác của Sếp:
    - Túi lớn (3.2Kg - 3.8Kg): 2.5 thùng / 1.000 túi (400 túi/thùng)
