@@ -74,15 +74,6 @@ export function useCatalogData() {
 		return Math.max(1, Math.ceil(currentTotalRecords.value / pageSize.value));
 	});
 
-	const startRecord = computed(() => {
-		if (currentTotalRecords.value === 0) return 0;
-		return (currentPage.value - 1) * pageSize.value + 1;
-	});
-
-	const endRecord = computed(() => {
-		return Math.min(currentPage.value * pageSize.value, currentTotalRecords.value);
-	});
-
 	function resetTableScroll() {
 		const container = document.querySelector('.table-container');
 		if (container) {
@@ -115,6 +106,14 @@ export function useCatalogData() {
 	function nextPage() {
 		if (currentPage.value < totalPages.value && !loadingCurrentTab.value) {
 			currentPage.value++;
+			refreshCurrentTabData();
+		}
+	}
+
+	function gotoPage(p) {
+		const n = Number(p) || 1;
+		if (n !== currentPage.value && n >= 1 && n <= totalPages.value && !loadingCurrentTab.value) {
+			currentPage.value = n;
 			refreshCurrentTabData();
 		}
 	}
@@ -419,11 +418,10 @@ export function useCatalogData() {
 		loadingCurrentTab,
 		currentTotalRecords,
 		totalPages,
-		startRecord,
-		endRecord,
 		refreshCurrentTabData,
 		prevPage,
 		nextPage,
+		gotoPage,
 		handleKeyDown,
 		resetTableScroll,
 		showItemDrawer,

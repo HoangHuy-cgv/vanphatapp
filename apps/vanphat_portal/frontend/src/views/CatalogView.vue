@@ -424,38 +424,16 @@
 			</table>
 		</div>
 
-		<!-- Thanh Phân Trang Sát Đáy Màn Hình Chuẩn Buồng Lái (Zero-Scroll 1080p) -->
+		<!-- Phân trang tối giản (BasePagination: số căn giữa, không khung) -->
 		<div class="cockpit-pagination-bar">
-			<div class="cockpit-pagination-left">
-				<span>Hiển thị</span>
-				<span class="text-white font-bold">{{ startRecord }}–{{ endRecord }}</span>
-				<span>trên tổng số</span>
-				<span class="text-white font-bold">{{ currentTotalRecords }}</span>
-				<span>{{ currentTabLabel.toLowerCase() }}</span>
-			</div>
-			<div class="cockpit-pagination-right">
-				<button
-					type="button"
-					class="btn-page-nav"
-					:disabled="currentPage <= 1 || loadingCurrentTab"
-					title="Trang trước (Phím [)"
-					@click="prevPage"
-				>
-					‹
-				</button>
-				<span class="page-indicator">
-					Trang {{ currentPage }} / {{ totalPages }}
-				</span>
-				<button
-					type="button"
-					class="btn-page-nav"
-					:disabled="currentPage >= totalPages || loadingCurrentTab"
-					title="Trang sau (Phím ])"
-					@click="nextPage"
-				>
-					›
-				</button>
-			</div>
+			<BasePagination
+				:page="currentPage"
+				:total-pages="totalPages"
+				:loading="loadingCurrentTab"
+				@prev="prevPage"
+				@next="nextPage"
+				@goto="gotoPage"
+			/>
 		</div>
 
 		<!-- Slide-over Drawers (S8: async chunk + Suspense, chỉ mount khi mở) -->
@@ -508,6 +486,7 @@ const DrawerItemDetail = defineAsyncComponent(() => import('../components/Drawer
 const DrawerCustomerDetail = defineAsyncComponent(() => import('../components/DrawerCustomerDetail.vue'));
 const DrawerSupplierDetail = defineAsyncComponent(() => import('../components/DrawerSupplierDetail.vue'));
 const DrawerUserDetail = defineAsyncComponent(() => import('../components/DrawerUserDetail.vue'));
+import BasePagination from '../components/BasePagination.vue';
 import { useCockpitFormat } from '../composables/useCockpitFormat';
 import { useCatalogData } from '../composables/useCatalogData';
 import { toast } from '../composables/useToast';
@@ -531,11 +510,10 @@ const {
 	loadingCurrentTab,
 	currentTotalRecords,
 	totalPages,
-	startRecord,
-	endRecord,
 	refreshCurrentTabData,
 	prevPage,
 	nextPage,
+	gotoPage,
 	handleKeyDown,
 	showItemDrawer,
 	selectedMasterItem,

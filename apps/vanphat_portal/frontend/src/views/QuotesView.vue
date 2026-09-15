@@ -114,38 +114,16 @@
 			</table>
 		</div>
 
-		<!-- Thanh Phân Trang Sát Đáy Chuẩn Buồng Lái (đồng bộ OrdersView/CatalogView) -->
+		<!-- Phân trang tối giản (BasePagination: số căn giữa, không khung) -->
 		<div class="cockpit-pagination-bar">
-			<div class="cockpit-pagination-left">
-				<span>Hiển thị</span>
-				<span class="text-white font-bold">{{ startRecord }}–{{ endRecord }}</span>
-				<span>trên tổng số</span>
-				<span class="text-white font-bold">{{ totalQuotations }}</span>
-				<span>báo giá</span>
-			</div>
-			<div class="cockpit-pagination-right">
-				<button
-					type="button"
-					class="btn-page-nav"
-					:disabled="currentPage <= 1 || loading"
-					title="Trang trước (Phím [)"
-					@click="prevPage"
-				>
-					‹
-				</button>
-				<span class="page-indicator">
-					Trang {{ currentPage }} / {{ totalPages }}
-				</span>
-				<button
-					type="button"
-					class="btn-page-nav"
-					:disabled="currentPage >= totalPages || loading"
-					title="Trang sau (Phím ])"
-					@click="nextPage"
-				>
-					›
-				</button>
-			</div>
+			<BasePagination
+				:page="currentPage"
+				:total-pages="totalPages"
+				:loading="loading"
+				@prev="prevPage"
+				@next="nextPage"
+				@goto="gotoPage"
+			/>
 		</div>
 
 		<!-- Step 1 & Step 2 Dialogs (S8: Suspense cho async chunk) -->
@@ -177,6 +155,7 @@
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted, defineAsyncComponent } from 'vue';
 import { useRouter } from 'vue-router';
+import BasePagination from '../components/BasePagination.vue';
 import { dialog } from '../composables/useConfirmDialog';
 // S8: drawers/modals nặng async — chunk riêng, render khi mở
 const ModalStep1Sale = defineAsyncComponent(() => import('../components/ModalStep1Sale.vue'));
@@ -200,15 +179,6 @@ const pageSize = ref(15);
 const totalQuotations = ref(0);
 const totalPages = ref(1);
 
-const startRecord = computed(() => {
-	if (totalQuotations.value === 0) return 0;
-	return (currentPage.value - 1) * pageSize.value + 1;
-});
-
-const endRecord = computed(() => {
-	return Math.min(currentPage.value * pageSize.value, totalQuotations.value);
-});
-
 function prevPage() {
 	if (currentPage.value > 1 && !loading.value) {
 		currentPage.value--;
@@ -219,6 +189,14 @@ function prevPage() {
 function nextPage() {
 	if (currentPage.value < totalPages.value && !loading.value) {
 		currentPage.value++;
+		loadQuotations();
+	}
+}
+
+function gotoPage(p) {
+	const n = Number(p) || 1;
+	if (n !== currentPage.value && n >= 1 && n <= totalPages.value && !loading.value) {
+		currentPage.value = n;
 		loadQuotations();
 	}
 }

@@ -313,19 +313,74 @@ html, body {
 .cockpit-pagination-bar {
 	margin-top: auto;
 	flex-shrink: 0;
-	height: 40px;
-	background: #161b22;
-	border: 1px solid #3a424e;
-	border-top: 1px solid #2d333b;
-	border-radius: 0 0 10px 10px;
+	min-height: 40px;
+	background: transparent;
+	border: 0;
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
-	padding: 0 18px;
+	justify-content: center;
+	padding: 6px 18px;
 	font-size: 13.5px;
 	color: #9da7b5;
 	user-select: none;
 	margin-bottom: 8px;
+}
+
+/* BasePagination (tối giản): số trang căn giữa, không khung viền.
+ * Giữ class cockpit-* cũ làm fallback khi view chưa migrate. */
+.vp-pager {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 2px;
+	font-variant-numeric: tabular-nums;
+}
+
+.vp-pager-nav,
+.vp-pager-num {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 28px;
+	height: 28px;
+	padding: 0 6px;
+	border-radius: 6px;
+	background: transparent;
+	border: 0;
+	color: #8b949e;
+	cursor: pointer;
+	font-size: 13.5px;
+	transition: color 0.15s ease;
+}
+
+.vp-pager-nav {
+	font-size: 16px;
+	font-weight: 700;
+}
+
+.vp-pager-num:hover:not(:disabled),
+.vp-pager-nav:hover:not(:disabled) {
+	color: #eef1f6;
+}
+
+.vp-pager-num.active {
+	color: #fff;
+	font-weight: 700;
+	text-decoration: underline;
+	text-underline-offset: 4px;
+	text-decoration-thickness: 2px;
+}
+
+.vp-pager-nav:disabled,
+.vp-pager-num:disabled {
+	opacity: 0.3;
+	cursor: default;
+}
+
+.vp-pager-gap {
+	color: #5b6572;
+	padding: 0 2px;
+	user-select: none;
 }
 
 .cockpit-pagination-left {
@@ -923,4 +978,3 @@ html, body {
 	border-color: #4ea1e0;
 	color: #0b0f19;
 }
-

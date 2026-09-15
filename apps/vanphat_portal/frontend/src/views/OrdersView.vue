@@ -198,38 +198,16 @@
 			</table>
 		</div>
 
-		<!-- Thanh Phân Trang Sát Đáy Màn Hình Chuẩn Buồng Lái (Zero-Scroll 1080p) -->
+		<!-- Phân trang tối giản (BasePagination: số căn giữa, không khung) -->
 		<div class="cockpit-pagination-bar">
-			<div class="cockpit-pagination-left">
-				<span>Hiển thị</span>
-				<span class="text-white font-bold">{{ startRecord }}–{{ endRecord }}</span>
-				<span>trên tổng số</span>
-				<span class="text-white font-bold">{{ totalOrders }}</span>
-				<span>đơn hàng</span>
-			</div>
-			<div class="cockpit-pagination-right">
-				<button
-					type="button"
-					class="btn-page-nav"
-					:disabled="currentPage <= 1 || loadingOrders"
-					title="Trang trước (Phím [)"
-					@click="prevPage"
-				>
-					‹
-				</button>
-				<span class="page-indicator">
-					Trang {{ currentPage }} / {{ totalPages }}
-				</span>
-				<button
-					type="button"
-					class="btn-page-nav"
-					:disabled="currentPage >= totalPages || loadingOrders"
-					title="Trang sau (Phím ])"
-					@click="nextPage"
-				>
-					›
-				</button>
-			</div>
+			<BasePagination
+				:page="currentPage"
+				:total-pages="totalPages"
+				:loading="loadingOrders"
+				@prev="prevPage"
+				@next="nextPage"
+				@goto="gotoPage"
+			/>
 		</div>
 
 		<!-- Drawer Chi Tiết Đơn Hàng (S8: Suspense cho async chunk) -->
@@ -264,6 +242,7 @@ import { useRoute } from 'vue-router';
 const DrawerOrderDetail = defineAsyncComponent(() => import('../components/DrawerOrderDetail.vue'));
 const ModalCreateOrder = defineAsyncComponent(() => import('../components/ModalCreateOrder.vue'));
 import { api } from '../composables/useSession';
+import BasePagination from '../components/BasePagination.vue';
 import { usePortalCounts } from '../composables/usePortalCounts';
 import { useCockpitFormat } from '../composables/useCockpitFormat';
 
@@ -284,15 +263,6 @@ const totalOrders = ref(0);
 const totalPages = ref(1);
 const tabCounts = ref({ xuong_sx: 0, ngcs: 0, mua_ngoai: 0, all: 0 });
 
-const startRecord = computed(() => {
-	if (totalOrders.value === 0) return 0;
-	return (currentPage.value - 1) * pageSize.value + 1;
-});
-
-const endRecord = computed(() => {
-	return Math.min(currentPage.value * pageSize.value, totalOrders.value);
-});
-
 function prevPage() {
 	if (currentPage.value > 1 && !loadingOrders.value) {
 		currentPage.value--;
@@ -303,6 +273,14 @@ function prevPage() {
 function nextPage() {
 	if (currentPage.value < totalPages.value && !loadingOrders.value) {
 		currentPage.value++;
+		loadOrders();
+	}
+}
+
+function gotoPage(p) {
+	const n = Number(p) || 1;
+	if (n !== currentPage.value && n >= 1 && n <= totalPages.value && !loadingOrders.value) {
+		currentPage.value = n;
 		loadOrders();
 	}
 }
