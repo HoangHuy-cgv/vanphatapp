@@ -101,7 +101,7 @@ def _query_items_qb(fields, filters, prefixes=None, like=None, start=0, page_len
 		return query
 
 	try:
-		from frappe.qb import Order
+		from frappe.query_builder import Order
 
 		rows = (
 			condition(frappe.qb.from_(IT).select(*[getattr(IT, field) for field in fields]))

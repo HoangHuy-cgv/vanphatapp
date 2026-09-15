@@ -425,7 +425,7 @@ def list_orders(tab=None, query=None, page=1, page_length=15):
 	trên prod (bắt được khi đo p95 staging 2026-09-15).
 	"""
 	require_doc("Sales Order", "read")
-	from frappe.qb import Order
+	from frappe.query_builder import Order
 	from frappe.query_builder.functions import Count
 
 	SO = frappe.qb.DocType("Sales Order")

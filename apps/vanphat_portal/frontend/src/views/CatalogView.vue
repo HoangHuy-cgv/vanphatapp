@@ -148,6 +148,14 @@
 							{{ it.stock_uom || 'Túi' }}
 						</td>
 					</tr>
+					<tr
+						v-for="i in (filteredMasterItems.length > 0 ? Math.max(0, pageSize - filteredMasterItems.length) : 0)"
+						:key="'it-filler-' + i"
+						class="filler-row"
+						aria-hidden="true"
+					>
+						<td colspan="5">&nbsp;</td>
+					</tr>
 					<tr v-if="filteredMasterItems.length === 0">
 						<td colspan="5" class="empty-cell">
 							<div v-if="loadingMasterItems" class="cockpit-empty-state">
@@ -220,6 +228,14 @@
 							<span v-else class="text-secondary/60 text-xs">—</span>
 						</td>
 					</tr>
+					<tr
+						v-for="i in (paginatedCustomers.length > 0 ? Math.max(0, pageSize - paginatedCustomers.length) : 0)"
+						:key="'kh-filler-' + i"
+						class="filler-row"
+						aria-hidden="true"
+					>
+						<td colspan="4">&nbsp;</td>
+					</tr>
 					<tr v-if="filteredCustomers.length === 0">
 						<td colspan="4" class="empty-cell">
 							<div v-if="loadingCustomers" class="cockpit-empty-state">
@@ -291,6 +307,14 @@
 							</span>
 							<span v-else class="text-secondary/60 text-xs">—</span>
 						</td>
+					</tr>
+					<tr
+						v-for="i in (paginatedSuppliers.length > 0 ? Math.max(0, pageSize - paginatedSuppliers.length) : 0)"
+						:key="'ncc-filler-' + i"
+						class="filler-row"
+						aria-hidden="true"
+					>
+						<td colspan="4">&nbsp;</td>
 					</tr>
 					<tr v-if="filteredSuppliers.length === 0">
 						<td colspan="4" class="empty-cell">
@@ -365,6 +389,14 @@
 								Đã khóa
 							</span>
 						</td>
+					</tr>
+					<tr
+						v-for="i in (paginatedUsers.length > 0 ? Math.max(0, pageSize - paginatedUsers.length) : 0)"
+						:key="'user-filler-' + i"
+						class="filler-row"
+						aria-hidden="true"
+					>
+						<td colspan="5">&nbsp;</td>
 					</tr>
 					<tr v-if="filteredUsers.length === 0">
 						<td colspan="5" class="empty-cell">

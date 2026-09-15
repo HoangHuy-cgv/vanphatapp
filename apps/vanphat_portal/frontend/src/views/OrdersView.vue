@@ -164,6 +164,14 @@
 							</span>
 						</td>
 					</tr>
+					<tr
+						v-for="i in (orders.length > 0 ? Math.max(0, pageSize - orders.length) : 0)"
+						:key="'order-filler-' + i"
+						class="filler-row"
+						aria-hidden="true"
+					>
+						<td colspan="7">&nbsp;</td>
+					</tr>
 					<tr v-if="orders.length === 0">
 						<td colspan="7" class="empty-cell">
 							<div v-if="loadingOrders" class="cockpit-empty-state">

@@ -99,6 +99,14 @@
 							</span>
 						</td>
 					</tr>
+					<tr
+						v-for="i in (filteredQuotations.length > 0 ? Math.max(0, pageSize - filteredQuotations.length) : 0)"
+						:key="'quote-filler-' + i"
+						class="filler-row"
+						aria-hidden="true"
+					>
+						<td colspan="5">&nbsp;</td>
+					</tr>
 				</tbody>
 			</table>
 		</div>

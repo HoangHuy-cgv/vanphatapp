@@ -397,6 +397,19 @@ html, body {
 	width: 100%;
 	border-collapse: collapse;
 	font-size: 15px;
+	height: 100%;
+}
+
+.table-row,
+.filler-row {
+	height: calc((100% - 47px) / 15);
+}
+
+.filler-row td {
+	border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+	padding: 0 18px;
+	pointer-events: none;
+	user-select: none;
 }
 
 .data-table th {
