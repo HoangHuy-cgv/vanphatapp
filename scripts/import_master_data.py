@@ -199,7 +199,8 @@ def import_to_frappe(data):
                 "alias": s.get("alias", ""),
                 "supplier_group": grp,
                 "supplier_type": s.get("supplier_type", "Company"),
-                "country": s.get("country", "Việt Nam"),
+                # Country native dùng tên chuẩn ISO ("Vietnam"); CSV ghi "Việt Nam" → map về chuẩn.
+                "country": {"Việt Nam": "Vietnam"}.get(s.get("country"), s.get("country") or "Vietnam"),
                 "payment_terms": s.get("payment_terms", ""),
                 "default_currency": s.get("default_currency", "VND"),
                 "tax_id": s.get("tax_id", ""),
