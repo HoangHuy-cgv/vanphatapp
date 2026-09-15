@@ -9,7 +9,7 @@ ERPNext v16 native backend + thin Vue cockpit for flexible-packaging factory (qu
 3. Ask vs decide: context còn mờ → STOP, hỏi Sếp qua `ask_user_question` (never plain text). Chỉ hỏi business flow logic (tiền, quyền, xóa dữ liệu, flow mới). Kỹ thuật chi tiết → tự quyết: research best practice cộng đồng trước, theo backend-native + config-native, visual-custom. Stack tech không đổi trừ khi Sếp yêu cầu. Đề xuất stack phải kèm research + trade-off, chờ Sếp chốt.
 4. Disagreement = stop and clarify. Context còn mờ trong hướng của Sếp (nhất là tiền/quyền/dữ liệu) → halt, state risk + evidence, propose alternative, wait for Sếp's call. No silent compliance, no performative agreement. Kỹ thuật chi tiết đã research → tự quyết + ghi log, không hỏi.
 5. Never invent schema — see `docs/DATA.md`. Never read `archive/`.
-6. Load matching skill via `skill` tool before acting (map below). Never apply from memory.
+6. Load matching skill via `skill` tool before acting (map below). Never apply from memory. Skills under `.agents/skills/*` are upstream-sealed (never edit); repo custom lives in `.agents/references/vanphat-overlay.md` (load alongside the skill when it names project conventions).
 7. Slices ~30min / 1–3 files. Parallelize independent work (background subagents/jobs); synthesize at end.
 8. Context hygiene: checkpoint + continue. At ~75% context: commit WIP, summarize (decisions kept, journeys dropped), continue without asking.
 9. Finish what you start: runs, verified, failures fixed.
