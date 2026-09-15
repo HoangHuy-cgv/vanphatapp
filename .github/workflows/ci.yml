@@ -30,23 +30,23 @@ jobs:
           cache: npm
           cache-dependency-path: apps/vanphat_portal/frontend/package-lock.json
 
-      - name: Python unit tests (backend)
-        run: python3 -m unittest discover -s apps/vanphat_portal/tests -p "test_*.py"
-
-      - name: Constraints floor + ratchet
-        run: python3 scripts/constraints-check.py
-
       - name: Frontend deps
         working-directory: apps/vanphat_portal/frontend
         run: npm ci
-
-      - name: Composables guard
-        working-directory: apps/vanphat_portal/frontend
-        run: node check-composables.mjs
 
       - name: Vite build
         working-directory: apps/vanphat_portal/frontend
         run: npm run build
 
+      - name: Composables guard
+        working-directory: apps/vanphat_portal/frontend
+        run: node check-composables.mjs
+
       - name: Bundle budget gate
         run: bash scripts/budget-gate.sh
+
+      - name: Python unit tests (backend)
+        run: python3 -m unittest discover -s apps/vanphat_portal/tests -p "test_*.py"
+
+      - name: Constraints floor + ratchet
+        run: python3 scripts/constraints-check.py
