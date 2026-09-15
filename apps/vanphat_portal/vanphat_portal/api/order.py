@@ -416,25 +416,40 @@ def list_orders(tab=None, query=None, page=1, page_length=15):
 	"""Danh sách Sales Order theo tab + tìm kiếm, phân trang server (spec §3).
 
 	Bộ query CỐ ĐỊNH cho mọi trang (không N+1):
-	1 count + 1 rows + 1 tab counts + 1 dòng hàng cả trang + 2 query cọc/KH.
+	1 count + 1 rows + 1 tab counts + 1 dòng hàng cả trang + 1 alias KH + 2 query cọc/KH.
 	Tab counts tính theo đúng từ khóa đang tìm (khớp danh sách), không phụ thuộc tab đang mở.
 	Đường qb KHÔNG tự áp permission như get_list → cổng read ở đầu (Sếp chốt 2026-09-15;
 	Sếp chọn "thấy hết công ty" nên chưa thêm User Permissions lọc theo owner).
+	Alias KH đọc bằng 1 query `get_list` batch (native, tôn trọng permission) thay vì
+	JOIN qb — pypika `Table.alias` là attr nội bộ nên `.field("alias")` nổ TypeError
+	trên prod (bắt được khi đo p95 staging 2026-09-15).
 	"""
 	require_doc("Sales Order", "read")
 	from frappe.query_builder.functions import Count
 
 	SO = frappe.qb.DocType("Sales Order")
 	SOI = frappe.qb.DocType("Sales Order Item")
-	CUST = frappe.qb.DocType("Customer")
 	ITEM = frappe.qb.DocType("Item")
-	# pypika Table.alias là None (trùng attr nội bộ) → dùng .field("alias")
-	CUST_ALIAS = CUST.field("alias")
 
 	tab_filter = text(tab).lower()
 	q = text(query).lower()
 	p, pl, start = paginate(page, page_length)
 	like = f"%{q}%" if q else None
+
+	# Tìm theo alias KH: resolve alias → mã KH trước (1 query native), rồi OR
+	# vào điều kiện qb (thay JOIN CUST — pypika Table.alias nổ TypeError trên prod).
+	alias_names: list = []
+	if like:
+		try:
+			alias_hits = frappe.db.get_list(
+				"Customer",
+				filters={"alias": ["like", like]},
+				fields=["name"],
+				page_length=pl,
+			)
+			alias_names = [row.get("name") for row in alias_hits or [] if row.get("name")]
+		except Exception:
+			alias_names = []
 
 	tab_where = None
 	if tab_filter == "ngcs":
@@ -455,21 +470,21 @@ def list_orders(tab=None, query=None, page=1, page_length=15):
 			frappe.qb.from_(SO)
 			.left_join(SOI)
 			.on((SOI.parent == SO.name) & (SOI.idx == 1))
-			.left_join(CUST)
-			.on(CUST.name == SO.customer)
 			.left_join(ITEM)
 			.on(ITEM.name == SOI.item_code)
 		)
 		where = SO.docstatus != 2
 		if like:
-			where = where & (
+			search = (
 				(SO.name.like(like))
 				| (SO.customer_name.like(like))
 				| (SO.customer.like(like))
-				| (CUST_ALIAS.like(like))
 				| (SOI.item_name.like(like))
 				| (ITEM.custom_alias.like(like))
 			)
+			if alias_names:
+				search = search | (SO.customer.isin(alias_names))
+			where = where & search
 		if include_tab and tab_where is not None:
 			where = where & tab_where
 		return builder.where(where)
@@ -496,7 +511,6 @@ def list_orders(tab=None, query=None, page=1, page_length=15):
 				SO.advance_paid,
 				SO.status,
 				SO.docstatus,
-				CUST_ALIAS.as_("customer_alias"),
 				SOI.item_code,
 				SOI.item_name,
 				SOI.uom,
@@ -527,10 +541,11 @@ def list_orders(tab=None, query=None, page=1, page_length=15):
 	except Exception:
 		pass
 
-	# Tiền/trạng thái: 1 query dòng hàng cả trang + 1 query cọc + 1 query hạn mức (thay N+1 cũ)
+	# Tiền/trạng thái: 1 query dòng hàng cả trang + 1 alias KH + 1 cọc + 1 hạn mức (thay N+1 cũ)
 	lines = _order_lines_for([row.get("name") for row in page_rows])
 	deposit_pcts = _deposit_pct_map([row.get("customer") for row in page_rows])
 	credit_limits = _credit_limit_map([row.get("customer") for row in page_rows])
+	alias_map = _customer_alias_map([row.get("customer") for row in page_rows])
 
 	orders = []
 	for row in page_rows:
@@ -560,9 +575,9 @@ def list_orders(tab=None, query=None, page=1, page_length=15):
 		order["credit_limit"] = credit_limit
 		order["qty"] = product_qty
 
-		# Alias + mặt hàng đầu từ JOIN (không get_value từng dòng)
+		# Alias KH từ batch map (không get_value từng dòng, không JOIN qb)
 		order["customer_alias"] = (
-			order.get("customer_alias") or order.get("customer_name") or order.get("customer")
+			alias_map.get(order.get("customer")) or order.get("customer_name") or order.get("customer")
 		)
 		order["item_name"] = order.get("item_name") or "—"
 		order["uom"] = order.get("uom") or "Túi"
@@ -662,6 +677,23 @@ def _customer_alias(customer):
 		return frappe.db.get_value("Customer", customer, "alias")
 	except Exception:
 		return None
+
+
+def _customer_alias_map(customers):
+	"""{customer: alias} cho cả trang bằng 1 query (chữa N+1, tôn trọng permission)."""
+	names = [name for name in dict.fromkeys(customers) if name]
+	if not names:
+		return {}
+	try:
+		rows = frappe.db.get_list(
+			"Customer",
+			filters={"name": ["in", names]},
+			fields=["name", "alias"],
+			page_length=len(names),
+		)
+	except Exception:
+		return {}
+	return {row.get("name"): row.get("alias") for row in rows or []}
 
 
 def _first_item_fields(item_code):
