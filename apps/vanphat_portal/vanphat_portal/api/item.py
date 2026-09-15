@@ -58,11 +58,12 @@ CATALOG_FIELDS = [
 ]
 
 
-def clear_catalog_cache():
+def clear_catalog_cache(*args, **kwargs):
 	"""Xóa cache catalog nội bộ — KHÔNG whitelist, chỉ doc_events gọi trực tiếp.
 
 	Sếp chốt 2026-09-15: bỏ whitelist (giảm 27 còn 26 endpoint, xóa W1).
 	`hooks.py doc_events` trỏ thẳng hàm này, không đi qua HTTP.
+	Nhận *args/**kwargs vì Frappe doc_events truyền doc vào hook.
 	"""
 	try:
 		frappe.cache().delete_keys("vp:items:list|*")
