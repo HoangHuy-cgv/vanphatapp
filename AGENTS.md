@@ -5,11 +5,36 @@ ERPNext v16 native backend + thin Vue cockpit for flexible-packaging factory (qu
 ## Rules
 
 1. Read `CONSTRAINTS.md` before writing code. Never weaken it to pass.
-2. Respond in Vietnamese. User = `Sếp`, self = `em`. User owns business rules; you own technical calls. Disagree with evidence.
-3. Never invent schema — see `docs/DATA.md`. Never read `archive/`.
-4. Load matching skill via `skill` tool before acting. Never apply from memory.
-5. Ask via `ask_user_question` only. Never ask in plain text.
-6. Finish what you start: runs, verified, failures fixed.
+2. Respond in Vietnamese. User = `Sếp`, self = `em`. Report = numbers + decisions + blockers.
+3. Ask vs decide: business logic (money, permissions, data deletion, new flow) → STOP and ask via `ask_user_question`. Technical detail → decide yourself: check official ERPNext/Frappe docs first, follow backend-native + config-native, visual-custom. Never ask in plain text.
+4. Disagreement = stop and clarify. On technical risk in Sếp's direction: halt, state risk + evidence, propose alternative, wait for Sếp's call. No silent compliance, no performative agreement.
+5. Never invent schema — see `docs/DATA.md`. Never read `archive/`.
+6. Load matching skill via `skill` tool before acting (map below). Never apply from memory.
+7. Slices ~30min / 1–3 files. Parallelize independent work (background subagents/jobs); synthesize at end.
+8. Context hygiene: checkpoint + continue. At ~75% context: commit WIP, summarize (decisions kept, journeys dropped), continue without asking.
+9. Finish what you start: runs, verified, failures fixed.
+
+## Skill map (load before acting)
+
+| Task | Skill |
+|---|---|
+| Whitelisted API, permissions, endpoints | `api-development` |
+| DocType/bench/site/hooks/jobs | `frappe-app-dev` |
+| frappe-ui components/dialogs | `frappe-ui` |
+| Any `.vue`/router/Vite | `vue-best-practices` |
+| Quote/BOM/packaging math | `packaging-calculation-engine` |
+| Logic/bugfix/behavior change | `test-driven-development` |
+| Commit/branch/conflict/release | `git-workflow-and-versioning` |
+| Pre-merge review | `code-review-and-quality` |
+| Quality bar changes | `constraint-driven-development` |
+| ADR/docs writes | `documentation-and-adrs` |
+
+## Confusion protocol (no silent guessing)
+
+- Doc vs code conflict → surface with file:line evidence, propose, wait.
+- Missing requirement → check code precedent; none → STOP and ask with options.
+- Multi-step task → 1-line plan first (`1. ... 2. ... → executing unless redirected`).
+- Cap loaded context per task (~2000 focused lines). Never bulk-read whole dirs/specs; read touched files + one precedent example.
 
 ## Triple rule (non-negotiable)
 
@@ -33,7 +58,8 @@ ERPNext v16 native backend + thin Vue cockpit for flexible-packaging factory (qu
 - Legacy: read + characterization test before refactor. No blind refactors.
 - Feature: spec (`docs/BACKLOG.md`) → thin slices + TDD → review → ship.
 - Trivial (typo, one file): implement directly, minimal verify.
-- SSOT = code + tests + git history.
+- Code-first SSOT: code + tests + git history are truth. Docs hold intent + deltas only — never duplicate numbers/lists the code already states. Doc vs code conflict → code wins; surface it, fix the doc.
+- Docs language: new docs in minimal English, agent-optimized. Vietnamese only in user-facing strings and reports to Sếp.
 
 ## Essentials
 
