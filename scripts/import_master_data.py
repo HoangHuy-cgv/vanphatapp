@@ -36,7 +36,8 @@ UOM_DEFINITIONS = [
     {"name": "Kg", "must_be_whole_number": 0},
     {"name": "m", "must_be_whole_number": 0},
     {"name": "Cây", "must_be_whole_number": 1},
-    {"name": "Cái", "must_be_whole_number": 1},
+    # Cái cho phép lẻ: thùng carton tính theo tỷ lệ BOM (VD 2.5 cái/túi lớn).
+    {"name": "Cái", "must_be_whole_number": 0},
 ]
 
 ITEM_GROUPS = [
