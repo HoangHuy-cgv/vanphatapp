@@ -1,0 +1,52 @@
+# CI nhẹ — chạy được không cần bench, không cần mạng, ~3 phút.
+# Gates đúng repo: constraints floor+ratchet, py unittest, composables guard, vite build + budget.
+# Đỏ = cấm merge (branch protection trên main).
+
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gates:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: apps/vanphat_portal/frontend/package-lock.json
+
+      - name: Python unit tests (backend)
+        run: python3 -m unittest discover -s apps/vanphat_portal/tests -p "test_*.py"
+
+      - name: Constraints floor + ratchet
+        run: python3 scripts/constraints-check.py
+
+      - name: Frontend deps
+        working-directory: apps/vanphat_portal/frontend
+        run: npm ci
+
+      - name: Composables guard
+        working-directory: apps/vanphat_portal/frontend
+        run: node check-composables.mjs
+
+      - name: Vite build
+        working-directory: apps/vanphat_portal/frontend
+        run: npm run build
+
+      - name: Bundle budget gate
+        run: bash scripts/budget-gate.sh
