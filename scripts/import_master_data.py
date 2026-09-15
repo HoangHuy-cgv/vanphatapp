@@ -210,7 +210,9 @@ def import_to_frappe(data):
         print("\n5. Nạp Trạm Máy & Công Đoạn Sản Xuất...")
         for ws in data.get("workstations", []):
             create_if_missing("Workstation", ws["name"], {
-                "doctype": "Workstation", "workstation_name": ws["workstation_name"],
+                # name = mã trạm (WS-*) để Operation.workstation link đúng mã CSV.
+                "doctype": "Workstation", "name": ws["name"],
+                "workstation_name": ws["workstation_name"],
                 "production_capacity": safe_int(ws.get("production_capacity", 1)), "hour_rate": 0.0,
                 "description": ws.get("description", "")
             }, f"Tạo Trạm Máy: {ws['workstation_name']}")
