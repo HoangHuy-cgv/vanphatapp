@@ -49,101 +49,20 @@
 						<span class="spec-dim-text">{{ compiledDimensions }}</span>
 					</div>
 
-					<!-- LINE 5: 8 Chip chất liệu chia 4 nhóm có vạch ngăn cách -->
-					<div class="mat-chips-wrap">
-						<!-- Nhóm 1: Màng in (Blue) -->
-						<div class="mat-group">
-							<button
-								type="button"
-								class="mat-chip chip-blue"
-								:class="{ on: isMaterialSelected('OPP') }"
-								@click="toggleMaterial('OPP')"
-							>
-								OPP
-							</button>
-							<button
-								type="button"
-								class="mat-chip chip-blue"
-								:class="{ on: isMaterialSelected('PET') }"
-								@click="toggleMaterial('PET')"
-							>
-								PET
-							</button>
-						</div>
-
-						<div class="mat-divider"></div>
-
-						<!-- Nhóm 2: Màng cản (Amber) -->
-						<div class="mat-group">
-							<button
-								type="button"
-								class="mat-chip chip-amber"
-								:class="{ on: isMaterialSelected('AL') }"
-								@click="toggleMaterial('AL')"
-							>
-								AL
-							</button>
-							<button
-								type="button"
-								class="mat-chip chip-amber"
-								:class="{ on: isMaterialSelected('MPET') }"
-								@click="toggleMaterial('MPET')"
-							>
-								MPET
-							</button>
-						</div>
-
-						<div class="mat-divider"></div>
-
-						<!-- Nhóm 3: Màng dẻo PA (Purple) -->
-						<div class="mat-group">
-							<button
-								type="button"
-								class="mat-chip chip-purple"
-								:class="{ on: isMaterialSelected('PA') }"
-								@click="toggleMaterial('PA')"
-							>
-								PA
-							</button>
-						</div>
-
-						<div class="mat-divider"></div>
-
-						<!-- Nhóm 4: Màng hàn dán (Emerald) -->
-						<div class="mat-group">
-							<button
-								type="button"
-								class="mat-chip chip-emerald"
-								:class="{ on: isMaterialSelected('PE sữa') }"
-								@click="toggleMaterial('PE sữa')"
-							>
-								PE sữa
-							</button>
-							<button
-								type="button"
-								class="mat-chip chip-emerald"
-								:class="{ on: isMaterialSelected('PE trong') }"
-								@click="toggleMaterial('PE trong')"
-							>
-								PE trong
-							</button>
-							<button
-								type="button"
-								class="mat-chip chip-emerald"
-								:class="{ on: isMaterialSelected('CPP') }"
-								@click="toggleMaterial('CPP')"
-							>
-								CPP
-							</button>
-							<button
-								type="button"
-								class="mat-chip chip-emerald"
-								:class="{ on: isMaterialSelected('MCPP') }"
-								@click="toggleMaterial('MCPP')"
-							>
-								MCPP
-							</button>
-						</div>
+					<!-- LINE 5: Chip vật liệu từ cấu trúc màng native (triple rule 2+3) -->
+					<div v-if="materialOptions.length" class="mat-chips-wrap" role="radiogroup" aria-label="Vật liệu màng">
+						<button
+							v-for="m in materialOptions"
+							:key="m.code"
+							type="button"
+							class="mat-chip"
+							:class="[m.cls, { on: isMaterialSelected(m.code) }]"
+							role="radio"
+							:aria-checked="isMaterialSelected(m.code)"
+							@click="toggleMaterial(m.code)"
+						>
+							{{ m.code }}
+						</button>
 					</div>
 				</div>
 			</div>
@@ -319,6 +238,7 @@ const {
 	formData,
 	isRoll,
 	needCylinder,
+	materialOptions,
 	selectedMaterials,
 	artworkUrl,
 	cylinderQty,

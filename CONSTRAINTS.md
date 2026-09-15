@@ -1,7 +1,17 @@
 # CONSTRAINTS — Chuẩn "tối ưu" của dự án Vạn Phát
 
-Rà soát lần cuối: **2026-09-14** — chốt bởi Sếp + em.
+Rà soát lần cuối: **2026-09-15** — chốt bởi Sếp + em.
 Phạm vi: `apps/vanphat_portal` (ERPNext native backend + Vue cockpit shell).
+
+**Triple rule ghim (mọi dev tuân theo — Sếp chốt 2026-09-15):**
+1. **Backend native** — tiền, thuế, cọc, BOM, tồn kho, trạng thái, sinh mã do DocType/controller
+   native tính. API `vanphat_portal.api.*` chỉ là façade mỏng, không nghiệp vụ trùng.
+2. **Config native** — option lists, defaults, labels, thứ tự, ẩn/hiện chỉ từ Custom Field /
+   Property Setter / DocType Layout / Item Group tree / `min_order_qty` / Payment Terms /
+   Credit Limit / Tax Template. Đổi trong Desk → UI đổi theo, **không build lại**.
+3. **Visual custom** — phần duy nhất được viết tay: bố cục cockpit, Modal, Drawer, màu,
+   nút click-chọn, diễn đạt flow bằng ngôn ngữ thân thiện. Cấm chứa tiền/thuế/trạng thái/
+   cấu hình/danh sách lựa chọn trong code visual.
 
 Áp dụng cho **mọi thay đổi** trong repo. Đây là file ràng buộc duy nhất; spec mô tả *xây cái gì*,
 file này định nghĩa *thế nào là đủ tốt để ship*. **Không được nới lỏng file này để một thay đổi đi qua.**
@@ -19,7 +29,7 @@ Máy kiểm chạy **không cần bench, không cần mạng, không cần Node*
 
 ## 1. Floor — luật cấm, phải bằng 0 ngay hôm nay
 
-7 luật dưới đây đang bằng 0 trên code hiện tại. Vi phạm = `GATE: FAIL`, không có ngoại lệ:
+10 luật dưới đây đang bằng 0 trên code hiện tại. Vi phạm = `GATE: FAIL`, không có ngoại lệ:
 
 | id | Luật |
 |---|---|
@@ -30,6 +40,9 @@ Máy kiểm chạy **không cần bench, không cần mạng, không cần Node*
 | `suppression` | Không thêm comment tắt máy kiểm: `@ts-ignore`, `eslint-disable`, `# noqa`, `type: ignore`, `istanbul ignore`, `Stryker disable`, `nosemgrep`, `gitleaks:allow` |
 | `secret` | Không khoá/bí mật trong source |
 | `stub` | Không `NotImplementedError`/`TODO`/`FIXME` đứng thay chỗ implementation trong API |
+| `raw_fetch` | Không `fetch(` trực tiếp trong `frontend/src` — mọi HTTP qua `api()` duy nhất (kể cả upload FormData) |
+| `hardcoded_user` | Không email/user hardcode trong client (sidebar đọc từ `get_boot`) |
+| `hardcoded_config` | Không option lists / defaults / labels / thứ tự hardcode mới trong Vue (config từ native — triple rule 2) |
 
 Thêm luật cấm thì sửa `FLOOR_RULES` trong `scripts/constraints-check.py` — **siết thì im lặng, nới thì phải to tiếng** (ghi vào bảng Exceptions có người chịu trách nhiệm + ngày hết hạn).
 
@@ -54,7 +67,7 @@ Baseline trong `.constraints-baseline.json`. Xấu đi = `GATE: FAIL`. Không đ
 
 | Số đo | Hôm nay | Hướng | Đích |
 |---|---|---|---|
-| Endpoint chưa có cổng quyền (trên 24 endpoint) | **19** | giảm | 0 |
+| Endpoint chưa có cổng quyền (trên 27 endpoint) | **22** | giảm | 0 (nợ quyền Sếp hoãn — plan item 1; 3 endpoint config mới `get_product_groups/get_payment_options/get_print_config` cũng chờ cổng chung) |
 | Danh tính user hardcode trong client | **1** | giảm | 0 |
 | Client tự nhân/chia trên field tiền | **1** | giảm | 0 |
 | Client tự cộng qty (`.reduce`) | **2** | giảm | 0 |
@@ -64,7 +77,7 @@ Baseline trong `.constraints-baseline.json`. Xấu đi = `GATE: FAIL`. Không đ
 | Entry JS gzip | **142 KB** | giảm/giữ | ≤ 170 warn / 300 fail |
 | File test frontend | **0** | tăng | ≥ 8 (các composable có logic) |
 | Guard composable frontend xanh | **1** | giữ 1 | 1 (không được tắt) |
-| Test backend xanh | **41** | tăng | không giảm |
+| Test backend xanh | **46** | tăng | không giảm |
 
 **Bằng chứng máy kiểm có tác dụng (2026-09-14):** guard `check-composables.mjs` bắt được
 `ReferenceError: serverPricingInitial is not defined` trong `useCreateOrderForm.js` — lỗi làm

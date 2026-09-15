@@ -71,6 +71,10 @@ def scan(paths: list[Path], pattern: str) -> list[str]:
 
 # ---------------------------------------------------------------- floor rules
 # (id, mô tả, globs, regex). Phải bằng 0 hôm nay, nếu không phải sửa code.
+# raw_fetch: api() trong useSession.js là implementation của đường fetch duy nhất.
+FLOOR_EXCLUDE = {
+    "raw_fetch": ("apps/vanphat_portal/frontend/src/composables/useSession.js",),
+}
 FLOOR_RULES = [
     ("mock_random_id", "Math.random() làm ID tài liệu", FE_GLOBS, r"Math\.random\s*\("),
     ("guest_api", "allow_guest=True trên dữ liệu nội bộ", API_GLOBS, r"allow_guest\s*=\s*True"),
@@ -89,6 +93,21 @@ FLOOR_RULES = [
         r"BEGIN (RSA|OPENSSH|EC|PGP) PRIVATE KEY|(api_secret|password|token)\s*=\s*[\"'][A-Za-z0-9/+_-]{16,}[\"']",
     ),
     ("stub", "hàm chưa làm (NotImplementedError/TODO trong API)", API_GLOBS, r"NotImplementedError|\bTODO\b|\bFIXME\b"),
+    # Triple rule ghim 2026-09-15 (backend native + config native + visual custom):
+    # mọi HTTP qua api() duy nhất; không identity/config hardcode mới trong Vue.
+    ("raw_fetch", "fetch() trực tiếp trong src (phải qua api())", FE_GLOBS, r"(?<![\w$.])fetch\s*\("),
+    (
+        "hardcoded_user",
+        "email/user hardcode trong client",
+        FE_GLOBS,
+        r"['\"][A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}['\"]",
+    ),
+    (
+        "hardcoded_config",
+        "option/default/label hardcode mới trong Vue (config phải từ native)",
+        FE_GLOBS,
+        r"<option\s+value=\"[^\"]+\"(?![^>]*v-for)|qty:\s*[0-9]{3,}|materials:\s*\[\s*['\"]",
+    ),
 ]
 
 # -------------------------------------------------------------- ratchet rules
@@ -200,6 +219,8 @@ def measure(full: bool) -> tuple[dict[str, int], list[str], list[str]]:
     for rule_id, desc, globs, pattern in FLOOR_RULES:
         targets = all_paths if globs == FE_GLOBS + API_GLOBS else (api_paths if globs == API_GLOBS else fe_paths)
         hits = scan(targets, pattern)
+        for excluded in FLOOR_EXCLUDE.get(rule_id, ()):
+            hits = [hit for hit in hits if not hit.startswith(excluded + ":")]
         if hits:
             floor_failures.append(f"[{rule_id}] {desc}: {len(hits)} chỗ -> {', '.join(hits[:5])}")
 

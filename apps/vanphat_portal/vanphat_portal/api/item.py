@@ -230,3 +230,104 @@ def get_detail(item_code):
 		bom_items.append(row_dict)
 
 	return {"item": item, "bom": {"master": bom_doc.as_dict(), "items": bom_items}}
+
+
+# Triple rule 2 (config native — Sếp chốt 2026-09-15): nhóm sản phẩm cockpit đọc từ
+# Item Group tree native, KHÔNG hardcode 4 <option> trong Vue. Mỗi nhóm gom các
+# Item Group con bán được; label/desc/uom từ data thật; min_qty từ min_order_qty.
+PRODUCT_GROUPS = (
+	{
+		"key": "tui_mang_ghep",
+		"label": "Túi màng ghép",
+		"desc": "Xưởng SX",
+		"item_groups": ("Túi Màng Ghép Đặt Riêng",),
+		"order_tab": "xuong_sx",
+		"uom": "Túi",
+	},
+	{
+		"key": "cuon_mang_ghep",
+		"label": "Cuộn màng ghép",
+		"desc": "Xưởng SX - Kg",
+		"item_groups": ("Cuộn Màng Ghép BTP",),
+		"order_tab": "xuong_sx",
+		"uom": "Kg",
+	},
+	{
+		"key": "tui_ngcs",
+		"label": "Túi NGCS",
+		"desc": "In lụa phôi có sẵn",
+		"item_groups": ("Túi Nước Giặt Có Sẵn (NGCS)",),
+		"order_tab": "ngcs",
+		"uom": "Túi",
+	},
+	{
+		"key": "tui_mang_don",
+		"label": "Túi màng đơn",
+		"desc": "Mua ngoài - Kg",
+		"item_groups": ("Túi Màng Đơn",),
+		"order_tab": "mua_ngoai",
+		"uom": "Kg",
+	},
+)
+
+
+@frappe.whitelist()
+def get_product_groups():
+	"""Nhóm sản phẩm cockpit từ Item Group native (triple rule 2).
+
+	DB trống → nhóm giữ label nhưng count 0 + min_qty null (truthful, không số bịa).
+	"""
+	groups = []
+	for spec in PRODUCT_GROUPS:
+		count = 0
+		min_qty = None
+		try:
+			count = int(
+				frappe.db.count("Item", {"item_group": ["in", list(spec["item_groups"])]}) or 0
+			)
+		except Exception:
+			count = 0
+		try:
+			rows = frappe.db.get_list(
+				"Item",
+				filters={"item_group": ["in", list(spec["item_groups"])]},
+				fields=["min_order_qty"],
+				order_by="min_order_qty asc",
+				page_length=1,
+			)
+			if rows and rows[0].get("min_order_qty"):
+				min_qty = rows[0].get("min_order_qty")
+		except Exception:
+			min_qty = None
+		groups.append({
+			"key": spec["key"],
+			"label": spec["label"],
+			"desc": spec["desc"],
+			"order_tab": spec["order_tab"],
+			"uom": spec["uom"],
+			"count": count,
+			"min_qty": min_qty,
+		})
+	return {"product_groups": groups}
+
+
+@frappe.whitelist()
+def get_print_config():
+	"""Cấu hình in ấn + phụ kiện cockpit từ Custom Field Select native (triple rule 2).
+
+	Đọc `options` của `custom_print_tech` / `custom_accessory_spec` trên Item —
+	đổi options trong Customize Form → UI đổi theo, không build lại.
+	Field thiếu/trống → list rỗng truthful, UI ẩn khối tương ứng.
+	"""
+	def select_options(dt, fieldname):
+		try:
+			df = frappe.get_meta(dt).get_field(fieldname)
+			raw = (df.options if df else "") or ""
+			return [line.strip() for line in str(raw).splitlines() if line.strip()]
+		except Exception:
+			return []
+
+	return {
+		"print_techs": select_options("Item", "custom_print_tech"),
+		"accessories": select_options("Item", "custom_accessory_spec"),
+	}

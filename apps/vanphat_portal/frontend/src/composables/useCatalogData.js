@@ -53,52 +53,21 @@ export function useCatalogData() {
 		return loadingUsers.value;
 	});
 
-	const filteredCustomers = computed(() => {
-		const q = customerSearchQuery.value.trim().toLowerCase();
-		if (!q) return customers.value;
-		return customers.value.filter(c =>
-			(c.name && c.name.toLowerCase().includes(q)) ||
-			(c.customer_name && c.customer_name.toLowerCase().includes(q)) ||
-			(c.alias && c.alias.toLowerCase().includes(q)) ||
-			(c.customer_group && c.customer_group.toLowerCase().includes(q)) ||
-			(c.territory && c.territory.toLowerCase().includes(q)) ||
-			(c.payment_terms && c.payment_terms.toLowerCase().includes(q)) ||
-			(c.tax_id && c.tax_id.toLowerCase().includes(q))
-		);
-	});
+	// Triple rule 1+2: KH/NCC/User paginate + search server như Items
+	// (không tải một lần rồi filter client). Envelope page_result thống nhất.
+	const totalCustomers = ref(0);
+	const totalSuppliers = ref(0);
+	const totalUsers = ref(0);
 
-	const filteredSuppliers = computed(() => {
-		const q = supplierSearchQuery.value.trim().toLowerCase();
-		if (!q) return suppliers.value;
-		return suppliers.value.filter(s =>
-			(s.name && s.name.toLowerCase().includes(q)) ||
-			(s.supplier_name && s.supplier_name.toLowerCase().includes(q)) ||
-			(s.alias && s.alias.toLowerCase().includes(q)) ||
-			(s.supplier_group && s.supplier_group.toLowerCase().includes(q)) ||
-			(s.payment_terms && s.payment_terms.toLowerCase().includes(q)) ||
-			(s.tax_id && s.tax_id.toLowerCase().includes(q))
-		);
-	});
-
-	const filteredUsers = computed(() => {
-		const q = userSearchQuery.value.trim().toLowerCase();
-		if (!q) return users.value;
-		return users.value.filter(u =>
-			(u.name && u.name.toLowerCase().includes(q)) ||
-			(u.full_name && u.full_name.toLowerCase().includes(q)) ||
-			(u.email && u.email.toLowerCase().includes(q)) ||
-			(u.mobile_no && u.mobile_no.includes(q)) ||
-			(u.department && u.department.toLowerCase().includes(q)) ||
-			(u.designation && u.designation.toLowerCase().includes(q)) ||
-			(u.role_profile_name && u.role_profile_name.toLowerCase().includes(q))
-		);
-	});
+	const filteredCustomers = computed(() => customers.value);
+	const filteredSuppliers = computed(() => suppliers.value);
+	const filteredUsers = computed(() => users.value);
 
 	const currentTotalRecords = computed(() => {
 		if (['sp', 'nvl', 'truc'].includes(activeCatalogTab.value)) return totalMasterItems.value;
-		if (activeCatalogTab.value === 'kh') return filteredCustomers.value.length;
-		if (activeCatalogTab.value === 'ncc') return filteredSuppliers.value.length;
-		return filteredUsers.value.length;
+		if (activeCatalogTab.value === 'kh') return totalCustomers.value;
+		if (activeCatalogTab.value === 'ncc') return totalSuppliers.value;
+		return totalUsers.value;
 	});
 
 	const totalPages = computed(() => {
@@ -124,8 +93,15 @@ export function useCatalogData() {
 
 	function refreshCurrentTabData() {
 		resetTableScroll();
-		if (['sp', 'nvl', 'truc'].includes(activeCatalogTab.value)) {
+		const tab = activeCatalogTab.value;
+		if (['sp', 'nvl', 'truc'].includes(tab)) {
 			loadMasterItems();
+		} else if (tab === 'kh') {
+			loadCustomers();
+		} else if (tab === 'ncc') {
+			loadSuppliers();
+		} else if (tab === 'user') {
+			loadUsers();
 		}
 	}
 
@@ -231,8 +207,21 @@ export function useCatalogData() {
 		}, 250);
 	});
 
+	let pickerSearchTimer = null;
+	function schedulePickerReload() {
+		clearTimeout(pickerSearchTimer);
+		pickerSearchTimer = setTimeout(() => {
+			currentPage.value = 1;
+			refreshCurrentTabData();
+		}, 250);
+	}
+
 	watch([customerSearchQuery, supplierSearchQuery, userSearchQuery], () => {
-		currentPage.value = 1;
+		if (['kh', 'ncc', 'user'].includes(activeCatalogTab.value)) {
+			schedulePickerReload();
+		} else {
+			currentPage.value = 1;
+		}
 	});
 
 	watch(activeCatalogTab, (newTab) => {
@@ -269,20 +258,11 @@ export function useCatalogData() {
 
 	const filteredMasterItems = computed(() => masterItems.value);
 
-	const paginatedCustomers = computed(() => {
-		const start = (currentPage.value - 1) * pageSize.value;
-		return filteredCustomers.value.slice(start, start + pageSize.value);
-	});
+	const paginatedCustomers = computed(() => customers.value);
 
-	const paginatedSuppliers = computed(() => {
-		const start = (currentPage.value - 1) * pageSize.value;
-		return filteredSuppliers.value.slice(start, start + pageSize.value);
-	});
+	const paginatedSuppliers = computed(() => suppliers.value);
 
-	const paginatedUsers = computed(() => {
-		const start = (currentPage.value - 1) * pageSize.value;
-		return filteredUsers.value.slice(start, start + pageSize.value);
-	});
+	const paginatedUsers = computed(() => users.value);
 
 	async function loadMasterItems() {
 		loadingMasterItems.value = true;
@@ -328,12 +308,19 @@ export function useCatalogData() {
 	async function loadCustomers() {
 		loadingCustomers.value = true;
 		try {
-			// ADR-006: master lists trả envelope page_result — đọc đúng hợp đồng.
-			const data = await api('vanphat_portal.api.customer.get_list', {}, { get: true });
+			// Triple rule 1+2: search + paginate server, envelope page_result.
+			const data = await api('vanphat_portal.api.customer.get_list', {
+				query: customerSearchQuery.value.trim() || undefined,
+				page: currentPage.value,
+				page_length: pageSize.value,
+			}, { get: true });
 			if (data && Array.isArray(data.customers)) {
 				customers.value = data.customers;
+				totalCustomers.value = data.total_count ?? data.customers.length;
+				currentPage.value = data.page ?? currentPage.value;
 			} else if (Array.isArray(data)) {
 				customers.value = data;
+				totalCustomers.value = data.length;
 			}
 		} catch (e) {
 			console.error('Error loading customers:', e);
@@ -350,12 +337,19 @@ export function useCatalogData() {
 	async function loadSuppliers() {
 		loadingSuppliers.value = true;
 		try {
-			// ADR-006: master lists trả envelope page_result — đọc đúng hợp đồng.
-			const data = await api('vanphat_portal.api.supplier.get_list', {}, { get: true });
+			// Triple rule 1+2: search + paginate server, envelope page_result.
+			const data = await api('vanphat_portal.api.supplier.get_list', {
+				query: supplierSearchQuery.value.trim() || undefined,
+				page: currentPage.value,
+				page_length: pageSize.value,
+			}, { get: true });
 			if (data && Array.isArray(data.suppliers)) {
 				suppliers.value = data.suppliers;
+				totalSuppliers.value = data.total_count ?? data.suppliers.length;
+				currentPage.value = data.page ?? currentPage.value;
 			} else if (Array.isArray(data)) {
 				suppliers.value = data;
+				totalSuppliers.value = data.length;
 			}
 		} catch (e) {
 			console.error('Error loading suppliers:', e);
@@ -372,12 +366,19 @@ export function useCatalogData() {
 	async function loadUsers() {
 		loadingUsers.value = true;
 		try {
-			// ADR-006: master lists trả envelope page_result — đọc đúng hợp đồng.
-			const data = await api('vanphat_portal.api.user.get_list', {}, { get: true });
+			// Triple rule 1+2: search + paginate server, envelope page_result.
+			const data = await api('vanphat_portal.api.user.get_list', {
+				query: userSearchQuery.value.trim() || undefined,
+				page: currentPage.value,
+				page_length: pageSize.value,
+			}, { get: true });
 			if (data && Array.isArray(data.users)) {
 				users.value = data.users;
+				totalUsers.value = data.total_count ?? data.users.length;
+				currentPage.value = data.page ?? currentPage.value;
 			} else if (Array.isArray(data)) {
 				users.value = data;
+				totalUsers.value = data.length;
 			}
 		} catch (e) {
 			console.error('Error loading users:', e);

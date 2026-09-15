@@ -19,15 +19,26 @@
 				<!-- KHỐI 1: THÔNG TIN KHÁCH & PHÂN LOẠI -->
 				<div class="form-section">
 					<div class="info-row-1">
-						<!-- Chọn khách hàng -->
-						<div class="field-col">
-							<label class="field-label">Khách hàng</label>
-							<select v-model="selectedCustomerId" class="select-input" @change="onCustomerChange" required>
-								<option value="" disabled>-- Chọn khách hàng --</option>
-								<option v-for="c in customers" :key="c.id" :value="c.id">
-									{{ c.alias }} • {{ c.name }}
-								</option>
-							</select>
+						<!-- Chọn khách hàng: ô Tìm-và-Chọn (danh sách động > 8 — triple rule 3) -->
+						<div class="field-col customer-pick-wrap">
+							<label class="field-label" for="order-customer-search">Khách hàng</label>
+							<input
+								id="order-customer-search"
+								type="text"
+								v-model="customerSearch"
+								class="text-input"
+								placeholder="Gõ tên / mã KH để chọn"
+								autocomplete="off"
+								@input="onCustomerSearchInput"
+								@focus="onCustomerSearchInput"
+								@blur="hideCustomerResults"
+							/>
+							<ul v-if="customerResults.length" class="cust-results">
+								<li v-for="c in customerResults" :key="c.id" @mousedown.prevent="selectCustomerResult(c)">
+									<span>{{ c.alias }}</span>
+									<span class="cust-code">{{ c.name }}</span>
+								</li>
+							</ul>
 						</div>
 
 						<!-- Brand / Thương hiệu -->
@@ -42,15 +53,24 @@
 							/>
 						</div>
 
-						<!-- Nhóm sản phẩm -->
+						<!-- Nhóm sản phẩm: nút click-chọn từ Item Group native (triple rule 2+3) -->
 						<div class="field-col">
-							<label class="field-label">Nhóm sản phẩm</label>
-							<select v-model="productGroup" class="select-input" @change="onProductGroupChange" required>
-								<option value="Túi màng ghép">Túi màng ghép (Xưởng SX)</option>
-								<option value="Cuộn màng ghép">Cuộn màng ghép (Xưởng SX - Kg)</option>
-								<option value="Túi NGCS">Túi NGCS (In lụa phôi có sẵn)</option>
-								<option value="Túi màng đơn">Túi màng đơn (Mua ngoài - Kg)</option>
-							</select>
+							<span id="pg-label" class="field-label">Nhóm sản phẩm</span>
+							<div class="choice-grid" role="radiogroup" aria-labelledby="pg-label">
+								<button
+									v-for="g in productGroups"
+									:key="g.key"
+									type="button"
+									class="choice-btn"
+									:class="{ on: productGroupKey === g.key }"
+									role="radio"
+									:aria-checked="productGroupKey === g.key"
+									@click="selectProductGroup(g.key)"
+								>
+									<span class="choice-label">{{ g.label }}</span>
+									<span class="choice-desc">{{ g.desc }}</span>
+								</button>
+							</div>
 						</div>
 					</div>
 
@@ -61,13 +81,24 @@
 							<input type="date" v-model="deliveryDate" class="text-input font-mono" required />
 						</div>
 
-						<!-- Hình thức thanh toán -->
+						<!-- Hình thức thanh toán: nút click-chọn từ Payment Terms native -->
 						<div class="field-col">
-							<label class="field-label">Hình thức thanh toán</label>
-							<select v-model="paymentType" class="select-input">
-								<option value="Trả trước">Trả trước (Cọc 50%)</option>
-								<option value="Trả sau">Trả sau (Công nợ)</option>
-							</select>
+							<span id="pay-label" class="field-label">Hình thức thanh toán</span>
+							<div class="choice-grid choice-grid-2" role="radiogroup" aria-labelledby="pay-label">
+								<button
+									v-for="opt in paymentOptions"
+									:key="opt.key"
+									type="button"
+									class="choice-btn"
+									:class="{ on: paymentKey === opt.key }"
+									role="radio"
+									:aria-checked="paymentKey === opt.key"
+									@click="selectPayment(opt.key)"
+								>
+									<span class="choice-label">{{ opt.label }}</span>
+									<span class="choice-desc">{{ opt.desc }}</span>
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -364,10 +395,22 @@ const {
 	customers,
 	isSubmitting,
 	fetchCustomers,
+	fetchUiConfig,
+	productGroups,
+	productGroupKey,
+	paymentOptions,
+	paymentKey,
+	selectProductGroup,
+	selectPayment,
 	catalogItems,
 	serverPricing,
 	isCalculatingPrice,
 	selectedCustomerId,
+	customerSearch,
+	customerResults,
+	onCustomerSearchInput,
+	selectCustomerResult,
+	hideCustomerResults,
 	brand,
 	productGroup,
 	deliveryDate,
@@ -387,7 +430,6 @@ const {
 	currentCustomItem,
 	availableGenericItems,
 	onCustomerChange,
-	onProductGroupChange,
 	onCustomItemChange,
 	onGenericItemChange,
 	addVariantRow,
@@ -400,12 +442,12 @@ const {
 // S7c: formatter dùng chung (xóa bản copy-paste)
 const { formatCurrency } = useCockpitFormat();
 
-// Default setup when modal opens
+// Default setup when modal opens — options native tải trước rồi mới reset theo tab
 watch(
 	() => props.isOpen,
 	async (val) => {
 		if (val) {
-			await fetchCustomers();
+			await Promise.all([fetchCustomers(), fetchUiConfig()]);
 
 			// Set default delivery date (+7 days)
 			const d = new Date();
@@ -427,7 +469,10 @@ const handleSubmit = async () => {
 	}
 
 	let orderTab = 'xuong_sx';
-	if (productGroup.value === 'Túi NGCS') orderTab = 'ngcs';
+	const selectedGroup = productGroups.value.find((g) => g.key === productGroupKey.value);
+	if (selectedGroup && selectedGroup.order_tab) {
+		orderTab = selectedGroup.order_tab;
+	} else if (productGroup.value === 'Túi NGCS') orderTab = 'ngcs';
 	else if (productGroup.value === 'Túi màng đơn') orderTab = 'mua_ngoai';
 
 	let builtItems = [];
@@ -671,6 +716,86 @@ const handleSubmit = async () => {
 	font-size: 12px;
 	font-weight: 600;
 	color: #8b949e;
+}
+
+/* Triple rule 3: ô Tìm-và-Chọn KH + nút click-chọn options native */
+.customer-pick-wrap {
+	position: relative;
+}
+.cust-results {
+	position: absolute;
+	z-index: 20;
+	left: 0;
+	right: 0;
+	margin: 4px 0 0;
+	padding: 0;
+	list-style: none;
+	background: #1a1f27;
+	border: 1px solid #3a424e;
+	border-radius: 8px;
+	overflow: hidden;
+	max-height: 240px;
+	overflow-y: auto;
+}
+.cust-results li {
+	display: flex;
+	justify-content: space-between;
+	gap: 8px;
+	padding: 8px 12px;
+	cursor: pointer;
+	font-size: 14px;
+	color: #eef1f6;
+}
+.cust-results li:hover {
+	background: rgba(78, 161, 224, 0.15);
+}
+.cust-code {
+	opacity: 0.6;
+	font-size: 12px;
+}
+
+/* Triple rule 3: nút click-chọn cho options native (a11y như ModalStep1Sale) */
+.choice-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 8px;
+}
+.choice-grid-2 {
+	grid-template-columns: 1fr 1fr;
+}
+.choice-btn {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: 2px;
+	min-height: 54px;
+	padding: 8px 12px;
+	background: #1a1f27;
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 10px;
+	cursor: pointer;
+	text-align: left;
+	transition: all 0.15s ease;
+}
+.choice-btn:hover {
+	border-color: rgba(255, 255, 255, 0.2);
+}
+.choice-btn.on {
+	background: rgba(78, 161, 224, 0.15);
+	border-color: #4ea1e0;
+}
+.choice-label {
+	font-size: 14px;
+	font-weight: 700;
+	color: #eef1f6;
+}
+.choice-desc {
+	font-size: 12px;
+	font-weight: 500;
+	color: #9da7b5;
+}
+.choice-btn.on .choice-desc {
+	color: #4ea1e0;
 }
 
 .text-input,

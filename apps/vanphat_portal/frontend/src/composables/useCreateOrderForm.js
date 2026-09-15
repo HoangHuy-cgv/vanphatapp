@@ -28,14 +28,17 @@ export function useCreateOrderForm(masterItemsRef) {
 
 	async function fetchCustomers() {
 		try {
+			// ADR-006: master lists trả envelope page_result — đọc đúng hợp đồng.
 			const data = await api('vanphat_portal.api.customer.get_list', {}, { get: true });
-			if (Array.isArray(data) && data.length > 0) {
-				customers.value = data.map((c) => ({
+			const rows = (data && Array.isArray(data.customers) && data.customers)
+				|| (Array.isArray(data) && data) || [];
+			if (rows.length > 0) {
+				customers.value = rows.map((c) => ({
 					id: c.name,
 					name: c.customer_name || c.name,
 					alias: c.alias || c.customer_name || c.name,
 					brand: c.brand || '',
-					payment_type: (c.payment_terms && c.payment_terms.toLowerCase().includes('sau')) ? 'Trả sau' : 'Trả trước',
+					payment_terms: c.payment_terms || '',
 				}));
 			}
 		} catch (e) {
@@ -71,6 +74,8 @@ export function useCreateOrderForm(masterItemsRef) {
 				cylinder_rate: null,
 				uom: item.stock_uom || item.uom || 'Túi',
 				base_rate: item.standard_rate || item.base_rate || 0,
+				// Triple rule 2: số lượng tối thiểu từ Item native — UI gợi ý, không hardcode.
+				min_order_qty: item.min_order_qty || null,
 				artwork_url: item.artwork_url || '',
 				is_custom: item.is_custom !== undefined ? item.is_custom : ((item.item_code || '').startsWith('TP-') || !(item.item_code || '').startsWith('NGCS-')),
 				default_variants: item.default_variants || [item.custom_alias || item.item_name],
@@ -79,12 +84,98 @@ export function useCreateOrderForm(masterItemsRef) {
 		return [];
 	});
 
-	// Form Fields
+	// Form Fields — triple rule 2: options từ native (Item Group / Payment Terms),
+	// visual chỉ render nút click-chọn. productGroup/paymentType giữ để caller cũ
+	// (ModalCreateOrder submit) không vỡ — suy từ key native đã chọn.
+	// Triple rule 2: qty gợi ý = min_order_qty native của mã đang chọn (hoặc min_qty
+	// của nhóm SP); trống khi native không có — không fallback số thương mại.
+	function suggestedQty(explicitMinQty) {
+		if (explicitMinQty) return explicitMinQty;
+		const g = productGroups.value.find((x) => x.key === productGroupKey.value);
+		return (g && g.min_qty) || '';
+	}
 	const selectedCustomerId = ref('');
+	const customerSearch = ref('');
+	const customerResults = ref([]);
+	let customerSearchTimer = null;
+
+	function customerMatches(c, q) {
+		const hay = `${c.alias || ''} ${c.name || ''} ${c.id || ''}`.toLowerCase();
+		return hay.includes(q);
+	}
+
+	function runCustomerSearch() {
+		const q = customerSearch.value.trim().toLowerCase();
+		if (!q) {
+			customerResults.value = customers.value.slice(0, 50);
+			return;
+		}
+		customerResults.value = customers.value.filter((c) => customerMatches(c, q)).slice(0, 50);
+	}
+
+	function onCustomerSearchInput() {
+		clearTimeout(customerSearchTimer);
+		customerSearchTimer = setTimeout(runCustomerSearch, 250);
+	}
+
+	function selectCustomerResult(c) {
+		selectedCustomerId.value = c.id;
+		customerSearch.value = c.alias || c.name;
+		customerResults.value = [];
+		onCustomerChange();
+	}
+
+	function hideCustomerResults() {
+		setTimeout(() => { customerResults.value = []; }, 150);
+	}
 	const brand = ref('');
-	const productGroup = ref('Túi màng ghép');
+	const productGroups = ref([]);
+	const productGroupKey = ref('');
+	const paymentOptions = ref([]);
+	const paymentKey = ref('');
+	const productGroup = computed(() => {
+		const g = productGroups.value.find((x) => x.key === productGroupKey.value);
+		return g ? g.label : '';
+	});
 	const deliveryDate = ref('');
-	const paymentType = ref('Trả trước');
+	const paymentType = computed(() => {
+		const p = paymentOptions.value.find((x) => x.key === paymentKey.value);
+		return p ? p.label : '';
+	});
+
+	async function fetchUiConfig() {
+		try {
+			const pg = await api('item.get_product_groups', {}, { get: true, silent: true });
+			if (pg && Array.isArray(pg.product_groups) && pg.product_groups.length) {
+				productGroups.value = pg.product_groups;
+				if (!productGroupKey.value || !productGroups.value.some((g) => g.key === productGroupKey.value)) {
+					productGroupKey.value = productGroups.value[0].key;
+				}
+			}
+		} catch (e) {
+			productGroups.value = [];
+		}
+		try {
+			const pay = await api('vanphat_portal.api.customer.get_payment_options', {}, { get: true, silent: true });
+			if (pay && Array.isArray(pay.payment_options) && pay.payment_options.length) {
+				paymentOptions.value = pay.payment_options;
+				if (!paymentKey.value || !paymentOptions.value.some((p) => p.key === paymentKey.value)) {
+					paymentKey.value = paymentOptions.value[0].key;
+				}
+			}
+		} catch (e) {
+			paymentOptions.value = [];
+		}
+	}
+
+	function selectProductGroup(key) {
+		productGroupKey.value = key;
+		onProductGroupChange();
+	}
+
+	function selectPayment(key) {
+		paymentKey.value = key;
+	}
 
 	// MTO state (Màng ghép / Cuộn)
 	const selectedCustomItemCode = ref('');
@@ -200,7 +291,15 @@ export function useCreateOrderForm(masterItemsRef) {
 	const onCustomerChange = () => {
 		if (!currentCustomer.value) return;
 		brand.value = currentCustomer.value.brand || '';
-		paymentType.value = currentCustomer.value.payment_type || 'Trả trước';
+		// Triple rule 2: hình thức thanh toán theo KH — Trả sau khi KH có payment_terms
+		// công nợ, còn lại theo option native đầu (không gán label cứng).
+		const terms = (currentCustomer.value.payment_terms || '').toLowerCase();
+		const payKey = terms.includes('sau') || terms.includes('nợ') || terms.includes('công nợ')
+			? 'tra_sau'
+			: (paymentOptions.value[0] && paymentOptions.value[0].key) || '';
+		if (payKey && paymentOptions.value.some((p) => p.key === payKey)) {
+			paymentKey.value = payKey;
+		}
 
 		// Reset items
 		selectedCustomItemCode.value = '';
@@ -220,15 +319,16 @@ export function useCreateOrderForm(masterItemsRef) {
 			}
 		} else {
 			if (availableGenericItems.value.length > 0) {
+				const first = availableGenericItems.value[0];
 				genericRows.value = [
 					{
-						item_code: availableGenericItems.value[0].item_code,
-						item_name: availableGenericItems.value[0].item_name,
-						variant_name: availableGenericItems.value[0].item_name,
-						// ADR-006: qty để trống chờ nhập thật (nợ config-native plan item 13).
-						qty: '',
-						rate: availableGenericItems.value[0].base_rate,
-						uom: availableGenericItems.value[0].uom,
+						item_code: first.item_code,
+						item_name: first.item_name,
+						variant_name: first.item_name,
+						// Triple rule 2: qty gợi ý từ min_order_qty native.
+						qty: suggestedQty(first.min_order_qty),
+						rate: first.base_rate,
+						uom: first.uom,
 					},
 				];
 			}
@@ -237,11 +337,11 @@ export function useCreateOrderForm(masterItemsRef) {
 
 	const onCustomItemChange = () => {
 		if (!currentCustomItem.value) return;
-		// Initialize default variants — qty để trống chờ nhập thật (ADR-006).
+		// Triple rule 2: qty gợi ý từ min_order_qty native của mã đang chọn.
 		const defaults = currentCustomItem.value.default_variants || ['Quy cách chuẩn'];
 		variantRows.value = defaults.map((name) => ({
 			variant_name: name,
-			qty: '',
+			qty: suggestedQty(currentCustomItem.value.min_order_qty),
 			rate: currentCustomItem.value.base_rate || 0,
 		}));
 		cylinderCount.value = currentCustomItem.value.cylinder_count || 0;
@@ -254,6 +354,8 @@ export function useCreateOrderForm(masterItemsRef) {
 			row.variant_name = item.item_name;
 			row.rate = item.base_rate;
 			row.uom = item.uom;
+			// Triple rule 2: đổi mã → gợi ý lại qty theo min_order_qty native.
+			if (row.qty === '' || row.qty == null) row.qty = suggestedQty(item.min_order_qty);
 		}
 	};
 
@@ -261,7 +363,7 @@ export function useCreateOrderForm(masterItemsRef) {
 		const rate = currentCustomItem.value ? currentCustomItem.value.base_rate : 0;
 		variantRows.value.push({
 			variant_name: '',
-			qty: '',
+			qty: suggestedQty(currentCustomItem.value && currentCustomItem.value.min_order_qty),
 			rate: rate,
 		});
 	};
@@ -278,8 +380,8 @@ export function useCreateOrderForm(masterItemsRef) {
 			item_code: firstItem.item_code || '',
 			item_name: firstItem.item_name || '',
 			variant_name: firstItem.item_name || '',
-			// ADR-006: qty để trống chờ nhập thật (nợ config-native plan item 13).
-			qty: '',
+			// Triple rule 2: qty gợi ý từ min_order_qty native.
+			qty: suggestedQty(firstItem.min_order_qty),
 			rate: firstItem.base_rate || 0,
 			uom: firstItem.uom || 'Túi',
 		});
@@ -292,17 +394,18 @@ export function useCreateOrderForm(masterItemsRef) {
 	};
 
 	function resetForOpen(initialTab) {
-		// Set initial product group according to active tab
-		if (initialTab === 'ngcs') {
-			productGroup.value = 'Túi NGCS';
-		} else if (initialTab === 'mua_ngoai') {
-			productGroup.value = 'Túi màng đơn';
-		} else {
-			productGroup.value = 'Túi màng ghép';
+		// Set initial product group according to active tab (key native — triple rule 2).
+		const byTab = productGroups.value.find((g) => g.order_tab === initialTab);
+		if (byTab) {
+			productGroupKey.value = byTab.key;
+		} else if (productGroups.value.length) {
+			productGroupKey.value = productGroups.value[0].key;
 		}
 		if (customers.value.length > 0) {
-			selectedCustomerId.value = customers.value[0].id;
-			onCustomerChange();
+			selectCustomerResult(customers.value[0]);
+		} else {
+			selectedCustomerId.value = '';
+			customerSearch.value = '';
 		}
 	}
 
@@ -310,11 +413,23 @@ export function useCreateOrderForm(masterItemsRef) {
 		customers,
 		isSubmitting,
 		fetchCustomers,
+		fetchUiConfig,
+		productGroups,
+		productGroupKey,
+		paymentOptions,
+		paymentKey,
+		selectProductGroup,
+		selectPayment,
 		catalogItems,
 		serverPricing,
 		isCalculatingPrice,
 		fetchPricePreview,
 		selectedCustomerId,
+		customerSearch,
+		customerResults,
+		onCustomerSearchInput,
+		selectCustomerResult,
+		hideCustomerResults,
 		brand,
 		productGroup,
 		deliveryDate,

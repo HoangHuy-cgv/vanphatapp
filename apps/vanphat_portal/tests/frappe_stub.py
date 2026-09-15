@@ -161,6 +161,13 @@ class State:
 		self.docs[(doctype, name)] = True
 		return self
 
+	def set_select_options(self, doctype, fieldname, options):
+		"""Options của Custom Field Select native (cho get_print_config test)."""
+		if not hasattr(self, "custom_options"):
+			self.custom_options = {}
+		self.custom_options[(doctype, fieldname)] = options
+		return self
+
 
 def flt(value, precision=None):
 	try:
@@ -278,6 +285,20 @@ def _or_match(row, spec):
 	return _row_matches(row, field, [op, value])
 
 
+class _Meta:
+	"""Meta giả: đọc options của Custom Field Select từ state.custom_options."""
+
+	def __init__(self, state, doctype):
+		self._state = state
+		self._doctype = doctype
+
+	def get_field(self, fieldname):
+		from types import SimpleNamespace
+
+		options = (self._state.custom_options or {}).get((self._doctype, fieldname), "")
+		return SimpleNamespace(options=options)
+
+
 class _Cache:
 	def __init__(self, state):
 		self._state = state
@@ -378,4 +399,5 @@ dữ liệu riêng mà không cần reload module. Trả về (frappe, state).
 	frappe.throw = throw
 	frappe.parse_json = utils.parse_json
 	frappe.get_list = frappe.db.get_list
+	frappe.get_meta = lambda doctype: _Meta(state, doctype)
 	return frappe, state

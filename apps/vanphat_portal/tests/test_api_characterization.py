@@ -384,6 +384,59 @@ class TestItemDetail(unittest.TestCase):
 			item.get_detail("")
 
 
+class TestNativeUiConfig(unittest.TestCase):
+	"""Triple rule 2: options UI đọc từ native, DB trống → truthful (không số bịa)."""
+
+	def test_nhom_san_pham_tu_item_group_native(self):
+		state = base_state()
+		state.add("Item", {"name": "TP-1", "item_code": "TP-001", "item_group": "Túi Màng Ghép Đặt Riêng", "min_order_qty": 5000.0})
+		state.add("Item", {"name": "NGCS-1", "item_code": "NGCS-001", "item_group": "Túi Nước Giặt Có Sẵn (NGCS)", "min_order_qty": 500.0})
+		res = item.get_product_groups()
+		by_key = {g["key"]: g for g in res["product_groups"]}
+		self.assertEqual(len(res["product_groups"]), 4)
+		self.assertEqual(by_key["tui_mang_ghep"]["label"], "Túi màng ghép")
+		self.assertEqual(by_key["tui_mang_ghep"]["order_tab"], "xuong_sx")
+		self.assertEqual(by_key["tui_mang_ghep"]["count"], 1)
+		self.assertEqual(by_key["tui_mang_ghep"]["min_qty"], 5000.0)
+		self.assertEqual(by_key["tui_ngcs"]["count"], 1)
+		self.assertEqual(by_key["cuon_mang_ghep"]["count"], 0)
+		self.assertIsNone(by_key["cuon_mang_ghep"]["min_qty"])
+
+	def test_hinh_thuc_thanh_toan_tu_payment_terms_native(self):
+		from vanphat_portal.api import customer
+
+		state = base_state()
+		state.add("Payment Terms Template", {"name": "Cọc trước 50% - Giao hàng 50%", "disabled": 0})
+		state.add("Payment Terms Template Detail", {"parent": "Cọc trước 50% - Giao hàng 50%", "invoice_portion": 50.0})
+		state.add("Payment Terms Template", {"name": "Công nợ gối đầu 30 ngày", "disabled": 0})
+		state.add("Payment Terms Template Detail", {"parent": "Công nợ gối đầu 30 ngày", "invoice_portion": 0.0})
+		res = customer.get_payment_options()
+		by_key = {o["key"]: o for o in res["payment_options"]}
+		self.assertEqual(by_key["tra_truoc"]["label"], "Trả trước")
+		self.assertEqual(by_key["tra_truoc"]["deposit_pct"], 50.0)
+		self.assertEqual(by_key["tra_sau"]["label"], "Trả sau")
+		self.assertEqual(by_key["tra_sau"]["deposit_pct"], 0.0)
+
+	def test_db_trong_config_truthful_khong_bia(self):
+		from vanphat_portal.api import customer
+
+		base_state()
+		res = item.get_product_groups()
+		self.assertTrue(all(g["count"] == 0 and g["min_qty"] is None for g in res["product_groups"]))
+		self.assertEqual(customer.get_payment_options(), {"payment_options": []})
+		self.assertEqual(
+			item.get_print_config(), {"print_techs": [], "accessories": []}
+		)
+
+	def test_print_config_doc_options_select_native(self):
+		state = base_state()
+		state.set_select_options("Item", "custom_print_tech", "In trục ống đồng\nIn lụa\nKhông in")
+		state.set_select_options("Item", "custom_accessory_spec", "Không\nVòi 16mm")
+		res = item.get_print_config()
+		self.assertEqual(res["print_techs"], ["In trục ống đồng", "In lụa", "Không in"])
+		self.assertEqual(res["accessories"], ["Không", "Vòi 16mm"])
+
+
 class TestQuotationPreview(unittest.TestCase):
 	def test_preview_bg_da_luu_doc_native(self):
 		state = base_state()

@@ -1,6 +1,6 @@
 {
-  "api_endpoints": 24,
-  "api_ungated": 19,
+  "api_endpoints": 27,
+  "api_ungated": 22,
   "client_hardcoded_qty": 0,
   "client_identity": 0,
   "client_magic_fallback": 0,
@@ -9,6 +9,6 @@
   "entry_gzip_kb": 142,
   "fe_guard_ok": 1,
   "fe_test_files": 0,
-  "py_tests": 42,
+  "py_tests": 46,
   "swallowed_catch": 1
 }

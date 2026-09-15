@@ -17,10 +17,42 @@ export function useStep2DirectorForm(props, emit) {
 	const isRoll = computed(() => formData.value.product_type === 'Cuộn màng ghép');
 	const needCylinder = computed(() => formData.value.print_type === 'In trục' && formData.value.cylinder_status === 'Chưa có trục');
 
+	// Triple rule 2: vật liệu từ cấu trúc màng native (BOM/layers của mã đang báo giá),
+	// không chip cứng. Màu chip theo nhóm vật liệu (giữ chuẩn cockpit cũ).
+	function matCls(code) {
+		const m = (code || '').toUpperCase();
+		if (m.includes('OPP') || m.includes('PET')) return 'chip-blue';
+		if (m.includes('AL') || m.includes('MPET')) return 'chip-amber';
+		if (m.includes('PA')) return 'chip-purple';
+		return 'chip-emerald';
+	}
+
+	function splitLayers(raw) {
+		if (Array.isArray(raw)) return raw.map((x) => String(x).trim()).filter(Boolean);
+		return String(raw || '').split('/').map((x) => x.trim()).filter(Boolean);
+	}
+
+	const materialOptions = computed(() => {
+		const saved = props.savedData.materials;
+		const fromSaved = Array.isArray(saved) && saved.length ? saved : null;
+		const fd = formData.value || {};
+		const fromForm = fd.materials || fd.custom_structure_layers || fd.layers;
+		const layers = fromSaved || splitLayers(fromForm);
+		return layers.map((code) => ({ code, cls: matCls(code) }));
+	});
+
 	// M2 state — restored from App-held savedData so Quay lại không mất dữ liệu.
-	// ADR-006: không default vật liệu/giá cứng — người dùng click-chọn ở Drawer;
-	// giá trục hiển thị "Chờ giá NCC" khi backend chưa trả (pending truthful).
-	const selectedMaterials = ref([...(props.savedData.materials || [])]);
+	// Triple rule 2: mặc định chọn hết lớp native (spec màng của mã đó); trống khi
+	// native không có — người dùng click-chọn ở Drawer, không default cứng.
+	const selectedMaterials = ref([
+		...(props.savedData.materials && props.savedData.materials.length
+			? props.savedData.materials
+			: splitLayers(
+				(props.step1Data || {}).materials
+				|| (props.step1Data || {}).custom_structure_layers
+				|| (props.step1Data || {}).layers
+			)),
+	]);
 	const artworkUrl = ref(props.savedData.artwork_url || '');
 	const cylinderQty = ref(props.savedData.cylinder_qty ?? 1);
 	const cylinderRateDisplay = computed(() => {
@@ -125,6 +157,7 @@ export function useStep2DirectorForm(props, emit) {
 		formData,
 		isRoll,
 		needCylinder,
+		materialOptions,
 		selectedMaterials,
 		artworkUrl,
 		cylinderQty,
