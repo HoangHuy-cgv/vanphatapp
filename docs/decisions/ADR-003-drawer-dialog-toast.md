@@ -1,7 +1,8 @@
 # ADR-003: Drawers native `<dialog>`, modals + toast frappe-ui (P4 Sếp duyệt)
 
 ## Status
-Accepted (2026-09-15)
+Partially superseded by ADR-007 (2026-09-15): modal/toast part retired with frappe-ui;
+drawer part (native `<dialog>` BaseDrawer, no `tabindex`) retained and extended by ADR-007.
 
 ## Date
 2026-09-15
@@ -21,7 +22,7 @@ Accepted (2026-09-15)
   Nguồn: MDN `<dialog>`/`showModal`/top-layer + Vue Teleport.
 - Modals → `Dialog` frappe-ui (`v-model:open`, đối chiếu API trong `node_modules` bản beta
   đang dùng, không copy mù docs mới); confirm/prompt → `dialog.confirm/prompt`.
-- Toast → `toast.*` lib (đã có `FrappeUIProvider` portals); xóa `CockpitToast.vue` + singleton.
+- Toast → `toast.*` lib (đã có `FrappeUIProvider` portals — lịch sử tiền ADR-007; hiện tại là `vue-sonner` trực tiếp, xem ADR-007); xóa `CockpitToast.vue` + singleton.
 - Animation dialog: `@starting-style` + `transition-behavior: allow-discrete` + liệt kê
   `display/overlay`; backdrop không animate fade-out bằng keyframes; mobile 768px full;
   tôn trọng `prefers-reduced-motion`. Nguồn: Chrome entry-exit + MDN animating dialogs.

@@ -2,7 +2,7 @@
 
 ## Stack
 
-Frappe/ERPNext v16.34.2 (digest-pinned image) + Vue 3.5 + Vite 7 + vue-router 4 (hash) + Tailwind v3 + `frappe-ui@1.0.0-beta.64` exact. Zero-Node static served at `/portal`. MariaDB + Redis + Cloudflare Tunnel + R2 backup (`infra/`).
+Frappe/ERPNext v16.34.2 (digest-pinned image) + Vue 3.5 + Vite 7 + vue-router 4 (hash) + Tailwind v3 standalone (no external UI preset) + Native HTML5 `<dialog>` + `vue-sonner@2.0.9` (ADR-007). Zero-Node static served at `/portal`. MariaDB + Redis + Cloudflare Tunnel + R2 backup (`infra/`).
 
 ## Layers (highest capable wins)
 
@@ -21,7 +21,7 @@ Frappe/ERPNext v16.34.2 (digest-pinned image) + Vue 3.5 + Vite 7 + vue-router 4 
 | `api/customer.py` `supplier.py` `user.py` | Customer/Supplier/User | Envelope `page_result` lists + server-filtered pickers |
 | `api/_common.py` | — | `paginate`/`page_result`/`text`/`as_json`/`resolve_customer`. No whitelist, no logic, no money |
 | `api/_guards.py` | — | `require_roles` (OR) + `require_doc` (`has_permission` to doc level, Vietnamese errors) |
-| `frontend/src/` | — | 3 lazy views (Orders/Quotes/Catalog) + 10 components (ModalCreateOrder, ModalStep1Sale, drawers, BaseDrawer, ArtworkBox) + 8 composables. Sole HTTP: `api()` in `useSession.js` |
+| `frontend/src/` | — | 3 lazy views (Orders/Quotes/Catalog) + 12 components (BaseModal, ConfirmDialog, BaseDrawer, ModalCreateOrder, ModalStep1Sale, drawers, ArtworkBox) + 9 composables. Sole HTTP: `api()` in `useSession.js`. Overlays: native `<dialog>` only; toast: `vue-sonner`; Step1→Step2 contract: single `submit` event |
 
 ## Boundaries
 

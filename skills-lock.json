@@ -79,18 +79,6 @@
       "skillPath": "skills/frappe-app-dev/SKILL.md",
       "computedHash": "53fc33422fc32f67527bc98af3f5d2e09c51e5b969f7114deefbb3c0bd6eb49f"
     },
-    "frappe-ui": {
-      "source": "frappe/frappe-ui",
-      "sourceType": "github",
-      "skillPath": "skills/frappe-ui/SKILL.md",
-      "computedHash": "1ff0eb66fa4fe147b91f1265da04c3e7bad7d85720db5e43c56441b61b3eb2ad"
-    },
-    "frontend-development": {
-      "source": "lubusin/frappe-skills",
-      "sourceType": "github",
-      "skillPath": "frontend-development/SKILL.md",
-      "computedHash": "34caac5fe50cfc6939ecebc7986d16f79ee9f8feb55e9f51607b78206ca7471b"
-    },
     "frontend-ui-engineering": {
       "source": "addyosmani/agent-skills",
       "sourceType": "github",

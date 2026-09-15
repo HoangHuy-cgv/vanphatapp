@@ -15,4 +15,4 @@
 
 ## Done (history)
 
-Triple-rule + 3 config endpoints → cleanup → 26-endpoint native permission gates (`api_ungated` 0) → prod wipe + fresh deploy + real p95 (list 213ms/detail 302ms, 13ms in-VPS) → doc restructure (this). Git log is the changelog.
+Triple-rule + 3 config endpoints → cleanup → 26-endpoint native permission gates (`api_ungated` 0) → prod wipe + fresh deploy + real p95 (list 213ms/detail 302ms, 13ms in-VPS) → doc restructure → Retire `frappe-ui` → native HTML5 `<dialog>` (`BaseModal`, `ConfirmDialog`) + `vue-sonner@2.0.9` (ADR-007; initial bundle dropped 142KB to 52KB; fixed Step 1→2 quote transition, drawer alignment, catalog action feedback, a11y labeling). Git log is the changelog.

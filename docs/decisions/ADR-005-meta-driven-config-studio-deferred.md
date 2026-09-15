@@ -21,7 +21,7 @@ Rà soát tìm được 4 tầng "config native" thật:
 - **v16 native**: Data Masking theo role, Workspace/Desktop Icon, Website Theme (SCSS).
 - **Frappe Studio**: visual builder đúng tiêu chí nhất, nhưng repo ghi *"very early development stage…
   Not recommended for production use yet"*; **0 release**; docs chỉ 1 trang; issue cơ bản còn mở
-  (current user #94, File Uploader #127, default value #128); **#225 chưa lên frappe-ui v1**; và trên
+  (current user #94, File Uploader #127, default value #128); **#225 chưa lên frappe-ui v1** (bằng chứng lịch sử cho ADR-007 retire lib — stack hiện tại không còn phụ thuộc các issue này); và trên
   production **chỉ chạy, không sửa được** (phải có dev bench + build lại).
 
 Đồng thời phát hiện lỗ hổng đang mở [frappe#42640](https://github.com/frappe/frappe/issues/42640)
@@ -37,14 +37,16 @@ permlevel** (reproduce trên v15.118.0 và develop/v16), và `read` ⇒ `print` 
    Cái gì sửa được trong Desk thì **cấm** viết vào Vue.
 2. **Code custom chỉ còn ở tầng visual**: bố cục cockpit, Modal, Drawer, màu, chọn-nhanh. Không chứa
    tiền/thuế/trạng thái/cấu hình/danh sách lựa chọn.
-3. **Giữ `frappe-ui` ghim exact `1.0.0-beta.64`** (ADR-003 vẫn hiệu lực). Từ chối đổi sang shadcn-vue:
-   frappe-ui vốn dựng trên Reka UI nên không nâng cấp a11y, chỉ tăng khối lượng viết lại. POC bỏ
-   frappe-ui (nhánh `poc/no-frappe-ui`, giảm 60% gzip) được giữ làm phương án dự phòng, **không** triển khai.
+3. **Retire `frappe-ui` theo ADR-007** (thay §3 bản 2026-09-14 vốn giữ pin `1.0.0-beta.64`):
+   POC bỏ frappe-ui (nhánh `poc/no-frappe-ui`) đã được triển khai chính thức —
+   entry JS 142→52 kB gzip, Tailwind preset ngoài đã gỡ, stack còn Vue 3.5 + Vite 7
+   + native `<dialog>` + `vue-sonner`. Từ chối đổi sang shadcn-vue (chỉ tăng khối
+   lượng viết lại, không nâng cấp a11y so với native dialog).
 4. **Không dùng `www.list` / portal list native cho Sales Order** trên site này cho tới khi frappe#42640
    được vá: rủi ro lộ field permlevel ngoài tầm kiểm soát của mình.
 5. **Hoãn Frappe Studio**, không cài production. Điều kiện mở lại (đủ cả 3): (a) có release gắn tag +
-   đường production được tài liệu hoá (không chỉ "exports run"), (b) đã lên frappe-ui v1, (c) tài liệu
-   vượt quá 1 trang giới thiệu. Việc nhúng **custom Vue component** trong Studio là điểm cộng: component
+   đường production được tài liệu hoá (không chỉ "exports run"), (b) upstream UI lib đã stable v1
+   (không còn beta churn — xem ADR-007), (c) tài liệu vượt quá 1 trang giới thiệu. Việc nhúng **custom Vue component** trong Studio là điểm cộng: component
    visual viết theo ADR này dùng lại được, nên hướng meta-driven không bị bỏ đi.
 6. **Mọi Custom Field mới phải kèm ADR + entry trong `docs/specs/erpnext-native-vi-en-mapping.md`**
    (theo AGENTS.md), và ưu tiên field native đã có (`custom_print_tech`, `custom_accessory_spec`).
@@ -96,8 +98,9 @@ permlevel** (reproduce trên v15.118.0 và develop/v16), và `read` ⇒ `print` 
   mặc định (`Túi màng ghép`/5000, `Túi màng đơn`→100). Field native đã tồn tại để thay thế:
   `custom_print_tech`/`custom_accessory_spec` có trong `fixtures/custom_field.json:130-146` và
   `api/item.py:51-52` đã select.
-- **Quy mô production (POC `poc/no-frappe-ui`, đã đo)**: entry JS 145→49 kB gzip (-66%),
-  CSS 54→6 kB gzip (-89%), tổng js+css 241→96 kB gzip (-60%).
+- **Quy mô production (ADR-007, đã triển khai)**: entry JS 142→52 kB gzip
+  (budget-gate warn 170 / fail 300), Tailwind preset ngoài đã gỡ, font Inter subset
+  tự host (latin 93KB + vietnamese 17KB).
 - Giới hạn bằng chứng: không có bench/site thật để kiểm thử Studio, DocType Layout hay issue #42640
   ở runtime; tất cả xác minh trên là đọc source/docs/API công khai + code repo. Cần bench staging
   trước khi triển khai (plan item 6).

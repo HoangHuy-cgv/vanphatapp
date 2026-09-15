@@ -20,7 +20,7 @@ ERPNext v16 native backend + thin Vue cockpit for flexible-packaging factory (qu
 |---|---|
 | Whitelisted API, permissions, endpoints | `api-development` |
 | DocType/bench/site/hooks/jobs | `frappe-app-dev` |
-| frappe-ui components/dialogs | `frappe-ui` |
+| Native dialogs/overlays/a11y | `frontend-ui-engineering` |
 | Any `.vue`/router/Vite | `vue-best-practices` |
 | Quote/BOM/packaging math | `packaging-calculation-engine` |
 | Logic/bugfix/behavior change | `test-driven-development` |
@@ -63,7 +63,7 @@ ERPNext v16 native backend + thin Vue cockpit for flexible-packaging factory (qu
 
 ## Essentials
 
-- Frontend: Vue 3 `<script setup>`, hash router, frappe-ui, Vite, static at `/portal`. Fetch only via `api()` in `composables/useSession.js` (incl. FormData). Read `page_result` envelopes. No client money/qty math, no local mutation after POST (re-read server), no hardcoded identity/config. See `docs/UI.md`.
+- Frontend: Vue 3 `<script setup>`, hash router, native `<dialog>` overlays + vue-sonner, Vite, static at `/portal`. Fetch only via `api()` in `composables/useSession.js` (incl. FormData). Read `page_result` envelopes. No client money/qty math, no local mutation after POST (re-read server), no hardcoded identity/config. See `docs/UI.md`.
 - Backend: lists return `page_result` envelope. Tx lists default 15/max 100; pickers default 100/max 100 + server filter. One money semantics + one HOLD rule (see `docs/API.md`). GET reads; POST commits itself. Detail reads use `get_doc` + `has_permission`.
 - UI: `custom_alias` in tables (codes in tooltips). 1-line header, 5–7 1-line cols, Vietnamese text+color status, right-aligned `tabular-nums`. Depth in drawers.
 

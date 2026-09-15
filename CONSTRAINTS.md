@@ -40,10 +40,10 @@ Tighten silently; loosen loudly (Exceptions table entry with owner + expiry).
 | `client_magic_fallback` | 0 | down |
 | `client_hardcoded_qty` | 0 | down |
 | `swallowed_catch` | 1 | down |
-| `entry_gzip_kb` | 142 | down/hold (warn 170 / fail 300) |
+| `entry_gzip_kb` | 52 | down/hold (warn 170 / fail 300) |
 | `fe_test_files` | 0 | up (target ≥ 8) |
 | `fe_guard_ok` | 1 | hold 1 |
-| `py_tests` | 48 | up (never down) |
+| `py_tests` | 54 | up (never down) |
 
 Checker: `scripts/constraints-check.py` (floor rules + ratchet + `api_ungated` AST ledger + bundle size + py tests + composables guard).
 
@@ -54,7 +54,7 @@ Checker: `scripts/constraints-check.py` (floor rules + ratchet + `api_ungated` A
 3. Client collects input → calls `api()` → renders. No money/qty math, no commercial fallbacks, no identity/config hardcodes. Reads `page_result` envelopes.
 4. Mutations re-read server. No local `order_state`/`is_hold` sets; no success toast on API error.
 5. Permissions native: Desk holds role matrix; code gates via `get_roles()` + `has_permission()` (`api/_guards.py`). `api_ungated = 0`. No `ignore_permissions` in user APIs.
-6. Stack locked: Vue 3.5 + Vite 7 + vue-router 4 hash + Tailwind v3 + `frappe-ui@1.0.0-beta.64` exact. No Studio on production until 3 reopen conditions (`docs/DECISIONS.md`). No `www.list` for Sales Order until `frappe#42640` fixed.
+6. Stack locked: Vue 3.5 + Vite 7 + vue-router 4 hash + Tailwind v3 + native `<dialog>` (`BaseModal` / `BaseDrawer`) + `vue-sonner`. No external heavy UI library on portal. No Studio on production until 3 reopen conditions (`docs/DECISIONS.md`). No `www.list` for Sales Order until `frappe#42640` fixed.
 
 ## Exceptions
 

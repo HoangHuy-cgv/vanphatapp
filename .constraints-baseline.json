@@ -6,7 +6,7 @@
   "client_magic_fallback": 0,
   "client_money_math": 0,
   "client_qty_reduce": 0,
-  "entry_gzip_kb": 142,
+  "entry_gzip_kb": 52,
   "fe_guard_ok": 1,
   "fe_test_files": 0,
   "py_tests": 54,
