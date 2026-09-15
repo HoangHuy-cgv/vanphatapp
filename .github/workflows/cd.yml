@@ -1,0 +1,72 @@
+name: CD - Deploy to Production VPS
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [master]
+
+concurrency:
+  group: cd-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup SSH Key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
+
+      - name: Add VPS to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Pre-deploy Backup on VPS
+        run: |
+          echo "Triggering backup before deployment..."
+          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "cd /opt/vanphat && sudo docker compose --profile backup run --rm backup || true"
+
+      - name: Sync Code & Assets to VPS
+        run: |
+          echo "Packaging repository files..."
+          git archive HEAD apps scripts data/clean-data infra/docker-compose.yml | ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} "cd /opt/vanphat && tar -x"
+
+      - name: Execute Migrations & Asset Linking
+        run: |
+          ssh ${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }} bash << 'EOF'
+            set -euo pipefail
+            cd /opt/vanphat
+
+            echo "Applying ERPNext DocType migrations..."
+            sudo docker compose -f infra/docker-compose.yml exec -T backend bench --site app.vanphat.io.vn migrate
+
+            echo "Ensuring static assets symlink..."
+            sudo docker compose -f infra/docker-compose.yml exec -T frontend ln -sfn /home/frappe/frappe-bench/apps/vanphat_portal/vanphat_portal/public /home/frappe/frappe-bench/assets/vanphat_portal
+
+            echo "Reloading frontend service..."
+            sudo docker compose -f infra/docker-compose.yml restart frontend
+          EOF
+
+      - name: Post-deploy Smoke Tests
+        run: |
+          echo "Testing live portal endpoints..."
+          LOGIN_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://app.vanphat.io.vn/login)
+          PORTAL_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://app.vanphat.io.vn/portal)
+
+          echo "Login endpoint status: HTTP $LOGIN_STATUS"
+          echo "Portal endpoint status: HTTP $PORTAL_STATUS"
+
+          if [ "$LOGIN_STATUS" != "200" ] || [ "$PORTAL_STATUS" != "200" ]; then
+            echo "Smoke test failed!"
+            exit 1
+          fi
+
+          echo "✓ All production endpoints responding HTTP 200 OK."
