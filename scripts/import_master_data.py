@@ -222,7 +222,8 @@ def import_to_frappe(data):
         for op in data["operations"]:
             op_name = op.get("operation_name", op.get("operation", op.get("name")))
             create_if_missing("Operation", op["name"], {
-                "doctype": "Operation", "operation_name": op_name,
+                # Operation autoname native = Prompt → name = mã công đoạn CSV.
+                "doctype": "Operation", "name": op["name"], "operation_name": op_name,
                 "workstation": ws_name_by_code.get(op.get("workstation", ""), ""),
                 "description": op.get("description", op.get("desc", ""))
             }, f"Tạo Công Đoạn: {op_name} ({op['name']})")
