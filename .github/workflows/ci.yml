@@ -1,0 +1,48 @@
+name: CI
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: apps/vanphat_portal/frontend/package-lock.json
+
+      - name: Install Frontend Dependencies
+        working-directory: apps/vanphat_portal/frontend
+        run: npm ci
+
+      - name: Build Frontend (Vite)
+        working-directory: apps/vanphat_portal/frontend
+        run: npm run build
+
+      - name: Check Composables & UI Design Tokens
+        working-directory: apps/vanphat_portal/frontend
+        run: |
+          node check-composables.mjs
+          node check-ui.mjs
+
+      - name: Check Bundle Budget Gate
+        run: bash scripts/budget-gate.sh
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Run Backend Unit Tests
+        run: python3 -m unittest discover -s apps/vanphat_portal/tests -p "test_*.py"

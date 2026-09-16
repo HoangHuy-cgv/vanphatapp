@@ -1,0 +1,10 @@
+id: no-v-html
+language: Html
+severity: error
+message: "CONSTRAINTS raw_html: cam v-html trong frontend/src"
+note: "Render text bang mustache {{ }} hoac textContent; chi tiet xem CONSTRAINTS.md Floor raw_html."
+rule:
+  kind: attribute
+  regex: 'v-html.*'
+files:
+  - 'apps/vanphat_portal/frontend/src/**'

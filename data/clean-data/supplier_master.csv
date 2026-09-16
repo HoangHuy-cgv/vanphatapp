@@ -1,0 +1,65 @@
+name,supplier_name,alias,supplier_group,supplier_type,country,payment_terms,default_currency,tax_id,primary_address,supplier_primary_contact,mobile_no,disabled
+NCC-00001,CÔNG TY CỔ PHẦN Á ĐÔNG ADG,ADONG,Vật Tư Đóng Gói,Company,Việt Nam,,VND,0308113486,"178/4L Phan Đăng Lưu, Phường Đức Nhuận, TP Hồ Chí Minh",,,0
+NCC-00002,CÔNG TY TNHH BAO BÌ NHỰA AMOY,AMOY,Màng Thô NVL,Company,Việt Nam,,VND,1101952381,"1599 Ấp Nhơn Hoà 1, Xã Mỹ Hạnh, Tây Ninh",,,0
+NCC-00003,CÔNG TY TNHH THƯƠNG MẠI GIẢI PHÁP TƯ VẤN THIẾT KẾ AN PHÁT HƯNG,ANPHATHUNG,Phụ Kiện Bao Bì,Company,Việt Nam,,VND,0317808928,"74/3L Đường 36, Phường Thủ Đức, TP Hồ Chí Minh",,,0
+NCC-00004,CÔNG TY TNHH KỸ THUẬT DUTEC VIỆT,ANPHATHUNG1,Phụ Kiện Bao Bì,Company,Việt Nam,,VND,0318654967,"557/57/14 Hương Lộ 3, Phường Bình Hưng Hòa, TP Hồ Chí Minh",,,0
+NCC-00005,CÔNG TY TNHH APIS TECH,APIS TECH,Vật Tư Đóng Gói,Company,Việt Nam,,VND,0317464240,"60/9A Đường số 2, Phường Hiệp Bình, TP Hồ Chí Minh",,,0
+NCC-00006,CÔNG TY TNHH BIDICA,BIDICA,Vật Tư Đóng Gói,Company,Việt Nam,,VND,0316133239,"8 Song Hành, Phường Trung Mỹ Tây, TP Hồ Chí Minh",,,0
+NCC-00007,CÔNG TY CỔ PHẦN ĐẦU TƯ ĐIỆN MÁY XANH,DIENMAYXANH,Vật Tư Đóng Gói,Company,Việt Nam,,VND,0303217354,"128 Trần Quang Khải, Phường Tân Định, TP Hồ Chí Minh",,,0
+NCC-00009,CÔNG TY TNHH THIẾT BỊ ĐIỆN DLC,DLC,Vật Tư Đóng Gói,Company,Việt Nam,,VND,0317476126,"T1-A03a.18, Tầng 3A, Tháp T1-A, Chung cư M-One, Số 35/12 Bế Văn Cấm, Phường Tân Hưng, TP Hồ Chí Minh",,,0
+NCC-00010,CÔNG TY TNHH MÃ VẠCH ĐỒNG NAI,DONGNAI,Vật Tư Đóng Gói,Company,Việt Nam,,VND,3603409983,"Số 54D, tổ 13C, KP 3, Phường Trấn Biên, Đồng Nai",,,0
+NCC-00011,CÔNG TY TNHH VIỆT NAM DONGYUN PLATE MAKING,DONGY,Gia Công Trục In,Company,Việt Nam,,VND,3700349426,"Số 19, Đại Lộ Tự Do, khu công nghiệp Việt Nam- Singapore, Phường Bình Hòa, Thành phố Thuận An, Bình Dương",,,0
+NCC-00012,CÔNG TY CỔ PHẦN NAM DƯƠNG THỊNH,DUONGTHINH,Vật Tư Đóng Gói,Company,Việt Nam,,VND,0314895009,"Số 98/66 Phan Huy Ích, Phường Tân Sơn, TP Hồ Chí Minh",,,0
+NCC-00015,CÔNG TY TNHH THƯƠNG MẠI CÔNG NGHỆ FUDA,FUDA,Vật Tư Đóng Gói,Company,Việt Nam,,VND,0315633366,"108 An Nhơn, Phường Gò Vấp, TP Hồ Chí Minh",,,0
+NCC-00016,CÔNG TY TNHH THƯƠNG MẠI SẢN XUẤT TÂN HÙNG CƠ,HUNGCO,Vật Tư Đóng Gói,Company,Việt Nam,,VND,0301871794,"7-9-11-13 Đường 53A, Phường Tân Tạo, TP Hồ Chí Minh",,,0
+NCC-00017,CÔNG TY TNHH MỘT THÀNH VIÊN THƯƠNG MẠI HÙNG DŨNG,HUNGDUNG,Vật Tư Đóng Gói,Company,Việt Nam,,VND,0319002587,"D6/52 Trịnh Như Khuê Ấp 4, Xã Bình Chánh, TP Hồ Chí Minh",,,0
+NCC-00018,CÔNG TY TNHH KỸ THUẬT QUỐC TẾ HƯNG THỊNH,HUNGTHINH,Vật Tư Đóng Gói,Company,Việt Nam,,VND,0313478637,"77/10 Đường Võ Thị Thừa, Phường An Phú Đông, TP Hồ Chí Minh",,,0
+NCC-00019,CÔNG TY TNHH SẢN XUẤT VÀ THƯƠNG MẠI THỰC PHẨM HỮU CHIẾN,HUUCHIEN,Vật Tư Đóng Gói,Company,Việt Nam,,VND,0319052242,"160/37 Đường số 11, khu phố 26, Phường Bình Hưng Hòa, TP Hồ Chí Minh",,,0
+NCC-00021,CÔNG TY TNHH SẢN XUẤT THƯƠNG MẠI IN ẤN BAO BÌ HẢI ÂU,Hai Au,Màng Thô NVL,Company,Việt Nam,,VND,0313245914,"ấp Voi Lá, Xã Long Hiệp, Huyện Bến Lức, Long An",,,0
+NCC-00022,CÔNG TY TNHH XUẤT NHẬP KHẨU KẾT NÔNG,Ket Nong,Vật Tư Đóng Gói,Company,Việt Nam,,VND,0315006943,"119/83 Nguyễn Thị Tần, Phường 2, Quận 8, TP Hồ Chí Minh",,,0
+NCC-00023,CÔNG TY CỔ PHẦN EZ COSMETIC VIỆT NAM - CHI NHÁNH LONG AN,EZ Long An,Vật Tư Đóng Gói,Company,Việt Nam,,VND,0312378238-004,"Nhà xưởng K2-3, KCN Tân Kim Mở Rộng, Thị trấn Cần Giuộc, Huyện Cần Giuộc, Long An",,,0
+NCC-00024,CÔNG TY TNHH SẢN XUẤT VÀ THƯƠNG MẠI LINH ĐẠI THÀNH,Linh Dai Thanh,Vật Tư Đóng Gói,Company,Việt Nam,,VND,1102017043,"Số 93, ấp 3A, đường 10A, Xã Hựu Thạnh, Huyện Đức Hoà, Long An",,,0
+NCC-00025,CTY TNHH TM DV SẢN XUẤT CƠ KHÍ CƠ ĐIỆN DTH,Co Khi Dien DTH,Vật Tư Đóng Gói,Company,Việt Nam,,VND,,"CHI NHÁNH 2 PHÚ SƠN ĐƯỜNG 06, TỔ 7, ẤP PHÚ SƠN, XÃ BẮC SƠN, TRẢNG BOM, ĐỒNG NAI",,,0
+NCC-00026,Công ty TNHH Tâm Tín Thịnh,Tam Tin Thinh,Vật Tư Đóng Gói,Company,Việt Nam,,VND,,"384/8B Nam Kỳ Khởi Nghĩa, P. Võ Thị sáu, Quận 3, TP.HCM",,,0
+NCC-00027,TUỆ NHI,Tue Nhi,Vật Tư Đóng Gói,Company,Việt Nam,,VND,,"346/7/6 Mã Lò, P. Bình Trị Đông A, Bình Tân, TP. HCM",,,0
+NCC-00028,Cty TNHH SX TM Bao Bì Nhựa Tuệ Nhi,Bao Bi Nhua Tue Nhi,Màng Thô NVL,Company,Việt Nam,,VND,,Tân Bình,,,0
+NCC-00029,CÔNG TY TNHH VẬT LIỆU BAO BÌ AC,Vat Lieu AC,Màng Thô NVL,Company,Việt Nam,,VND,1101953723,"Số 184, Đường Tỉnh 825, ấp Bình Tiền 2, Xã Đức Hòa Hạ, Huyện Đức Hoà, Long An",,,0
+NCC-00030,BAO BÌ KHOA LÂM,KHOALAM,Màng Thô NVL,Company,Việt Nam,,VND,,"76/8 Trần bá Giao, P5, Quận Gò Vấp, TPHCM",,,0
+NCC-00031,CÔNG TY TNHH BAO BÌ KIẾN TÂM,KIENTAM,Gia Công Trục In,Company,Việt Nam,,VND,1101967500,"Thửa 452, Đường số 7, KCN Tân Đô, Xã Đức Hòa, Tây Ninh",,,0
+NCC-00034,CÔNG TY TNHH SẢN XUẤT THƯƠNG MẠI XÂY DỰNG LONG ĐẠI THÀNH,LONGDAITHANH,Vật Tư Đóng Gói,Company,Việt Nam,,VND,0312203397,"19C Đường 116, ấp 4, Xã Phú Hòa Đông, TP Hồ Chí Minh",,,0
+NCC-00035,Hà Phước Minh Chủ Nhà,MINH,Vật Tư Đóng Gói,Company,Việt Nam,,VND,,,,,0
+NCC-00036,CÔNG TY TNHH SX TM BAO BÌ MINH HUY LONG,MINHHUYLONG,Màng Thô NVL,Company,Việt Nam,,VND,,"D5/177A Đường Tân Long, Ấp 4, Xã Tân Nhựt, Xã Bình Chánh, TPHCM",,,0
+NCC-00037,TRẦN MINH NGỌC,MINHNGOC,Vật Tư Đóng Gói,Company,Việt Nam,,VND,,,,,0
+NCC-00038,CÔNG TY CỔ PHẦN MISA,MISA,Vật Tư Đóng Gói,Company,Việt Nam,,VND,,,,,0
+NCC-00039,CÔNG TY TNHH PHÁT TRIỂN THƯƠNG MẠI DỊCH VỤ NAM KHANG,Nam Khang,Vật Tư Đóng Gói,Company,Việt Nam,,VND,0313717814,"67 Bình Lợi, Phường Bình Lợi Trung, TP Hồ Chí Minh",,,0
+NCC-00040,CÔNG TY TNHH INOX NAM LONG,NAMLONG,Vật Tư Đóng Gói,Company,Việt Nam,,VND,0318718579,"1626 Nguyễn Cửu Phú, Phường Tân Tạo, TP Hồ Chí Minh",,,0
+NCC-00041,CÔNG TY TNHH THƯƠNG MẠI VÀ XUẤT NHẬP KHẨU NAM SƠN,NAMSON,Màng Thô NVL,Company,Việt Nam,,VND,0302694611,"Lầu 6, Tòa nhà Saigon Royal Residence, Tháp A, Số 34-35 Bến Vân Đồn, Phường Xóm Chiếu, TP Hồ Chí Minh",,,0
+NCC-00042,CÔNG TY TNHH SẢN XUẤT THƯƠNG MẠI DỊCH VỤ NHỰA KIM NGUYÊN,NCC,Màng Thô NVL,Company,Việt Nam,,VND,0310952087,"373/1/171J Lý Thường Kiệt, Phường 9, Quận Tân Bình, TP Hồ Chí Minh",,,0
+NCC-00043,CÔNG TY TNHH THƯƠNG MẠI MÁY MÓC THIẾT BỊ KIM MINH,Kim Minh,Vật Tư Đóng Gói,Company,Việt Nam,,VND,0314573026,"15 Đường số 6, Khu dân cư Hai Thành, Phường Tân Tạo A, Quận Bình Tân, TP Hồ Chí Minh",,028 6685 7111,0
+NCC-00044,CÔNG TY CỔ PHẦN BAO BÌ NHỰA TIẾN THỊNH,Tien Thinh,Màng Thô NVL,Company,Việt Nam,,VND,0313883219,"Số 140/53 Vườn Lài, phường An Phú Đông, Quận 12, TP Hồ Chí Minh",,,0
+NCC-00045,CÔNG TY CỔ PHẦN BAO BÌ AB,Bao Bi Ab,Màng Thô NVL,Company,Việt Nam,,VND,1101803862,"Lô D4, Đường số 2, Khu công nghiệp Tân Đô, Xã Đức Hòa Hạ, Huyện Đức Hoà, Long An",,,0
+NCC-00046,CÔNG TY TNHH QUẢNG CÁO MỘC ẤN,Moc An,Vật Tư Đóng Gói,Company,Việt Nam,,VND,0312214688,"128/23 đường TTH13, phường Tân Thới Hiệp, Quận 12, TP Hồ Chí Minh",,,0
+NCC-00047,CÔNG TY CỔ PHẦN QUỐC TẾ UNLIMITED ACCESS VIỆT NAM,Unlimited,Vật Tư Đóng Gói,Company,Việt Nam,,VND,0316096435,"Số 6 Nguyễn Trung Trực, Phường 5, Quận Bình Thạnh, TP Hồ Chí Minh",,,0
+NCC-00048,CÔNG TY CỔ PHẦN SẢN XUẤT BAO BÌ TRANG TÍN,Trang Tin,Gia Công Trục In,Company,Việt Nam,,VND,1101217748,"Lô I9-I10, Đường số 4, Khu công nghiệp Hải Sơn, ấp Bình Tiền, Xã Đức Hòa Hạ, Huyện Đức Hoà, Long An",,,0
+NCC-00049,VẬN TẢI ĐÔNG QUÂN,Dong Quan,Vật Tư Đóng Gói,Company,Việt Nam,,VND,,,,,0
+NCC-00050,Công ty TNHH Thịnh Đạt Bình Dương,Thinh Dat Binh Duong,Vật Tư Đóng Gói,Company,Việt Nam,,VND,,"Số 1063 Nguyễn Thị Minh Khai, KP. Tân Phú 2, P. Tân Bình, TX. Dĩ An, T. Bình Dương",,,0
+NCC-00051,CÔNG TY TNHH SẢN XUẤT THƯƠNG MẠI IN ẤN BAO BÌ BÁCH SINH – LONG AN,Bach Sinh Long An,Màng Thô NVL,Company,Việt Nam,,VND,,"Lô Q17 Đường Số 11, KCN Hải Sơn mở rộng",,,0
+NCC-00052,CÔNG TY TNHH MTV SUNGDO VINA,Sungdo Vina,Hóa Chất & Keo Ghép,Company,Việt Nam,,VND,,"Lô 05F, đường số 05, KCN Giang Điền, xã Giang Điền , Huyện Trảng Bom, Tỉnh Đồng Nai, Việt Nam",,,0
+NCC-00053,CÔNG TY TNHH KỸ THUẬT QUỐC TẾ HƯNG  THỊNH,Hung Thinh,Vật Tư Đóng Gói,Company,Việt Nam,,VND,,"21/8/44 Võ Thị Thừa, KP3. P. An Phú Đông,  Quận 12, HCM",,,0
+NCC-00054,CÔNG TY TNHH MTV SX TM Tạ Minh,Ta Minh,Vật Tư Đóng Gói,Company,Việt Nam,,VND,,"373/1/171J Lý Thường Kiệt, Phường 9, Quận Tân Bình, TP Hồ Chí Minh",,,0
+NCC-00055,Công ty TNHH TM & SX Cơ Khí Nhựa Minh Đạt,Minh Dat,Màng Thô NVL,Company,Việt Nam,,VND,,"741/24 Hương lộ 2, P. Bình Trị Đông A, Quận Bình Tân, TP.HCM",,,0
+NCC-00056,CÔNG TY TNHH  THƯƠNG MẠI VÀ DỊCH VỤ CÔNG NGHIỆP NHẬT NAM,NHATNAM,Vật Tư Đóng Gói,Company,Việt Nam,,VND,0314331965,"151/67/41/2 Liên khu 4-5 Khu phố 5, Phường Bình Tân, TP Hồ Chí Minh",,,0
+NCC-00057,CÔNG TY TNHH SẢN XUẤT - THƯƠNG MẠI SÀI GÒN,SAIGON,Vật Tư Đóng Gói,Company,Việt Nam,,VND,0302628584,"336 Đường Đoàn Nguyễn Tuấn,Ấp 3, Xã Hưng Long, TP Hồ Chí Minh",,,0
+NCC-00058,CÔNG TY TNHH  TỰ ĐỘNG HÓA SIGMA,SIGMA,Vật Tư Đóng Gói,Company,Việt Nam,,VND,0314541306,"F1/13Y2 Ấp 72, Xã Vĩnh Lộc, TP Hồ Chí Minh",,,0
+NCC-00059,A Thiệu,THIEU,Vật Tư Đóng Gói,Company,Việt Nam,,VND,,,,,0
+NCC-00060,CHI NHÁNH CÔNG TY CỔ PHẦN THẾ GIỚI DI ĐỘNG,Thới Giới,Vật Tư Đóng Gói,Company,Việt Nam,,VND,0303217354-010,"Số 106, Quốc lộ 1, Phường Long An, Tây Ninh",,,0
+NCC-00061,Thùng giấy Tiến Phát,THUNGTP,Phụ Kiện Bao Bì,Company,Việt Nam,,VND,,,,,0
+NCC-00062,CÔNG TY TNHH NHỰA NGUYÊN TIẾN PHÁT,TIENTHINH,Phụ Kiện Bao Bì,Company,Việt Nam,,VND,,"Lô H3, Đường Số 4, KCN Hải Sơn, Ấp Bình Tiền 2, Xã Đức Hoà, Tỉnh Long An",,,0
+NCC-00063,CÔNG TY TNHH MỘT THÀNH VIÊN CƠ ĐIỆN TIGE,TIGE,Vật Tư Đóng Gói,Company,Việt Nam,,VND,3702495084,"Ô 33, Lô DC03, đường D19, KDC Việt Sing, Phường An Phú, TP Hồ Chí Minh",,,0
+NCC-00064,Cty Dong YUN Miền Nam,Dongyun,Gia Công Trục In,Company,Việt Nam,,VND,,,,,0
+NCC-00065,CÔNG TY TNHH THƯƠNG MẠI VÀ DỊCH VỤ TRƯỜNG AN,TRUONG AN,Vật Tư Đóng Gói,Company,Việt Nam,,VND,0101989446,"Số 8/31, tổ 13, Phường Long Biên, Quận Long Biên, Hà Nội",,,0
+NCC-00066,CÔNG TY TNHH SẢN XUẤT - THƯƠNG MẠI THÉP VIỆT THÀNH,VIETTHANH,Vật Tư Đóng Gói,Company,Việt Nam,,VND,0301692964,"623-625 Nguyễn Trãi, Phường Chợ Lớn, TP Hồ Chí Minh",,,0
+NCC-00067,CÔNG TY TNHH CÔNG NGHỆ VINH NGUYỄN,VINHNGUYEN,Vật Tư Đóng Gói,Company,Việt Nam,,VND,0315101322,"RR9 Hồng Lĩnh, Phường Hòa Hưng, TP Hồ Chí Minh",,,0
+NCC-00068,CÔNG TY TNHH XANH DƯƠNG,Xanh Dương,Vật Tư Đóng Gói,Company,Việt Nam,,VND,0303920581,"1023/2/6 Lê Văn Lương, Xã Nhà Bè, TP Hồ Chí Minh",,,0
+NCC-00069,CƠ SỞ IN ẤN BAO BÌ THANH TÙNG,THANH Tùng,Màng Thô NVL,Company,Việt Nam,,VND,,"39A Ấp 2, Long Sơn, Cần Đước, Long An",NGUYỄN THANH TÙNG,0903.874782,0
+NCC-00070,HỘ KINH DOANH ĐẶNG DIỆU TÂM,Dang Dieu Tam,Vật Tư Đóng Gói,Individual,Việt Nam,,VND,,,,,0

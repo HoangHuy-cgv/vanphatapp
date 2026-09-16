@@ -1,0 +1,360 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+  @page {
+    size: A4 portrait;
+    margin: 10mm 12mm 14mm 12mm;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    color: #111111;
+    font-size: 11px;
+    line-height: 1.4;
+    background-color: #ffffff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    position: relative;
+    padding-bottom: 10mm;
+  }
+
+  /* WATERMARK TỐI GIẢN CHÌM 4.5% */
+  .watermark-bg {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 320px;
+    opacity: 0.045;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .watermark-bg img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .content-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+  }
+
+  /* Tiêu đề Hợp Đồng */
+  .doc-title-box {
+    text-align: center;
+    margin: 6px 0 10px 0;
+  }
+  .doc-title {
+    font-size: 19px;
+    font-weight: 800;
+    color: #0b66c3;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+  .doc-meta {
+    font-size: 10.5px;
+    color: #555555;
+    margin-top: 2px;
+  }
+
+  /* Khung thông tin 2 bên Pháp lý A & B - Tối giản */
+  .parties-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 8px;
+  }
+  .party-box {
+    width: 50%;
+    vertical-align: top;
+    padding: 6px 10px;
+    border: 1px solid #d0d7de;
+    background-color: transparent;
+  }
+  .party-box:first-child {
+    border-right: none;
+    border-radius: 4px 0 0 4px;
+  }
+  .party-box:last-child {
+    border-radius: 0 4px 4px 0;
+  }
+  .party-title {
+    font-weight: 800;
+    font-size: 10.5px;
+    color: #0b66c3;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+    border-bottom: 1px solid #e1e4e8;
+    padding-bottom: 2px;
+  }
+  .party-line {
+    font-size: 10px;
+    margin-bottom: 2px;
+    line-height: 1.35;
+  }
+  .party-line b {
+    color: #444444;
+  }
+
+  /* Bảng danh mục sản phẩm hợp đồng */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 8px;
+    border: 1px solid #333333;
+    background-color: transparent;
+  }
+  .items-table th {
+    background-color: #f0f4f8;
+    color: #0b66c3;
+    font-weight: 700;
+    font-size: 10.5px;
+    text-align: center;
+    padding: 5px 4px;
+    border: 1px solid #333333;
+    text-transform: uppercase;
+  }
+  .items-table td {
+    padding: 4.5px 6px;
+    border: 1px solid #444444;
+    font-size: 10px;
+    vertical-align: middle;
+    background-color: transparent;
+  }
+  .col-c { text-align: center; }
+  .col-r { text-align: right; font-variant-numeric: tabular-nums; }
+  .item-title {
+    font-weight: 700;
+    color: #111111;
+    font-size: 10.5px;
+  }
+  .item-desc {
+    color: #444444;
+    font-size: 9.5px;
+    line-height: 1.35;
+    margin-top: 1.5px;
+  }
+
+  /* Bảng tổng tiền */
+  .summary-tr td {
+    font-weight: 600;
+    padding: 4.5px 8px;
+    background-color: transparent;
+  }
+  .grand-total-tr td {
+    background-color: transparent !important;
+    border-top: 1.5px solid #0b66c3 !important;
+  }
+  .grand-total-lbl {
+    font-size: 11px;
+    font-weight: 800;
+    color: #0b66c3;
+    text-transform: uppercase;
+  }
+  .grand-total {
+    color: #0b66c3 !important;
+    font-size: 12.5px !important;
+    font-weight: 800 !important;
+  }
+  .words-line {
+    margin-bottom: 8px;
+    padding: 4px 8px;
+    font-style: italic;
+    background-color: transparent;
+    border-left: 3px solid #0b66c3;
+    font-size: 10px;
+  }
+
+  /* Điều khoản thực hiện hợp đồng - TỐI GIẢN, SẠCH SẼ, LOẠI BỎ VISUAL NOISE */
+  .terms-box {
+    padding: 2px 0;
+    border: none;
+    background-color: transparent;
+    margin-top: 6px;
+    page-break-inside: avoid;
+  }
+  .terms-title {
+    font-weight: 700;
+    font-size: 10.5px;
+    color: #0b66c3;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .terms-box ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  .terms-box li {
+    position: relative;
+    padding-left: 12px;
+    margin-bottom: 2.5px;
+    font-size: 10px;
+    color: #333333;
+    line-height: 1.35;
+  }
+  .terms-box li::before {
+    content: "•";
+    color: #0b66c3;
+    font-weight: bold;
+    position: absolute;
+    left: 2px;
+  }
+
+  /* Khung chữ ký pháp lý 2 bên */
+  .sign-container {
+    width: 100%;
+    margin-top: 15px;
+    page-break-inside: avoid;
+  }
+  .sign-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: none;
+    text-align: center;
+  }
+  .sign-table td {
+    border: none;
+    vertical-align: top;
+    padding: 0 12px;
+  }
+  .sign-header {
+    font-weight: 700;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    color: #111111;
+  }
+  .sign-hint {
+    font-size: 9px;
+    color: #777777;
+    margin-top: 2px;
+    font-style: italic;
+  }
+  .sign-space {
+    height: 65px;
+  }
+</style>
+
+<!-- WATERMARK VP CHÌM CĂN GIỮA MỌI TRANG -->
+<div class="watermark-bg">
+  <img src="{{ watermark_uri or '/files/logo-vp.png' }}" alt="" />
+</div>
+
+<div class="content-container">
+  <!-- TIÊU ĐỀ HỢP ĐỒNG (ĐÃ BỎ TIÊU NGỮ & BỎ CỤM TỪ SẢN XUẤT BAO BÌ) -->
+  <div class="doc-title-box">
+    <div class="doc-title">HỢP ĐỒNG MUA BÁN</div>
+    <div class="doc-meta">
+      Số hợp đồng: <b>HĐ-{{ doc.name }}</b> &nbsp;•&nbsp; 
+      Ngày lập: <b>{{ frappe.utils.formatdate(doc.transaction_date or doc.posting_date, "dd/MM/yyyy") }}</b>
+    </div>
+  </div>
+
+  <!-- THÔNG TIN PHÁP LÝ HAI BÊN -->
+  <table class="parties-table">
+    <tr>
+      <!-- BÊN A: VẠN PHÁT -->
+      <td class="party-box">
+        <div class="party-title">BÊN A: BÊN BÁN (VẠN PHÁT)</div>
+        <div class="party-line"><b>Đơn vị:</b> CÔNG TY TNHH TM SX BAO BÌ VẠN PHÁT</div>
+        <div class="party-line"><b>Mã số thuế:</b> 0314587660 &nbsp;|&nbsp; <b>Hotline:</b> 0941.201.949</div>
+        <div class="party-line"><b>Nhà máy:</b> 336 Đoàn Nguyễn Tuấn, Hưng Long, Bình Chánh, TP.HCM</div>
+        <div class="party-line"><b>Tài khoản:</b> 060158384267 – Sacombank CN Bình Chánh</div>
+      </td>
+      <!-- BÊN B: KHÁCH HÀNG -->
+      <td class="party-box">
+        <div class="party-title">BÊN B: BÊN MUA (KHÁCH HÀNG)</div>
+        <div class="party-line"><b>Đơn vị:</b> {{ (doc.customer_name or doc.customer or "") | upper }}</div>
+        <div class="party-line"><b>Mã số thuế:</b> {{ doc.tax_id or "—" }} &nbsp;|&nbsp; <b>Điện thoại:</b> {{ doc.contact_mobile or doc.contact_phone or "—" }}</div>
+        <div class="party-line"><b>Địa chỉ:</b> {{ doc.shipping_address or doc.address_display or "—" }}</div>
+        <div class="party-line"><b>Đại diện:</b> Giám Đốc hoặc Người Đại Diện Hợp Pháp</div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- BẢNG DANH MỤC HÀNG HÓA -->
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th style="width: 4%;">STT</th>
+        <th style="width: 46%;">Tên hàng &amp; Quy cách kỹ thuật</th>
+        <th style="width: 8%;">ĐVT</th>
+        <th style="width: 12%;">Số lượng</th>
+        <th style="width: 14%;">Đơn giá (VNĐ)</th>
+        <th style="width: 16%;">Thành tiền (VNĐ)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in doc.items %}
+      <tr>
+        <td class="col-c">{{ loop.index }}</td>
+        <td>
+          <div class="item-title">{{ row.item_name }}</div>
+          {% if row.description %}
+          <div class="item-desc">{{ row.description }}</div>
+          {% endif %}
+        </td>
+        <td class="col-c">{{ row.uom or "Túi" }}</td>
+        <td class="col-r"><b>{{ "{:,.0f}".format(row.qty or 0) }}</b></td>
+        <td class="col-r">{{ "{:,.0f}".format(row.rate or 0) }}</td>
+        <td class="col-r"><b>{{ "{:,.0f}".format(row.amount or (row.qty * row.rate) or 0) }}</b></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr class="summary-tr">
+        <td colspan="5" class="col-r">Tổng Tiền Hàng Chưa VAT:</td>
+        <td class="col-r"><b>{{ "{:,.0f}".format(doc.net_total or 0) }}</b></td>
+      </tr>
+      <tr class="summary-tr">
+        <td colspan="5" class="col-r">Thuế GTGT (VAT 8%):</td>
+        <td class="col-r"><b>{{ "{:,.0f}".format(doc.total_taxes_and_charges or (doc.net_total * 0.08) or 0) }}</b></td>
+      </tr>
+      <tr class="summary-tr grand-total-tr">
+        <td colspan="5" class="col-r grand-total-lbl">TỔNG GIÁ TRỊ HỢP ĐỒNG:</td>
+        <td class="col-r grand-total">{{ "{:,.0f}".format(doc.grand_total or ((doc.net_total or 0) + (doc.total_taxes_and_charges or 0))) }}</td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <!-- BẰNG CHỮ -->
+  <div class="words-line">
+    <b>Bằng chữ:</b> {{ doc.in_words or "—" }}
+  </div>
+
+  <!-- ĐIỀU KHOẢN HỢP ĐỒNG THỐNG NHẤT (LOẠI BỎ HOÀN TOÀN VISUAL NOISE) -->
+  <div class="terms-box">
+    <div class="terms-title">Điều khoản thực hiện hợp đồng</div>
+    <ul>
+      <li><b>Tiêu chuẩn &amp; Dung sai:</b> Hàng mới 100%, chuẩn màu in ≥ 8.5/10 so với bản thiết kế duyệt. Dung sai sản xuất ±20% theo thực tế công nghệ, quyết toán theo số lượng thực xuất.</li>
+      <li><b>Thời gian &amp; Giao nhận:</b> Khắc trục in 05 – 07 ngày làm việc; sản xuất và giao hàng 17 – 22 ngày làm việc kể từ ngày hoàn tất trục in và duyệt mẫu (trừ CN, ngày lễ). Giao tại địa chỉ Bên B đăng ký.</li>
+      <li><b>Tiến độ thanh toán:</b> Đợt 1 cọc 50% tiền hàng + 100% tiền trục in ngay khi ký hợp đồng và duyệt file in; Đợt 2 tất toán 50% còn lại trước khi Bên A xuất kho giao hàng.</li>
+      <li><b>Tài khoản thụ hưởng:</b> <b>060158384267</b> (Sacombank CN Bình Chánh) — CTY TNHH TM SX BAO BÌ VẠN PHÁT.</li>
+      <li><b>Bản quyền &amp; Hiệu lực:</b> Bên B cam kết chịu trách nhiệm pháp lý 100% về nhãn hiệu và bản quyền in ấn. Hợp đồng lập thành 02 bản có giá trị pháp lý như nhau, có hiệu lực kể từ ngày ký.</li>
+    </ul>
+  </div>
+
+  <!-- CHỮ KÝ PHÁP LÝ HAI BÊN -->
+  <div class="sign-container">
+    <table class="sign-table">
+      <tr>
+        <td style="width: 50%;">
+          <div class="sign-header">ĐẠI DIỆN BÊN B (KHÁCH HÀNG)</div>
+          <div class="sign-hint">(Ký duyệt, ghi rõ họ tên &amp; đóng dấu)</div>
+          <div class="sign-space"></div>
+        </td>
+        <td style="width: 50%;">
+          <div class="sign-header">ĐẠI DIỆN BÊN A (VẠN PHÁT)</div>
+          <div class="sign-hint">(Ký duyệt, ghi rõ họ tên &amp; đóng dấu)</div>
+          <div class="sign-space"></div>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

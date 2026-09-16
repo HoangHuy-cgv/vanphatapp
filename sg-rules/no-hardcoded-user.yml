@@ -1,0 +1,10 @@
+id: no-hardcoded-user
+language: JavaScript
+severity: error
+message: "CONSTRAINTS hardcoded_user: cam email cung trong client (identity tu get_boot)"
+note: "Sidebar hien trang thai dang nhap that tu get_boot; chi tiet xem CONSTRAINTS.md Floor hardcoded_user."
+rule:
+  kind: string
+  regex: '.*[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}.*'
+files:
+  - 'apps/vanphat_portal/frontend/src/**'

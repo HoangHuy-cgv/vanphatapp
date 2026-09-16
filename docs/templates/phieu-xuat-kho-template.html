@@ -1,0 +1,253 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+  @page {
+    size: A5 landscape;
+    margin: 6mm 10mm 8mm 10mm;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    color: #111111;
+    font-size: 10px;
+    line-height: 1.35;
+    background-color: #ffffff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    position: relative;
+  }
+
+  /* WATERMARK TỐI GIẢN CHÌM 4.5% CHO KHỔ A5 */
+  .watermark-bg {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 240px;
+    opacity: 0.045;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .watermark-bg img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .content-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+  }
+
+  /* Tiêu đề Phiếu Xuất Kho */
+  .doc-title-box {
+    text-align: center;
+    margin: 4px 0 6px 0;
+  }
+  .doc-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #0b66c3;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+  .doc-meta {
+    font-size: 9.5px;
+    color: #555555;
+    margin-top: 1.5px;
+  }
+
+  /* Khung thông tin giao nhận */
+  .info-box {
+    width: 100%;
+    border: 1px solid #d0d7de;
+    border-radius: 4px;
+    padding: 4px 8px;
+    margin-bottom: 6px;
+    background-color: transparent;
+  }
+  .info-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .info-table td {
+    padding: 1.5px 4px;
+    font-size: 9.5px;
+    vertical-align: top;
+  }
+  .lbl {
+    width: 105px;
+    color: #666666;
+    font-weight: 500;
+  }
+  .val {
+    color: #111111;
+    font-weight: 600;
+  }
+
+  /* Bảng danh sách hàng xuất kho */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 6px;
+    border: 1px solid #333333;
+    background-color: transparent;
+  }
+  .items-table th {
+    background-color: #f0f4f8;
+    color: #0b66c3;
+    font-weight: 700;
+    font-size: 9.5px;
+    text-align: center;
+    padding: 3.5px 4px;
+    border: 1px solid #333333;
+    text-transform: uppercase;
+  }
+  .items-table td {
+    padding: 3.5px 5px;
+    border: 1px solid #444444;
+    font-size: 9px;
+    vertical-align: middle;
+    background-color: transparent;
+  }
+  .col-c { text-align: center; }
+  .col-r { text-align: right; font-variant-numeric: tabular-nums; }
+  .item-title {
+    font-weight: 700;
+    color: #111111;
+  }
+
+  /* Khung 4 chữ ký xuất kho */
+  .sign-container {
+    width: 100%;
+    margin-top: 8px;
+    page-break-inside: avoid;
+  }
+  .sign-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: none;
+    text-align: center;
+  }
+  .sign-table td {
+    border: none;
+    vertical-align: top;
+    padding: 0 4px;
+  }
+  .sign-header {
+    font-weight: 700;
+    font-size: 9.5px;
+    text-transform: uppercase;
+    color: #111111;
+  }
+  .sign-hint {
+    font-size: 8px;
+    color: #777777;
+    margin-top: 1px;
+    font-style: italic;
+  }
+  .sign-space {
+    height: 48px;
+  }
+</style>
+
+<!-- WATERMARK VP CHÌM CĂN GIỮA MỌI TRANG -->
+<div class="watermark-bg">
+  <img src="{{ watermark_uri or '/files/logo-vp.png' }}" alt="" />
+</div>
+
+<div class="content-container">
+  <!-- TIÊU ĐỀ PHIẾU XUẤT KHO -->
+  <div class="doc-title-box">
+    <div class="doc-title">PHIẾU XUẤT KHO</div>
+    <div class="doc-meta">
+      Số phiếu: <b>{{ doc.name }}</b> &nbsp;•&nbsp; 
+      Ngày xuất: <b>{{ frappe.utils.formatdate(doc.posting_date or doc.transaction_date, "dd/MM/yyyy") }}</b> &nbsp;•&nbsp; 
+      Theo đơn hàng: <b>{{ doc.against_sales_order or doc.po_no or "—" }}</b>
+    </div>
+  </div>
+
+  <!-- THÔNG TIN GIAO NHẬN -->
+  <div class="info-box">
+    <table class="info-table">
+      <tr>
+        <td class="lbl">Khách hàng:</td>
+        <td class="val" colspan="3">{{ (doc.customer_name or doc.customer or "") | upper }}</td>
+      </tr>
+      <tr>
+        <td class="lbl">Địa điểm nhận:</td>
+        <td class="val" colspan="3">{{ doc.shipping_address or doc.address_display or "—" }}</td>
+      </tr>
+      <tr>
+        <td class="lbl">Kho xuất hàng:</td>
+        <td class="val" colspan="3">336 Đoàn Nguyễn Tuấn, Xã Hưng Long, H. Bình Chánh, TP.HCM</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- BẢNG DANH SÁCH HÀNG XUẤT -->
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th style="width: 5%;">STT</th>
+        <th style="width: 45%;">Tên hàng hóa &amp; Quy cách bao bì</th>
+        <th style="width: 10%;">ĐVT</th>
+        <th style="width: 14%;">Số lượng yêu cầu</th>
+        <th style="width: 14%;">Thực xuất</th>
+        <th style="width: 12%;">Ghi chú</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in doc.items %}
+      <tr>
+        <td class="col-c">{{ loop.index }}</td>
+        <td>
+          <div class="item-title">{{ row.item_name }}</div>
+          {% if row.description %}
+          <div style="font-size: 8.5px; color: #555;">{{ row.description }}</div>
+          {% endif %}
+        </td>
+        <td class="col-c">{{ row.uom or "Túi" }}</td>
+        <td class="col-r">{{ "{:,.0f}".format(row.qty or 0) }}</td>
+        <td class="col-r"><b>{{ "{:,.0f}".format(row.qty or 0) }}</b></td>
+        <td class="col-c">{{ row.remarks or "Đủ chuẩn" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <!-- KHUNG 4 CHỮ KÝ XUẤT KHO -->
+  <div class="sign-container">
+    <table class="sign-table">
+      <tr>
+        <td style="width: 25%;">
+          <div class="sign-header">NGƯỜI LẬP BIỂU</div>
+          <div class="sign-hint">(Ký &amp; ghi rõ họ tên)</div>
+          <div class="sign-space"></div>
+        </td>
+        <td style="width: 25%;">
+          <div class="sign-header">THỦ KHO XUẤT</div>
+          <div class="sign-hint">(Ký xác nhận xuất)</div>
+          <div class="sign-space"></div>
+        </td>
+        <td style="width: 25%;">
+          <div class="sign-header">NGƯỜI GIAO HÀNG</div>
+          <div class="sign-hint">(Ký xác nhận nhận)</div>
+          <div class="sign-space"></div>
+        </td>
+        <td style="width: 25%;">
+          <div class="sign-header">KHÁCH HÀNG NHẬN</div>
+          <div class="sign-hint">(Ký &amp; ghi rõ họ tên)</div>
+          <div class="sign-space"></div>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

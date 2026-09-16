@@ -1,0 +1,60 @@
+"""Whitelisted Supplier APIs for Van Phat Portal (S5/S6: login-only, truthful).
+
+Provides strictly mapped ERPNext Native Supplier master data.
+Portal bắt buộc login — không guest. DB trống → [] (truthful, không CSV fallback).
+"""
+
+import frappe
+
+from vanphat_portal.api._common import page_result, paginate, text
+from vanphat_portal.api._guards import require_doc
+
+
+@frappe.whitelist()
+def get_list(query=None, supplier_group=None, page=1, page_length=100):
+	"""Return suppliers filtered by query string and supplier group.
+
+	ADR-006: envelope `page_result` thống nhất mọi list; picker tham chiếu
+	default 100/max 100 + filter server (không tải vượt trần).
+	"""
+	require_doc("Supplier", "read")
+	q = text(query).lower()
+	grp = text(supplier_group)
+	like = f"%{q}%" if q else None
+	p, pl, start = paginate(page, page_length, default=100)
+
+	filters = {"disabled": 0}
+	if grp:
+		filters["supplier_group"] = grp
+	fields = [
+		"name", "supplier_name", "alias", "supplier_group",
+		"supplier_type", "country", "payment_terms",
+		"default_currency", "tax_id", "primary_address",
+		"supplier_primary_contact", "mobile_no", "disabled"
+	]
+	or_filters = [
+		["Supplier", "name", "like", like],
+		["Supplier", "supplier_name", "like", like],
+		["Supplier", "alias", "like", like],
+		["Supplier", "supplier_group", "like", like],
+		["Supplier", "tax_id", "like", like],
+	] if like else None
+	# S5: get_list tôn trọng permission (không get_all bypass)
+	rows = frappe.db.get_list("Supplier", filters=filters, or_filters=or_filters, fields=fields, order_by="name asc",
+		start=start, page_length=pl)
+	total_count = frappe.db.count("Supplier", filters)
+	return page_result("suppliers", rows, p, pl, total_count)
+
+
+@frappe.whitelist()
+def get_detail(name=None):
+	"""Return detailed supplier information (login + permission check)."""
+	require_doc("Supplier", "read")
+	if not name:
+		return None
+	if not frappe.db.exists("Supplier", name):
+		return None
+	doc = frappe.get_doc("Supplier", name)
+	if not frappe.has_permission("Supplier", "read", doc):
+		frappe.throw("Không có quyền xem nhà cung cấp.", frappe.PermissionError)
+	return doc.as_dict()

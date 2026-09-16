@@ -1,0 +1,5 @@
+﻿name,operation_name,workstation,description
+THOI-MANG,Thổi Màng PE,WS-THOI-01,"Sếp chốt: công đoạn thổi màng thô (PES/PE) — cost center máy thổi riêng, Vạn Phát vận hành."
+GHEP-MANG,Ghép Màng Khô,WS-GHEP-01,Nguồn raw: tiến độ SX.
+CAT-TUI,Cắt Dán Túi,WS-CAT-01,Nguồn raw: tiến độ SX.
+DONG-VOI,Đóng Vòi Hàn Nhiệt,WS-VOI-01,Nguồn raw: tiến độ SX + BOM (CAT-TUI).

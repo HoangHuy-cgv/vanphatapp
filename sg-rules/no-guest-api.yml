@@ -1,0 +1,13 @@
+id: no-guest-api
+language: Python
+severity: error
+message: "CONSTRAINTS guest_api: cam allow_guest=True tren du lieu noi bo"
+note: "Khach portal phai login; chi tiet xem CONSTRAINTS.md Floor guest_api."
+rule:
+  any:
+    - pattern: '@frappe.whitelist(allow_guest=True)'
+    - pattern: '@frappe.whitelist(allow_guest=True, $$$)'
+    - pattern: '@frappe.whitelist($$$, allow_guest=True)'
+    - pattern: '@frappe.whitelist($$$, allow_guest=True, $$$)'
+files:
+  - 'apps/vanphat_portal/vanphat_portal/api/**'

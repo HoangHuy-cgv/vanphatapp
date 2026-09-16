@@ -1,0 +1,180 @@
+name: vanphat
+
+# Single source: frappe/erpnext v16.34.2 (Sếp locked 2026-09-10, newest v16, no dual).
+# Digest pinned for reproducibility (pushed 2026-09-09 by frappedevs).
+x-image: &image frappe/erpnext:v16.34.2@sha256:2feeb8973c3581726b4abd451ccb69c18426ec547bd04f7a4fdee47f17d1c3f1
+
+x-default-volumes: &default_volumes
+  volumes:
+    - sites:/home/frappe/frappe-bench/sites
+    - logs:/home/frappe/frappe-bench/logs
+    # Compose resolves relative paths against this file's dir (infra/), so the
+    # app lives at ../apps. Run from anywhere with: docker compose -f infra/docker-compose.yml ...
+    - ../apps/vanphat_portal:/home/frappe/frappe-bench/apps/vanphat_portal
+
+x-backend-config: &backend-config
+  <<: *default_volumes
+  image: *image
+  environment:
+    PYTHONPATH: /home/frappe/frappe-bench/apps/vanphat_portal
+
+networks:
+  vanphat_network:
+    driver: bridge
+
+volumes:
+  sites:
+  db-data:
+  redis-queue-data:
+  logs:
+  backups:
+
+services:
+  configurator:
+    <<: *backend-config
+    entrypoint:
+      - bash
+      - -c
+    command:
+      - >
+        ls -1 apps > sites/apps.txt;
+        bench set-config -g db_host $$DB_HOST;
+        bench set-config -gp db_port $$DB_PORT;
+        bench set-config -g redis_cache "redis://$$REDIS_CACHE";
+        bench set-config -g redis_queue "redis://$$REDIS_QUEUE";
+        bench set-config -g redis_socketio "redis://$$REDIS_QUEUE";
+        bench set-config -gp socketio_port $$SOCKETIO_PORT
+    environment:
+      DB_HOST: db
+      DB_PORT: "3306"
+      REDIS_CACHE: redis-cache:6379
+      REDIS_QUEUE: redis-queue:6379
+      SOCKETIO_PORT: "9000"
+    networks:
+      - vanphat_network
+    restart: "no"
+
+  db:
+    image: mariadb:11.8
+    healthcheck:
+      test: mariadb-admin ping -h localhost -p$$MYSQL_ROOT_PASSWORD
+      interval: 2s
+      retries: 20
+      start_period: 10s
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-character-set-client-handshake
+      - --skip-innodb-read-only-compressed
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Missing MYSQL_ROOT_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - vanphat_network
+    restart: unless-stopped
+
+  backend:
+    <<: *backend-config
+    networks:
+      - vanphat_network
+    depends_on:
+      db:
+        condition: service_healthy
+      configurator:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  frontend:
+    <<: *backend-config
+    command:
+      - nginx-entrypoint.sh
+    environment:
+      BACKEND: backend:8000
+      SOCKETIO: websocket:9000
+      FRAPPE_SITE_NAMER_HEADER: host
+    depends_on:
+      - backend
+      - websocket
+    networks:
+      - vanphat_network
+    ports:
+      - "127.0.0.1:8080:8080" # localhost only; public access via Cloudflare Tunnel
+    restart: unless-stopped
+
+  websocket:
+    <<: *backend-config
+    command:
+      - node
+      - /home/frappe/frappe-bench/apps/frappe/socketio.js
+    depends_on:
+      - configurator
+    networks:
+      - vanphat_network
+    restart: unless-stopped
+
+  scheduler:
+    <<: *backend-config
+    command:
+      - bench
+      - schedule
+    depends_on:
+      - configurator
+    networks:
+      - vanphat_network
+    restart: unless-stopped
+
+  queue-worker:
+    <<: *backend-config
+    command:
+      - bench
+      - worker
+      - --queue
+      - short,default,long
+    depends_on:
+      - configurator
+    networks:
+      - vanphat_network
+    restart: unless-stopped
+
+  redis-cache:
+    image: redis:7.4-alpine
+    command: redis-server
+    volumes:
+      - /dev/null:/dev/null
+    networks:
+      - vanphat_network
+    restart: unless-stopped
+
+  redis-queue:
+    image: redis:7.4-alpine
+    command:
+      - redis-server
+      - --appendonly
+      - "yes"
+    volumes:
+      - redis-queue-data:/data
+    networks:
+      - vanphat_network
+  # Nightly bench backup -> ./backups (volume) -> R2 offsite via infra/backup-r2.sh cron on host.
+  backup:
+    <<: *backend-config
+    command:
+      - bash
+      - -c
+      - bench --site $$BACKUP_SITE backup --with-files --backup-path /backups
+    environment:
+      BACKUP_SITE: ${BACKUP_SITE:?Missing BACKUP_SITE}
+    volumes:
+      - backups:/backups
+    depends_on:
+      db:
+        condition: service_healthy
+      configurator:
+        condition: service_completed_successfully
+    networks:
+      - vanphat_network
+    restart: "no"
+    profiles:
+      - backup

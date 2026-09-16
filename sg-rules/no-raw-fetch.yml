@@ -1,0 +1,11 @@
+id: no-raw-fetch
+language: JavaScript
+severity: error
+message: "CONSTRAINTS raw_fetch: moi HTTP trong frontend/src phai qua api() (useSession.js)"
+note: "useSession.js la noi duy nhat duoc phep goi fetch truc tiep."
+rule:
+  pattern: 'fetch($$$)'
+ignores:
+  - 'apps/vanphat_portal/frontend/src/composables/useSession.js'
+files:
+  - 'apps/vanphat_portal/frontend/src/**'

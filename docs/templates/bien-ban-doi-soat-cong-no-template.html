@@ -1,0 +1,296 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+  @page {
+    size: A4 landscape;
+    margin: 8mm 12mm 10mm 12mm;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    color: #111111;
+    font-size: 10.5px;
+    line-height: 1.4;
+    background-color: #ffffff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    position: relative;
+  }
+
+  /* WATERMARK TỐI GIẢN CHÌM 4.5% KHỔ A4 LANDSCAPE */
+  .watermark-bg {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 360px;
+    opacity: 0.045;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .watermark-bg img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .content-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+  }
+
+  /* Tiêu đề Đối soát */
+  .doc-title-box {
+    text-align: center;
+    margin: 6px 0 10px 0;
+  }
+  .doc-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: #0b66c3;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+  .doc-meta {
+    font-size: 10.5px;
+    color: #555555;
+    margin-top: 2px;
+  }
+
+  /* Khung thông tin 2 bên đối soát */
+  .parties-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 8px;
+  }
+  .party-box {
+    width: 50%;
+    vertical-align: top;
+    padding: 6px 10px;
+    border: 1px solid #d0d7de;
+    background-color: transparent;
+  }
+  .party-box:first-child {
+    border-right: none;
+    border-radius: 4px 0 0 4px;
+  }
+  .party-box:last-child {
+    border-radius: 0 4px 4px 0;
+  }
+  .party-title {
+    font-weight: 800;
+    font-size: 10.5px;
+    color: #0b66c3;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+    border-bottom: 1px solid #e1e4e8;
+    padding-bottom: 2px;
+  }
+  .party-line {
+    font-size: 10px;
+    margin-bottom: 2px;
+  }
+  .party-line b {
+    color: #555555;
+  }
+
+  /* Bảng chi tiết công nợ */
+  .ledger-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 6px;
+    border: 1px solid #333333;
+    background-color: transparent;
+  }
+  .ledger-table th {
+    background-color: #f0f4f8;
+    color: #0b66c3;
+    font-weight: 700;
+    font-size: 10px;
+    text-align: center;
+    padding: 4px;
+    border: 1px solid #333333;
+    text-transform: uppercase;
+  }
+  .ledger-table td {
+    padding: 4px 6px;
+    border: 1px solid #444444;
+    font-size: 9.5px;
+    vertical-align: middle;
+    background-color: transparent;
+  }
+  .col-c { text-align: center; }
+  .col-r { text-align: right; font-variant-numeric: tabular-nums; }
+
+  .grand-total-tr td {
+    border-top: 1.5px solid #0b66c3 !important;
+  }
+  .grand-total-lbl {
+    font-size: 10.5px;
+    font-weight: 800;
+    color: #0b66c3;
+    text-transform: uppercase;
+  }
+  .grand-total {
+    color: #0b66c3 !important;
+    font-size: 11.5px !important;
+    font-weight: 800 !important;
+  }
+
+  .statement-note {
+    font-size: 10px;
+    font-style: italic;
+    color: #333333;
+    margin: 6px 0 12px 0;
+    line-height: 1.4;
+  }
+
+  /* Chữ ký 2 bên */
+  .sign-container {
+    width: 100%;
+    margin-top: 10px;
+    page-break-inside: avoid;
+  }
+  .sign-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: none;
+    text-align: center;
+  }
+  .sign-table td {
+    border: none;
+    vertical-align: top;
+    padding: 0 15px;
+  }
+  .sign-header {
+    font-weight: 700;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    color: #111111;
+  }
+  .sign-hint {
+    font-size: 8.5px;
+    color: #777777;
+    margin-top: 2px;
+    font-style: italic;
+  }
+  .sign-space {
+    height: 60px;
+  }
+</style>
+
+<!-- WATERMARK VP CHÌM CĂN GIỮA MỌI TRANG -->
+<div class="watermark-bg">
+  <img src="{{ watermark_uri or '/files/logo-vp.png' }}" alt="" />
+</div>
+
+<div class="content-container">
+  <!-- TIÊU ĐỀ ĐỐI SOÁT CÔNG NỢ -->
+  <div class="doc-title-box">
+    <div class="doc-title">BIÊN BẢN ĐỐI SOÁT CÔNG NỢ</div>
+    <div class="doc-meta">
+      Kỳ đối soát: <b>{{ frappe.utils.formatdate(doc.from_date, "dd/MM/yyyy") or "Đầu kỳ" }}</b> đến <b>{{ frappe.utils.formatdate(doc.to_date or doc.posting_date, "dd/MM/yyyy") }}</b> &nbsp;•&nbsp; 
+      Ngày lập biên bản: <b>{{ frappe.utils.formatdate(doc.posting_date, "dd/MM/yyyy") }}</b>
+    </div>
+  </div>
+
+  <!-- THÔNG TIN PHÁP LÝ HAI BÊN -->
+  <table class="parties-table">
+    <tr>
+      <!-- BÊN A: VẠN PHÁT -->
+      <td class="party-box">
+        <div class="party-title">BÊN BÁN: CÔNG TY TNHH TM SX BAO BÌ VẠN PHÁT</div>
+        <div class="party-line"><b>Mã số thuế:</b> 0314587660 &nbsp;|&nbsp; <b>Hotline:</b> 0941.201.949</div>
+        <div class="party-line"><b>Nhà máy:</b> 336 Đoàn Nguyễn Tuấn, Xã Hưng Long, H. Bình Chánh, TP.HCM</div>
+        <div class="party-line"><b>Tài khoản thanh toán:</b> 060158384267 – Sacombank CN Bình Chánh</div>
+      </td>
+      <!-- BÊN B: KHÁCH HÀNG -->
+      <td class="party-box">
+        <div class="party-title">BÊN MUA: {{ (doc.customer_name or doc.customer or "") | upper }}</div>
+        <div class="party-line"><b>Mã số thuế:</b> {{ doc.tax_id or "—" }} &nbsp;|&nbsp; <b>Điện thoại:</b> {{ doc.contact_mobile or doc.contact_phone or "—" }}</div>
+        <div class="party-line"><b>Địa chỉ:</b> {{ doc.shipping_address or doc.address_display or "—" }}</div>
+        <div class="party-line"><b>Đại diện đối soát:</b> Bộ phận Kế toán công nợ</div>
+      </td>
+    </tr>
+  </table>
+
+  <!-- BẢNG CHI TIẾT CÔNG NỢ -->
+  <table class="ledger-table">
+    <thead>
+      <tr>
+        <th style="width: 4%;">STT</th>
+        <th style="width: 11%;">Ngày CT</th>
+        <th style="width: 15%;">Số chứng từ</th>
+        <th style="width: 30%;">Diễn giải nội dung</th>
+        <th style="width: 13%;">Số phát sinh (Nợ)</th>
+        <th style="width: 13%;">Đã thanh toán (Có)</th>
+        <th style="width: 14%;">Số dư còn lại (VNĐ)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="col-c">0</td>
+        <td class="col-c">{{ frappe.utils.formatdate(doc.from_date, "dd/MM/yyyy") or "—" }}</td>
+        <td class="col-c">DK</td>
+        <td><b>Số dư công nợ đầu kỳ</b></td>
+        <td class="col-r">—</td>
+        <td class="col-r">—</td>
+        <td class="col-r"><b>{{ "{:,.0f}".format(doc.opening_balance or 0) }}</b></td>
+      </tr>
+      {% for row in doc.entries %}
+      <tr>
+        <td class="col-c">{{ loop.index }}</td>
+        <td class="col-c">{{ frappe.utils.formatdate(row.posting_date, "dd/MM/yyyy") }}</td>
+        <td class="col-c"><b>{{ row.voucher_no }}</b></td>
+        <td>{{ row.remarks or row.against_voucher or "Giao hàng theo đơn đặt hàng" }}</td>
+        <td class="col-r">{{ "{:,.0f}".format(row.debit or 0) if row.debit else "—" }}</td>
+        <td class="col-r">{{ "{:,.0f}".format(row.credit or 0) if row.credit else "—" }}</td>
+        <td class="col-r"><b>{{ "{:,.0f}".format(row.balance or 0) }}</b></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="4" class="col-r" style="font-weight: 700;">TỔNG CỘNG PHÁT SINH TRONG KỲ:</td>
+        <td class="col-r" style="font-weight: 700;">{{ "{:,.0f}".format(doc.total_debit or 0) }}</td>
+        <td class="col-r" style="font-weight: 700;">{{ "{:,.0f}".format(doc.total_credit or 0) }}</td>
+        <td class="col-r grand-total">{{ "{:,.0f}".format(doc.closing_balance or 0) }}</td>
+      </tr>
+      <tr class="grand-total-tr">
+        <td colspan="6" class="col-r grand-total-lbl">SỐ TIỀN BÊN MUA CÒN PHẢI THANH TOÁN (DƯ NỢ CUỐI KỲ):</td>
+        <td class="col-r grand-total">{{ "{:,.0f}".format(doc.closing_balance or 0) }}</td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <!-- CAM KẾT THANH TOÁN -->
+  <div class="statement-note">
+    • <b>Bằng chữ:</b> <i>{{ doc.in_words or "—" }}</i><br>
+    • Hai bên cùng xác nhận và thống nhất số liệu đối soát công nợ như trên là hoàn toàn chính xác. Bên Mua cam kết thanh toán dứt điểm số dư nợ còn lại đúng hạn theo thỏa thuận hợp đồng.
+  </div>
+
+  <!-- CHỮ KÝ 2 BÊN -->
+  <div class="sign-container">
+    <table class="sign-table">
+      <tr>
+        <td style="width: 50%;">
+          <div class="sign-header">ĐẠI DIỆN BÊN MUA (KHÁCH HÀNG)</div>
+          <div class="sign-hint">(Kế toán trưởng &amp; Giám đốc ký, đóng dấu)</div>
+          <div class="sign-space"></div>
+        </td>
+        <td style="width: 50%;">
+          <div class="sign-header">ĐẠI DIỆN BÊN BÁN (VẠN PHÁT)</div>
+          <div class="sign-hint">(Kế toán công nợ &amp; Giám đốc ký, đóng dấu)</div>
+          <div class="sign-space"></div>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

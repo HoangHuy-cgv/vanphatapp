@@ -1,0 +1,118 @@
+﻿name,customer_name,alias,customer_type,customer_group,territory,payment_terms,default_currency,tax_id,primary_address,customer_primary_contact,disabled
+KH-00001,CÔNG TY CỔ PHẦN DS COSMETIC,DS COSMETIC,Company,Khách Hàng Bao Bì Màng Ghép,Việt Nam,Công nợ gối đầu 30 ngày,VND,,,Huy,0
+KH-00002,CÔNG TY CỔ PHẦN BỆNH VIỆN VẠN AN,VẠN AN,Company,Khách Hàng Túi Màng Đơn,Tây Ninh,Công nợ gối đầu 30 ngày,VND,,"Số 352 Tuyến Tránh Quốc Lộ 1, Ấp 4, Phường Long An, Tỉnh Tây Ninh",Huy,0
+KH-00003,CÔNG TY TNHH SX THƯƠNG MẠI BAO BÌ KOVAA,KOVAA,Company,Khách Hàng Bao Bì Màng Ghép,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,"Số 79/16, Đường TL08, Khu Phố 3A, Phường An Phú",Huy,0
+KH-00004,CÔNG TY TNHH CÔNG NGHỆ VẬT LIỆU TIÊN PHONG VIETCOAT,VIETCOAT,Company,Khách Hàng Bao Bì Màng Ghép,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Giang,0
+KH-00005,CÔNG TY TNHH MTV TM TRANG UYÊN,TRANG UYÊN,Company,Khách Hàng Bao Bì Màng Ghép,TP. Hồ Chí Minh,Cọc trước 50% - Giao hàng 50%,VND,,"118/59 Phan Huy ích, Phường Tân Sơn, Quận Tân Bình, TP Hồ Chí Minh",Huy,0
+KH-00006,CÔNG TY TNHH MTV SX TM XNK ANH PHÁT,ANH PHÁT,Company,Khách Hàng Bao Bì Màng Ghép,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Huy,0
+KH-00007,CÔNG TY TNHH SẢN XUẤT - XUẤT NHẬP KHẨU AMYCO,AMYCO,Company,Khách Hàng Bao Bì Màng Ghép,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Huy,0
+KH-00008,CÔNG TY CỔ PHẦN ECO WIPES VIỆT NAM,ECO WIPES,Company,Khách Hàng Bao Bì Màng Ghép,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Lam,0
+KH-00009,CÔNG TY TNHH TM-DV HÓA MỸ PHẨM LÂM GIA,LÂM GIA,Company,Khách Hàng Bao Bì In Sẵn (NGCS),TP. Hồ Chí Minh,Cọc trước 50% - Giao hàng 50%,VND,,"245/129 Lãnh Binh Thăng, P12, Quận 11, Thành phố Hồ Chí Minh",Lài,0
+KH-00010,CÔNG TY TNHH THƯƠNG MẠI JNS VIỆT NAM,JNS VIỆT NAM,Company,Khách Hàng Túi Màng Đơn,Long An,Cọc trước 50% - Giao hàng 50%,VND,,"2B, Đường Tỉnh 835, Ấp 3B, Xã Phước Lợi, Huyện Bến Lức, Tỉnh Long An",Lam,0
+KH-00011,CÔNG TY TNHH SẢN XUẤT NỆM PHONG NGUYÊN,PHONG NGUYÊN,Company,Khách Hàng Túi Màng Đơn,TP. Hồ Chí Minh,Cọc trước 50% - Giao hàng 50%,VND,,"79H Đỗ Ngọc Thạnh, Phường 15, Quận 5, TP. Hồ Chí Minh",Lam,0
+KH-00012,CÔNG TY CỔ PHẦN DINH DƯỠNG SKX,DINH DƯỠNG SKX,Company,Khách Hàng Túi Màng Đơn,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Lam,0
+KH-00013,CÔNG TY CP ĐẦU TƯ LIÊN DOANH SẢN XUẤT HOÁ MỸ PHẨM VIỆT NHẬT,VIỆT NHẬT,Company,Khách Hàng Bao Bì In Sẵn (NGCS),TP. Hồ Chí Minh,Cọc trước 50% - Giao hàng 50%,VND,,"Số 2 ngõ 250/8 phố Tân Mai, Phường Thịnh Liệt, Quận Hoàng Mai, Hà Nội.",Nhàn,0
+KH-00014,CÔNG TY CỔ PHẦN EZ COSMETIC VIỆT NAM – CHI NHÁNH LONG AN,EZ COSMETIC,Company,Khách Hàng Bao Bì Màng Ghép,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Huy,0
+KH-00015,HỘ KINH DOANH ĐẶNG DIỀU TÂM,ĐẶNG DIỀU TÂM,Individual,Khách Hàng Thương Mại & Phân Phối,TP. Hồ Chí Minh,Cọc trước 50% - Giao hàng 50%,VND,,"50/77 Nguyễn Quý Yêm, Phường An Lạc, Quận Bình Tân, TP Hồ Chí Minh",Lam,0
+KH-00016,CÔNG TY TNHH ENZY FOOD,ENZY FOOD,Company,Khách Hàng Bao Bì Màng Ghép,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Lam,0
+KH-00017,Công ty TNHH sản xuất và thương mại Anh Lâm,ANH LÂM,Company,Khách Hàng Thương Mại & Phân Phối,Hà Tĩnh,Cọc trước 50% - Giao hàng 50%,VND,,Minh tiến kỳ tiến kỳ anh hà tĩnh,Lài,0
+KH-00018,CÔNG TY TNHH SẢN XUẤT THƯƠNG MẠI DỊCH VỤ TỔNG HỢP THÁI DƯƠNG,THÁI DƯƠNG,Company,Khách Hàng Bao Bì In Sẵn (NGCS),TP. Hồ Chí Minh,Cọc trước 50% - Giao hàng 50%,VND,,"283/14 Dương Đình Hội, Phường Tăng Nhơn Phú , Thành phố Hồ Chí Minh, Việt Nam",Lài,0
+KH-00019,PHÒNG KHÁM CHUYÊN KHOA NHI – MẶT TRỜI BÉ CON,MTBC,Individual,Khách Hàng Thương Mại & Phân Phối,TP. Hồ Chí Minh,Cọc trước 50% - Giao hàng 50%,VND,,"31 Hữu Nghị, Phường Bình Thọ, Thủ Đức, TPHCM",Lam,0
+KH-00020,CÔNG TY TNHH TM-DV THANH TẠO PHÁT,THANH TẠO PHÁT,Company,Khách Hàng Bao Bì In Sẵn (NGCS),Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Nhàn,0
+KH-00021,CÔNG TY TNHH ĐẦU TƯ VÀ THƯƠNG MẠI AN SINH LỘC,AN SINH LỘC,Company,Khách Hàng Bao Bì In Sẵn (NGCS),Hải Phòng,Cọc trước 50% - Giao hàng 50%,VND,,"Thôn Đôn Thư, Xã Trường Tân, TP Hải Phòng.",Nhàn,0
+KH-00022,CÔNG TY TNHH HÓA PHẨM NAM GIA PHÁT,NAM GIA PHÁT,Company,Khách Hàng Bao Bì In Sẵn (NGCS),Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Cty,0
+KH-00023,CÔNG TY TNHH SX& ĐẦU TƯ PHÚ THÀNH,PHÚ THÀNH,Company,Khách Hàng Bao Bì In Sẵn (NGCS),Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Lài,0
+KH-00024,HỘ KINH DOANH HÀO GIA,HÀO GIA,Individual,Khách Hàng Bao Bì In Sẵn (NGCS),Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Lài,0
+KH-00025,CÔNG TY TNHH PHÁT TRIỂN THƯƠNG MẠI NHAN GIA PHÁT,NHAN GIA PHÁT,Company,Khách Hàng Bao Bì In Sẵn (NGCS),Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Lài,0
+KH-00026,CÔNG TY TNHH THƯƠNG MẠI -XNK T&Đ VIỆT NAM,T&Đ VIỆT NAM,Company,Khách Hàng Thương Mại & Phân Phối,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Nhàn,0
+KH-00027,Hộ Kinh Doanh NT VAN,NT VAN,Individual,Khách Hàng Bao Bì In Sẵn (NGCS),Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Giang,0
+KH-00028,CÔNG TY TNHH HÓA MỸ PHẨM LINH PHƯƠNG,LINH PHƯƠNG,Company,Khách Hàng Thương Mại & Phân Phối,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Phúc,0
+KH-00029,CÔNG TY TNHH HÓA MỸ PHẨM VIO,VIO,Company,Khách Hàng Bao Bì In Sẵn (NGCS),Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Nhàn,0
+KH-00030,CÔNG TY TNHH DƯƠNG PHÁT HT,DƯƠNG PHÁT,Company,Khách Hàng Bao Bì In Sẵn (NGCS),Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Phúc,0
+KH-00031,CÔNG TY TNHH KINH DOANH ĐẦU TƯ VÀ DỊCH VỤ PHAN GIA BÍCH,PHAN GIA BÍCH,Company,Khách Hàng Bao Bì In Sẵn (NGCS),Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Nhàn,0
+KH-00032,CÔNG TY TNHH SẢN XUẤT VÀ THƯƠNG MẠI TUẤN PHÁT,TUẤN PHÁT,Company,Khách Hàng Bao Bì In Sẵn (NGCS),Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Nhàn,0
+KH-00033,CÔNG TY CỔ PHẦN CARITAS FRUITS,CARITAS FRUITS,Company,Khách Hàng Bao Bì Màng Ghép,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,"Tầng 14, Toà nhà HM Town, Số 412 Đường Nguyễn Thị",Huy,0
+KH-00034,CÔNG TY TNHH PET UNIVERSE,PET UNIVERSE,Company,Khách Hàng Thương Mại & Phân Phối,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Huy,0
+KH-00035,JieJie’s Kitchen Campuchia,JIEJIE CAMBODIA,Company,Khách Hàng Bao Bì Màng Ghép,Campuchia,Cọc trước 50% - Giao hàng 50%,VND,,CAMPHUCHIA,Huy,0
+KH-00036,CÔNG TY TNHH SAHAKA VIỆT NAM,SAHAKA,Company,Khách Hàng Thương Mại & Phân Phối,TP. Hồ Chí Minh,Cọc trước 50% - Giao hàng 50%,VND,,"40 đường 9, khu phố 3, Phường Phước Long",Huy,0
+KH-00037,CÔNG TY TNHH SẢN XUẤT THƯƠNG MẠI DỊCH VỤ AHA FRESH,AHA FRESH,Company,Khách Hàng Bao Bì Màng Ghép,TP. Hồ Chí Minh,Cọc trước 50% - Giao hàng 50%,VND,,"Số 77 Đường Số 2, Phường Bình Tân, TP Hồ Chí Minh",Huy,0
+KH-00038,CÔNG TY TNHH TM VÀ DV TRƯỜNG AN,TRƯỜNG AN,Company,Khách Hàng Thương Mại & Phân Phối,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,,0
+KH-00039,NGUYỄN CHÍ LINH,NGUYỄN CHÍ LINH,Individual,Khách Hàng Bao Bì Màng Ghép,Bình Dương,Cọc trước 50% - Giao hàng 50%,VND,,"346 Phan Đăng Lưu, Hiệp An, Thủ Dầu Một, Bình Dương",Lam,0
+KH-00040,CÔNG TY TNHH TM XNK KIẾN NAM,KIẾN NAM,Company,Khách Hàng Thương Mại & Phân Phối,TP. Hồ Chí Minh,Cọc trước 50% - Giao hàng 50%,VND,,"81 Mai Thị Lựu, Phường Đa Kao, Quận 1, Thành Phố Hồ Chí Minh",Lam,0
+KH-00041,CÔNG TY TNHH DẦU KHÍ PHẠM GIA GROUP,PHẠM GIA GROUP,Company,Khách Hàng Thương Mại & Phân Phối,Sóc Trăng,Cọc trước 50% - Giao hàng 50%,VND,,"48 ấp Tân Hòa B, xã Long Hưng, huyện Mỹ Tú, tỉnh Sóc Trăng",Lài,0
+KH-00042,CÔNG TY TNHH SAM RAN,SAM RAN,Company,Khách Hàng Túi Màng Đơn,Tây Ninh,Cọc trước 50% - Giao hàng 50%,VND,,"Ấp 5, Xã Thạnh Lợi,Tỉnh Tây Ninh, Việt Nam",Lam,0
+KH-00043,CÔNG TY TNHH MỸ PHẨM AVATAR VIỆT NAM,AVATAR,Company,Khách Hàng Bao Bì In Sẵn (NGCS),Tây Ninh,Cọc trước 50% - Giao hàng 50%,VND,,"Thừa đất số 1007, tờ bản đồ số 1, ấp 2, xã Long Cang, Tỉnh Tây Ninh, Việt Nam",Lài,0
+KH-00044,CÔNG TY TNHH ZYLAND,ZYLAND,Company,Khách Hàng Thương Mại & Phân Phối,TP. Hồ Chí Minh,Cọc trước 50% - Giao hàng 50%,VND,,"23/4A, Tổ 9, Ấp 1, Xã Xuân Thới Thượng, Huyện Hóc Môn, TP.HCM",Lam,0
+KH-00045,ANH TÂN,ANH TÂN,Individual,Khách Hàng Bao Bì Màng Ghép,TP. Hồ Chí Minh,Cọc trước 50% - Giao hàng 50%,VND,,Bình Chánh,Huy,0
+KH-00046,HỘ KINH DOANH THẾ KỶ VÀNG,THẾ KỶ VÀNG,Individual,Khách Hàng Bao Bì In Sẵn (NGCS),TP. Hồ Chí Minh,Cọc trước 50% - Giao hàng 50%,VND,,"88 Tập đoàn 6B, phường Tân Tạo A, quận Bình Tân, TpHCM",Lài,0
+KH-00047,CÔNG TY TNHH THƯƠNG MẠI DỊCH VỤ QUẢNG CÁO HOÀNG TIẾN,QUẢNG CÁO HOÀNG TIẾN,Company,Khách Hàng Thương Mại & Phân Phối,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Lam,0
+KH-00048,CÔNG TY TNHH THƯƠNG MẠI THỰC PHẨM JMC,JMC FOOD,Company,Khách Hàng Thương Mại & Phân Phối,TP. Hồ Chí Minh,Cọc trước 50% - Giao hàng 50%,VND,,"18-20 Đường số 6, KP 4, Phường Hiệp Bình,Thành Phố Hồ Chí Minh",Lam,0
+KH-00049,HỘ KINH DOANH NGUYỄN THỊ XUÂN MỸ,NGUYỄN THỊ XUÂN MỸ,Individual,Khách Hàng Bao Bì Màng Ghép,Đắk Lắk,Cọc trước 50% - Giao hàng 50%,VND,,"545 Hùng Vương, Phường Buôn Hồ, Tỉnh Đắk Lắk",Lam,0
+KH-00050,CÔNG TY TNHH THƯƠNG MẠI VÀ SẢN XUẤT A A A HYGIENE,A A A HYGIENE,Company,Khách Hàng Bao Bì In Sẵn (NGCS),TP. Hồ Chí Minh,Cọc trước 50% - Giao hàng 50%,VND,,"B1/12A, Ấp2, XãBìnhLợi, Tphcm Nhân viên",Nhàn,0
+KH-00051,CÔNG TY TNHH SẢN XUẤT TM&DV VCOS,TM&DV VCOS,Company,Khách Hàng Thương Mại & Phân Phối,TP. Hồ Chí Minh,Cọc trước 50% - Giao hàng 50%,VND,,"số 116, Đường Thới An 13, Phường Thới An, Quận 12, Thành phố Hồ Chí Minh.",Lài,0
+KH-00052,CÔNG TY TNHH GREEN HIGHLANDS,GREEN HIGHLANDS,Company,Khách Hàng Thương Mại & Phân Phối,Gia Lai,Cọc trước 50% - Giao hàng 50%,VND,,"22 Lý Thường Kiệt , Phường An Phú ,Tỉnh Gia Lai",Nhàn,0
+KH-00053,HỘ KINH DOANH PHAN VĂN LONG,PHAN VĂN LONG,Individual,Khách Hàng Bao Bì Màng Ghép,Thừa Thiên Huế,Cọc trước 50% - Giao hàng 50%,VND,,"Lô 38 Kiệt 48 Phùng Khắc Khoan, Phường Phú Hiệp, TP.Huế",,0
+KH-00054,CÔNG TY TNHH ZEUS TECHNOLOGY,ZEUS TECHNOLOGY,Company,Khách Hàng Thương Mại & Phân Phối,TP. Hồ Chí Minh,Cọc trước 50% - Giao hàng 50%,VND,,"Tầng 2 Số 21, Đường Võ Trần Toản, Phường Thảo Điền, TP, Thủ Đức, TPHCM",Huy,0
+KH-00055,KHA BẢO QUÂN,KHA BẢO QUÂN,Individual,Khách Hàng Bao Bì Màng Ghép,Sóc Trăng,Cọc trước 50% - Giao hàng 50%,VND,,"113 Lê Lợi, Khóm 2, Phường 1, Thị Xã Vĩnh Châu, Tỉnh Sóc Trăng",Lam,0
+KH-00056,CÔNG TY CỔ PHẦN SẢN XUẤT NATURE,NATURE,Company,Khách Hàng Thương Mại & Phân Phối,Hưng Yên,Cọc trước 50% - Giao hàng 50%,VND,,"Thôn Đông Mai , Xã Lạc Đạo , Tỉnh Hưng Yên , Việt Nam",Nhàn,0
+KH-00057,CÔNG TY TNHH ĐẦU TƯ SẢN XUẤT DỊCH VỤ VÀ THƯƠNG MẠI NGUYỄN GIA,NGUYỄN GIA,Company,Khách Hàng Bao Bì In Sẵn (NGCS),TP. Hồ Chí Minh,Cọc trước 50% - Giao hàng 50%,VND,,"Đường n17 , khu công nghiệp mỹ phước 4, thới hoà, hồ chí minh",Lài,0
+KH-00058,CÔNG TY TNHH PAVE GLACE,PAVE GLACE,Company,Khách Hàng Thương Mại & Phân Phối,TP. Hồ Chí Minh,Cọc trước 50% - Giao hàng 50%,VND,,"98 Đường 65 Khu định cư, Tân Quy Đông, Phường Tân Phong, Quận 7, TP. Hồ Chí Minh",Huy,0
+KH-00059,CÔNG TY CỔ PHẦN THƯƠNG MẠI LÂM ANH HÀ NỘI,LÂM ANH HÀ NỘI,Company,Khách Hàng Thương Mại & Phân Phối,Hà Nội,Cọc trước 50% - Giao hàng 50%,VND,,"số 4/1/110 Phú Viễn, Tổ 25, Phường Bồ Đề, Thành phố Hà Nội",Lài,0
+KH-00060,CÔNG TY TNHH TM DV SOHA NAM SƠN,DV SOHA NAM SƠN,Company,Khách Hàng Thương Mại & Phân Phối,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Nhàn,0
+KH-00061,CÔNG TY TNHH ARIX VIỆT NAM,ARIX VIỆT NAM,Company,Khách Hàng Thương Mại & Phân Phối,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Lài,0
+KH-00062,CÔNG TY CP PHÚC HƯNG PHÚC,PHÚC HƯNG PHÚC,Company,Khách Hàng Thương Mại & Phân Phối,Đồng Nai,Cọc trước 50% - Giao hàng 50%,VND,,"tổ 15 ấp 5 ,Xã Xuân Hòa , Tỉnh đồng nai",Nhàn,0
+KH-00063,CÔNG TY CỔ PHẦN HÓA CHẤT SAVINA,HÓA CHẤT SAVINA,Company,Khách Hàng Thương Mại & Phân Phối,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,"Số 9, Quốc Lộ 1A, tổ 2, ấp Phú Mỹ, xã Song Phú, tỉnh Vĩnh Long",Lài,0
+KH-00064,CÔNG TY CỔ PHẦN QUỐC TẾ CARA,QUỐC TẾ CARA,Company,Khách Hàng Thương Mại & Phân Phối,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,"Số 216 Nguyễn Hữu Cảnh , Phường Quảng Phú ,Tỉnh Thanh Hóa",Nhàn,0
+KH-00065,Công ty TNHH Sản Xuất Nam Việt,NAM VIỆT,Company,Khách Hàng Thương Mại & Phân Phối,TP. Hồ Chí Minh,Cọc trước 50% - Giao hàng 50%,VND,,"20A Đường Số 16, Phước Bình, Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam",Duyên,0
+KH-00066,CÔNG TY TNHH DL SWEETS,DL SWEETS,Company,Khách Hàng Thương Mại & Phân Phối,TP. Hồ Chí Minh,Cọc trước 50% - Giao hàng 50%,VND,,"118/59 Phan Huy ích, Phường Tân Sơn, Quận Tân Bình",Lam,0
+KH-00067,CÔNG TY CỔ PHẦN SẢN XUẤT THƯƠNG MẠI DỊCH VỤ HOÀNG GIA HUY,DỊCH VỤ HOÀNG,Company,Khách Hàng Thương Mại & Phân Phối,TP. Hồ Chí Minh,Cọc trước 50% - Giao hàng 50%,VND,,A6/16A TỔ 6 - ẤP 1 - XÃ VĨNH LỘC A - BÌNH CHÁNH,Duyên,0
+KH-00068,CÔNG TY CỔ PHẦN TRUYỀN THÔNG Y HỌC CỔ TRUYỀN VIỆT NAM,TRUYỀN THÔNG Y,Company,Khách Hàng Thương Mại & Phân Phối,Bắc Ninh,Cọc trước 50% - Giao hàng 50%,VND,,"ông Trần Văn Quyết, xóm 10, thôn Đức Lân, Xã Văn Môn, Tỉnh Bắc Ninh, Việt Nam",Nhàn,0
+KH-00069,CÔNG TY TNHH SX VÀ TMDV CƯỜNG NGUYỄN,VÀ TMDV CƯỜNG NGUYỄN,Company,Khách Hàng Thương Mại & Phân Phối,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Lài,0
+KH-00070,Công ty TNHH ĐẦU TƯ XÂY DỰNG ĐỨC HIỀN,XÂY DỰNG ĐỨC HIỀN,Company,Khách Hàng Thương Mại & Phân Phối,TP. Hồ Chí Minh,Cọc trước 50% - Giao hàng 50%,VND,,"78/81 Đường Đỗ Lương, Phường Phước Thắng, TP Hồ Chí Minh",Lài,0
+KH-00071,CÔNG TY TNHH DANY VIỆT NAM,DANY VIỆT NAM,Company,Khách Hàng Thương Mại & Phân Phối,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Lam,0
+KH-00072,CÔNG TY TNHH ACE PHÁT TÀI,ACE PHÁT TÀI,Company,Khách Hàng Thương Mại & Phân Phối,Hưng Yên,Cọc trước 50% - Giao hàng 50%,VND,,"Quang Vinh ,Ân Thi ,Hưng Yên",Nhàn,0
+KH-00073,CÔNG TY TNHH SẢN XUẤT & THƯƠNG MẠI THỊNH ANH,& THƯƠNG MẠI,Company,Khách Hàng Thương Mại & Phân Phối,Ninh Bình,Cọc trước 50% - Giao hàng 50%,VND,,khu đất DV Trường Thi - Ninh Bình - Việt Nam,Nhàn,0
+KH-00074,CÔNG TY TNHH SẢN XUẤT THƯƠNG MẠI DỊCH VỤ XNK AZ88,DỊCH VỤ XNK AZ88,Company,Khách Hàng Thương Mại & Phân Phối,TP. Hồ Chí Minh,Cọc trước 50% - Giao hàng 50%,VND,,"361/60/70D Nguyễn Thị Sáng, Ấp 43, Xã Đông Thạnh, TP. Hồ Chí Minh",Lam,0
+KH-00075,CÔNG TY TNHH SẢN XUẤT VÀ DỊCH VỤ THƯƠNG MẠI HƯNG THỊNH PHÁT,THƯƠNG MẠI HƯNG,Company,Khách Hàng Thương Mại & Phân Phối,Phú Thọ,Cọc trước 50% - Giao hàng 50%,VND,,"Thôn Trại Giếng, xã Hội Thịnh, tỉnh Phú Thọ",,0
+KH-00076,CÔNG TY TNHH SẢN XUẤT VÀ THƯƠNG MẠI DỊCH VỤ NGUYỄN AN AG,DỊCH VỤ NGUYỄN,Company,Khách Hàng Thương Mại & Phân Phối,An Giang,Cọc trước 50% - Giao hàng 50%,VND,,"Số 692 đường Bùi Văn Danh , Phường Long Xuyên ,Tỉnh An Giang",Nhàn,0
+KH-00077,Công ty Cổ Phần Đầu Tư Thương Mại & Sản Xuất HT Group,& SẢN XUẤT,Company,Khách Hàng Thương Mại & Phân Phối,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,"147 đường Xô Viết Nghệ Tĩnh, Tổ Dân Phố 1, Thị trấn Xuân An, huyện Nghi",Nhàn,0
+KH-00078,CÔNG TY CỔ PHẦN DUCHI DULI GROUP,DUCHI DULI GROUP,Company,Khách Hàng Thương Mại & Phân Phối,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,,0
+KH-00079,CÔNG TY CỔ PHẦN SẢN XUẤT VÀ THƯƠNG MẠI G.N.A,G.N.A,Company,Khách Hàng Thương Mại & Phân Phối,TP. Hồ Chí Minh,Cọc trước 50% - Giao hàng 50%,VND,,"Tổ 1,Đường Khánh Bình 60,KP. Bình Chánh Đông ,Phường Tân Hiệp ,TPHCM",Nhàn,0
+KH-00080,CÔNG TY TNHH IN ẤN SẢN XUẤT VÀ GIẢI PHÁP BAO BÌ TEM NHÃN PHONG UYÊN,IN ẤN SẢN,Company,Khách Hàng Thương Mại & Phân Phối,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Phúc,0
+KH-00081,Hải sản tươi sống Ốc Kiều,ỐC KIỀU,Individual,Khách Hàng Túi Màng Đơn,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,,0
+KH-00082,CÔNG TY TNHH SẢN XUẤT VÀ THƯƠNG MẠI DƯƠNG SƠN,DƯƠNG SƠN,Company,Khách Hàng Thương Mại & Phân Phối,TP. Hồ Chí Minh,Cọc trước 50% - Giao hàng 50%,VND,,"344/9 Mỹ Phước, Tần Vạn,KP, Tân Phú , P.Tân Bình, TP.Dĩ An, tỉnh Bình Dương",Lài,0
+KH-00083,ANH LUÂN,ANH LUÂN,Individual,Khách Hàng Túi Màng Đơn,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,,0
+KH-00084,CÔNG TY TNHH THƯƠNG MẠI VÀ DỊCH VỤ DPDG,DPDG,Company,Khách Hàng Thương Mại & Phân Phối,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Phúc,0
+KH-00085,CÔNG TY TNHH CUNG ỨNG DỊCH VỤ HLC VIỆT NAM,CUNG ỨNG DỊCH,Company,Khách Hàng Thương Mại & Phân Phối,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,"Ki ốt số 40 B2.1-HH03B, Khu Đô Thị Thanh Hà",Nhàn,0
+KH-00086,CÔNG TY TNHH THƯƠNG MẠI &XNK SNT VIỆT NAM,&XNK SNT VIỆT NAM,Company,Khách Hàng Thương Mại & Phân Phối,Hải Phòng,Cọc trước 50% - Giao hàng 50%,VND,,"An Hải , Hải Phòng",Nhàn,0
+KH-00087,CÔNG TY CP ĐẦU TƯ VN MART,VN MART,Company,Khách Hàng Thương Mại & Phân Phối,Ninh Bình,Cọc trước 50% - Giao hàng 50%,VND,,"Thửa đất 313 ,Thôn 5 , Xã Yên Khánh,Tỉnh Ninh Bình",Nhàn,0
+KH-00088,CÔNG TY CỔ PHẦN CHAN FOOD,CHAN FOOD,Company,Khách Hàng Thương Mại & Phân Phối,TP. Hồ Chí Minh,Cọc trước 50% - Giao hàng 50%,VND,,"68 Nguyễn Huệ, Phường Bến Nghé, Quận 1, TP. Hồ Chí Minh",Huy,0
+KH-00089,CÔNG TY TNHH SẢN XUẤT VÀ THƯƠNG MẠI TUẤN PHÁT HC,TUẤN PHÁT HC,Company,Khách Hàng Bao Bì In Sẵn (NGCS),Hưng Yên,Cọc trước 50% - Giao hàng 50%,VND,,"Thôn Hồng Cầu , Xã Như Quỳnh , Tỉnh Hưng Yên",Nhàn,0
+KH-00090,Công ty TNHH SẢN XUẤT & THƯƠNG MẠI HITRACO,& THƯƠNG MẠI HITRACO,Company,Khách Hàng Thương Mại & Phân Phối,An Giang,Cọc trước 50% - Giao hàng 50%,VND,,"41/13, Trần Qúy Khoáng, Khóm Đông Phú, P. Long Xuyên, Tỉnh An Giang",Lài,0
+KH-00091,CÔNG TY TNHH DƯỢC MỸ PHẨM HAPPY LIFE,DƯỢC MỸ PHẨM,Company,Khách Hàng Thương Mại & Phân Phối,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,Một phần lô 13 + 14 cụm công nghiệp An Xá giai đoạn 2,Phúc,0
+KH-00092,CÔNG TY TNHH SẢN XUẤT THƯƠNG MẠI XUẤT NHẬP KHẨU VIỆT NAM ANH,XUẤT NHẬP KHẨU,Company,Khách Hàng Thương Mại & Phân Phối,Hà Nội,Cọc trước 50% - Giao hàng 50%,VND,,"Xóm 3 Thôn Dư Xá, xã Hòa Xá, Thành Phố Hà Nội, Việt Nam",Lài,0
+KH-00093,Công ty TNHH Sản Xuất Thương Mại Hồng Gia Phát,HỒNG GIA PHÁT,Company,Khách Hàng Thương Mại & Phân Phối,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,,0
+KH-00094,CÔNG TY TNHH TMDV VÀ SX T.A.L,TMDV VÀ SX T.A.L,Company,Khách Hàng Thương Mại & Phân Phối,Hải Phòng,Cọc trước 50% - Giao hàng 50%,VND,,"Số 43 Phố Cao Sơn, Khu Xuân Áng, T.T Trường Sơn, H.An Lao, TP.Hải Phòng",Lài,0
+KH-00095,CÔNG TY TNHH SẢN XUẤT VÀ THƯƠNG MẠI HUY NGA,HUY NGA,Company,Khách Hàng Thương Mại & Phân Phối,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Lài,0
+KH-00096,CÔNG TY TNHH THƯƠNG MẠI DỊCH VỤ SẢN XUẤT AZENKA,SẢN XUẤT AZENKA,Company,Khách Hàng Thương Mại & Phân Phối,TP. Hồ Chí Minh,Cọc trước 50% - Giao hàng 50%,VND,,"76/11 Ấp 1 ,Xã Bà Điểm ,TP Hồ Chí Minh",Nhàn,0
+KH-00097,CÔNG TY TNHH TM DV ANH PHÚC,DV ANH PHÚC,Company,Khách Hàng Thương Mại & Phân Phối,Bắc Ninh,Cọc trước 50% - Giao hàng 50%,VND,,BẮC NINH,Nhàn,0
+KH-00098,HỘ KINH DOANH TẠP HÓA - TRƯỜNG GIANG,TẠP HÓA -,Individual,Khách Hàng Thương Mại & Phân Phối,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Phúc,0
+KH-00099,CÔNG TY TNHH SẢN XUẤT VÀ THƯƠNG MẠI NHẬT KHẢI,NHẬT KHẢI,Company,Khách Hàng Thương Mại & Phân Phối,TP. Hồ Chí Minh,Cọc trước 50% - Giao hàng 50%,VND,,"Số 26 Đường Mai Văn Vĩnh , Phường Tân Hưng , Thành phố Hồ Chí Minh",Nhàn,0
+KH-00100,CÔNG TY TRÁCH NHIỆM HỮU HẠN THƯƠNG MẠI VÀ SẢN XUẤT HP GROUP,HP GROUP,Company,Khách Hàng Thương Mại & Phân Phối,An Giang,Cọc trước 50% - Giao hàng 50%,VND,,"ấp Long Hòa 1 , Xã Long Kiến , Tỉnh An Giang",Nhàn,0
+KH-00101,Công ty TNHH SẢN XUẤT VÀ THƯƠNG MẠI TACY,TACY,Company,Khách Hàng Thương Mại & Phân Phối,Tuyên Quang,Cọc trước 50% - Giao hàng 50%,VND,,"Cầu Xì, Sơn Thủy, Tuyên Quang,Việt Nam",Lài,0
+KH-00102,Công ty TNHH TIỆP ANH HƯƠNG,TIỆP ANH HƯƠNG,Company,Khách Hàng Thương Mại & Phân Phối,Ninh Bình,Cọc trước 50% - Giao hàng 50%,VND,,"Vũ Dương, Ninh Bình",Lài,0
+KH-00103,HỘ KINH DOANH CƠ SỞ SẢN XUẤT HOA NI,HOA NI,Individual,Khách Hàng Thương Mại & Phân Phối,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,Lài,0
+KH-00104,CÔNG TY TNHH THƯƠNG MẠI DƯỢC HÓA MỸ PHẨM GREEN PRO,DƯỢC HÓA MỸ,Company,Khách Hàng Thương Mại & Phân Phối,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,"Xóm Ngũ Lộc , Hưng Lộc , TP Vinh , Tỉnh Nghệ An",Nhàn,0
+KH-00105,Hộ Kinh Thảo Phương,HỘ KINH THẢO PHƯƠNG,Individual,Khách Hàng Thương Mại & Phân Phối,An Giang,Cọc trước 50% - Giao hàng 50%,VND,,"1/3 Khóm Thới An A, Phường Mỹ Thạnh ,Thành phố Long Xuyên ,Tỉnh An Giang",Nhàn,0
+KH-00106,CÔNG TY TNHH NHÀ HÀNG HÀN QUỐC MS BARUN,MS BARUN,Company,Khách Hàng Thương Mại & Phân Phối,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,"Số 39 Đường Nội Khu Phú Mỹ Hưng - Midtown Lô M6, Phường Tân Mỹ, TP",Lam,0
+KH-00107,CÔNG TY TNHH PHONG TÍN,PHONG TÍN,Company,Khách Hàng Bao Bì Màng Ghép,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,,0
+KH-00108,Khách hàng Bluum,BLUUM,Individual,Khách Hàng Bao Bì Màng Ghép,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,,0
+KH-00109,Khách hàng Chakari,CHAKARI,Individual,Khách Hàng Bao Bì Màng Ghép,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,,0
+KH-00110,Khách hàng Clean,CLEAN,Individual,Khách Hàng Bao Bì Màng Ghép,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,,0
+KH-00111,Khách hàng DPClean,DPCLEAN,Individual,Khách Hàng Bao Bì Màng Ghép,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,,0
+KH-00112,Khách hàng Premium,PREMIUM,Individual,Khách Hàng Bao Bì Màng Ghép,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,,0
+KH-00113,Khách hàng Raptor Clean,RAPTOR CLEAN,Individual,Khách Hàng Bao Bì Màng Ghép,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,,0
+KH-00114,Khách hàng Sachpoong,SACHPOONG,Individual,Khách Hàng Bao Bì Màng Ghép,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,,0
+KH-00115,Khách hàng Trần Quân,TRẦN QUÂN,Individual,Khách Hàng Bao Bì Màng Ghép,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,,0
+KH-00116,Khách hàng Yumi Care,YUMI CARE,Individual,Khách Hàng Bao Bì Màng Ghép,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,,0
+KH-00117,TOP GIA,TOP GIA,Individual,Khách Hàng Thương Mại & Phân Phối,Việt Nam,Cọc trước 50% - Giao hàng 50%,VND,,,,0

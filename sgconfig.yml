@@ -1,0 +1,5 @@
+ruleDirs:
+  - sg-rules
+languageGlobs:
+  html:
+    - '*.vue'

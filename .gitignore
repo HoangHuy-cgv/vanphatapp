@@ -1,0 +1,53 @@
+# Live env copies — never commit (only *.env.example templates are committed)
+*.env
+!*.env.example
+
+# Secrets — never commit
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*token*.json
+*credentials*.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node
+node_modules/
+.tools/
+
+# Data / outputs (regenerable, often large)
+raw-data/
+data/raw-data/
+**/raw-data/
+*_mapped.csv
+_build_report.json
+_meta.json
+
+# Local audit downloads (upstream source + inspection copies, never commit)
+audit/
+# OS / editor
+.DS_Store
+*.swp
+*~
+
+# Archive snapshots (prototypes, PDF/PNG/rpm binaries — disk-only, never in git history)
+archive/
+
+# Vite unplugin auto-gen (không commit)
+auto-imports.d.ts
+components.d.ts
+
+# Vite build assets TRACKED (Sếp duyệt 2026-09-15 — CD sync cùng code, khỏi rsync tay)
+# apps/vanphat_portal/vanphat_portal/public/frontend/assets/
+
+# Artifact tạm của guard composable (guard tự dọn; đây là lưới an toàn nếu guard crash)
+apps/vanphat_portal/frontend/.composables-check*
+
+# Tmp workspace (binary pilot OCR, chrome profile, npm-cache — disk-only, never commit)
+.tmp/

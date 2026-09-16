@@ -1,0 +1,10 @@
+id: no-stub-comment-py
+language: Python
+severity: error
+message: "CONSTRAINTS stub: cam TODO/FIXME dung cho implementation API"
+note: "API dang do phai implement that hoac xoa endpoint; chi tiet xem CONSTRAINTS.md Floor stub."
+rule:
+  kind: comment
+  regex: '.*(TODO|FIXME).*'
+files:
+  - 'apps/vanphat_portal/vanphat_portal/api/**'

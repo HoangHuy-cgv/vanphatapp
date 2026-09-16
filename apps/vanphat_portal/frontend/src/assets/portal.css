@@ -1,0 +1,814 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ADR-007: Không dùng external UI framework CSS. Font Inter subset tự host
+   dưới đây (latin 93KB + vietnamese 17KB — xem budget-gate.sh).
+   Tailwind v3 standalone (tailwind.config.js không còn preset ngoài). */
+@font-face {
+	font-family: 'InterVariable';
+	font-weight: 100 900;
+	font-display: swap;
+	font-style: normal;
+	src: url('./fonts/inter/Inter-latin.woff2') format('woff2-variations'),
+	     url('./fonts/inter/Inter-latin.woff2') format('woff2');
+	unicode-range: U+0000-00FF, U+0100-017F, U+0180-024F;
+}
+
+@font-face {
+	font-family: 'InterVariable';
+	font-weight: 100 900;
+	font-display: swap;
+	font-style: normal;
+	src: url('./fonts/inter/Inter-vietnamese.woff2') format('woff2-variations'),
+	     url('./fonts/inter/Inter-vietnamese.woff2') format('woff2');
+	unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01B0, U+1EA0-1EF9;
+}
+
+@font-face {
+	font-family: 'Inter';
+	font-weight: 100 900;
+	font-display: swap;
+	font-style: normal;
+	src: url('./fonts/inter/Inter-latin.woff2') format('woff2');
+	unicode-range: U+0000-00FF, U+0100-017F, U+0180-024F;
+}
+
+@font-face {
+	font-family: 'Inter';
+	font-weight: 100 900;
+	font-display: swap;
+	font-style: normal;
+	src: url('./fonts/inter/Inter-vietnamese.woff2') format('woff2');
+	unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01B0, U+1EA0-1EF9;
+}
+
+:root {
+	--canvas: #12151a;
+	--surface: #161b22;
+	--surface-low: #1a1f27;
+	--outline: #3a424e;
+	--outline-focus: #4ea1e0;
+	--ink: #eef1f6;
+	--ink-secondary: #9da7b5;
+	--ink-muted: #64748b;
+	--primary: #4ea1e0;
+	--primary-press: #3b8ac4;
+	--blocked: #f97066;
+	--ok: #51cf66;
+	--warn: #fec84b;
+	--amber: #f59e0b;
+	--amber-bright: #fbbf24;
+	--info: #38bdf8;
+	--emerald: #34d399;
+	--violet: #c084fc;
+	--canvas-deep: #0b0f19;
+	--surface-sunken: #0d1117;
+	--surface-card: #12161f;
+	--surface-head: #11151c;
+	--ink-bright: #ffffff;
+	--ink-strong: #e6edf3;
+	--ink-pale: #c9d1d9;
+	--ink-gray: #9ca3af;
+	--ink-slate: #94a3b8;
+	--ink-faint: #8b949e;
+	--danger: #f85149;
+	--danger-bright: #ef4444;
+	--danger-soft: #f87171;
+	--danger-light: #ff7b72;
+	--violet-pale: #c4b5fd;
+	--primary-deep: #2563eb;
+	--primary-deep-press: #1d4ed8;
+	--accent-blue: #0284c7;
+	--accent-blue-press: #0369a1;
+	--accent-indigo: #1f6feb;
+	--raised: #21262d;
+	--raised-hover: #30363d;
+	--ink-ghost: #484f58;
+	--outline-dim: #2d333b;
+	--surface-inset: #141820;
+	--surface-badge: #1a2333;
+	--surface-pill: #1e293b;
+	--surface-chip: #1f242c;
+	--avatar-bg: #1f2937;
+	--avatar-ring: #374151;
+	--ink-mist: #cbd5e1;
+	--ink-snow: #e2e8f0;
+	--ink-crisp: #f1f5f9;
+	--font-sans: 'InterVariable', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+}
+
+*, *::before, *::after {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+button, input, select, textarea {
+	font-family: inherit;
+}
+
+html, body {
+	height: 100%;
+	font-family: var(--font-sans);
+	background: var(--canvas);
+	color: var(--ink);
+	-webkit-font-smoothing: antialiased;
+	overflow: hidden;
+}
+
+.portal-layout {
+	display: flex;
+	height: 100vh;
+	overflow: hidden;
+}
+
+.sidebar {
+	width: 216px;
+	height: 100%;
+	flex-shrink: 0;
+	background: var(--surface);
+	border-right: 1px solid var(--outline-dim);
+	padding: 14px 10px;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	z-index: 10;
+}
+
+.brand-block {
+	display: flex;
+	align-items: center;
+	gap: 9px;
+	padding: 4px 6px 12px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+	margin-bottom: 6px;
+}
+
+.brand-logo {
+	height: 24px;
+	width: auto;
+	max-width: 36px;
+	object-fit: contain;
+	background: transparent;
+	filter: drop-shadow(0 2px 6px rgba(237, 28, 36, 0.35));
+}
+
+.brand-title {
+	font-weight: 800;
+	letter-spacing: 0.03em;
+	color: var(--ink-bright);
+	font-size: 14px;
+	white-space: nowrap;
+}
+
+.nav-menu {
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	flex: 1;
+}
+
+.nav-btn {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	width: 100%;
+	text-align: left;
+	background: transparent;
+	border: 0;
+	border-radius: 8px;
+	color: var(--ink-secondary);
+	font-size: 14.5px;
+	font-weight: 600;
+	padding: 9px 12px;
+	cursor: pointer;
+	text-decoration: none;
+	transition: all 0.15s ease;
+}
+
+.nav-btn:hover {
+	color: var(--ink);
+	background: rgba(255, 255, 255, 0.04);
+}
+
+.nav-btn.active {
+	background: rgba(78, 161, 224, 0.14);
+	color: var(--primary);
+	font-weight: 700;
+}
+
+.nav-icon {
+	width: 18px;
+	height: 18px;
+	flex-shrink: 0;
+	opacity: 0.85;
+}
+
+.nav-btn.active .nav-icon {
+	opacity: 1;
+	stroke: var(--primary);
+}
+
+.nav-text {
+	flex: 1;
+}
+
+.nav-badge {
+	font-size: 11.5px;
+	font-weight: 700;
+	padding: 1px 7px;
+	border-radius: 10px;
+	background: rgba(255, 255, 255, 0.08);
+	color: var(--ink-secondary);
+	font-variant-numeric: tabular-nums;
+}
+
+.nav-btn.active .nav-badge {
+	background: rgba(78, 161, 224, 0.25);
+	color: var(--primary);
+}
+
+.sidebar-footer {
+	margin-top: auto;
+	padding-top: 12px;
+	border-top: 1px solid rgba(255, 255, 255, 0.07);
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 6px;
+	padding-left: 4px;
+	padding-right: 2px;
+}
+
+.user-block {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	min-width: 0;
+	flex: 1;
+}
+
+.user-avatar {
+	width: 28px;
+	height: 28px;
+	border-radius: 50%;
+	background: var(--avatar-bg);
+	border: 1px solid var(--avatar-ring);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--ink-gray);
+	flex-shrink: 0;
+}
+
+.user-id {
+	font-size: 13px;
+	font-weight: 600;
+	color: var(--ink-mist);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.btn-logout {
+	width: 30px;
+	height: 30px;
+	border-radius: 6px;
+	border: none;
+	background: transparent;
+	color: var(--ink-slate);
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: all 0.15s ease;
+	flex-shrink: 0;
+}
+
+.btn-logout:hover {
+	color: var(--danger-soft);
+	background: rgba(239, 68, 68, 0.12);
+}
+
+.main-content {
+	flex: 1;
+	min-width: 0;
+	height: 100vh;
+	display: flex;
+	flex-direction: column;
+	overflow: hidden;
+	padding: 16px 24px 0;
+}
+
+.page-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 12px;
+	flex-shrink: 0;
+}
+
+.btn-new-quote {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	font-family: inherit;
+	font-size: 15px;
+	font-weight: 700;
+	color: var(--ink-bright);
+	background: var(--primary);
+	border: 0;
+	border-radius: 8px;
+	padding: 11px 22px;
+	cursor: pointer;
+	transition: background 0.15s;
+}
+
+.btn-new-quote:hover {
+	background: var(--primary-press);
+}
+
+.table-container {
+	flex: 1;
+	min-height: 0;
+	background: var(--surface);
+	border: 1px solid var(--outline);
+	border-radius: 10px;
+	overflow-y: hidden;
+	overflow-x: auto;
+	position: relative;
+}
+
+.cockpit-pagination-bar {
+	margin-top: 10px;
+	flex-shrink: 0;
+	min-height: 40px;
+	background: transparent;
+	border: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 4px 18px;
+	font-size: 13.5px;
+	color: var(--ink-secondary);
+	user-select: none;
+	margin-bottom: 8px;
+}
+
+/* BasePagination: Ô vuông bo góc riêng biệt (Linear / shadcn style) */
+.vp-pager {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 6px;
+	font-variant-numeric: tabular-nums;
+	user-select: none;
+}
+
+.vp-pager-nav,
+.vp-pager-num {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 32px;
+	height: 32px;
+	padding: 0 8px;
+	border-radius: 6px;
+	background: rgba(255, 255, 255, 0.03);
+	border: 1px solid var(--outline, var(--outline));
+	color: var(--ink-secondary, var(--ink-secondary));
+	cursor: pointer;
+	font-size: 13px;
+	font-weight: 500;
+	line-height: 1;
+	transition: all 0.15s ease;
+	box-sizing: border-box;
+}
+
+.vp-pager-nav {
+	padding: 0 8px;
+	color: var(--ink-secondary, var(--ink-secondary));
+}
+
+.vp-pager-num:hover:not(:disabled):not(.active),
+.vp-pager-nav:hover:not(:disabled) {
+	background: rgba(255, 255, 255, 0.08);
+	border-color: rgba(255, 255, 255, 0.25);
+	color: var(--ink, var(--ink));
+}
+
+.vp-pager-num.active {
+	background: var(--primary, var(--primary));
+	border-color: var(--primary, var(--primary));
+	color: var(--ink-bright);
+	font-weight: 700;
+	box-shadow: 0 0 10px rgba(78, 161, 224, 0.35);
+	cursor: default;
+}
+
+.vp-pager-nav:disabled,
+.vp-pager-num:disabled {
+	opacity: 0.3;
+	cursor: not-allowed;
+	border-color: rgba(255, 255, 255, 0.05);
+	background: transparent;
+}
+
+.vp-pager-gap {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 24px;
+	height: 32px;
+	color: var(--ink-muted, #64748b);
+	font-size: 13px;
+	user-select: none;
+}
+
+.table-container::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+	background: var(--surface);
+}
+
+.table-container::-webkit-scrollbar-thumb {
+	background: var(--outline);
+	border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+	background: var(--primary);
+}
+
+.data-table {
+	width: 100%;
+	border-collapse: collapse;
+	font-size: 15px;
+	height: 100%;
+}
+
+.table-row,
+.filler-row {
+	height: calc((100% - 47px) / 15);
+}
+
+.filler-row td {
+	border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+	padding: 0 18px;
+	pointer-events: none;
+	user-select: none;
+}
+
+.data-table th {
+	text-align: left;
+	font-size: 13.5px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	color: var(--ink-secondary);
+	padding: 13px 18px;
+	border-bottom: 1px solid var(--outline);
+	background: var(--surface-low);
+	position: sticky;
+	top: 0;
+	z-index: 5;
+	box-shadow: 0 1px 0 var(--outline);
+	white-space: nowrap !important;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	user-select: none;
+}
+
+.data-table th:first-child {
+	border-top-left-radius: 9px;
+}
+
+.data-table th:last-child {
+	border-top-right-radius: 9px;
+}
+
+.data-table td {
+	padding: 14px 18px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+	color: var(--ink);
+}
+
+.data-table tbody tr:last-child td {
+	border-bottom: 0;
+}
+
+.data-table tbody tr:last-child td:first-child {
+	border-bottom-left-radius: 9px;
+}
+
+.data-table tbody tr:last-child td:last-child {
+	border-bottom-right-radius: 9px;
+}
+
+.table-row:hover {
+	background: rgba(255, 255, 255, 0.02);
+}
+
+.text-secondary {
+	color: var(--ink-secondary);
+}
+
+.text-primary {
+	color: var(--primary);
+}
+
+.font-bold {
+	font-weight: 700;
+}
+
+.text-right {
+	text-align: right;
+}
+
+.text-center {
+	text-align: center;
+}
+
+.text-num {
+	font-variant-numeric: tabular-nums;
+}
+
+.row-actions {
+	white-space: nowrap;
+}
+
+.cursor-pointer {
+	cursor: pointer;
+	transition: all 0.15s ease;
+}
+
+.table-row.cursor-pointer:hover {
+	background: rgba(78, 161, 224, 0.08) !important;
+}
+
+.truncate {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+/* --- Industrial Cockpit Navigation & Tab Bars --- */
+.catalog-header-cockpit {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	margin-bottom: 14px;
+	flex-wrap: nowrap;
+	flex-shrink: 0;
+}
+
+.order-tabs-bar {
+	display: flex;
+	gap: 6px;
+	margin-bottom: 12px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+	padding-bottom: 10px;
+	flex-shrink: 0;
+}
+
+.catalog-header-cockpit .catalog-tabs-bar {
+	margin-bottom: 0 !important;
+	border-bottom: none !important;
+	padding-bottom: 0 !important;
+	flex: 1;
+	min-width: 0;
+	overflow-x: auto;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+}
+
+.catalog-header-cockpit .catalog-tabs-bar::-webkit-scrollbar {
+	display: none;
+}
+
+.order-tab-btn {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	padding: 8px 12px 10px;
+	border-radius: 6px;
+	border: 1px solid transparent;
+	background: transparent;
+	color: var(--ink-slate);
+	font-size: 14px;
+	font-weight: 600;
+	cursor: pointer;
+	white-space: nowrap !important;
+	flex-shrink: 0;
+	transition: color 0.15s ease, background 0.15s ease;
+}
+
+.order-tab-btn span {
+	white-space: nowrap !important;
+}
+
+.order-tab-btn:hover {
+	background: rgba(255, 255, 255, 0.04);
+	color: var(--ink-crisp);
+}
+
+.order-tab-btn.active {
+	background: transparent;
+	border-color: transparent;
+	color: var(--ink-bright);
+	font-weight: 700;
+}
+
+/* Dải màu gạch chân công nghệ 2.5px ở đáy */
+.order-tab-btn.active::after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 8px;
+	right: 8px;
+	height: 2.5px;
+	background: var(--primary);
+	border-radius: 2px 2px 0 0;
+	box-shadow: 0 -1px 8px rgba(78, 161, 224, 0.6);
+}
+
+.tab-badge {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 20px;
+	height: 19px;
+	padding: 0 6px;
+	border-radius: 10px;
+	font-size: 12px;
+	font-weight: 700;
+	background: rgba(255, 255, 255, 0.08);
+	color: var(--ink-slate);
+	font-variant-numeric: tabular-nums;
+	transition: all 0.15s ease;
+}
+
+.order-tab-btn:hover .tab-badge {
+	color: var(--ink-snow);
+}
+
+.order-tab-btn.active .tab-badge {
+	background: rgba(78, 161, 224, 0.18);
+	color: var(--primary);
+}
+
+/* --- Search Cockpit Input & Controls --- */
+.catalog-search-cockpit-wrap {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	flex-shrink: 0;
+}
+
+.search-input-wrap {
+	position: relative;
+	width: 250px;
+	display: flex;
+	align-items: center;
+}
+
+.search-icon {
+	position: absolute;
+	left: 12px;
+	width: 16px;
+	height: 16px;
+	color: var(--ink-faint);
+	pointer-events: none;
+}
+
+.catalog-search-input {
+	width: 100%;
+	padding: 8px 32px 8px 36px;
+	background: var(--surface);
+	border: 1px solid var(--outline);
+	border-radius: 6px;
+	color: var(--ink-crisp);
+	font-size: 14.5px;
+	outline: none;
+	transition: border-color 0.15s ease;
+}
+
+.catalog-search-input:focus {
+	border-color: var(--primary);
+	box-shadow: 0 0 0 2px rgba(78, 161, 224, 0.15);
+}
+
+.btn-clear-search {
+	position: absolute;
+	right: 10px;
+	background: transparent;
+	border: none;
+	color: var(--ink-faint);
+	cursor: pointer;
+	font-size: 13px;
+	padding: 2px 4px;
+	border-radius: 4px;
+}
+
+.btn-clear-search:hover {
+	color: var(--ink-bright);
+}
+
+/* --- Badges & Utility Colors --- */
+.text-emerald {
+	color: #34d399;
+}
+
+.text-amber {
+	color: #fbbf24;
+}
+
+.text-rose {
+	color: var(--danger-soft);
+}
+
+.text-secondary {
+	color: var(--ink-slate);
+}
+
+.font-mono {
+	font-family: inherit;
+	font-variant-numeric: tabular-nums;
+	font-feature-settings: "tnum";
+}
+
+/* --- Industrial Cockpit Empty State (Zero Dead-End UX) --- */
+.cockpit-empty-state {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+	padding: 3rem 1rem;
+	text-align: center;
+}
+
+.empty-msg {
+	font-size: 14px;
+	font-weight: 500;
+	color: var(--ink-slate);
+	letter-spacing: -0.01em;
+}
+
+.btn-empty-action {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	padding: 6px 14px;
+	border-radius: 6px;
+	font-size: 13.5px;
+	font-weight: 600;
+	cursor: pointer;
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	background: rgba(255, 255, 255, 0.05);
+	color: var(--ink-snow);
+	transition: all 0.15s ease;
+}
+
+.btn-empty-action:hover {
+	background: rgba(255, 255, 255, 0.1);
+	border-color: rgba(255, 255, 255, 0.25);
+	color: var(--ink-bright);
+}
+
+.btn-empty-action.btn-empty-primary {
+	background: rgba(78, 161, 224, 0.15);
+	border-color: rgba(78, 161, 224, 0.4);
+	color: var(--primary);
+}
+
+.btn-empty-action.btn-empty-primary:hover {
+	background: var(--primary);
+	border-color: var(--primary);
+	color: #0b0f19;
+}
+
+/* --- Shared icon button (centralized — S2: thay 5 bản copyscoped) --- */
+.btn-icon {
+	background: transparent;
+	border: none;
+	color: var(--ink-faint);
+	cursor: pointer;
+	padding: 4px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 6px;
+	transition: all 0.15s ease;
+}
+
+.btn-icon:hover {
+	color: var(--ink-bright);
+	background: rgba(255, 255, 255, 0.08);
+}

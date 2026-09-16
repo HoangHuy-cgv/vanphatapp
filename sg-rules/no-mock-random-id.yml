@@ -1,0 +1,9 @@
+id: no-mock-random-id
+language: JavaScript
+severity: error
+message: "CONSTRAINTS mock_random_id: cam Math.random() lam document ID"
+note: "ID chung tu do backend/ERPNext cap; chi tiet xem CONSTRAINTS.md Floor mock_random_id."
+rule:
+  pattern: 'Math.random($$$)'
+files:
+  - 'apps/vanphat_portal/frontend/src/**'

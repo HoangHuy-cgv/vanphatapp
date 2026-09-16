@@ -1,0 +1,11 @@
+id: no-permissioned-get-all
+language: Python
+severity: error
+message: "CONSTRAINTS permissioned_get_all: master data co phan quyen dung get_list, khong get_all"
+note: "get_all bypass permission; chi tiet xem CONSTRAINTS.md Floor permissioned_get_all."
+rule:
+  any:
+    - pattern: 'frappe.get_all($$$)'
+    - pattern: 'frappe.db.get_all($$$)'
+files:
+  - 'apps/vanphat_portal/vanphat_portal/api/**'

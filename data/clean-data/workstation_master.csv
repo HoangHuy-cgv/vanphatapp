@@ -1,0 +1,5 @@
+﻿name,workstation_name,production_capacity,hour_rate,description
+WS-GHEP-01,Máy Ghép Màng Khô,1,0.0,Nguồn raw: tiến độ SX cột GHÉP.
+WS-CAT-01,Máy Cắt Dán Túi,1,0.0,Nguồn raw: tiến độ SX cột CẮT.
+WS-VOI-01,Máy Đóng Vòi,1,0.0,Nguồn raw: tiến độ SX cột ĐÓNG VÒI.
+WS-THOI-01,Máy Thổi PE Liên Doanh,1,0.0,"Sếp chốt: máy thổi là NCC ngoài (cost center riêng) nhưng Vạn Phát vận hành, đứng thu-chi, chốt sổ cuối tháng."

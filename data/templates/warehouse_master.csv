@@ -1,0 +1,5 @@
+﻿name,warehouse_name,warehouse_code,warehouse_type,parent_warehouse,is_group,account,description,disabled
+NVL - VP,Kho Nguyên Vật Liệu,NVL,Stores,All Warehouses,0,"152 - Nguyên liệu, vật liệu",Nguồn raw: sổ NXT NVL-T9 (kho NVL thật).,0
+BTP - VP,Kho Bán Thành Phẩm,BTP,Work In Progress,All Warehouses,0,154 - Chi phí sản xuất kinh doanh dở dang,Nguồn raw: tiến độ SX (cuộn ghép chờ cắt).,0
+TP - VP,Kho Thành Phẩm,TP,Finished Goods,All Warehouses,0,155 - Thành phẩm,Nguồn raw: sổ cọc + tồn NGCS (túi chờ giao).,0
+TRUC - VP,Kho Trục In,TRUC,Stores,All Warehouses,0,153 - Công cụ dụng cụ,Nguồn raw: excel TRỤC IN cột KHO (VP 113 + NCC-giữ).,0

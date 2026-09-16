@@ -1,0 +1,10 @@
+id: no-stub-comment-js
+language: JavaScript
+severity: error
+message: "CONSTRAINTS stub: cam TODO/FIXME dung cho implementation client"
+note: "Flow dang do phai implement that hoac xoa; chi tiet xem CONSTRAINTS.md Floor stub."
+rule:
+  kind: comment
+  regex: '.*(TODO|FIXME).*'
+files:
+  - 'apps/vanphat_portal/frontend/src/**'

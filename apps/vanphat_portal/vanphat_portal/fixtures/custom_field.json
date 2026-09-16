@@ -1,0 +1,242 @@
+[
+  {
+    "name": "Item-custom_alias",
+    "docstatus": 0,
+    "doctype": "Custom Field",
+    "dt": "Item",
+    "fieldname": "custom_alias",
+    "label": "Tên Gọi Tắt (Alias UI)",
+    "fieldtype": "Data",
+    "description": "Tên ngắn gọn hiển thị trên màn hình tác nghiệp UI/Cockpit",
+    "insert_after": "item_name"
+  },
+  {
+    "name": "Item-packaging_tab",
+    "docstatus": 0,
+    "doctype": "Custom Field",
+    "dt": "Item",
+    "fieldname": "packaging_tab",
+    "label": "Kỹ Thuật Bao Bì",
+    "fieldtype": "Tab Break",
+    "insert_after": "description"
+  },
+  {
+    "name": "Item-sec_film_spec",
+    "docstatus": 0,
+    "doctype": "Custom Field",
+    "dt": "Item",
+    "fieldname": "sec_film_spec",
+    "label": "Thông Số Màng & Kích Thước",
+    "fieldtype": "Section Break",
+    "insert_after": "packaging_tab"
+  },
+  {
+    "name": "Item-custom_structure_layers",
+    "docstatus": 0,
+    "doctype": "Custom Field",
+    "dt": "Item",
+    "fieldname": "custom_structure_layers",
+    "label": "Cấu Trúc Màng Ghép",
+    "fieldtype": "Data",
+    "description": "Ví dụ: PET//PA/PE sữa, OPP//PE, PET/MPET/PA/PE sữa",
+    "insert_after": "sec_film_spec"
+  },
+  {
+    "name": "Item-custom_thickness_mic",
+    "docstatus": 0,
+    "doctype": "Custom Field",
+    "dt": "Item",
+    "fieldname": "custom_thickness_mic",
+    "label": "Độ Dày (mic / µm)",
+    "fieldtype": "Float",
+    "description": "Tổng độ dày màng ghép hoặc màng đơn",
+    "insert_after": "custom_structure_layers"
+  },
+  {
+    "name": "Item-custom_film_width_mm",
+    "docstatus": 0,
+    "doctype": "Custom Field",
+    "dt": "Item",
+    "fieldname": "custom_film_width_mm",
+    "label": "Khổ Màng Cuộn (mm)",
+    "fieldtype": "Float",
+    "description": "Khổ cuộn màng đưa vào máy ghép hoặc chia cuộn",
+    "insert_after": "custom_thickness_mic"
+  },
+  {
+    "name": "Item-col_break_pouch",
+    "docstatus": 0,
+    "doctype": "Custom Field",
+    "dt": "Item",
+    "fieldname": "col_break_pouch",
+    "fieldtype": "Column Break",
+    "insert_after": "custom_film_width_mm"
+  },
+  {
+    "name": "Item-custom_pouch_width_mm",
+    "docstatus": 0,
+    "doctype": "Custom Field",
+    "dt": "Item",
+    "fieldname": "custom_pouch_width_mm",
+    "label": "Chiều Rộng Túi W (mm)",
+    "fieldtype": "Float",
+    "description": "Khổ ngang thành phẩm túi",
+    "insert_after": "col_break_pouch"
+  },
+  {
+    "name": "Item-custom_pouch_length_mm",
+    "docstatus": 0,
+    "doctype": "Custom Field",
+    "dt": "Item",
+    "fieldname": "custom_pouch_length_mm",
+    "label": "Chiều Dài/Cao Túi L (mm)",
+    "fieldtype": "Float",
+    "description": "Chiều cao thành phẩm túi",
+    "insert_after": "custom_pouch_width_mm"
+  },
+  {
+    "name": "Item-custom_gusset_mm",
+    "docstatus": 0,
+    "doctype": "Custom Field",
+    "dt": "Item",
+    "fieldname": "custom_gusset_mm",
+    "label": "Độ Mở Đáy / Hông G (mm)",
+    "fieldtype": "Float",
+    "description": "Kích thước nếp gấp đáy hoặc xếp hông",
+    "insert_after": "custom_pouch_length_mm"
+  },
+  {
+    "name": "Item-custom_cut_length_mm",
+    "docstatus": 0,
+    "doctype": "Custom Field",
+    "dt": "Item",
+    "fieldname": "custom_cut_length_mm",
+    "label": "Bước Cắt Dao L_cut (mm)",
+    "fieldtype": "Float",
+    "description": "Bước cắt túi trên máy cắt Totani (Pitch)",
+    "insert_after": "custom_gusset_mm"
+  },
+  {
+    "name": "Item-sec_print_accessory",
+    "docstatus": 0,
+    "doctype": "Custom Field",
+    "dt": "Item",
+    "fieldname": "sec_print_accessory",
+    "label": "Công Nghệ In & Phụ Kiện Đóng Gói",
+    "fieldtype": "Section Break",
+    "insert_after": "custom_cut_length_mm"
+  },
+  {
+    "name": "Item-custom_print_tech",
+    "docstatus": 0,
+    "doctype": "Custom Field",
+    "dt": "Item",
+    "fieldname": "custom_print_tech",
+    "label": "Công Nghệ In",
+    "fieldtype": "Select",
+    "options": "In trục ống đồng\nIn offset (Không trục)\nIn lụa\nKhông in",
+    "description": "In trục (có mã trục liên kết) hoặc In offset (không trục)",
+    "insert_after": "sec_print_accessory"
+  },
+  {
+    "name": "Item-custom_accessory_spec",
+    "docstatus": 0,
+    "doctype": "Custom Field",
+    "dt": "Item",
+    "fieldname": "custom_accessory_spec",
+    "label": "Phụ Kiện Miệng Túi",
+    "fieldtype": "Select",
+    "options": "Không\nVòi 16mm\nVòi 10mm\nKhóa Zipper",
+    "description": "Phụ kiện miệng túi: Vòi 16mm, Vòi 10mm, Khóa Zipper (để trống hoặc Không nếu không gắn phụ kiện)",
+    "insert_after": "custom_print_tech"
+  },
+  {
+    "name": "Item-custom_cylinder_item",
+    "docstatus": 0,
+    "doctype": "Custom Field",
+    "dt": "Item",
+    "fieldname": "custom_cylinder_item",
+    "label": "Mã Trục In Ống Đồng",
+    "fieldtype": "Link",
+    "options": "Item",
+    "description": "Liên kết tới mã bộ trục in ống đồng (chỉ dùng khi in trục)",
+    "insert_after": "custom_accessory_spec"
+  },
+  {
+    "name": "Item-sec_cylinder_spec",
+    "docstatus": 0,
+    "doctype": "Custom Field",
+    "dt": "Item",
+    "fieldname": "sec_cylinder_spec",
+    "label": "Thông Số Kỹ Thuật Bộ Trục In",
+    "fieldtype": "Section Break",
+    "depends_on": "eval:doc.item_group==\"Trục In Ống Đồng\"",
+    "insert_after": "custom_cylinder_item"
+  },
+  {
+    "name": "Item-custom_cylinder_code",
+    "docstatus": 0,
+    "doctype": "Custom Field",
+    "dt": "Item",
+    "fieldname": "custom_cylinder_code",
+    "label": "Mã Khắc Laser Trục",
+    "fieldtype": "Data",
+    "description": "Mã khắc laser định danh trên quả trục in của NCC (vd: G4006940)",
+    "insert_after": "sec_cylinder_spec"
+  },
+  {
+    "name": "Item-custom_cylinder_length_mm",
+    "docstatus": 0,
+    "doctype": "Custom Field",
+    "dt": "Item",
+    "fieldname": "custom_cylinder_length_mm",
+    "label": "Chiều Dài Trục L (mm)",
+    "fieldtype": "Float",
+    "description": "Chiều dài quả trục in ống đồng (mm)",
+    "insert_after": "custom_cylinder_code"
+  },
+  {
+    "name": "Item-custom_cylinder_circ_mm",
+    "docstatus": 0,
+    "doctype": "Custom Field",
+    "dt": "Item",
+    "fieldname": "custom_cylinder_circ_mm",
+    "label": "Chu Vi Trục C (mm)",
+    "fieldtype": "Float",
+    "description": "Chu vi quả trục in ống đồng (mm)",
+    "insert_after": "custom_cylinder_length_mm"
+  },
+  {
+    "name": "Item-custom_cylinder_qty",
+    "docstatus": 0,
+    "doctype": "Custom Field",
+    "dt": "Item",
+    "fieldname": "custom_cylinder_qty",
+    "label": "Số Cây Trong Bộ Trục",
+    "fieldtype": "Int",
+    "description": "Số lượng cây trục trong bộ",
+    "insert_after": "custom_cylinder_circ_mm"
+  },
+  {
+    "name": "Item-custom_cylinder_location",
+    "docstatus": 0,
+    "doctype": "Custom Field",
+    "dt": "Item",
+    "fieldname": "custom_cylinder_location",
+    "label": "Kho / NCC Giữ Trục",
+    "fieldtype": "Data",
+    "description": "Địa điểm lưu giữ bộ trục in (Kho Vạn Phát, Kho Kiến Tâm, Kho Trang Tín...)",
+    "insert_after": "custom_cylinder_qty"
+  },
+  {
+    "name": "Sales Order Item-custom_screen_print_brand",
+    "docstatus": 0,
+    "doctype": "Custom Field",
+    "dt": "Sales Order Item",
+    "fieldname": "custom_screen_print_brand",
+    "label": "Brand In Lụa Lần 2 (Khách)",
+    "fieldtype": "Data",
+    "description": "Tên nhãn hàng / logo in lụa lần 2 lên phôi túi có sẵn (NGCS / TMD)",
+    "insert_after": "item_name"
+  }
+]

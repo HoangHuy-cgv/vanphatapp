@@ -1,0 +1,11 @@
+id: no-stub-py
+language: Python
+severity: error
+message: "CONSTRAINTS stub: cam NotImplementedError lam dai dien implementation API"
+note: "API dang do phai implement that hoac xoa endpoint; chi tiet xem CONSTRAINTS.md Floor stub."
+rule:
+  any:
+    - pattern: 'raise NotImplementedError($$$)'
+    - pattern: 'raise NotImplementedError'
+files:
+  - 'apps/vanphat_portal/vanphat_portal/api/**'

@@ -1,0 +1,14 @@
+id: no-suppression-js
+language: JavaScript
+severity: error
+message: "CONSTRAINTS suppression: cam comment tat checker (eslint-disable, ts-ignore, istanbul, Stryker, nosemgrep, gitleaks)"
+note: "Gate do thi fail phai sua code, khong tat luat; chi tiet xem CONSTRAINTS.md Floor suppression."
+rule:
+  kind: comment
+  regex: '.*(eslint-disable|ts-ignore|istanbul ignore|Stryker disable|nosemgrep|gitleaks:allow).*'
+files:
+  - 'apps/vanphat_portal/frontend/src/**'
+  - 'scripts/**'
+ignores:
+  - 'apps/vanphat_portal/frontend/components.d.ts'
+  - 'apps/vanphat_portal/frontend/auto-imports.d.ts'

@@ -1,0 +1,429 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+  @page {
+    size: A4 portrait;
+    margin: 10mm 12mm 14mm 12mm;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    color: #111111;
+    font-size: 11px;
+    line-height: 1.4;
+    background-color: #ffffff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    position: relative;
+    padding-bottom: 10mm;
+  }
+
+  /* WATERMARK TỐI GIẢN (CHÌM 4.5% TỰ ĐỘNG LẶP MỌI TRANG) */
+  .watermark-bg {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 320px;
+    opacity: 0.045;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .watermark-bg img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .content-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+  }
+
+  /* Tiêu đề Đơn Đặt Hàng */
+  .doc-title-box {
+    text-align: center;
+    margin: 6px 0 10px 0;
+  }
+  .doc-title {
+    font-size: 19px;
+    font-weight: 800;
+    color: #0b66c3;
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+  .doc-meta {
+    font-size: 10.5px;
+    color: #555555;
+    margin-top: 2px;
+  }
+
+  /* Khung thông tin khách hàng - 3 dòng tối giản */
+  .customer-info-box {
+    width: 100%;
+    border: 1px solid #d0d7de;
+    border-radius: 4px;
+    padding: 7px 10px;
+    margin-bottom: 10px;
+    background-color: transparent;
+  }
+  .customer-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .customer-table td {
+    padding: 2.5px 4px;
+    font-size: 10.5px;
+    vertical-align: top;
+  }
+  .lbl {
+    width: 120px;
+    color: #666666;
+    font-weight: 500;
+  }
+  .val {
+    color: #111111;
+    font-weight: 600;
+  }
+
+  /* Bảng danh sách sản phẩm đặt hàng */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 8px;
+    border: 1px solid #333333;
+    background-color: transparent;
+  }
+  .items-table th {
+    background-color: #f0f4f8;
+    color: #0b66c3;
+    font-weight: 700;
+    font-size: 10.5px;
+    text-align: center;
+    padding: 5px 4px;
+    border: 1px solid #333333;
+    text-transform: uppercase;
+  }
+  .items-table td {
+    padding: 4.5px 6px;
+    border: 1px solid #444444;
+    font-size: 10px;
+    vertical-align: middle;
+    background-color: transparent;
+  }
+  .col-c { text-align: center; }
+  .col-r { text-align: right; font-variant-numeric: tabular-nums; }
+  .item-title {
+    font-weight: 700;
+    color: #111111;
+    font-size: 10.5px;
+  }
+  .item-desc {
+    color: #444444;
+    font-size: 9.5px;
+    line-height: 1.35;
+    margin-top: 1.5px;
+  }
+
+  /* Bảng tổng tiền */
+  .summary-tr td {
+    font-weight: 600;
+    padding: 4.5px 8px;
+    background-color: transparent;
+  }
+  .grand-total-tr td {
+    background-color: transparent !important;
+    border-top: 1.5px solid #0b66c3 !important;
+  }
+  .grand-total-lbl {
+    font-size: 11px;
+    font-weight: 800;
+    color: #0b66c3;
+    text-transform: uppercase;
+  }
+  .grand-total {
+    color: #0b66c3 !important;
+    font-size: 12.5px !important;
+    font-weight: 800 !important;
+  }
+  .words-line {
+    margin-bottom: 8px;
+    padding: 4px 8px;
+    font-style: italic;
+    background-color: transparent;
+    border-left: 3px solid #0b66c3;
+    font-size: 10px;
+  }
+
+  /* Tiến độ thanh toán & Điều khoản sản xuất */
+  .terms-box {
+    padding: 2px 0;
+    border: none;
+    background-color: transparent;
+    margin-top: 6px;
+    page-break-inside: avoid;
+  }
+  .terms-title {
+    font-weight: 700;
+    font-size: 10.5px;
+    color: #0b66c3;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+  .terms-box ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  .terms-box li {
+    position: relative;
+    padding-left: 12px;
+    margin-bottom: 2px;
+    font-size: 10px;
+    color: #333333;
+    line-height: 1.35;
+  }
+  .terms-box li::before {
+    content: "•";
+    color: #0b66c3;
+    font-weight: bold;
+    position: absolute;
+    left: 2px;
+  }
+
+  /* Khung chữ ký 2 bên - TỐI GIẢN (KHÔNG GHI SẴN TÊN) */
+  .sign-container {
+    width: 100%;
+    margin-top: 15px;
+    page-break-inside: avoid;
+  }
+  .sign-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: none;
+    text-align: center;
+  }
+  .sign-table td {
+    border: none;
+    vertical-align: top;
+    padding: 0 10px;
+  }
+  .sign-header {
+    font-weight: 700;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    color: #111111;
+  }
+  .sign-hint {
+    font-size: 9px;
+    color: #777777;
+    margin-top: 2px;
+    font-style: italic;
+  }
+  .sign-space {
+    height: 70px;
+  }
+
+  /* =========================================================
+     TRANG 2: PHỤ LỤC HÌNH ẢNH THIẾT KẾ DUYỆT MẪU (TỐI ĐA KHÔNG GIAN)
+     ========================================================= */
+  .page-appendix {
+    page-break-before: always;
+    page-break-inside: avoid;
+    padding-top: 4px;
+    padding-bottom: 12mm;
+    display: flex;
+    flex-direction: column;
+    height: 255mm;
+  }
+  .appendix-head {
+    text-align: center;
+    border-bottom: 2px solid #0b66c3;
+    padding-bottom: 4px;
+    margin-bottom: 8px;
+    flex-shrink: 0;
+  }
+  .appendix-head h3 {
+    font-size: 15px;
+    font-weight: 800;
+    color: #0b66c3;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .appendix-head p {
+    font-size: 10px;
+    color: #666666;
+    margin-top: 2px;
+  }
+  .design-preview-container {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 4px auto;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    box-sizing: border-box;
+    overflow: hidden;
+  }
+  .design-preview-container img {
+    max-width: 100%;
+    max-height: 235mm;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto;
+  }
+</style>
+
+<!-- WATERMARK VP CHÌM CĂN GIỮA MỌI TRANG -->
+<div class="watermark-bg">
+  <img src="{{ watermark_uri or '/files/logo-vp.png' }}" alt="" />
+</div>
+
+<div class="content-container">
+  <!-- TIÊU ĐỀ ĐƠN ĐẶT HÀNG -->
+  <div class="doc-title-box">
+    <div class="doc-title">ĐƠN ĐẶT HÀNG</div>
+    <div class="doc-meta">
+      Số: <b>{{ doc.name }}</b> &nbsp;•&nbsp; 
+      Ngày đặt: <b>{{ frappe.utils.formatdate(doc.transaction_date or doc.posting_date, "dd/MM/yyyy") }}</b> &nbsp;•&nbsp; 
+      Ngày giao cam kết: <b>{{ frappe.utils.formatdate(doc.delivery_date or doc.schedule_date, "dd/MM/yyyy") or "Theo tiến độ thỏa thuận" }}</b>
+    </div>
+  </div>
+
+  <!-- THÔNG TIN KHÁCH HÀNG (3 DÒNG TỐI GIẢN) -->
+  <div class="customer-info-box">
+    <table class="customer-table">
+      <tr>
+        <td class="lbl">Khách hàng:</td>
+        <td class="val" colspan="3">{{ (doc.customer_name or doc.customer or "") | upper }}</td>
+      </tr>
+      <tr>
+        <td class="lbl">Mã số thuế:</td>
+        <td class="val" style="width: 42%;">{{ doc.tax_id or "—" }}</td>
+        <td class="lbl" style="width: 90px;">Điện thoại:</td>
+        <td class="val">{{ doc.contact_mobile or doc.contact_phone or "—" }}</td>
+      </tr>
+      <tr>
+        <td class="lbl">Địa chỉ nhận hàng:</td>
+        <td class="val" colspan="3">{{ doc.shipping_address or doc.address_display or "—" }}</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- BẢNG CHI TIẾT SẢN PHẨM ĐẶT HÀNG -->
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th style="width: 4%;">STT</th>
+        <th style="width: 46%;">Tên hàng &amp; Quy cách kỹ thuật</th>
+        <th style="width: 8%;">ĐVT</th>
+        <th style="width: 12%;">Số lượng</th>
+        <th style="width: 14%;">Đơn giá (VNĐ)</th>
+        <th style="width: 16%;">Thành tiền (VNĐ)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in doc.items %}
+      <tr>
+        <td class="col-c">{{ loop.index }}</td>
+        <td>
+          <div class="item-title">{{ row.item_name }}</div>
+          {% if row.description %}
+          <div class="item-desc">{{ row.description }}</div>
+          {% endif %}
+        </td>
+        <td class="col-c">{{ row.uom or "Túi" }}</td>
+        <td class="col-r"><b>{{ "{:,.0f}".format(row.qty or 0) }}</b></td>
+        <td class="col-r">{{ "{:,.0f}".format(row.rate or 0) }}</td>
+        <td class="col-r"><b>{{ "{:,.0f}".format(row.amount or (row.qty * row.rate) or 0) }}</b></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr class="summary-tr">
+        <td colspan="5" class="col-r">Tổng Tiền Hàng Chưa VAT:</td>
+        <td class="col-r"><b>{{ "{:,.0f}".format(doc.net_total or 0) }}</b></td>
+      </tr>
+      <tr class="summary-tr">
+        <td colspan="5" class="col-r">Thuế GTGT (VAT 8%):</td>
+        <td class="col-r"><b>{{ "{:,.0f}".format(doc.total_taxes_and_charges or (doc.net_total * 0.08) or 0) }}</b></td>
+      </tr>
+      <tr class="summary-tr grand-total-tr">
+        <td colspan="5" class="col-r grand-total-lbl">TỔNG CỘNG ĐƠN HÀNG:</td>
+        <td class="col-r grand-total">{{ "{:,.0f}".format(doc.grand_total or ((doc.net_total or 0) + (doc.total_taxes_and_charges or 0))) }}</td>
+      </tr>
+      {% if doc.advance_paid and doc.advance_paid > 0 %}
+      <tr class="summary-tr">
+        <td colspan="5" class="col-r" style="color: #2e7d32;">Đã Đặt Cọc / Tạm Ứng:</td>
+        <td class="col-r" style="color: #2e7d32;"><b>-{{ "{:,.0f}".format(doc.advance_paid) }}</b></td>
+      </tr>
+      <tr class="summary-tr" style="background-color: #f8fafc;">
+        <td colspan="5" class="col-r" style="font-weight: 700; color: #c62828;">CÒN LẠI PHẢI THANH TOÁN:</td>
+        <td class="col-r" style="font-weight: 700; color: #c62828; font-size: 11px;"><b>{{ "{:,.0f}".format((doc.grand_total or ((doc.net_total or 0) + (doc.total_taxes_and_charges or 0))) - doc.advance_paid) }}</b></td>
+      </tr>
+      {% endif %}
+    </tfoot>
+  </table>
+
+  <!-- BẰNG CHỮ -->
+  <div class="words-line">
+    <b>Bằng chữ:</b> {{ doc.in_words or "—" }}
+  </div>
+
+  <!-- TIẾN ĐỘ THANH TOÁN & ĐIỀU KHOẢN THỰC HIỆN -->
+  <div class="terms-box">
+    <div class="terms-title">Tiến độ thanh toán &amp; Điều khoản thực hiện</div>
+    <ul>
+      <li><b>Đợt 1 (Đặt cọc):</b> 50% tiền hàng + 100% tiền trục in ngay khi xác nhận đơn đặt hàng và duyệt file thiết kế.</li>
+      <li><b>Đợt 2 (Tất toán):</b> 50% tiền hàng còn lại trước khi giao hàng xuất kho hoặc khi có thông báo hoàn tất sản xuất.</li>
+      <li><b>Tài khoản:</b> <b>060158384267</b> (Sacombank CN Bình Chánh) — CTY TNHH TM SX BAO BÌ VẠN PHÁT.</li>
+      <li><b>Dung sai sản xuất:</b> ±20% theo thực tế công nghệ máy thổi và ghép màng in. Thanh toán theo số lượng thực xuất.</li>
+      <li><b>Thời gian giao hàng:</b> 17 – 22 ngày làm việc kể từ ngày hoàn tất trục in và ký duyệt mẫu (trừ Chủ nhật, ngày lễ).</li>
+      <li><b>Bản quyền thương hiệu:</b> Khách hàng cam kết chịu trách nhiệm 100% về tính hợp pháp của nhãn hiệu và nội dung in ấn.</li>
+    </ul>
+  </div>
+
+  <!-- CHỮ KÝ TỐI GIẢN (2 BÊN: KHÁCH HÀNG & VẠN PHÁT) -->
+  <div class="sign-container">
+    <table class="sign-table">
+      <tr>
+        <td style="width: 50%;">
+          <div class="sign-header">ĐẠI DIỆN KHÁCH HÀNG</div>
+          <div class="sign-hint">(Ký duyệt &amp; đóng dấu xác nhận đặt hàng)</div>
+          <div class="sign-space"></div>
+        </td>
+        <td style="width: 50%;">
+          <div class="sign-header">ĐẠI DIỆN VẠN PHÁT</div>
+          <div class="sign-hint">(Ký duyệt &amp; đóng dấu xác nhận nhận đơn)</div>
+          <div class="sign-space"></div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- ========================================================
+       TRANG 2: PHỤ LỤC HÌNH ẢNH THIẾT KẾ DUYỆT MẪU
+       ======================================================== -->
+  {% if doc.design_image %}
+  <div class="page-appendix">
+    <div class="appendix-head">
+      <h3>PHỤ LỤC: HÌNH ẢNH THIẾT KẾ DUYỆT MẪU</h3>
+      <p>(Đính kèm theo đơn đặt hàng số: <b>{{ doc.name }}</b> — Ngày: <b>{{ frappe.utils.formatdate(doc.transaction_date or doc.posting_date, "dd/MM/yyyy") }}</b>)</p>
+    </div>
+
+    <!-- KHUNG HÌNH ẢNH THIẾT KẾ DUYỆT MẪU TẬN DỤNG TOÀN BỘ DIỆN TÍCH TRANG A4 -->
+    <div class="design-preview-container">
+      <img src="{{ doc.design_image }}" alt="Hình ảnh thiết kế duyệt mẫu" />
+    </div>
+  </div>
+  {% endif %}
+</div>

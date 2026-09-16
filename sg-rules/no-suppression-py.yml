@@ -1,0 +1,13 @@
+id: no-suppression-py
+language: Python
+severity: error
+message: "CONSTRAINTS suppression: cam comment tat checker (noqa, type ignore, nosemgrep, gitleaks)"
+note: "Ngoai le duy nhat: import sau sys.path trong apps/vanphat_portal/tests (E402 bat buoc). Sua o tests phai co ly do rieng."
+rule:
+  kind: comment
+  regex: '.*(noqa|type:\s*ignore|nosemgrep|gitleaks:allow).*'
+files:
+  - 'apps/vanphat_portal/vanphat_portal/**'
+  - 'scripts/**'
+ignores:
+  - 'apps/vanphat_portal/tests/**'

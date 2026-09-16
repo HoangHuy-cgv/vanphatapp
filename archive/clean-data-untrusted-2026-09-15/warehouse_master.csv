@@ -1,0 +1,6 @@
+﻿name,warehouse_name,warehouse_code,warehouse_type,parent_warehouse,is_group,account,description,disabled
+NVL - VP,Kho Nguyên Vật Liệu,NVL,Stores,All Warehouses,0,"152 - Nguyên liệu, vật liệu","Lưu trữ cuộn màng PET in từ NCC, cuộn màng thô (PE sữa, PA, MPET, OPP), keo ghép polyurethane, dung môi Ethyl Acetate (EA), phụ kiện vòi nắp và thùng carton đóng gói.",0
+BTP - VP,Kho Bán Thành Phẩm,BTP,Work In Progress,All Warehouses,0,154 - Chi phí sản xuất kinh doanh dở dang,"Lưu trữ cuộn màng ghép phức hợp sau công đoạn ghép màng khô, đang ủ nhiệt lưu hóa keo hoặc chờ chuyển sang máy cắt dán túi.",0
+TP - VP,Kho Thành Phẩm,TP,Finished Goods,All Warehouses,0,155 - Thành phẩm,"Lưu trữ túi màng ghép đặt riêng hoàn thiện, túi zipper mua ngoài, túi phôi NGCS có sẵn và túi sau khi gia công in lụa hoàn tất đóng thùng chờ xuất giao.",0
+TRUC - VP,Kho Trục In,TRUC,Stores,All Warehouses,0,153 - Công cụ dụng cụ,"Quản lý danh mục các bộ trục in ống đồng khắc laser của khách hàng, theo dõi thông số chu vi, chiều dài và lịch sử điều chuyển vị trí.",0
+PHE-LIEU - VP,Kho Phế Liệu,PHE-LIEU,Scrap,All Warehouses,0,"152 - Nguyên liệu, vật liệu",Thu hồi phế liệu màng nhựa PE sữa xén biên và màng ghép phức hợp phế thải trong quá trình canh chỉnh máy để cân ký bán thanh lý tái chế.,0

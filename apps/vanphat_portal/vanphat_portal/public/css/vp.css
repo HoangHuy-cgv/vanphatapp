@@ -1,0 +1,206 @@
+/* Bao Bi Van Phat - login shell. Visual only, no logic. */
+
+:root {
+  --canvas: #12151a;
+  --outline: #3a424e;
+  --outline-focus: #4ea1e0;
+  --ink: #eef1f6;
+  --ink-secondary: #9da7b5;
+  --primary: #4ea1e0;
+  --primary-press: #3b8ac4;
+  --blocked: #f97066;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --input-size: 18px;
+  --input-weight: 500;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+  font-family: var(--font-sans);
+  background-color: var(--canvas);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
+}
+
+.login-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px 16px;
+  background-color: var(--canvas);
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(13, 17, 23, 0.84) 0%,
+      rgba(18, 24, 34, 0.88) 50%,
+      rgba(13, 17, 23, 0.93) 100%
+    ),
+    url('/assets/vanphat_portal/images/bg-factory.webp');
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 300px;
+}
+
+.login-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 22px;
+  width: 100%;
+}
+
+.hero-logo {
+  width: 135px;
+  height: auto;
+  object-fit: contain;
+  margin-bottom: 12px;
+  filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.6));
+}
+
+.hero-brand {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  text-transform: uppercase;
+  white-space: nowrap;
+  text-align: center;
+  width: 100%;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9);
+}
+
+.login-card {
+  width: 100%;
+  background: rgba(22, 27, 34, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 24px 20px;
+  box-shadow:
+    0 20px 40px -10px rgba(0, 0, 0, 0.7),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 14px;
+  width: 100%;
+}
+
+/* Comprehensive font-size lock: idle, hover, focus, active, and autofill */
+.form-input,
+.form-input:hover,
+.form-input:focus,
+.form-input:active {
+  width: 100%;
+  min-width: 0;
+  height: 50px;
+  padding: 0 14px;
+  background: rgba(18, 21, 26, 0.92);
+  border: 1px solid var(--outline);
+  border-radius: 8px;
+  font-family: var(--font-sans) !important;
+  font-size: 18px !important;
+  font-weight: 500 !important;
+  color: #ffffff !important;
+  line-height: normal !important;
+  outline: none;
+}
+
+.form-input::placeholder {
+  font-family: var(--font-sans) !important;
+  font-size: 18px !important;
+  font-weight: 400 !important;
+  color: var(--ink-secondary) !important;
+  opacity: 0.85 !important;
+}
+
+.form-input:focus {
+  border-color: var(--outline-focus) !important;
+  box-shadow: 0 0 0 3px rgba(78, 161, 224, 0.25) !important;
+}
+
+/* Chrome / Safari / Edge Autofill font-size and color lock */
+.form-input:-webkit-autofill,
+.form-input:-webkit-autofill:hover,
+.form-input:-webkit-autofill:focus,
+.form-input:-webkit-autofill:active {
+  font-family: var(--font-sans) !important;
+  font-size: 18px !important;
+  font-weight: 500 !important;
+  line-height: normal !important;
+  -webkit-text-fill-color: #ffffff !important;
+  -webkit-box-shadow: 0 0 0 50px rgba(18, 21, 26, 0.95) inset !important;
+  caret-color: #ffffff !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Necessary for WebKit internal shadow DOM text styling on autofill */
+.form-input:-webkit-autofill::first-line {
+  font-family: var(--font-sans) !important;
+  font-size: 18px !important;
+  font-weight: 500 !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 46px;
+  font-family: inherit;
+  font-size: var(--input-size);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+  background: var(--primary);
+  border: 0;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: var(--primary-press);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.login-error {
+  color: var(--blocked);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.4;
+  text-align: center;
+}

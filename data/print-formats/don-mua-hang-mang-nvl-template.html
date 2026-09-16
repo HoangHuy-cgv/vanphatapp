@@ -1,0 +1,368 @@
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+  @page {
+    size: A4 portrait;
+    margin: 8mm 10mm 12mm 10mm;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+    color: #111111;
+    font-size: 11.5px;
+    line-height: 1.45;
+    background-color: #ffffff;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    position: relative;
+    padding-bottom: 4mm;
+  }
+
+  /* WATERMARK CHÌM */
+  .watermark-bg {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 320px;
+    opacity: 0.045;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .watermark-bg img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .content-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+  }
+
+  /* TIÊU ĐỀ ĐƠN HÀNG */
+  .doc-title-box {
+    text-align: center;
+    margin: 6px 0 12px 0;
+  }
+  .doc-title {
+    font-size: 20.5px;
+    font-weight: 800;
+    color: #0b66c3;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .doc-subtitle {
+    font-size: 12px;
+    font-weight: 600;
+    color: #444444;
+    margin-top: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  .doc-meta {
+    font-size: 11.5px;
+    color: #555555;
+    margin-top: 5px;
+  }
+
+  /* THÔNG TIN NHÀ CUNG CẤP (PHẲNG - BỎ KHUNG VIỀN) */
+  .supplier-info-box {
+    width: 100%;
+    border: none;
+    padding: 0;
+    margin-bottom: 12px;
+    background-color: transparent;
+  }
+  .supplier-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .supplier-table td {
+    padding: 3px 0;
+    font-size: 11.5px;
+    vertical-align: top;
+  }
+  .lbl {
+    width: 140px;
+    white-space: nowrap;
+    color: #555555;
+    font-weight: 500;
+  }
+  .val {
+    color: #111111;
+    font-weight: 600;
+  }
+
+  /* BẢNG CHI TIẾT 10 CỘT MÀNG NGUYÊN LIỆU (CHÍNH XÁC THEO RAW EXCEL) */
+  .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+    border: 1px solid #333333;
+    background-color: transparent;
+  }
+  .items-table th {
+    background-color: #f0f4f8;
+    color: #0b66c3;
+    font-weight: 700;
+    font-size: 10.5px;
+    text-align: center;
+    padding: 7px 3px;
+    border: 1px solid #333333;
+    text-transform: uppercase;
+  }
+  .items-table td {
+    padding: 6.5px 4px;
+    border: 1px solid #444444;
+    font-size: 11px;
+    vertical-align: middle;
+    background-color: transparent;
+  }
+  .col-c { text-align: center; }
+  .col-r { text-align: right; font-variant-numeric: tabular-nums; }
+  .item-title {
+    font-weight: 700;
+    color: #111111;
+    font-size: 11.5px;
+    line-height: 1.35;
+  }
+  .item-spec {
+    font-size: 10.5px;
+    color: #555555;
+    margin-top: 3px;
+    line-height: 1.35;
+  }
+  .item-spec b {
+    color: #111111;
+    font-weight: 600;
+  }
+
+  /* BẢNG TỔNG TIỀN */
+  .summary-tr td {
+    font-weight: 600;
+    font-size: 11.5px;
+    padding: 6px 8px;
+    background-color: transparent;
+  }
+  .grand-total-tr td {
+    background-color: transparent !important;
+    border-top: 1.5px solid #0b66c3 !important;
+  }
+  .grand-total-lbl {
+    font-size: 12px;
+    font-weight: 800;
+    color: #0b66c3;
+    text-transform: uppercase;
+  }
+  .grand-total {
+    color: #0b66c3 !important;
+    font-size: 12.5px !important;
+    font-weight: 800 !important;
+    white-space: nowrap !important;
+  }
+  .words-line {
+    margin-bottom: 12px;
+    padding: 6px 10px;
+    font-style: italic;
+    background-color: transparent;
+    border-left: 3px solid #0b66c3;
+    font-size: 11px;
+  }
+
+  /* LƯU Ý KỸ THUẬT MÀNG CUỘN THÔ */
+  .terms-box {
+    padding: 4px 0;
+    border: none;
+    background-color: transparent;
+    margin-top: 8px;
+    page-break-inside: avoid;
+  }
+  .terms-title {
+    font-weight: 700;
+    font-size: 11.5px;
+    color: #0b66c3;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .terms-box ul {
+    list-style: none;
+    padding-left: 0;
+  }
+  .terms-box li {
+    position: relative;
+    padding-left: 15px;
+    margin-bottom: 3.5px;
+    font-size: 11px;
+    color: #333333;
+    line-height: 1.4;
+  }
+  .terms-box li::before {
+    content: "•";
+    color: #0b66c3;
+    font-weight: bold;
+    position: absolute;
+    left: 2px;
+  }
+
+  /* KHUNG CHỮ KÝ 2 BÊN */
+  .sign-container {
+    width: 100%;
+    margin-top: 20px;
+    page-break-inside: avoid;
+  }
+  .sign-table {
+    width: 100%;
+    border-collapse: collapse;
+    border: none;
+    text-align: center;
+  }
+  .sign-table td {
+    border: none;
+    vertical-align: top;
+    padding: 0 10px;
+  }
+  .sign-header {
+    font-weight: 700;
+    font-size: 11.5px;
+    text-transform: uppercase;
+    color: #111111;
+  }
+  .sign-hint {
+    font-size: 10px;
+    color: #777777;
+    margin-top: 3px;
+    font-style: italic;
+  }
+  .sign-space {
+    height: 70px;
+  }
+</style>
+
+{% if watermark_uri %}
+<div class="watermark-bg">
+  <img src="{{ watermark_uri }}" alt="Watermark">
+</div>
+{% endif %}
+
+<div class="content-container">
+  <!-- TIÊU ĐỀ ĐƠN HÀNG -->
+  <div class="doc-title-box">
+    <div class="doc-title">ĐƠN ĐẶT HÀNG</div>
+    <div class="doc-subtitle">ĐẶT MUA NGUYÊN LIỆU MÀNG CUỘN</div>
+    <div class="doc-meta">
+      Số đơn: <b>{{ doc.name }}</b> &nbsp;•&nbsp; 
+      Ngày đặt: <b>{{ frappe.utils.formatdate(doc.transaction_date or doc.posting_date, "dd/MM/yyyy") }}</b>
+    </div>
+  </div>
+
+  <!-- THÔNG TIN NHÀ CUNG CẤP (2 DÒNG TỐI GIẢN - PHẲNG) -->
+  <div class="supplier-info-box">
+    <table class="supplier-table">
+      <tr>
+        <td class="lbl">Nhà cung cấp:</td>
+        <td class="val">{{ (doc.supplier_name or doc.supplier or "CÔNG TY TNHH THƯƠNG MẠI VÀ XNK NAM SƠN") | upper }}</td>
+      </tr>
+      <tr>
+        <td class="lbl">Địa chỉ kho / xưởng:</td>
+        <td class="val">{{ doc.supplier_address or doc.address_display or "Lầu 6, Tòa nhà Saigon Royal Residence, 34-35 Bến Vân Đồn, Q.4, TP.HCM" }}</td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- BẢNG CHI TIẾT 7 CỘT TỐI ƯU VISUAL (GỘP KHỔ & ĐỘ DÀY VÀO TÊN HÀNG) -->
+  <table class="items-table">
+    <thead>
+      <tr>
+        <th style="width: 4%;">STT</th>
+        <th style="width: 38%;">Tên màng &amp; Quy cách kỹ thuật</th>
+        <th style="width: 12%;">Số mét dài<br>(m)</th>
+        <th style="width: 12%;">Khối lượng<br>(Kg)</th>
+        <th style="width: 6%;">ĐVT</th>
+        <th style="width: 12%;">Đơn giá<br>(đ/Kg)</th>
+        <th style="width: 16%;">Thành tiền<br>(VNĐ)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in doc.items %}
+      <tr>
+        <td class="col-c">{{ loop.index }}</td>
+        <td>
+          <div class="item-title">{{ row.item_name }}</div>
+          <div class="item-spec">
+            Khổ màng: <b>{{ row.custom_film_width_mm or row.custom_film_width_cm or row.kho_mang or "—" }} mm</b> &nbsp;•&nbsp; 
+            Độ dày: <b>{{ row.custom_thickness_mic or row.do_day or "—" }} mic</b>
+            {% if row.custom_note or row.note %}
+            &nbsp;•&nbsp; <span>{{ row.custom_note or row.note }}</span>
+            {% endif %}
+          </div>
+        </td>
+        <td class="col-r">{{ "{:,.0f}".format(row.custom_linear_meters or row.met_dai or 0) if (row.custom_linear_meters or row.met_dai) else "—" }}</td>
+        <td class="col-r"><b>{{ "{:,.1f}".format(row.custom_weight_kg or row.qty or 0) }}</b></td>
+        <td class="col-c"><b>{{ row.uom or "Kg" }}</b></td>
+        <td class="col-r" style="white-space: nowrap;">{{ "{:,.0f}".format(row.rate or 0) }}</td>
+        <td class="col-r" style="white-space: nowrap;"><b>{{ "{:,.0f}".format(row.amount or (row.qty * row.rate) or 0) }}</b></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <!-- CỘNG TIỀN HÀNG -->
+      <tr class="summary-tr">
+        <td colspan="5" class="col-r">Cộng tiền hàng (chưa VAT):</td>
+        <td colspan="2" class="col-r" style="white-space: nowrap;">{{ "{:,.0f}".format(doc.net_total or doc.total or 0) }} đ</td>
+      </tr>
+      <!-- THUẾ VAT -->
+      <tr class="summary-tr">
+        <td colspan="5" class="col-r">Thuế GTGT (VAT):</td>
+        <td colspan="2" class="col-r" style="white-space: nowrap;">{{ "{:,.0f}".format(doc.total_taxes_and_charges or 0) }} đ</td>
+      </tr>
+      <!-- TỔNG THANH TOÁN -->
+      <tr class="summary-tr grand-total-tr">
+        <td colspan="5" class="col-r grand-total-lbl">TỔNG CỘNG THANH TOÁN:</td>
+        <td colspan="2" class="col-r grand-total" style="white-space: nowrap;">{{ "{:,.0f}".format(doc.grand_total or 0) }} đ</td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <!-- BẰNG CHỮ -->
+  <div class="words-line">
+    <b>Số tiền bằng chữ:</b> {{ doc.in_words or "Theo tổng giá trị trên hóa đơn." }}
+  </div>
+
+  <!-- LƯU Ý KỸ THUẬT MÀNG CUỘN NGUYÊN LIỆU -->
+  <div class="terms-box">
+    <div class="terms-title">Lưu ý kỹ thuật &amp; Giao nhận:</div>
+    <ul>
+      <li><b>Dung sai quy cách:</b> Dung sai số lượng mét dài: <b>±2%</b>; dung sai độ dày màng: <b>±5%</b>.</li>
+      <li><b>Quy cách bao gói &amp; Lõi:</b> Quấn cuộn chặt, bọc màng bảo vệ tránh bụi bẩn và trầy xước bề mặt; lõi giấy carton tiêu chuẩn <b>3 inch (76mm)</b>.</li>
+      <li><b>Chất lượng màng:</b> Màng phẳng đều, không cong vênh, không dính bụi; độ xử lý bề mặt corona đạt tiêu chuẩn kỹ thuật ghép màng đùn / keo khô.</li>
+      <li><b>Tiến độ giao hàng:</b> Từ 3–5 ngày kể từ ngày nhận đơn đặt hàng.</li>
+      <li><b>Địa điểm giao màng:</b> Nhà máy Bao Bì Vạn Phát — 336 Đoàn Nguyễn Tuấn, ấp 3 xã Hưng Long, Huyện Bình Chánh, TP.HCM (SĐT liên hệ: 0938.258.948).</li>
+    </ul>
+  </div>
+
+  <!-- CHỮ KÝ XÁC NHẬN -->
+  <div class="sign-container">
+    <table class="sign-table">
+      <tr>
+        <td style="width: 50%;">
+          <div class="sign-header">ĐẠI DIỆN NHÀ CUNG CẤP</div>
+          <div class="sign-hint">(Ký, đóng dấu và xác nhận ngày giao)</div>
+          <div class="sign-space"></div>
+        </td>
+        <td style="width: 50%;">
+          <div class="sign-header">ĐẠI DIỆN BÊN ĐẶT HÀNG</div>
+          <div class="sign-hint">(Ký, ghi rõ họ tên)</div>
+          <div class="sign-space"></div>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
